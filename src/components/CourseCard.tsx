@@ -10,10 +10,20 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ title, image, ageRange, features, backgroundColor }: CourseCardProps) => {
+  const courseImages = {
+    "Coding for Young Explorers": "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80",
+    "Advanced Coding for Innovators": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+    "AI for Budding Entrepreneurs": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80"
+  };
+
   return (
     <Card className={`${backgroundColor} border-none shadow-lg hover:shadow-xl transition-shadow`}>
       <CardHeader>
-        <img src={image} alt={title} className="w-full h-48 object-cover rounded-t-lg" />
+        <img 
+          src={courseImages[title as keyof typeof courseImages] || image} 
+          alt={title} 
+          className="w-full h-48 object-cover rounded-lg shadow-md" 
+        />
         <CardTitle className="text-xl mt-4">{title}</CardTitle>
         <p className="text-sm text-gray-600">{ageRange}</p>
       </CardHeader>
