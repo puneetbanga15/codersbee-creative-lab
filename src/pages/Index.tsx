@@ -3,6 +3,9 @@ import { Hero } from "@/components/Hero";
 import { CourseCard } from "@/components/CourseCard";
 import { Features } from "@/components/Features";
 import { Testimonial } from "@/components/Testimonial";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { CTASection } from "@/components/CTASection";
+import { Stats } from "@/components/Stats";
 
 const Index = () => {
   const courses = [
@@ -47,15 +50,22 @@ const Index = () => {
       <Navbar />
       <Hero />
       
-      <section id="features" className="py-20 bg-white">
+      <section id="stats" className="py-16 bg-white">
+        <Stats />
+      </section>
+
+      <section id="features" className="py-20 bg-gradient-to-b from-white to-codersbee-purple/20">
         <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
+            Why Choose <span className="text-codersbee-vivid">CodersBee</span>?
+          </h2>
           <Features />
         </div>
       </section>
 
-      <section id="courses" className="py-20 bg-codersbee-purple/10">
+      <section id="courses" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
             Learning Tracks Offered By Us
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -66,9 +76,13 @@ const Index = () => {
         </div>
       </section>
 
+      <section className="py-20 bg-codersbee-purple/10">
+        <WhyChooseUs />
+      </section>
+
       <section id="testimonials" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
             What Our Parents Say
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -78,6 +92,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <CTASection />
     </div>
   );
 };
