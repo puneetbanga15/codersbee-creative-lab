@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import AboutUs from "./pages/AboutUs";
+import AICorner from "./pages/AICorner";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/ai-corner" element={<AICorner />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
