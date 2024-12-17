@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Facebook } from "lucide-react";
+import { ChevronLeft, ChevronRight, Facebook, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const testimonials = [
@@ -59,7 +59,7 @@ export const TestimonialCarousel = () => {
           >
             <div className="flex mb-4">
               {[...Array(testimonials[current].rating)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 text-yellow-400" />
+                <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
               ))}
             </div>
             <p className="text-gray-700 mb-6 leading-relaxed">{testimonials[current].content}</p>
