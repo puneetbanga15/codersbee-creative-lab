@@ -14,7 +14,10 @@ export const Hero = () => {
             <p className="text-xl mb-8 text-gray-600">
               Live online 1:1 classes for kids aged 6-15
             </p>
-            <Button className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white px-8 py-6 text-lg">
+            <Button 
+              className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white px-8 py-6 text-lg"
+              onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
+            >
               Book a FREE trial
             </Button>
           </div>

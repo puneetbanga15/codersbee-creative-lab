@@ -6,7 +6,7 @@ export const Stats = () => {
     { icon: <Users className="w-8 h-8" />, value: "500+", label: "Happy Students" },
     { icon: <Code2 className="w-8 h-8" />, value: "50+", label: "Projects Built" },
     { icon: <Trophy className="w-8 h-8" />, value: "15+", label: "Awards Won" },
-    { icon: <Star className="w-8 h-8" />, value: "4.9", label: "Average Rating" },
+    { icon: <Star className="w-8 h-8" />, value: "5/5", label: "Average Rating" },
   ];
 
   return (
