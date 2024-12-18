@@ -6,6 +6,7 @@ import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { CTASection } from "@/components/CTASection";
 import { Stats } from "@/components/Stats";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
+import { InnovationHighlight } from "@/components/InnovationHighlight";
 
 const Index = () => {
   const courses = [
@@ -36,6 +37,8 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
+      
+      <InnovationHighlight />
       
       <section id="stats" className="py-16 bg-white">
         <Stats />
