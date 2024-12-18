@@ -23,7 +23,7 @@ export const Hero = () => {
           </div>
           <div className="flex-1">
             <img 
-              src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80" 
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" 
               alt="Online coding class illustration" 
               className="w-full max-w-lg mx-auto animate-float rounded-lg shadow-xl"
             />
