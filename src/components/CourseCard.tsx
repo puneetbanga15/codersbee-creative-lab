@@ -11,9 +11,9 @@ interface CourseCardProps {
 
 export const CourseCard = ({ title, image, ageRange, features, backgroundColor }: CourseCardProps) => {
   const courseDescriptions = {
-    "Coding for Young Explorers": "Fundamentals of web, Gamified for easier grasping",
-    "Advanced Coding for Innovators": "Javascript, Python and Fundamentals of AI",
-    "AI for Budding Entrepreneurs": "Generative AI - From basics to advanced"
+    "Coding for Young Explorers": "Start your coding journey with fun and interactive lessons. Learn the basics of programming through games and creative projects. Perfect for beginners who want to explore the world of coding.",
+    "Advanced Coding for Innovators": "Take your coding skills to the next level with real-world projects. Learn popular programming languages and start building your own applications with AI integration.",
+    "AI for Budding Entrepreneurs": "Master the latest AI tools and technologies. Create innovative solutions using generative AI, and learn how to build and deploy AI-powered applications."
   };
 
   const courseImages = {
@@ -23,7 +23,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
   };
 
   return (
-    <Card className={`${backgroundColor} border-none shadow-lg hover:shadow-xl transition-shadow`}>
+    <Card className={`${backgroundColor} border-none shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col`}>
       <CardHeader>
         <img 
           src={courseImages[title as keyof typeof courseImages] || image} 
@@ -32,9 +32,9 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
         />
         <CardTitle className="text-xl mt-4">{title}</CardTitle>
         <p className="text-sm text-gray-600">{ageRange}</p>
-        <p className="text-sm text-gray-700 mt-2">{courseDescriptions[title as keyof typeof courseDescriptions]}</p>
+        <p className="text-sm text-gray-700 mt-2 min-h-[80px]">{courseDescriptions[title as keyof typeof courseDescriptions]}</p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow">
         <ul className="space-y-2">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center">
@@ -44,7 +44,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
           ))}
         </ul>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button 
           className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
           onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
