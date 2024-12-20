@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import AboutUs from "./pages/AboutUs";
 import AICorner from "./pages/AICorner";
+import ParentsLogin from "./pages/ParentsLogin";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/ai-corner" element={<AICorner />} />
+          <Route path="/parents/login" element={<ParentsLogin />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
