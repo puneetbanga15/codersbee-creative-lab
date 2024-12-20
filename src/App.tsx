@@ -9,6 +9,7 @@ import Courses from "./pages/Courses";
 import AboutUs from "./pages/AboutUs";
 import AICorner from "./pages/AICorner";
 import ParentsLogin from "./pages/ParentsLogin";
+import ParentsRegister from "./pages/ParentsRegister";
 import Parents from "./pages/Parents";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/ai-corner" element={<AICorner />} />
           <Route path="/parents" element={<Parents />} />
           <Route path="/parents/login" element={<ParentsLogin />} />
+          <Route path="/parents/register" element={<ParentsRegister />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
