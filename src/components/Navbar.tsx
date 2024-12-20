@@ -19,8 +19,7 @@ export const Navbar = () => {
             <Link to="/about" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">About Us</Link>
             <Link to="/blogs" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">Blogs</Link>
             
-            {/* New menu items */}
-            <Link to="/parents" className="flex items-center space-x-1 text-codersbee-dark hover:text-codersbee-vivid transition-colors">
+            <Link to="/parents/login" className="flex items-center space-x-1 text-codersbee-dark hover:text-codersbee-vivid transition-colors">
               <User className="h-4 w-4" />
               <span>Parent's Corner</span>
             </Link>

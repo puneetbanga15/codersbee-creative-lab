@@ -9,6 +9,7 @@ import Courses from "./pages/Courses";
 import AboutUs from "./pages/AboutUs";
 import AICorner from "./pages/AICorner";
 import ParentsLogin from "./pages/ParentsLogin";
+import Parents from "./pages/Parents";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/ai-corner" element={<AICorner />} />
+          <Route path="/parents" element={<Parents />} />
           <Route path="/parents/login" element={<ParentsLogin />} />
         </Routes>
       </BrowserRouter>
