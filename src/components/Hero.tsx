@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpLeft } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export const Hero = () => {
   return (
@@ -28,18 +28,18 @@ export const Hero = () => {
               >
                 Book Trial Class Now
               </Button>
-              <div className="absolute -top-12 -left-32 transform -rotate-12">
+              <div className="absolute -top-12 right-0 transform rotate-12">
                 <div className="flex items-center gap-2">
-                  <ArrowUpLeft className="w-5 h-5 text-codersbee-vivid animate-bounce" />
                   <span className="text-codersbee-vivid font-medium">It's FREE!</span>
+                  <ArrowUpRight className="w-5 h-5 text-codersbee-vivid animate-bounce" />
                 </div>
               </div>
             </div>
           </div>
           <div className="flex-1">
             <img 
-              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" 
-              alt="Online coding class illustration" 
+              src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80" 
+              alt="AI and coding education illustration" 
               className="w-full max-w-lg mx-auto animate-float rounded-lg shadow-xl"
             />
           </div>
