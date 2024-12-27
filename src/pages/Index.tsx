@@ -7,6 +7,8 @@ import { CTASection } from "@/components/CTASection";
 import { Stats } from "@/components/Stats";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { InnovationHighlight } from "@/components/InnovationHighlight";
+import { SuccessStories } from "@/components/SuccessStories";
+import { FAQ } from "@/components/FAQ";
 
 const Index = () => {
   const courses = [
@@ -44,6 +46,8 @@ const Index = () => {
         <Stats />
       </section>
 
+      <SuccessStories />
+
       <section id="features" className="py-20 bg-gradient-to-b from-white to-codersbee-purple/20">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
@@ -79,6 +83,7 @@ const Index = () => {
         </div>
       </section>
 
+      <FAQ />
       <CTASection />
     </div>
   );
