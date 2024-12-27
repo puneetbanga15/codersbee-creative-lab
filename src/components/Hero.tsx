@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpLeft } from "lucide-react";
 
 export const Hero = () => {
   return (
@@ -9,7 +9,7 @@ export const Hero = () => {
           <div className="flex-1 text-center md:text-left">
             <div className="mb-6">
               <span className="bg-red-100 text-red-600 px-4 py-1 rounded-full text-sm font-medium">
-                Don't let your child fall behind
+                Don't let your child fall behind in the AI revolution
               </span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-codersbee-dark mb-6">
@@ -18,7 +18,7 @@ export const Hero = () => {
               <br />AI School
             </h1>
             <p className="text-xl mb-8 text-gray-600">
-              While AI is transforming the world, give your child the edge they need. 
+              While AI is transforming the world at lightning speed, give your child the edge they need. 
               Start their journey with personalized 1:1 classes.
             </p>
             <div className="relative inline-block">
@@ -28,10 +28,10 @@ export const Hero = () => {
               >
                 Book Trial Class Now
               </Button>
-              <div className="absolute -top-12 right-0 transform rotate-12">
+              <div className="absolute -top-12 -left-32 transform -rotate-12">
                 <div className="flex items-center gap-2">
+                  <ArrowUpLeft className="w-5 h-5 text-codersbee-vivid animate-bounce" />
                   <span className="text-codersbee-vivid font-medium">It's FREE!</span>
-                  <ArrowUpRight className="w-5 h-5 text-codersbee-vivid animate-bounce" />
                 </div>
               </div>
             </div>
