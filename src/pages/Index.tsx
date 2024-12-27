@@ -42,20 +42,7 @@ const Index = () => {
       
       <InnovationHighlight />
       
-      <section id="stats" className="py-16 bg-white">
-        <Stats />
-      </section>
-
       <SuccessStories />
-
-      <section id="features" className="py-20 bg-gradient-to-b from-white to-codersbee-purple/20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
-            Why Choose <span className="text-codersbee-vivid">CodersBee</span>?
-          </h2>
-          <Features />
-        </div>
-      </section>
 
       <section id="courses" className="py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -84,6 +71,11 @@ const Index = () => {
       </section>
 
       <FAQ />
+
+      <section id="stats" className="py-16 bg-white">
+        <Stats />
+      </section>
+
       <CTASection />
     </div>
   );

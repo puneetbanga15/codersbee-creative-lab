@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
 
 export const Hero = () => {
   return (
@@ -21,20 +20,12 @@ export const Hero = () => {
               While AI is transforming the world at lightning speed, give your child the edge they need. 
               Start their journey with personalized 1:1 classes.
             </p>
-            <div className="relative inline-block">
-              <Button 
-                className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white px-8 py-6 text-lg"
-                onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-              >
-                Book Trial Class Now
-              </Button>
-              <div className="absolute -top-12 right-0 transform rotate-12">
-                <div className="flex items-center gap-2">
-                  <span className="text-codersbee-vivid font-medium">It's FREE!</span>
-                  <ArrowUpRight className="w-5 h-5 text-codersbee-vivid animate-bounce" />
-                </div>
-              </div>
-            </div>
+            <Button 
+              className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white px-8 py-6 text-lg"
+              onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
+            >
+              Book Trial Class Now
+            </Button>
           </div>
           <div className="flex-1">
             <img 

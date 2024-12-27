@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { User, Trophy, Sparkles } from "lucide-react";
+import { User } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Navbar = () => {
   return (
@@ -14,23 +20,25 @@ export const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">Home</Link>
-            <Link to="/courses" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">Courses</Link>
+            <a href="/#courses" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">Courses</a>
             <Link to="/about" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">About Us</Link>
-            <Link to="/blogs" className="text-codersbee-dark hover:text-codersbee-vivid transition-colors">Blogs</Link>
             
-            <Link to="/parents/login" className="flex items-center space-x-1 text-codersbee-dark hover:text-codersbee-vivid transition-colors">
-              <User className="h-4 w-4" />
-              <span>Parent's Corner</span>
-            </Link>
-            <Link to="/showcase" className="flex items-center space-x-1 text-codersbee-dark hover:text-codersbee-vivid transition-colors">
-              <Trophy className="h-4 w-4" />
-              <span>Showcase</span>
-            </Link>
-            <Link to="/ai-corner" className="flex items-center space-x-1 text-codersbee-dark hover:text-codersbee-vivid transition-colors">
-              <Sparkles className="h-4 w-4" />
-              <span>AI Corner</span>
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link to="/parents/login" className="w-full">Parent Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/teachers/login" className="w-full">Teacher Login</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <Button className="bg-codersbee-vivid hover:bg-codersbee-vivid/90">Book a FREE trial</Button>
           </div>
