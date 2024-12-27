@@ -40,7 +40,12 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Button className="bg-codersbee-vivid hover:bg-codersbee-vivid/90">Book a FREE trial</Button>
+            <Button 
+              className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+              onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
+            >
+              Book Trial Class
+            </Button>
           </div>
           
           <button className="md:hidden text-codersbee-dark">

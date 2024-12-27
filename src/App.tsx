@@ -6,10 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import AboutUs from "./pages/AboutUs";
-import AICorner from "./pages/AICorner";
 import ParentsLogin from "./pages/ParentsLogin";
 import ParentsRegister from "./pages/ParentsRegister";
-import Parents from "./pages/Parents";
 
 const queryClient = new QueryClient();
 
@@ -22,8 +20,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/ai-corner" element={<AICorner />} />
-          <Route path="/parents" element={<Parents />} />
           <Route path="/parents/login" element={<ParentsLogin />} />
           <Route path="/parents/register" element={<ParentsRegister />} />
         </Routes>
