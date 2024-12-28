@@ -1,26 +1,15 @@
 import { motion } from "framer-motion";
-import { Sparkles, Brain } from "lucide-react";
+import { Brain } from "lucide-react";
 
 export const InnovationHighlight = () => {
   return (
-    <section className="py-16 bg-gradient-to-b from-codersbee-purple/20 to-white">
+    <section className="py-16 bg-gradient-to-b from-white to-codersbee-purple/20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-codersbee-dark">
-            Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
-          </h2>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12 text-center"
+          className="text-center"
         >
           <div className="inline-flex items-center bg-codersbee-vivid/10 px-6 py-3 rounded-full">
             <Brain className="w-5 h-5 text-codersbee-vivid mr-2" />
