@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Sparkles, Rocket, Brain, Zap } from "lucide-react";
+import { Sparkles, Brain } from "lucide-react";
 
 export const InnovationHighlight = () => {
   return (
@@ -14,12 +14,6 @@ export const InnovationHighlight = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-codersbee-dark">
             Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
           </h2>
-          <div className="flex items-center justify-center mb-4">
-            <Sparkles className="w-6 h-6 text-codersbee-vivid mr-2" />
-            <p className="text-xl text-gray-700">
-              Our students are building remarkable AI projects
-            </p>
-          </div>
         </motion.div>
 
         <motion.div
@@ -29,9 +23,9 @@ export const InnovationHighlight = () => {
           className="mt-12 text-center"
         >
           <div className="inline-flex items-center bg-codersbee-vivid/10 px-6 py-3 rounded-full">
-            <Zap className="w-5 h-5 text-codersbee-vivid mr-2" />
+            <Brain className="w-5 h-5 text-codersbee-vivid mr-2" />
             <p className="text-codersbee-dark font-medium">
-              Our students don't just learn - they create the future!
+              Your child could be our next champion! Join us in creating the future.
             </p>
           </div>
         </motion.div>

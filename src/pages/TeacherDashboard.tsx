@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClient } from '@supabase/supabase-js';
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
-
-const supabase = createClient(
-  "https://xyzcompanyidgoeshere.supabase.co",
-  "your-anon-key-goes-here"
-);
+import { supabase } from "@/lib/supabase";
 
 interface ClassSchedule {
   studentName: string;

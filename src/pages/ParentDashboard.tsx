@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClient } from '@supabase/supabase-js';
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
-
-const supabase = createClient(
-  "https://xyzcompanyidgoeshere.supabase.co",
-  "your-anon-key-goes-here"
-);
+import { supabase } from "@/lib/supabase";
 
 interface StudentInfo {
   name: string;
@@ -52,18 +47,16 @@ const ParentDashboard = () => {
       <div className="container mx-auto px-4 pt-24">
         <h1 className="text-3xl font-bold mb-8">Welcome to Parent Dashboard</h1>
         
-        <div className="grid gap-6">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Student Information</h2>
-            <div className="space-y-2">
-              <p><span className="font-medium">Name:</span> {studentInfo.name}</p>
-              <p><span className="font-medium">Course:</span> {studentInfo.course}</p>
-              <p><span className="font-medium">Next Class:</span> {format(studentInfo.nextClass, "PPpp")}</p>
-              <p><span className="font-medium">Teacher:</span> {studentInfo.teacher}</p>
-              <p><span className="font-medium">Next Fees Due:</span> {format(studentInfo.nextFeesDue, "PP")}</p>
-            </div>
-          </Card>
-        </div>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Student Information</h2>
+          <div className="space-y-2">
+            <p><span className="font-medium">Name:</span> {studentInfo.name}</p>
+            <p><span className="font-medium">Course:</span> {studentInfo.course}</p>
+            <p><span className="font-medium">Next Class:</span> {format(studentInfo.nextClass, "PPpp")}</p>
+            <p><span className="font-medium">Teacher:</span> {studentInfo.teacher}</p>
+            <p><span className="font-medium">Next Fees Due:</span> {format(studentInfo.nextFeesDue, "PP")}</p>
+          </div>
+        </Card>
       </div>
     </div>
   );
