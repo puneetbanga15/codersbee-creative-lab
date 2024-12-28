@@ -35,7 +35,7 @@ export const Navbar = () => {
                   <Link to="/parents/login" className="w-full">Parent Login</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/teachers/login" className="w-full">Teacher Login</Link>
+                  <Link to="/parents/login" className="w-full">Teacher Login</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
