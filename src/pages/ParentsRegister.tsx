@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
+import { createClient } from '@supabase/supabase-js';
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,12 +16,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const supabase = createClient(
+  "https://xyzcompanyidgoeshere.supabase.co",
+  "your-anon-key-goes-here"
+);
 
 const formSchema = z.object({
   parentName: z.string().min(2, "Name must be at least 2 characters"),
   studentName: z.string().min(2, "Student name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  country: z.string().min(1, "Please select your country"),
+  timezone: z.string().min(1, "Please select your timezone"),
 });
 
 const ParentsRegister = () => {
@@ -32,14 +48,32 @@ const ParentsRegister = () => {
       studentName: "",
       email: "",
       phone: "",
+      password: "",
+      country: "",
+      timezone: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Here you would typically send the data to your backend
-      console.log("Form submitted:", values);
-      toast.success("Registration successful!");
+      const { data, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          data: {
+            parent_name: values.parentName,
+            student_name: values.studentName,
+            phone: values.phone,
+            country: values.country,
+            timezone: values.timezone,
+            status: 'pending'
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success("Registration successful! Our admin team will contact you soon.");
       navigate("/parents/login");
     } catch (error) {
       toast.error("Registration failed. Please try again.");
@@ -89,11 +123,20 @@ const ParentsRegister = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="Enter your email"
-                        {...field}
-                      />
+                      <Input type="email" placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Create a password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,12 +149,54 @@ const ParentsRegister = () => {
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="Enter your phone number"
-                        {...field}
-                      />
+                      <Input type="tel" placeholder="Enter your phone number" {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your country" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="IN">India</SelectItem>
+                        <SelectItem value="US">United States</SelectItem>
+                        <SelectItem value="UK">United Kingdom</SelectItem>
+                        <SelectItem value="AU">Australia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="timezone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Timezone</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your timezone" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Asia/Kolkata">India (IST)</SelectItem>
+                        <SelectItem value="America/New_York">US Eastern</SelectItem>
+                        <SelectItem value="Europe/London">UK (GMT/BST)</SelectItem>
+                        <SelectItem value="Australia/Sydney">Australia (AEST)</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
