@@ -1,16 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
-
-// Initialize Supabase client
-const supabase = createClient(
-  "https://xyzcompanyidgoeshere.supabase.co",  // Replace with your Supabase URL
-  "your-anon-key-goes-here"  // Replace with your anon key
-);
+import { supabase } from "@/lib/supabase";
 
 const ParentsLogin = () => {
   const [email, setEmail] = useState("");
@@ -32,9 +26,10 @@ const ParentsLogin = () => {
         toast.error(error.message);
       } else {
         toast.success("Logged in successfully!");
-        navigate("/parents");
+        navigate("/parents/dashboard");
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
