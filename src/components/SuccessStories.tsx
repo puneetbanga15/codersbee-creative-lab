@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Trophy, Star, Award } from "lucide-react";
 import { motion } from "framer-motion";
+import { LearningJourney } from "./LearningJourney";
 
 const ChampionJourney = ({ icon: Icon, title, milestones, color }) => (
   <Card className={`p-6 ${color} backdrop-blur`}>
