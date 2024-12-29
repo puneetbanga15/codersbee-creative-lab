@@ -24,6 +24,91 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          is_parent: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          is_parent?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          is_parent?: boolean | null
+        }
+        Relationships: []
+      }
+      progress_milestones: {
+        Row: {
+          achieved_at: string
+          created_at: string
+          description: string | null
+          id: string
+          student_id: string | null
+          title: string
+        }
+        Insert: {
+          achieved_at?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          student_id?: string | null
+          title: string
+        }
+        Update: {
+          achieved_at?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          student_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_milestones_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: string
+          parent_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          full_name: string
+          id?: string
+          parent_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          parent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

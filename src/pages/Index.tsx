@@ -39,14 +39,12 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
-      
       <InnovationHighlight />
-      
       <SuccessStories />
 
-      <section id="courses" className="py-20 bg-white">
+      <section id="courses" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-codersbee-dark">
             Learning Tracks Offered By Us
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -57,13 +55,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="py-20 bg-codersbee-purple/10">
+      <section className="py-16 bg-codersbee-purple/10">
         <WhyChooseUs />
       </section>
 
-      <section id="testimonials" className="py-20 bg-white">
+      <section id="testimonials" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-codersbee-dark">
             What Our Parents Say
           </h2>
           <TestimonialCarousel />
@@ -72,7 +70,7 @@ const Index = () => {
 
       <FAQ />
 
-      <section id="stats" className="py-16 bg-white">
+      <section id="stats" className="py-12 bg-white">
         <Stats />
       </section>
 
