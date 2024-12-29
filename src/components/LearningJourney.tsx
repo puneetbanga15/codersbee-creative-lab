@@ -4,24 +4,36 @@ import { Milestone } from "lucide-react";
 export const LearningJourney = () => {
   const milestones = [
     {
-      title: "Getting Started",
-      description: "Introduction to coding concepts and basic AI understanding",
-      date: "Week 1-4"
+      title: "Fundamentals",
+      description: "Scratch, Javascript or Python based on age and prior knowledge",
+      date: "2-3 months"
     },
     {
       title: "Building Foundations",
-      description: "Core programming skills and AI tools exploration",
-      date: "Week 5-8"
+      description: "Detailed understanding of advanced concepts",
+      date: "2-3 months"
     },
     {
-      title: "Creating Projects",
-      description: "Hands-on project development with AI integration",
-      date: "Week 9-12"
+      title: "Creating Coding Projects",
+      description: "Building real-world applications",
+      date: "3-4 months",
+      branch: "coding"
+    },
+    {
+      title: "Creating AI Projects",
+      description: "Developing AI-powered solutions",
+      date: "3-4 months",
+      branch: "ai"
     },
     {
       title: "Advanced Concepts",
-      description: "Complex problem-solving and AI application mastery",
-      date: "Week 13-16"
+      description: "Complex problem-solving and integration",
+      date: "4-5 months"
+    },
+    {
+      title: "Senior Hackathons",
+      description: "Ready for advanced competitions",
+      date: "Final Stage"
     }
   ];
 
@@ -30,13 +42,16 @@ export const LearningJourney = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-10 text-codersbee-dark">
           Your Learning Journey
+          <span className="block text-sm text-gray-600 mt-2">
+            Typically 2 classes per week
+          </span>
         </h2>
         <div className="relative">
-          {/* Connection Line */}
+          {/* Main Connection Line */}
           <div className="absolute left-1/2 top-0 h-full w-0.5 bg-codersbee-vivid/20 -translate-x-1/2" />
           
           {/* Milestones */}
-          <div className="space-y-12">
+          <div className="space-y-16">
             {milestones.map((milestone, index) => (
               <motion.div
                 key={index}

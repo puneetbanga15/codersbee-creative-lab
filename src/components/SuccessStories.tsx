@@ -1,11 +1,78 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Trophy, Star, Award, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trophy, Star, Award } from "lucide-react";
 import { motion } from "framer-motion";
-import { LearningJourney } from "./LearningJourney";
+
+const ChampionJourney = ({ icon: Icon, title, milestones, color }) => (
+  <Card className={`p-6 ${color} backdrop-blur`}>
+    <div className="flex items-start gap-4">
+      <div className={`${color.replace('from-', 'bg-').split(' ')[0]} p-3 rounded-lg`}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div className="flex-1">
+        <h3 className="text-xl font-semibold mb-4">{title}</h3>
+        <div className="relative">
+          <div className="absolute left-2 top-0 h-full w-0.5 bg-gray-200" />
+          <div className="space-y-4 relative">
+            {milestones.map((milestone, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center gap-3 pl-6"
+              >
+                <div className="absolute left-0 w-4 h-4 bg-white border-2 border-gray-300 rounded-full" />
+                <span className="text-gray-700">{milestone}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
 
 export const SuccessStories = () => {
+  const champions = [
+    {
+      icon: Trophy,
+      title: "Shuvam's Journey",
+      color: "bg-gradient-to-br from-codersbee-yellow/30 to-white",
+      milestones: [
+        "Started coding at age 8",
+        "Mastered Scratch in 6 months",
+        "Completed Python fundamentals",
+        "Created AI story generator",
+        "Building AI travel planner"
+      ]
+    },
+    {
+      icon: Star,
+      title: "Vamshika's Journey",
+      color: "bg-gradient-to-br from-codersbee-green/30 to-white",
+      milestones: [
+        "Initially hesitant about coding",
+        "Found passion through mentorship",
+        "Mastered core programming concepts",
+        "Won coding competition",
+        "Inspiring other young coders"
+      ]
+    },
+    {
+      icon: Award,
+      title: "Ayan's Journey",
+      color: "bg-gradient-to-br from-codersbee-orange/30 to-white",
+      milestones: [
+        "Natural problem-solver",
+        "Quick learner in Python",
+        "Advanced AI concepts",
+        "Created recipe generator",
+        "Working on AI innovations"
+      ]
+    }
+  ];
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -13,87 +80,22 @@ export const SuccessStories = () => {
           Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
         </h2>
         
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-codersbee-yellow/30 to-white backdrop-blur h-full">
-              <div className="flex items-start gap-4">
-                <div className="bg-yellow-100 p-3 rounded-lg">
-                  <Trophy className="w-6 h-6 text-yellow-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Shuvam's Coding Journey</h3>
-                  <p className="text-gray-600 mb-4">
-                    Starting his journey at age 8, Shuvam mastered Scratch, Python, and Javascript over 3 years. 
-                    He's now utilizing AI tools to create books and is developing what he calls "world's best AI travel planner".
-                  </p>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full flex items-center gap-2 hover:bg-yellow-50" disabled>
-                      <ExternalLink className="w-4 h-4" />
-                      Video Demo Coming Soon
-                    </Button>
-                    <Button variant="outline" className="w-full flex items-center gap-2 hover:bg-yellow-50" disabled>
-                      <ExternalLink className="w-4 h-4" />
-                      Project Showcase Coming Soon
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-codersbee-green/30 to-white backdrop-blur h-full">
-              <div className="flex items-start gap-4">
-                <div className="bg-green-100 p-3 rounded-lg">
-                  <Star className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Vamshika's Coding Victory</h3>
-                  <p className="text-gray-600 mb-4">
-                    From having no initial interest in coding, Vamshika's journey with Manisha ma'am transformed her into 
-                    a passionate coder. Her dedication led to winning a $100 coding competition, showcasing her remarkable growth.
-                  </p>
-                  <Button variant="outline" className="w-full flex items-center gap-2 hover:bg-green-50" disabled>
-                    <ExternalLink className="w-4 h-4" />
-                    Success Story Coming Soon
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-codersbee-orange/30 to-white backdrop-blur h-full">
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-100 p-3 rounded-lg">
-                  <Award className="w-6 h-6 text-orange-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Ayan's AI Innovation</h3>
-                  <p className="text-gray-600 mb-4">
-                    A brilliant coder with a hacker mindset, Ayan mastered coding fundamentals and continues his journey into 
-                    advanced AI. His innovative AI-powered recipe generator showcases his technical prowess.
-                  </p>
-                  <Button variant="outline" className="w-full flex items-center gap-2 hover:bg-orange-50" disabled>
-                    <ExternalLink className="w-4 h-4" />
-                    Project Demo Coming Soon
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+        <div className="space-y-6">
+          {champions.map((champion, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.2 }}
+            >
+              <ChampionJourney {...champion} />
+            </motion.div>
+          ))}
         </div>
 
-        <LearningJourney />
+        <div className="mt-16">
+          <LearningJourney />
+        </div>
       </div>
     </section>
   );
