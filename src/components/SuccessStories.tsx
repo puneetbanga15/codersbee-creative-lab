@@ -5,29 +5,29 @@ import { motion } from "framer-motion";
 import { LearningJourney } from "./LearningJourney";
 
 const ChampionJourney = ({ icon: Icon, title, milestones, color }) => (
-  <Card className={`p-6 ${color} backdrop-blur`}>
-    <div className="flex items-start gap-4">
-      <div className={`${color.replace('from-', 'bg-').split(' ')[0]} p-3 rounded-lg`}>
-        <Icon className="w-6 h-6" />
+  <Card className={`p-6 ${color} backdrop-blur h-full`}>
+    <div className="flex flex-col h-full">
+      <div className="flex items-start gap-4 mb-4">
+        <div className={`${color.replace('from-', 'bg-').split(' ')[0]} p-3 rounded-lg`}>
+          <Icon className="w-6 h-6" />
+        </div>
+        <h3 className="text-xl font-semibold">{title}</h3>
       </div>
-      <div className="flex-1">
-        <h3 className="text-xl font-semibold mb-4">{title}</h3>
-        <div className="relative">
-          <div className="absolute left-2 top-0 h-full w-0.5 bg-gray-200" />
-          <div className="space-y-4 relative">
-            {milestones.map((milestone, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-3 pl-6"
-              >
-                <div className="absolute left-0 w-4 h-4 bg-white border-2 border-gray-300 rounded-full" />
-                <span className="text-gray-700">{milestone}</span>
-              </motion.div>
-            ))}
-          </div>
+      <div className="relative flex-1">
+        <div className="absolute left-2 top-0 h-full w-0.5 bg-gray-200" />
+        <div className="space-y-3 relative">
+          {milestones.map((milestone, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center gap-3 pl-6"
+            >
+              <div className="absolute left-0 w-4 h-4 bg-white border-2 border-gray-300 rounded-full" />
+              <span className="text-sm text-gray-700">{milestone}</span>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@ export const SuccessStories = () => {
           Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
         </h2>
         
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {champions.map((champion, index) => (
             <motion.div
               key={index}
@@ -93,6 +93,18 @@ export const SuccessStories = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="mt-12 text-center"
+        >
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+            Every child's journey is unique, shaped by their interests, pace, and learning style. 
+            While these stories showcase different paths to success, we customize our approach to match 
+            your child's individual needs and aspirations.
+          </p>
+        </motion.div>
 
         <div className="mt-16">
           <LearningJourney />
