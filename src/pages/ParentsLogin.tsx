@@ -1,96 +1,32 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { Navbar } from "@/components/Navbar";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ParentsLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Logged in successfully!");
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
         navigate("/parents/dashboard");
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error("An unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="pt-24 px-4">
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            Parent's Corner Login
-          </h2>
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="mt-1"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="mt-1"
-                placeholder="Enter your password"
-              />
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <button
-              onClick={() => navigate("/parents/register")}
-              className="text-codersbee-vivid hover:underline"
-            >
-              Register here
-            </button>
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-center mb-8">Parent Login</h1>
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          theme="light"
+          providers={[]}
+        />
       </div>
     </div>
   );

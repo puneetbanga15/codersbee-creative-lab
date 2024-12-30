@@ -1,10 +1,44 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Trophy, Star, Award } from "lucide-react";
+import { Trophy, Star, Award, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { LearningJourney } from "./LearningJourney";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-const ChampionJourney = ({ icon: Icon, title, milestones, color }) => (
+const ChampionDetails = ({ name, feedback, projectLinks }) => (
+  <div className="space-y-6">
+    <div>
+      <h4 className="text-lg font-semibold mb-2">Parent's Feedback</h4>
+      <blockquote className="border-l-4 border-codersbee-vivid pl-4 italic">
+        {feedback}
+      </blockquote>
+    </div>
+    <div>
+      <h4 className="text-lg font-semibold mb-2">Projects</h4>
+      <div className="space-y-2">
+        {projectLinks.map((link, index) => (
+          <a
+            key={index}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-codersbee-vivid hover:underline"
+          >
+            {link.title} <ExternalLink className="w-4 h-4" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const ChampionJourney = ({ icon: Icon, title, milestones, color, details }) => (
   <Card className={`p-6 ${color} backdrop-blur h-full`}>
     <div className="flex flex-col h-full">
       <div className="flex items-start gap-4 mb-4">
@@ -30,6 +64,19 @@ const ChampionJourney = ({ icon: Icon, title, milestones, color }) => (
           ))}
         </div>
       </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button className="mt-4 text-codersbee-vivid hover:underline flex items-center gap-1">
+            View Details <ExternalLink className="w-4 h-4" />
+          </button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+          <ChampionDetails {...details} />
+        </DialogContent>
+      </Dialog>
     </div>
   </Card>
 );
@@ -46,7 +93,15 @@ export const SuccessStories = () => {
         "Completed Python fundamentals",
         "Created AI story generator",
         "Building AI travel planner"
-      ]
+      ],
+      details: {
+        name: "Shuvam",
+        feedback: "Shuvam has shown remarkable progress. The hands-on approach and project-based learning have kept him engaged and excited about coding.",
+        projectLinks: [
+          { title: "AI Story Generator", url: "#" },
+          { title: "Travel Planner (In Progress)", url: "#" }
+        ]
+      }
     },
     {
       icon: Star,
@@ -58,7 +113,15 @@ export const SuccessStories = () => {
         "Mastered core programming concepts",
         "Won coding competition",
         "Inspiring other young coders"
-      ]
+      ],
+      details: {
+        name: "Vamshika",
+        feedback: "Vamshika's transformation has been incredible. The supportive environment and practical projects have boosted her confidence.",
+        projectLinks: [
+          { title: "Coding Competition Project", url: "#" },
+          { title: "Mentorship Program Feedback", url: "#" }
+        ]
+      }
     },
     {
       icon: Award,
@@ -70,7 +133,15 @@ export const SuccessStories = () => {
         "Advanced AI concepts",
         "Created recipe generator",
         "Working on AI innovations"
-      ]
+      ],
+      details: {
+        name: "Ayan",
+        feedback: "Ayan has excelled in his coding journey. The hands-on projects have allowed him to apply his knowledge effectively.",
+        projectLinks: [
+          { title: "Recipe Generator", url: "#" },
+          { title: "AI Innovations Showcase", url: "#" }
+        ]
+      }
     }
   ];
 

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { GraduationCap, Clock, DollarSign } from "lucide-react";
+import { GraduationCap, Clock, DollarSign, Code } from "lucide-react";
 
 export const WhyChooseUs = () => {
   const features = [
@@ -14,6 +14,11 @@ export const WhyChooseUs = () => {
       description: "Choose class times that work best for you, with easy rescheduling options to accommodate your busy lifestyle.",
     },
     {
+      icon: <Code className="w-12 h-12" />,
+      title: "Hands-on Learning",
+      description: "We focus on practical, project-based learning where every class results in a working project that your child can proudly showcase.",
+    },
+    {
       icon: <DollarSign className="w-12 h-12" />,
       title: "Transparent Pricing",
       description: "No long-term commitments required. Pay as you go with clear, upfront pricing and flexible payment options.",
@@ -25,7 +30,7 @@ export const WhyChooseUs = () => {
       <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-codersbee-dark">
         What Differentiates Us From Others
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map((feature, index) => (
           <motion.div
             key={index}
