@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 const champions = [
@@ -22,9 +28,9 @@ const champions = [
 
 export const SuccessStories = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedChampion, setSelectedChampion] = useState(null);
+  const [selectedChampion, setSelectedChampion] = useState<typeof champions[0] | null>(null);
 
-  const handleOpenDialog = (champion) => {
+  const handleOpenDialog = (champion: typeof champions[0]) => {
     setSelectedChampion(champion);
     setOpenDialog(true);
   };
@@ -73,14 +79,17 @@ export const SuccessStories = () => {
         </div>
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <Dialog.Overlay />
-          <Dialog.Content>
-            <Dialog.Title>{selectedChampion?.name}</Dialog.Title>
-            <Dialog.Description>
-              {selectedChampion?.description}
-            </Dialog.Description>
-            <Button onClick={() => setOpenDialog(false)}>Close</Button>
-          </Dialog.Content>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedChampion?.name}</DialogTitle>
+              <DialogDescription>
+                {selectedChampion?.description}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4">
+              <Button onClick={() => setOpenDialog(false)}>Close</Button>
+            </div>
+          </DialogContent>
         </Dialog>
       </div>
     </section>
