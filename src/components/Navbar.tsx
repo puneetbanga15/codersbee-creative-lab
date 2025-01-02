@@ -15,7 +15,11 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/">
-              <img src="/CodersBeeLogo.png" alt="CodersBee Logo" className="h-10" />
+              <img 
+                src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+                alt="CodersBee Logo" 
+                className="h-12" 
+              />
             </Link>
           </div>
           
