@@ -5,7 +5,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogOverlay
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -29,9 +28,9 @@ const champions = [
 
 export const SuccessStories = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedChampion, setSelectedChampion] = useState(null);
+  const [selectedChampion, setSelectedChampion] = useState<typeof champions[0] | null>(null);
 
-  const handleOpenDialog = (champion) => {
+  const handleOpenDialog = (champion: typeof champions[0]) => {
     setSelectedChampion(champion);
     setOpenDialog(true);
   };
@@ -62,20 +61,21 @@ export const SuccessStories = () => {
                 alt={champion.name}
                 className="w-32 h-32 mx-auto rounded-full mb-4 object-cover"
               />
-              <h3 className="text-xl font-semibold mb-2">{champion.name}</h3>
-              <p className="text-gray-600 mb-4">{champion.description}</p>
-              <Button
-                onClick={() => handleOpenDialog(champion)}
-                className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white"
-              >
-                View Journey
-              </Button>
+              <h3 className="text-xl font-semibold mb-2 text-center">{champion.name}</h3>
+              <p className="text-gray-600 mb-4 text-center">{champion.description}</p>
+              <div className="text-center">
+                <Button
+                  onClick={() => handleOpenDialog(champion)}
+                  className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white"
+                >
+                  View Journey
+                </Button>
+              </div>
             </div>
           ))}
         </div>
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogOverlay />
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{selectedChampion?.name}</DialogTitle>
@@ -83,7 +83,9 @@ export const SuccessStories = () => {
                 {selectedChampion?.description}
               </DialogDescription>
             </DialogHeader>
-            <Button onClick={() => setOpenDialog(false)}>Close</Button>
+            <div className="mt-4">
+              <Button onClick={() => setOpenDialog(false)}>Close</Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
