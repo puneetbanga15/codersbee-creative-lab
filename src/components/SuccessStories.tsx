@@ -11,19 +11,19 @@ import { Button } from '@/components/ui/button';
 
 const champions = [
   {
-    name: "Alice",
-    image: "/lovable-uploads/alice.png",
-    description: "Alice has excelled in coding and AI projects.",
+    name: "Shuvam",
+    image: "/placeholder.svg",
+    description: "Shuvam has mastered Python and created amazing AI projects.",
   },
   {
-    name: "Bob",
-    image: "/lovable-uploads/bob.png",
-    description: "Bob loves creating games and interactive applications.",
+    name: "Ayan",
+    image: "/placeholder.svg",
+    description: "Ayan excels in game development and web applications.",
   },
   {
-    name: "Charlie",
-    image: "/lovable-uploads/charlie.png",
-    description: "Charlie is passionate about AI and robotics.",
+    name: "Vamshika",
+    image: "/placeholder.svg",
+    description: "Vamshika is passionate about robotics and machine learning.",
   },
 ];
 
@@ -45,8 +45,8 @@ export const SuccessStories = () => {
         
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center mb-12">
           <img 
-            src="/lovable-uploads/7ee9aa6b-bb6d-485c-8a7c-bd494a05aa2a.png" 
-            alt="Online coding class" 
+            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e" 
+            alt="White robot" 
             className="w-full md:w-1/2 rounded-lg shadow-xl"
           />
           <img 
