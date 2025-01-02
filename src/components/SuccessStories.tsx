@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogOverlay
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 const champions = [
@@ -73,14 +80,16 @@ export const SuccessStories = () => {
         </div>
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <Dialog.Overlay />
-          <Dialog.Content>
-            <Dialog.Title>{selectedChampion?.name}</Dialog.Title>
-            <Dialog.Description>
-              {selectedChampion?.description}
-            </Dialog.Description>
+          <DialogOverlay />
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedChampion?.name}</DialogTitle>
+              <DialogDescription>
+                {selectedChampion?.description}
+              </DialogDescription>
+            </DialogHeader>
             <Button onClick={() => setOpenDialog(false)}>Close</Button>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog>
       </div>
     </section>
