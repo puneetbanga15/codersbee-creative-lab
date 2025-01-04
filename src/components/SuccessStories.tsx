@@ -78,16 +78,33 @@ export const SuccessStories = () => {
                   <motion.div
                     key={stepIndex}
                     initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: stepIndex * 0.1 }}
+                    whileInView={{ 
+                      opacity: 1, 
+                      x: 0,
+                      transition: {
+                        duration: 0.5,
+                        delay: stepIndex * 0.1,
+                        type: "spring",
+                        stiffness: 100
+                      }
+                    }}
                     className="flex items-center"
                   >
-                    <div className="relative">
+                    <motion.div 
+                      className="relative"
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
                       <div className="w-4 h-4 rounded-full bg-codersbee-vivid"></div>
                       {stepIndex !== champion.journey.length - 1 && (
-                        <div className="absolute top-4 left-2 w-0.5 h-12 bg-codersbee-vivid"></div>
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          animate={{ height: "3rem" }}
+                          transition={{ duration: 0.3, delay: stepIndex * 0.1 }}
+                          className="absolute top-4 left-2 w-0.5 bg-codersbee-vivid"
+                        />
                       )}
-                    </div>
+                    </motion.div>
                     <p className="ml-4 text-gray-700">{step}</p>
                   </motion.div>
                 ))}
@@ -97,7 +114,7 @@ export const SuccessStories = () => {
                   onClick={() => handleOpenDialog(champion)}
                   className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white"
                 >
-                  View Full Journey
+                  See More Details
                 </Button>
               </div>
             </motion.div>

@@ -9,6 +9,7 @@ import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { InnovationHighlight } from "@/components/InnovationHighlight";
 import { SuccessStories } from "@/components/SuccessStories";
 import { FAQ } from "@/components/FAQ";
+import { ProblemAgitation } from "@/components/ProblemAgitation";
 
 const Index = () => {
   const courses = [
@@ -18,20 +19,22 @@ const Index = () => {
       ageRange: "Recommended for 6-9 years old kids",
       features: ["Code.Org, Scratch, HTML and CSS", "Fundamentals", "Gamified", "Fun and Interactive"],
       backgroundColor: "bg-codersbee-yellow/30",
+      showArrow: true
     },
     {
-      title: "Advanced Coding for Innovators",
+      title: "Coding for Innovators",
       image: "/placeholder.svg",
       ageRange: "Recommended for kids aged 9-12",
       features: ["Javascript, Python and Fundamentals of AI", "Coding Projects", "Real world problems", "Gen AI Creativity"],
       backgroundColor: "bg-codersbee-orange/30",
+      showArrow: true
     },
     {
       title: "AI for Budding Entrepreneurs",
       image: "/placeholder.svg",
       ageRange: "Recommended for kids aged 12 and above",
       features: ["Generative AI - From basics to advanced", "AI Projects", "OpenAI APIs", "Cloud Hosting"],
-      backgroundColor: "bg-codersbee-green/30",
+      backgroundColor: "bg-codersbee-green/30"
     },
   ];
 
@@ -39,6 +42,7 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
+      <ProblemAgitation />
       <InnovationHighlight />
       <SuccessStories />
 
