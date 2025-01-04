@@ -46,12 +46,12 @@ const Index = () => {
       <InnovationHighlight />
       <SuccessStories />
 
-      <section className="py-16 bg-white">
+      <section className="py-8 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-codersbee-dark">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-codersbee-dark">
             Ready to Start Your Child's AI Journey?
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-16">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             We've crafted specialized learning tracks that adapt to your child's age and skill level. 
             Each track is designed to nurture their creativity while building strong foundations in coding and AI.
             Let's explore the perfect path for your child:
@@ -59,7 +59,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="courses" className="py-16 bg-white">
+      <section id="courses" className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-codersbee-dark">
             Learning Tracks Offered By Us
@@ -72,7 +72,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-codersbee-purple/10">
+      <section className="py-16 bg-gradient-to-b from-white to-codersbee-purple/10">
+        <div className="container mx-auto px-4 text-center mb-8">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            While many platforms offer coding courses, what truly sets us apart is our commitment to delivering an exceptional learning experience.
+            Here's why parents and students choose CodersBee:
+          </p>
+        </div>
         <WhyChooseUs />
       </section>
 
