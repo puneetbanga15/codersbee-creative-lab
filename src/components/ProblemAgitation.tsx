@@ -4,8 +4,8 @@ export const ProblemAgitation = () => {
   const questions = [
     "Did you know that 65% of today's students will work in jobs that don't even exist yet?",
     "Are you aware that the AI market is projected to reach $1.3 trillion by 2032, growing at an incredible rate of 38% annually?",
-    "Is your child prepared for a world where AI is expected to automate 85 million jobs while creating 97 million new roles by 2025?",
-    "Did you know that companies using AI and automation are 33% more likely to be high-performing organizations?"
+    "By 2035, experts predict that 80% of all jobs will require some form of AI literacy and coding skills. Is your child ready?",
+    "Research shows that children who learn AI and coding early are 3 times more likely to become innovators in emerging technologies."
   ];
 
   return (
