@@ -129,9 +129,14 @@ export const SuccessStories = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mt-12"
         >
-          <p className="text-2xl font-semibold text-codersbee-vivid bg-codersbee-purple/20 p-6 rounded-lg inline-block">
-            "Every journey is unique, but success with CodersBee is a guarantee. Join us to unlock your child's coding potential!"
-          </p>
+          <div className="max-w-3xl mx-auto bg-gradient-to-r from-codersbee-purple/30 to-codersbee-vivid/20 p-8 rounded-xl shadow-lg">
+            <p className="text-2xl font-semibold text-codersbee-dark leading-relaxed">
+              Every journey is unique, but success with CodersBee is a guarantee.
+              <span className="block mt-2 text-codersbee-vivid">
+                Join us to unlock your child's potential to become a future AI innovator and leader!
+              </span>
+            </p>
+          </div>
         </motion.div>
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
