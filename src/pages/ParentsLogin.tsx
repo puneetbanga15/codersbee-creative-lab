@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, MessageCircle, GraduationCap, Link, ClipboardList, Calendar, CreditCard } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -12,6 +12,23 @@ const ParentsLogin = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
+        // Create profile if it doesn't exist
+        const createProfile = async () => {
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', session.user.id)
+            .single();
+
+          if (!existingProfile) {
+            await supabase.from('profiles').insert({
+              id: session.user.id,
+              is_parent: true
+            });
+          }
+        };
+
+        createProfile();
         navigate("/parents/dashboard");
       }
     });
@@ -49,7 +66,7 @@ const ParentsLogin = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Class Scheduling</h3>
-                  <p className="text-gray-600">View upcoming classes and request rescheduling with ease</p>
+                  <p className="text-gray-600">View and request class rescheduling with ease</p>
                 </div>
               </CardContent>
             </Card>
@@ -69,22 +86,10 @@ const ParentsLogin = () => {
             <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
               <CardContent className="flex items-start gap-4 p-4">
                 <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                  <ClipboardList className="w-6 h-6 text-codersbee-vivid" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Homework & Assignments</h3>
-                  <p className="text-gray-600">Access and track assignments and learning materials</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-              <CardContent className="flex items-start gap-4 p-4">
-                <div className="p-2 bg-codersbee-purple/20 rounded-lg">
                   <BookOpen className="w-6 h-6 text-codersbee-vivid" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">Advanced Learning Resources</h3>
+                  <h3 className="font-semibold mb-1">Learning Resources</h3>
                   <p className="text-gray-600">Access curated videos and advanced courses</p>
                 </div>
               </CardContent>
