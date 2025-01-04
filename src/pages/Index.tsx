@@ -18,16 +18,14 @@ const Index = () => {
       image: "/placeholder.svg",
       ageRange: "Recommended for 6-9 years old kids",
       features: ["Code.Org, Scratch, HTML and CSS", "Fundamentals", "Gamified", "Fun and Interactive"],
-      backgroundColor: "bg-codersbee-yellow/30",
-      showArrow: true
+      backgroundColor: "bg-codersbee-yellow/30"
     },
     {
       title: "Coding for Innovators",
       image: "/placeholder.svg",
       ageRange: "Recommended for kids aged 9-12",
       features: ["Javascript, Python and Fundamentals of AI", "Coding Projects", "Real world problems", "Gen AI Creativity"],
-      backgroundColor: "bg-codersbee-orange/30",
-      showArrow: true
+      backgroundColor: "bg-codersbee-orange/30"
     },
     {
       title: "AI for Budding Entrepreneurs",
