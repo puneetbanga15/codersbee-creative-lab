@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
+import { User, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -30,6 +30,16 @@ export const Navbar = () => {
             <a href="/#courses" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Courses</a>
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">About Us</Link>
             
+            <a 
+              href="https://wa.me/917087884023" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold"
+            >
+              <MessageCircle className="h-5 w-5" />
+              WhatsApp
+            </a>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -69,6 +79,15 @@ export const Navbar = () => {
               <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
                 <a href="/#courses" className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
                 <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
+                <a 
+                  href="https://wa.me/917087884023" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  WhatsApp
+                </a>
                 <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
                 <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
                 <Button 

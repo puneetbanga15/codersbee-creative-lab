@@ -60,15 +60,14 @@ export const SuccessStories = () => {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <span className="text-gray-600">or</span>
-            <a 
-              href="https://wa.me/917087884023" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-codersbee-vivid hover:text-codersbee-vivid/90 font-semibold"
+            <Button
+              variant="outline"
+              className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 hover:bg-green-50 border-green-600"
+              onClick={() => window.open('https://wa.me/917087884023', '_blank')}
             >
               <MessageCircle className="h-5 w-5" />
-              Message us on WhatsApp: +91-7087884023
-            </a>
+              Message us on WhatsApp
+            </Button>
           </div>
         </div>
       </div>
