@@ -130,6 +130,7 @@ const ParentsLogin = () => {
               theme="light"
               providers={[]}
               view="sign_in"
+              showLinks={false}
             />
           </CardContent>
         </Card>
