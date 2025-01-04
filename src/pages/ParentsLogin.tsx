@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, MessageCircle, GraduationCap, Link, ClipboardList } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Link, ClipboardList, Calendar, CreditCard } from "lucide-react";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -45,6 +45,18 @@ const ParentsLogin = () => {
             <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
               <CardContent className="flex items-start gap-4 p-4">
                 <div className="p-2 bg-codersbee-purple/20 rounded-lg">
+                  <Calendar className="w-6 h-6 text-codersbee-vivid" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Class Scheduling</h3>
+                  <p className="text-gray-600">View upcoming classes and request rescheduling with ease</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
+              <CardContent className="flex items-start gap-4 p-4">
+                <div className="p-2 bg-codersbee-purple/20 rounded-lg">
                   <MessageCircle className="w-6 h-6 text-codersbee-vivid" />
                 </div>
                 <div>
@@ -74,6 +86,18 @@ const ParentsLogin = () => {
                 <div>
                   <h3 className="font-semibold mb-1">Advanced Learning Resources</h3>
                   <p className="text-gray-600">Access curated videos and advanced courses</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
+              <CardContent className="flex items-start gap-4 p-4">
+                <div className="p-2 bg-codersbee-purple/20 rounded-lg">
+                  <CreditCard className="w-6 h-6 text-codersbee-vivid" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Easy Fee Payments</h3>
+                  <p className="text-gray-600">Manage and track fee payments securely online</p>
                 </div>
               </CardContent>
             </Card>
