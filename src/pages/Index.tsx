@@ -46,6 +46,19 @@ const Index = () => {
       <InnovationHighlight />
       <SuccessStories />
 
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-codersbee-dark">
+            Ready to Start Your Child's AI Journey?
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-16">
+            We've crafted specialized learning tracks that adapt to your child's age and skill level. 
+            Each track is designed to nurture their creativity while building strong foundations in coding and AI.
+            Let's explore the perfect path for your child:
+          </p>
+        </div>
+      </section>
+
       <section id="courses" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-codersbee-dark">
