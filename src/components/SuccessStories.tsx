@@ -57,9 +57,12 @@ export const SuccessStories = () => {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">
-          Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          Discover How Our Students Are
         </h2>
+        <h3 className="text-2xl md:text-3xl font-bold text-center mb-10 text-codersbee-vivid">
+          Leading the AI Revolution
+        </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {champions.map((champion, index) => (

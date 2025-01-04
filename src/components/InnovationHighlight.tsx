@@ -14,7 +14,7 @@ export const InnovationHighlight = () => {
           <div className="inline-flex items-center bg-codersbee-vivid/10 px-6 py-3 rounded-full">
             <Brain className="w-5 h-5 text-codersbee-vivid mr-2" />
             <p className="text-codersbee-dark font-medium">
-              Empowering young minds with AI and coding skills
+              CodersBee is the necessary bridge between traditional education and the demands of tomorrow's AI-powered world
             </p>
           </div>
         </motion.div>
