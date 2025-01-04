@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export const Hero = () => {
   return (
@@ -27,13 +28,22 @@ export const Hero = () => {
               Book Trial Class Now
             </Button>
           </div>
-          <div className="flex-1">
+          <motion.div 
+            className="flex-1"
+            animate={{ y: [-10, 10] }}
+            transition={{ 
+              repeat: Infinity,
+              repeatType: "reverse",
+              duration: 2,
+              ease: "easeInOut"
+            }}
+          >
             <img 
               src="/lovable-uploads/d95b1d69-5a60-4de8-97e4-1cd0f750f9c6.png" 
               alt="Online Classroom" 
               className="w-full max-w-lg mx-auto rounded-lg shadow-xl"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
