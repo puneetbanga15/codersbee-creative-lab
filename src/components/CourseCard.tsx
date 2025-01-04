@@ -19,7 +19,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
   const courseImages = {
     "Coding for Young Explorers": "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80",
     "Advanced Coding for Innovators": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-    "AI for Budding Entrepreneurs": "/lovable-uploads/ddcd2e4f-55b3-41aa-b1b2-26b416244488.png"
+    "AI for Budding Entrepreneurs": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80"
   };
 
   return (
@@ -31,13 +31,13 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
           className="w-full h-48 object-cover rounded-lg shadow-md" 
         />
         <CardTitle className="text-xl mt-4">{title}</CardTitle>
-        <p className="text-sm text-gray-600">{ageRange}</p>
-        <p className="text-sm text-gray-700 mt-2 min-h-[80px]">{courseDescriptions[title as keyof typeof courseDescriptions]}</p>
+        <p className="text-sm text-[#8E9196]">{ageRange}</p>
+        <p className="text-sm text-[#403E43] mt-2 min-h-[80px]">{courseDescriptions[title as keyof typeof courseDescriptions]}</p>
       </CardHeader>
       <CardContent className="flex-grow">
         <ul className="space-y-2">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center">
+            <li key={index} className="flex items-center text-[#403E43]">
               <span className="mr-2">•</span>
               {feature}
             </li>
@@ -46,7 +46,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
       </CardContent>
       <CardFooter className="mt-auto">
         <Button 
-          className="w-full bg-[#2B4C7E] hover:bg-[#506D97]"
+          className="w-full bg-[#9b87f5] hover:bg-[#7E69AB]"
           onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
         >
           Join Course
