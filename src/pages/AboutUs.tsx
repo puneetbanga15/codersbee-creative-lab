@@ -42,7 +42,7 @@ const AboutUs = () => {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-codersbee-dark">
-              Pioneering the Future of <span className="text-codersbee-vivid">AI Education</span>
+              We are Pioneering the Future of <span className="text-codersbee-vivid">AI Education</span>
             </h1>
             <p className="text-xl text-gray-600">
               Building the bridge between traditional education and tomorrow's AI-driven world
