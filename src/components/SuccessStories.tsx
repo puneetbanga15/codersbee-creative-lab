@@ -44,7 +44,7 @@ export const SuccessStories = () => {
         
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center mb-12">
           <img 
-            src="/lovable-uploads/b11a90a8-ea28-4d3f-a1be-236a7415f258.png" 
+            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
             alt="AI Robot" 
             className="w-full md:w-1/2 rounded-lg shadow-xl"
           />
