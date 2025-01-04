@@ -29,8 +29,8 @@ export const Hero = () => {
           </div>
           <div className="flex-1">
             <img 
-              src="/lovable-uploads/dabdc79c-f6b3-47c9-b182-6a42ba5264b6.png" 
-              alt="Student learning coding" 
+              src="/lovable-uploads/ddcd2e4f-55b3-41aa-b1b2-26b416244488.png" 
+              alt="AI Robot" 
               className="w-full max-w-lg mx-auto animate-float rounded-lg shadow-xl"
             />
           </div>

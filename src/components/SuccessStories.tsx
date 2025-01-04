@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Dialog,
   DialogContent,
@@ -12,18 +13,36 @@ const champions = [
   {
     name: "Shuvam",
     image: "/placeholder.svg",
-    description: "Shuvam has mastered Python and created amazing AI projects.",
-  },
-  {
-    name: "Ayan",
-    image: "/placeholder.svg",
-    description: "Ayan excels in game development and web applications.",
+    milestones: [
+      "Started coding at age 8",
+      "Mastered Scratch in 6 months",
+      "Completed Python fundamentals",
+      "Created AI story generator",
+      "Building AI travel planner"
+    ]
   },
   {
     name: "Vamshika",
     image: "/placeholder.svg",
-    description: "Vamshika is passionate about robotics and machine learning.",
+    milestones: [
+      "Initially hesitant about coding",
+      "Found passion through mentorship",
+      "Mastered core programming concepts",
+      "Won coding competition",
+      "Inspiring other young coders"
+    ]
   },
+  {
+    name: "Ayan",
+    image: "/placeholder.svg",
+    milestones: [
+      "Natural problem-solver",
+      "Quick learner in Python",
+      "Advanced AI concepts",
+      "Created recipe generator",
+      "Working on AI innovations"
+    ]
+  }
 ];
 
 export const SuccessStories = () => {
@@ -42,50 +61,62 @@ export const SuccessStories = () => {
           Meet Our <span className="text-codersbee-vivid">AI and Coding Champions</span>
         </h2>
         
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-center mb-12">
-          <img 
-            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
-            alt="AI Robot" 
-            className="w-full md:w-1/2 rounded-lg shadow-xl"
-          />
-        </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {champions.map((champion, index) => (
-            <div 
+            <motion.div 
               key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
               className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
             >
-              <img
-                src={champion.image}
-                alt={champion.name}
-                className="w-32 h-32 mx-auto rounded-full mb-4 object-cover"
-              />
-              <h3 className="text-xl font-semibold mb-2 text-center">{champion.name}</h3>
-              <p className="text-gray-600 mb-4 text-center">{champion.description}</p>
-              <div className="text-center">
+              <h3 className="text-xl font-semibold mb-4 text-center">{champion.name}'s Journey</h3>
+              <div className="space-y-3">
+                {champion.milestones.map((milestone, mIndex) => (
+                  <motion.div
+                    key={mIndex}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: mIndex * 0.1 + index * 0.2 }}
+                    className="flex items-center space-x-2"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-codersbee-vivid"></div>
+                    <p className="text-gray-600">{milestone}</p>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="text-center mt-4">
                 <Button
                   onClick={() => handleOpenDialog(champion)}
                   className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white"
                 >
-                  View Journey
+                  View Details
                 </Button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{selectedChampion?.name}</DialogTitle>
+              <DialogTitle>{selectedChampion?.name}'s Journey</DialogTitle>
               <DialogDescription>
-                {selectedChampion?.description}
+                <div className="space-y-2 mt-4">
+                  {selectedChampion?.milestones.map((milestone, index) => (
+                    <motion.p
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className="text-gray-600"
+                    >
+                      {milestone}
+                    </motion.p>
+                  ))}
+                </div>
               </DialogDescription>
             </DialogHeader>
-            <div className="mt-4">
-              <Button onClick={() => setOpenDialog(false)}>Close</Button>
-            </div>
           </DialogContent>
         </Dialog>
       </div>

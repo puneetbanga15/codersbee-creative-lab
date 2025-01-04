@@ -19,7 +19,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
   const courseImages = {
     "Coding for Young Explorers": "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80",
     "Advanced Coding for Innovators": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-    "AI for Budding Entrepreneurs": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80"
+    "AI for Budding Entrepreneurs": "/lovable-uploads/ddcd2e4f-55b3-41aa-b1b2-26b416244488.png"
   };
 
   return (
