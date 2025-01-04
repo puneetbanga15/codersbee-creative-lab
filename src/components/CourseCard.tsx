@@ -46,7 +46,7 @@ export const CourseCard = ({ title, image, ageRange, features, backgroundColor }
       </CardContent>
       <CardFooter className="mt-auto">
         <Button 
-          className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+          className="w-full bg-[#2B4C7E] hover:bg-[#506D97]"
           onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
         >
           Join Course
