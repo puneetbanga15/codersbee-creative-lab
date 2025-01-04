@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LucideBookOpen, MessageCircle, GraduationCap, Link, ClipboardList } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Link, ClipboardList } from "lucide-react";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
