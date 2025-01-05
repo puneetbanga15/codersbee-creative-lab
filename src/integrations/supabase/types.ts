@@ -139,18 +139,24 @@ export type Database = {
           full_name: string | null
           id: string
           is_parent: boolean | null
+          phone_number: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
         }
         Insert: {
           created_at?: string
           full_name?: string | null
           id: string
           is_parent?: boolean | null
+          phone_number?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
         }
         Update: {
           created_at?: string
           full_name?: string | null
           id?: string
           is_parent?: boolean | null
+          phone_number?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
         }
         Relationships: []
       }
@@ -226,7 +232,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "admin" | "teacher" | "parent"
     }
     CompositeTypes: {
       [_ in never]: never

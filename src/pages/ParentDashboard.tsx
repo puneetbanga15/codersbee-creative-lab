@@ -4,8 +4,9 @@ import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Calendar, CreditCard, MessageSquare } from "lucide-react";
+import { Loader2, Calendar, CreditCard, MessageSquare, LogOut, Phone } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface Student {
   id: string;
@@ -33,6 +34,27 @@ const ParentDashboard = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ClassSchedule[]>([]);
   const [payments, setPayments] = useState<FeePayment[]>([]);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate("/parents/login");
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error logging out",
+        description: error.message,
+      });
+    }
+  };
+
+  const handleWhatsAppClick = () => {
+    window.open('https://wa.me/919996465023', '_blank');
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -102,7 +124,27 @@ const ParentDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto px-4 pt-24">
-        <h1 className="text-3xl font-bold mb-8">Welcome to Parent Dashboard</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Welcome to Parent Dashboard</h1>
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              className="bg-green-500 hover:bg-green-600 text-white"
+              onClick={handleWhatsAppClick}
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              Contact on WhatsApp
+            </Button>
+            <Button
+              variant="outline"
+              className="text-red-500 hover:text-red-600"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+        </div>
         
         {students.length === 0 ? (
           <Card className="p-6">
