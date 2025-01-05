@@ -10,12 +10,18 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { createTeacherAccount } from "@/utils/auth";
 
 const TeacherDashboard = () => {
   const { toast } = useToast();
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [showAddTeacher, setShowAddTeacher] = useState(false);
-  const [newTeacher, setNewTeacher] = useState({ name: "", email: "", phone: "" });
+  const [newTeacher, setNewTeacher] = useState({ 
+    name: "", 
+    email: "", 
+    phone: "",
+    password: "" // Added password field
+  });
 
   // Fetch teachers data
   const { data: teachers, isLoading: teachersLoading } = useQuery({
@@ -74,27 +80,28 @@ const TeacherDashboard = () => {
 
   const handleAddTeacher = async () => {
     try {
-      const { error } = await supabase.from('profiles').insert([
-        {
-          full_name: newTeacher.name,
-          phone_number: newTeacher.phone,
-          role: 'teacher',
-          is_parent: false,
-        }
-      ]);
+      if (!newTeacher.email || !newTeacher.password || !newTeacher.name || !newTeacher.phone) {
+        throw new Error("All fields are required");
+      }
 
-      if (error) throw error;
+      await createTeacherAccount(
+        newTeacher.email,
+        newTeacher.password,
+        newTeacher.name,
+        newTeacher.phone
+      );
 
       toast({
         title: "Success",
-        description: "Teacher added successfully",
+        description: "Teacher account created successfully",
       });
       setShowAddTeacher(false);
-      setNewTeacher({ name: "", email: "", phone: "" });
+      setNewTeacher({ name: "", email: "", phone: "", password: "" });
     } catch (error) {
+      console.error('Error creating teacher:', error);
       toast({
         title: "Error",
-        description: "Failed to add teacher",
+        description: error instanceof Error ? error.message : "Failed to add teacher",
         variant: "destructive",
       });
     }
@@ -264,6 +271,15 @@ const TeacherDashboard = () => {
                 onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
                 placeholder="Email address"
                 type="email"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Password</label>
+              <Input
+                value={newTeacher.password}
+                onChange={(e) => setNewTeacher({ ...newTeacher, password: e.target.value })}
+                placeholder="Password"
+                type="password"
               />
             </div>
             <div>
