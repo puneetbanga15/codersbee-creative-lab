@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
-import { Navbar } from "@/components/Navbar"; // Add this import
+import { Navbar } from "@/components/Navbar";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -41,7 +41,8 @@ const ParentsLogin = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/30 to-codersbee-orange/20 flex flex-col items-center justify-center p-4">
-        <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center">
+        {/* Added pt-20 class to create space below the fixed navbar */}
+        <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center pt-20">
           {/* Benefits Section */}
           <div className="space-y-6">
             <h1 className="text-3xl md:text-4xl font-bold text-codersbee-dark">
