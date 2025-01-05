@@ -16,6 +16,8 @@ const formSchema = z.object({
   timezone: z.string().min(1, "Please select a timezone"),
   children: z.array(z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
+    courseName: z.string().min(2, "Course name must be at least 2 characters"),
+    teacherId: z.string().min(1, "Please select a teacher"),
   })).min(1).max(3),
 });
 
@@ -29,7 +31,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       email: "",
       phone: "",
       timezone: "",
-      children: [{ name: "" }],
+      children: [{ name: "", courseName: "", teacherId: "" }],
     },
   });
 
@@ -50,15 +52,27 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       if (authError) throw authError;
 
       for (const child of values.children) {
-        const { error: studentError } = await supabase
+        const { data: studentData, error: studentError } = await supabase
           .from('students')
           .insert({
             full_name: child.name,
             parent_id: authData.user?.id,
             timezone: values.timezone,
-          });
+          })
+          .select()
+          .single();
 
         if (studentError) throw studentError;
+
+        const { error: enrollmentError } = await supabase
+          .from('course_enrollments')
+          .insert({
+            student_id: studentData.id,
+            course_name: child.courseName,
+            teacher_id: child.teacherId,
+          });
+
+        if (enrollmentError) throw enrollmentError;
       }
 
       toast.success("Parent and children added successfully!");
@@ -84,7 +98,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
             variant="outline"
             onClick={() => {
               const children = form.getValues('children');
-              form.setValue('children', [...children, { name: '' }]);
+              form.setValue('children', [...children, { name: '', courseName: '', teacherId: '' }]);
             }}
           >
             Add Another Child
