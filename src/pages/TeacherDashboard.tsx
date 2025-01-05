@@ -6,10 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeacherDashboardHeader } from "@/components/TeacherDashboardHeader";
 import { TeachersTab } from "@/components/dashboard/TeachersTab";
 import { ParentsTab } from "@/components/dashboard/ParentsTab";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { ScheduleTable } from "@/components/dashboard/teacher/ScheduleTable";
+import { PaymentsTable } from "@/components/dashboard/teacher/PaymentsTable";
+import { ScheduleCalendar } from "@/components/dashboard/teacher/ScheduleCalendar";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 const TeacherDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -119,54 +119,19 @@ const TeacherDashboard = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Class Schedule</CardTitle>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setSelectedMonth(subMonths(selectedMonth, 1))}
-                  >
-                    Previous Month
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setSelectedMonth(new Date())}
-                  >
-                    Current Month
-                  </Button>
-                </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-6">
-                <Calendar
-                  mode="single"
-                  selected={selectedMonth}
-                  onSelect={(date) => date && setSelectedMonth(date)}
-                  className="rounded-md border"
+                <ScheduleCalendar 
+                  selectedMonth={selectedMonth}
+                  setSelectedMonth={setSelectedMonth}
                 />
                 <div className="space-y-4">
                   {schedulesLoading ? (
                     <p>Loading schedule...</p>
                   ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Teacher</TableHead>
-                          <TableHead>Student</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {schedules?.map((schedule) => (
-                          <TableRow key={schedule.id}>
-                            <TableCell>
-                              {format(new Date(schedule.scheduled_at), 'PPp')}
-                            </TableCell>
-                            <TableCell>{schedule.teacher?.full_name}</TableCell>
-                            <TableCell>{schedule.student?.full_name}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                    <ScheduleTable schedules={schedules || []} />
                   )}
                 </div>
               </div>
@@ -183,28 +148,7 @@ const TeacherDashboard = () => {
               {paymentsLoading ? (
                 <p>Loading payments...</p>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {payments?.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell>
-                          {format(new Date(payment.payment_date), 'PP')}
-                        </TableCell>
-                        <TableCell>{payment.student?.full_name}</TableCell>
-                        <TableCell>${payment.amount}</TableCell>
-                        <TableCell>{payment.status}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <PaymentsTable payments={payments || []} />
               )}
             </CardContent>
           </Card>
