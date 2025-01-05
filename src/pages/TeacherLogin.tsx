@@ -34,27 +34,30 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (error) throw error;
+      if (authError) throw authError;
 
-      const { data: teacherData, error: teacherError } = await supabase
-        .from('teachers')
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
         .select('*')
-        .eq('email', values.email)
+        .eq('id', authData.user.id)
+        .eq('role', 'admin')
         .single();
 
-      if (teacherError || !teacherData) {
-        throw new Error('Not authorized as a teacher');
+      if (profileError || !profileData) {
+        await supabase.auth.signOut();
+        throw new Error('Not authorized as an admin');
       }
 
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
     } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
+      console.error('Login error:', error);
+      toast.error("Login failed. Please check your credentials or admin status.");
     }
   };
 
@@ -64,7 +67,7 @@ const TeacherLogin = () => {
       <div className="pt-24 px-4">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            Teacher Login
+            Admin Login
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
