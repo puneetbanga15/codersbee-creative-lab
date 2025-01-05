@@ -9,7 +9,7 @@ import { Facebook, Linkedin } from "lucide-react";
 
 export const FAQ = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="pt-8 pb-20 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Frequently Asked <span className="text-codersbee-vivid">Questions</span>
