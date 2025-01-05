@@ -11,6 +11,8 @@ import ParentsRegister from "./pages/ParentsRegister";
 import ParentDashboard from "./pages/ParentDashboard";
 import TeacherLogin from "./pages/TeacherLogin";
 import TeacherDashboard from "./pages/TeacherDashboard";
+import Quizzes from "./pages/Quizzes";
+import Projects from "./pages/Projects";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/parents/dashboard" element={<ParentDashboard />} />
           <Route path="/teachers/login" element={<TeacherLogin />} />
           <Route path="/teachers/dashboard" element={<TeacherDashboard />} />
+          <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/projects" element={<Projects />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

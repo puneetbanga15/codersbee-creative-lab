@@ -344,6 +344,101 @@ export type Database = {
           },
         ]
       }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          explanation: string | null
+          id: string
+          options: Json
+          question: string
+          quiz_id: string | null
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options: Json
+          question: string
+          quiz_id?: string | null
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          question?: string
+          quiz_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_premium: boolean | null
+          quiz_type: Database["public"]["Enums"]["quiz_type"]
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          quiz_type: Database["public"]["Enums"]["quiz_type"]
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_premium?: boolean | null
+          quiz_type?: Database["public"]["Enums"]["quiz_type"]
+          title?: string
+        }
+        Relationships: []
+      }
+      student_projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          difficulty_level: string
+          id: string
+          project_url: string | null
+          session_number: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          difficulty_level: string
+          id?: string
+          project_url?: string | null
+          session_number: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string
+          id?: string
+          project_url?: string | null
+          session_number?: number
+          title?: string
+        }
+        Relationships: []
+      }
       students: {
         Row: {
           created_at: string
@@ -384,6 +479,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      quiz_type: "scratch" | "python" | "ai"
       user_role: "admin" | "teacher" | "parent"
     }
     CompositeTypes: {
