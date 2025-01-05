@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
 type Project = {
@@ -88,10 +87,7 @@ const Projects = () => {
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="outline">Session {project.session_number}</Badge>
-                    <Button>Start Project</Button>
-                  </div>
+                  <Badge variant="outline">Session {project.session_number}</Badge>
                 </CardContent>
               </Card>
             ))}

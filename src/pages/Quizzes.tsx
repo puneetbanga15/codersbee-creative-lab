@@ -4,7 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Quiz } from "@/components/Quiz";
 import { supabase } from "@/integrations/supabase/client";
 
 type Quiz = {
@@ -17,6 +17,7 @@ type Quiz = {
 
 const Quizzes = () => {
   const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
+  const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
 
   const { data: quizzes, isLoading } = useQuery({
     queryKey: ['quizzes', selectedType],
@@ -36,6 +37,17 @@ const Quizzes = () => {
     { value: 'python', label: 'Python' },
     { value: 'ai', label: 'AI' },
   ];
+
+  if (activeQuiz) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+        <Navbar />
+        <div className="container mx-auto px-4 pt-24">
+          <Quiz quizId={activeQuiz} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
@@ -70,22 +82,23 @@ const Quizzes = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quizzes?.map((quiz) => (
-              <Card key={quiz.id} className="relative">
-                {quiz.is_premium && (
-                  <Badge className="absolute top-4 right-4 bg-yellow-500">
-                    <Lock className="w-3 h-3 mr-1" />
-                    Premium
-                  </Badge>
-                )}
+              <Card key={quiz.id}>
                 <CardHeader>
-                  <CardTitle>{quiz.title}</CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle>{quiz.title}</CardTitle>
+                    {quiz.is_premium && (
+                      <Badge className="bg-yellow-500">Premium</Badge>
+                    )}
+                  </div>
                   <CardDescription>{quiz.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Badge className="bg-codersbee-vivid">
-                    {quiz.quiz_type.charAt(0).toUpperCase() + quiz.quiz_type.slice(1)}
-                  </Badge>
-                  <Button className="w-full mt-4">Start Quiz</Button>
+                  <Button 
+                    className="w-full"
+                    onClick={() => setActiveQuiz(quiz.id)}
+                  >
+                    Start Quiz
+                  </Button>
                 </CardContent>
               </Card>
             ))}
