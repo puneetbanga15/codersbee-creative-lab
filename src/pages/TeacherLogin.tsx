@@ -42,7 +42,7 @@ const TeacherLogin = () => {
 
       if (signInError) throw signInError;
 
-      // After successful sign in, check if the user is a teacher
+      // After successful sign in, check if the user is a teacher or admin
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('role')
@@ -51,10 +51,10 @@ const TeacherLogin = () => {
 
       if (profileError) throw profileError;
 
-      if (profileData?.role !== 'teacher') {
-        // If not a teacher, sign out and throw error
+      if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
+        // If not a teacher or admin, sign out and throw error
         await supabase.auth.signOut();
-        throw new Error('Not authorized as a teacher');
+        throw new Error('Not authorized as a teacher or admin');
       }
 
       toast.success("Login successful!");
@@ -64,12 +64,12 @@ const TeacherLogin = () => {
       // Sign out if there was an error
       await supabase.auth.signOut();
       
-      let errorMessage = "Login failed. Please check your credentials or teacher status.";
+      let errorMessage = "Login failed. Please check your credentials.";
       if (error instanceof Error) {
         if (error.message === 'Invalid login credentials') {
           errorMessage = "Invalid email or password.";
-        } else if (error.message === 'Not authorized as a teacher') {
-          errorMessage = "This account is not authorized as a teacher.";
+        } else if (error.message === 'Not authorized as a teacher or admin') {
+          errorMessage = "This account is not authorized as a teacher or admin.";
         }
       }
       toast.error(errorMessage);
