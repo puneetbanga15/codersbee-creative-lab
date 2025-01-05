@@ -34,21 +34,24 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      // First, attempt to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (authError) throw authError;
+      if (signInError) throw signInError;
 
+      // After successful sign in, check if the user is a teacher
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('id', authData.user.id)
-        .eq('role', 'teacher')
+        .select('role')
         .single();
 
-      if (profileError || !profileData) {
+      if (profileError) throw profileError;
+
+      if (profileData?.role !== 'teacher') {
+        // If not a teacher, sign out and throw error
         await supabase.auth.signOut();
         throw new Error('Not authorized as a teacher');
       }
@@ -57,7 +60,18 @@ const TeacherLogin = () => {
       navigate("/teachers/dashboard");
     } catch (error) {
       console.error('Login error:', error);
-      toast.error("Login failed. Please check your credentials or teacher status.");
+      // Sign out if there was an error
+      await supabase.auth.signOut();
+      
+      let errorMessage = "Login failed. Please check your credentials or teacher status.";
+      if (error instanceof Error) {
+        if (error.message === 'Invalid login credentials') {
+          errorMessage = "Invalid email or password.";
+        } else if (error.message === 'Not authorized as a teacher') {
+          errorMessage = "This account is not authorized as a teacher.";
+        }
+      }
+      toast.error(errorMessage);
     }
   };
 
