@@ -36,70 +36,47 @@ npm i
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Security Considerations for Public Repositories
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Since this is a public repository, follow these best practices:
 
-**Use GitHub Codespaces**
+1. **Environment Variables**: Never commit sensitive information like API keys or passwords. Use environment variables instead.
+2. **Access Control**: While the code is public, maintain strict access control for:
+   - Your Netlify deployment settings
+   - Your Supabase project
+   - Your domain registrar account
+3. **Branch Protection**: Consider enabling branch protection rules on GitHub to prevent unauthorized changes to main branches.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
+## Deployment Instructions
 
 ### Option 1: Using Lovable (Recommended for development)
 
 Simply open [Lovable](https://lovable.dev/projects/55ef7545-c199-48f3-b885-e2604f988f95) and click on Share -> Publish.
 
-### Option 2: Using Netlify with Custom Domain (Private Repository)
+### Option 2: Using Netlify with Custom Domain
 
-To deploy a private repository to Netlify with a custom domain, follow these steps:
+To deploy to Netlify with a custom domain, follow these steps:
 
-1. **Configure Repository Access**
-   - Keep your repository private on GitHub
+1. **Deploy to Netlify**
    - Go to [Netlify](https://app.netlify.com)
-   - Click "Site settings" > "Build & deploy" > "Continuous Deployment"
-   - Under "Repository access", click "Configure"
-   - Choose either:
-     - Option 1: Grant access to all your repositories
-     - Option 2 (Recommended): Grant access to only this specific repository
-   - Follow the GitHub authorization flow
-
-2. **Deploy to Netlify**
-   - Go back to Netlify dashboard
    - Click "Add new site" > "Import an existing project"
-   - Select your private repository from the list
+   - Select your repository
    - Configure the build settings:
      - Build command: `npm run build`
      - Publish directory: `dist`
      - Node version: 18 (or higher)
 
-3. **Environment Variables**
+2. **Environment Variables**
    - Add the following environment variables in Netlify's dashboard:
      - `VITE_SUPABASE_URL`: Your Supabase project URL
      - `VITE_SUPABASE_ANON_KEY`: Your Supabase project's anon/public key
 
-4. **Configure Custom Domain**
+3. **Configure Custom Domain**
    - In Netlify dashboard, go to "Domain settings"
    - Click "Add custom domain"
    - Follow Netlify's instructions to configure your DNS settings
 
-5. **Build Command**
+4. **Build Command**
    The project is configured to use Vite, so Netlify will automatically:
    - Install dependencies with `npm install`
    - Build the project with `npm run build`
@@ -111,12 +88,7 @@ For more detailed instructions, visit our docs: [Custom domains](https://docs.lo
 
 If you encounter issues:
 
-1. **Repository Access Issues**
-   - Verify Netlify has been granted access to your private repository
-   - Check GitHub OAuth permissions in your GitHub settings
-   - Try removing and re-adding the repository connection in Netlify
-
-2. **Build Errors**
+1. **Build Errors**
    - Check Netlify's deploy logs
    - Ensure all environment variables are set correctly
    - Verify Node.js version is 18 or higher in Netlify settings
