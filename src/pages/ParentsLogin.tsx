@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { toast } from "sonner";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const ParentsLogin = () => {
         }
       } catch (error) {
         console.error("Error checking session:", error);
+        toast.error("Error checking session");
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -34,23 +36,28 @@ const ParentsLogin = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session) {
         try {
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', session.user.id)
             .single();
 
+          if (profileError) throw profileError;
+
           if (!profile) {
-            await supabase.from('profiles').insert({
+            const { error: insertError } = await supabase.from('profiles').insert({
               id: session.user.id,
               is_parent: true,
               role: 'parent'
             });
+
+            if (insertError) throw insertError;
           }
 
           navigate("/parents/dashboard");
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error handling sign in:", error);
+          toast.error(error.message || "Error during sign in");
         }
       }
     });
@@ -170,7 +177,8 @@ const ParentsLogin = () => {
                 theme="light"
                 providers={[]}
                 view="sign_in"
-                showLinks={false}
+                showLinks={true}
+                redirectTo={window.location.origin + "/parents/dashboard"}
               />
             </CardContent>
           </Card>
