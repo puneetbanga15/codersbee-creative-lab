@@ -8,6 +8,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { ParentFormFields } from "./ParentFormFields";
 import { ChildInputField } from "./ChildInputField";
+import { ScrollArea } from "./ui/scroll-area";
 
 const formSchema = z.object({
   parentName: z.string().min(2, "Name must be at least 2 characters"),
@@ -84,29 +85,34 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <ParentFormFields form={form} />
-        
-        {form.watch('children').map((_, index) => (
-          <ChildInputField key={index} form={form} index={index} />
-        ))}
+    <ScrollArea className="h-[80vh] px-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <ParentFormFields form={form} />
+          
+          <div className="flex flex-col gap-4">
+            {form.watch('children').map((_, index) => (
+              <ChildInputField key={index} form={form} index={index} />
+            ))}
+          </div>
 
-        {form.watch('children').length < 3 && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              const children = form.getValues('children');
-              form.setValue('children', [...children, { name: '', courseName: '', teacherId: '' }]);
-            }}
-          >
-            Add Another Child
-          </Button>
-        )}
-
-        <Button type="submit" className="w-full">Add Parent</Button>
-      </form>
-    </Form>
+          <div className="flex justify-between items-center">
+            {form.watch('children').length < 3 && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const children = form.getValues('children');
+                  form.setValue('children', [...children, { name: '', courseName: '', teacherId: '' }]);
+                }}
+              >
+                Add Another Child
+              </Button>
+            )}
+            <Button type="submit">Add Parent</Button>
+          </div>
+        </form>
+      </Form>
+    </ScrollArea>
   );
 };

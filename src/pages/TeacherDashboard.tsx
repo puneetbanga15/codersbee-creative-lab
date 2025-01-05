@@ -2,31 +2,35 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { TeacherDashboardHeader } from "@/components/TeacherDashboardHeader";
+import { TeachersTab } from "@/components/dashboard/TeachersTab";
+import { ParentsTab } from "@/components/dashboard/ParentsTab";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { TeacherDashboardHeader } from "@/components/TeacherDashboardHeader";
+import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 
 const TeacherDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-  // Fetch teachers data
-  const { data: teachers, isLoading: teachersLoading } = useQuery({
-    queryKey: ['teachers'],
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('role', 'teacher');
+        .eq('id', user.id)
+        .single();
       
       if (error) throw error;
       return data;
     },
   });
 
-  // Fetch schedules for the selected month
   const { data: schedules, isLoading: schedulesLoading } = useQuery({
     queryKey: ['schedules', selectedMonth],
     queryFn: async () => {
@@ -49,7 +53,6 @@ const TeacherDashboard = () => {
     },
   });
 
-  // Fetch fee payments
   const { data: payments, isLoading: paymentsLoading } = useQuery({
     queryKey: ['payments'],
     queryFn: async () => {
@@ -67,48 +70,49 @@ const TeacherDashboard = () => {
     },
   });
 
+  const isAdmin = userProfile?.role === 'admin';
+
   return (
     <div className="container mx-auto p-6">
       <TeacherDashboardHeader />
 
-      <Tabs defaultValue="teachers" className="space-y-4">
+      <Tabs defaultValue={isAdmin ? "teachers" : "schedule"} className="space-y-4">
         <TabsList>
-          <TabsTrigger value="teachers">Teachers</TabsTrigger>
+          {isAdmin && (
+            <>
+              <TabsTrigger value="teachers">Teachers</TabsTrigger>
+              <TabsTrigger value="parents">Parents</TabsTrigger>
+            </>
+          )}
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="teachers">
-          <Card>
-            <CardHeader>
-              <CardTitle>Teachers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {teachersLoading ? (
-                <p>Loading teachers...</p>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {teachers?.map((teacher) => (
-                      <TableRow key={teacher.id}>
-                        <TableCell>{teacher.full_name}</TableCell>
-                        <TableCell>{teacher.phone_number}</TableCell>
-                        <TableCell>Active</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {isAdmin && (
+          <>
+            <TabsContent value="teachers">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Teachers</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <TeachersTab />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="parents">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Parents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ParentsTab />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </>
+        )}
 
         <TabsContent value="schedule">
           <Card>
