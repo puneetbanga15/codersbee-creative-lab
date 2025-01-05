@@ -11,37 +11,50 @@ const ParentsLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    // Check initial session
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // Create profile if it doesn't exist
-        const createProfile = async () => {
-          const { data: existingProfile } = await supabase
-            .from('profiles')
-            .select()
-            .eq('id', session.user.id)
-            .single();
+        navigate("/parents/dashboard");
+      }
+    };
+    
+    checkSession();
 
-          if (!existingProfile) {
-            await supabase.from('profiles').insert({
-              id: session.user.id,
-              is_parent: true
-            });
-          }
-        };
+    // Set up auth state listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        // Check if profile exists
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
 
-        createProfile();
+        if (!profile) {
+          // Create profile if it doesn't exist
+          await supabase.from('profiles').insert({
+            id: session.user.id,
+            is_parent: true,
+            role: 'parent'
+          });
+        }
+
         navigate("/parents/dashboard");
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/30 to-codersbee-orange/20 flex flex-col items-center justify-center p-4">
-        {/* Added pt-20 class to create space below the fixed navbar */}
         <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center pt-20">
           {/* Benefits Section */}
           <div className="space-y-6">
