@@ -52,7 +52,7 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
@@ -62,8 +62,58 @@ This project is built with .
 
 ## How can I deploy this project?
 
+### Option 1: Using Lovable (Recommended for development)
+
 Simply open [Lovable](https://lovable.dev/projects/55ef7545-c199-48f3-b885-e2604f988f95) and click on Share -> Publish.
 
-## I want to use a custom domain - is that possible?
+### Option 2: Using Netlify with Custom Domain
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+To deploy to Netlify with a custom domain, follow these steps:
+
+1. **Prepare Your Repository**
+   - Make sure your repository is public on GitHub
+   - If it's private, you'll need to authorize Netlify to access it
+
+2. **Deploy to Netlify**
+   - Go to [Netlify](https://app.netlify.com)
+   - Click "Add new site" > "Import an existing project"
+   - Connect your GitHub account if you haven't already
+   - Select your repository
+   - Configure the build settings:
+     - Build command: `npm run build`
+     - Publish directory: `dist`
+     - Node version: 18 (or higher)
+
+3. **Environment Variables**
+   - Add the following environment variables in Netlify's dashboard:
+     - `VITE_SUPABASE_URL`: Your Supabase project URL
+     - `VITE_SUPABASE_ANON_KEY`: Your Supabase project's anon/public key
+
+4. **Configure Custom Domain**
+   - In Netlify dashboard, go to "Domain settings"
+   - Click "Add custom domain"
+   - Follow Netlify's instructions to configure your DNS settings
+
+5. **Build Command**
+   The project is configured to use Vite, so Netlify will automatically:
+   - Install dependencies with `npm install`
+   - Build the project with `npm run build`
+   - Deploy the contents of the `dist` directory
+
+For more detailed instructions, visit our docs: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+
+## Troubleshooting Deployment
+
+If you encounter issues:
+
+1. **Repository Not Found Error**
+   - Make sure your repository is public or Netlify has proper access
+   - Verify the repository URL is correct
+   - Try reconnecting your GitHub account to Netlify
+
+2. **Build Errors**
+   - Check Netlify's deploy logs
+   - Ensure all environment variables are set correctly
+   - Verify Node.js version is 18 or higher in Netlify settings
+
+For additional help, consult [Netlify's documentation](https://docs.netlify.com/) or reach out to support.
