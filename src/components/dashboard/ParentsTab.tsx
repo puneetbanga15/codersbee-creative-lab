@@ -2,20 +2,58 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 export const ParentsTab = () => {
-  const { data: parents, isLoading } = useQuery({
+  const { data: parents, isLoading, refetch } = useQuery({
     queryKey: ['parents'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*, students(*)')
+        .select(`
+          *,
+          students(
+            *,
+            course_enrollments(
+              *,
+              teacher:profiles(full_name)
+            )
+          )
+        `)
         .eq('role', 'parent');
       
       if (error) throw error;
       return data;
     },
   });
+
+  const updateFeeStatus = async (studentId: string, status: string) => {
+    try {
+      const { error } = await supabase
+        .from('fee_payments')
+        .insert({
+          student_id: studentId,
+          amount: 0, // Placeholder amount
+          status: status,
+          description: 'Manual status update'
+        });
+
+      if (error) throw error;
+      toast.success('Fee status updated successfully');
+      refetch();
+    } catch (error) {
+      console.error('Error updating fee status:', error);
+      toast.error('Failed to update fee status');
+    }
+  };
 
   return (
     <>
@@ -25,10 +63,11 @@ export const ParentsTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Parent Name</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Children</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Children & Courses</TableHead>
+              <TableHead>Fee Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -37,9 +76,45 @@ export const ParentsTab = () => {
                 <TableCell>{parent.full_name}</TableCell>
                 <TableCell>{parent.phone_number}</TableCell>
                 <TableCell>
-                  {parent.students?.map((student: any) => student.full_name).join(', ')}
+                  <div className="space-y-2">
+                    {parent.students?.map((student: any) => (
+                      <div key={student.id} className="border-b pb-2 last:border-0">
+                        <p className="font-medium">{student.full_name}</p>
+                        <div className="text-sm text-gray-500">
+                          {student.course_enrollments?.map((enrollment: any) => (
+                            <p key={enrollment.id}>
+                              {enrollment.course_name} - Teacher: {enrollment.teacher?.full_name}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </TableCell>
-                <TableCell>Active</TableCell>
+                <TableCell>
+                  {parent.students?.map((student: any) => (
+                    <div key={student.id} className="mb-2">
+                      <Select
+                        onValueChange={(value) => updateFeeStatus(student.id, value)}
+                        defaultValue="pending"
+                      >
+                        <SelectTrigger className="w-[140px]">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="paid">Paid</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="overdue">Overdue</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm">
+                    View Details
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

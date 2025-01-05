@@ -38,6 +38,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
+      // First create the auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
         password: "tempPass123!", // You might want to generate this randomly
@@ -51,13 +52,18 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       });
 
       if (authError) throw authError;
+      if (!authData.user) throw new Error('No user data returned');
 
+      // Wait for the trigger to create the profile
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Create students and enroll them in courses
       for (const child of values.children) {
         const { data: studentData, error: studentError } = await supabase
           .from('students')
           .insert({
             full_name: child.name,
-            parent_id: authData.user?.id,
+            parent_id: authData.user.id,
             timezone: values.timezone,
           })
           .select()
