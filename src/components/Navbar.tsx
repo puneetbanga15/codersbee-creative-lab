@@ -13,7 +13,7 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/917087884023', '_blank');
+    window.open('https://wa.me/919996465023', '_blank');
   };
 
   const handleTrialClick = () => {
