@@ -35,6 +35,19 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
+      // First check if the user already exists
+      const { data: existingUser, error: userCheckError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', values.email)
+        .single();
+
+      if (existingUser) {
+        toast.error("A teacher with this email already exists");
+        return;
+      }
+
+      // If user doesn't exist, proceed with signup
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
         password: "tempPass123!", // You might want to generate this randomly
@@ -46,10 +59,17 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
         },
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        if (authError.message === "User already registered") {
+          toast.error("A teacher with this email already exists");
+          return;
+        }
+        throw authError;
+      }
 
       toast.success("Teacher added successfully!");
       onSuccess();
+      form.reset();
     } catch (error) {
       console.error('Error adding teacher:', error);
       toast.error("Failed to add teacher");
