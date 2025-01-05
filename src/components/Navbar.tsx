@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -11,6 +11,8 @@ import {
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/919996465023', '_blank');
@@ -18,6 +20,18 @@ export const Navbar = () => {
 
   const handleTrialClick = () => {
     window.open('https://calendly.com/codersbee/class-slot', '_blank');
+  };
+
+  const handleCoursesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/#courses');
+    } else {
+      const coursesSection = document.getElementById('courses');
+      if (coursesSection) {
+        coursesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
@@ -35,7 +49,7 @@ export const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-4">
-            <a href="/#courses" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Courses</a>
+            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Courses</a>
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">About Us</Link>
             
             <DropdownMenu>
@@ -86,7 +100,7 @@ export const Navbar = () => {
             
             {isMobileMenuOpen && (
               <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
-                <a href="/#courses" className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
+                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
                 <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
                 <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
                 <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
