@@ -66,19 +66,24 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/55ef7545-c199-48f3-b885-e2604f988f95) and click on Share -> Publish.
 
-### Option 2: Using Netlify with Custom Domain
+### Option 2: Using Netlify with Custom Domain (Private Repository)
 
-To deploy to Netlify with a custom domain, follow these steps:
+To deploy a private repository to Netlify with a custom domain, follow these steps:
 
-1. **Prepare Your Repository**
-   - Make sure your repository is public on GitHub
-   - If it's private, you'll need to authorize Netlify to access it
+1. **Configure Repository Access**
+   - Keep your repository private on GitHub
+   - Go to [Netlify](https://app.netlify.com)
+   - Click "Site settings" > "Build & deploy" > "Continuous Deployment"
+   - Under "Repository access", click "Configure"
+   - Choose either:
+     - Option 1: Grant access to all your repositories
+     - Option 2 (Recommended): Grant access to only this specific repository
+   - Follow the GitHub authorization flow
 
 2. **Deploy to Netlify**
-   - Go to [Netlify](https://app.netlify.com)
+   - Go back to Netlify dashboard
    - Click "Add new site" > "Import an existing project"
-   - Connect your GitHub account if you haven't already
-   - Select your repository
+   - Select your private repository from the list
    - Configure the build settings:
      - Build command: `npm run build`
      - Publish directory: `dist`
@@ -106,10 +111,10 @@ For more detailed instructions, visit our docs: [Custom domains](https://docs.lo
 
 If you encounter issues:
 
-1. **Repository Not Found Error**
-   - Make sure your repository is public or Netlify has proper access
-   - Verify the repository URL is correct
-   - Try reconnecting your GitHub account to Netlify
+1. **Repository Access Issues**
+   - Verify Netlify has been granted access to your private repository
+   - Check GitHub OAuth permissions in your GitHub settings
+   - Try removing and re-adding the repository connection in Netlify
 
 2. **Build Errors**
    - Check Netlify's deploy logs
