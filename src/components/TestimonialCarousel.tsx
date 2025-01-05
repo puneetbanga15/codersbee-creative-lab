@@ -82,7 +82,7 @@ export const TestimonialCarousel = () => {
         <ChevronRight className="w-6 h-6 text-codersbee-dark" />
       </button>
 
-      <div className="mt-8 text-center">
+      <div className="mt-4 text-center">
         <Button
           variant="outline"
           className="gap-2"
