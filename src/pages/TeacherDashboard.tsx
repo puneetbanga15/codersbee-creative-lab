@@ -6,22 +6,11 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { createTeacherAccount } from "@/utils/auth";
+import { TeacherDashboardHeader } from "@/components/TeacherDashboardHeader";
 
 const TeacherDashboard = () => {
-  const { toast } = useToast();
   const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [showAddTeacher, setShowAddTeacher] = useState(false);
-  const [newTeacher, setNewTeacher] = useState({ 
-    name: "", 
-    email: "", 
-    phone: "",
-    password: "" // Added password field
-  });
 
   // Fetch teachers data
   const { data: teachers, isLoading: teachersLoading } = useQuery({
@@ -78,41 +67,9 @@ const TeacherDashboard = () => {
     },
   });
 
-  const handleAddTeacher = async () => {
-    try {
-      if (!newTeacher.email || !newTeacher.password || !newTeacher.name || !newTeacher.phone) {
-        throw new Error("All fields are required");
-      }
-
-      await createTeacherAccount(
-        newTeacher.email,
-        newTeacher.password,
-        newTeacher.name,
-        newTeacher.phone
-      );
-
-      toast({
-        title: "Success",
-        description: "Teacher account created successfully",
-      });
-      setShowAddTeacher(false);
-      setNewTeacher({ name: "", email: "", phone: "", password: "" });
-    } catch (error) {
-      console.error('Error creating teacher:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add teacher",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <Button onClick={() => setShowAddTeacher(true)}>Add Teacher</Button>
-      </div>
+      <TeacherDashboardHeader />
 
       <Tabs defaultValue="teachers" className="space-y-4">
         <TabsList>
@@ -249,53 +206,6 @@ const TeacherDashboard = () => {
           </Card>
         </TabsContent>
       </Tabs>
-
-      <Dialog open={showAddTeacher} onOpenChange={setShowAddTeacher}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Teacher</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Name</label>
-              <Input
-                value={newTeacher.name}
-                onChange={(e) => setNewTeacher({ ...newTeacher, name: e.target.value })}
-                placeholder="Teacher's name"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Email</label>
-              <Input
-                value={newTeacher.email}
-                onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
-                placeholder="Email address"
-                type="email"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Password</label>
-              <Input
-                value={newTeacher.password}
-                onChange={(e) => setNewTeacher({ ...newTeacher, password: e.target.value })}
-                placeholder="Password"
-                type="password"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Phone</label>
-              <Input
-                value={newTeacher.phone}
-                onChange={(e) => setNewTeacher({ ...newTeacher, phone: e.target.value })}
-                placeholder="Phone number"
-              />
-            </div>
-            <Button onClick={handleAddTeacher} className="w-full">
-              Add Teacher
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

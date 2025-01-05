@@ -45,19 +45,19 @@ const TeacherLogin = () => {
         .from('profiles')
         .select('*')
         .eq('id', authData.user.id)
-        .eq('role', 'admin')
+        .eq('role', 'teacher')
         .single();
 
       if (profileError || !profileData) {
         await supabase.auth.signOut();
-        throw new Error('Not authorized as an admin');
+        throw new Error('Not authorized as a teacher');
       }
 
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
     } catch (error) {
       console.error('Login error:', error);
-      toast.error("Login failed. Please check your credentials or admin status.");
+      toast.error("Login failed. Please check your credentials or teacher status.");
     }
   };
 
@@ -67,7 +67,7 @@ const TeacherLogin = () => {
       <div className="pt-24 px-4">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            Admin Login
+            Teacher Login
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

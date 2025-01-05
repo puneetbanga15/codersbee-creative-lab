@@ -137,6 +137,48 @@ export type Database = {
           },
         ]
       }
+      course_enrollments: {
+        Row: {
+          course_name: string
+          created_at: string
+          id: string
+          status: string | null
+          student_id: string | null
+          teacher_id: string | null
+        }
+        Insert: {
+          course_name: string
+          created_at?: string
+          id?: string
+          status?: string | null
+          student_id?: string | null
+          teacher_id?: string | null
+        }
+        Update: {
+          course_name?: string
+          created_at?: string
+          id?: string
+          status?: string | null
+          student_id?: string | null
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_enrollments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_enrollments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emp: {
         Row: {
           Emp_id: number
@@ -155,29 +197,41 @@ export type Database = {
       fee_configurations: {
         Row: {
           amount: number
+          bank_account_details: string | null
+          bank_name: string | null
           classes_prepaid: number | null
           created_at: string
           id: string
           payment_due_days: number | null
+          payment_method: string | null
           payment_schedule: string | null
+          paypal_email: string | null
           student_id: string | null
         }
         Insert: {
           amount: number
+          bank_account_details?: string | null
+          bank_name?: string | null
           classes_prepaid?: number | null
           created_at?: string
           id?: string
           payment_due_days?: number | null
+          payment_method?: string | null
           payment_schedule?: string | null
+          paypal_email?: string | null
           student_id?: string | null
         }
         Update: {
           amount?: number
+          bank_account_details?: string | null
+          bank_name?: string | null
           classes_prepaid?: number | null
           created_at?: string
           id?: string
           payment_due_days?: number | null
+          payment_method?: string | null
           payment_schedule?: string | null
+          paypal_email?: string | null
           student_id?: string | null
         }
         Relationships: [
@@ -296,18 +350,21 @@ export type Database = {
           full_name: string
           id: string
           parent_id: string | null
+          timezone: string | null
         }
         Insert: {
           created_at?: string
           full_name: string
           id?: string
           parent_id?: string | null
+          timezone?: string | null
         }
         Update: {
           created_at?: string
           full_name?: string
           id?: string
           parent_id?: string | null
+          timezone?: string | null
         }
         Relationships: [
           {
