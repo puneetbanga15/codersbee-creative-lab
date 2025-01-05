@@ -11,10 +11,7 @@ type Question = {
   id: string;
   question: string;
   options: {
-    a: string;
-    b: string;
-    c: string;
-    d: string;
+    [key: string]: string;
   };
   correct_answer: string;
 };
@@ -34,7 +31,10 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
         .eq('quiz_id', quizId);
       
       if (error) throw error;
-      return data as Question[];
+      return (data as any[]).map(q => ({
+        ...q,
+        options: q.options as { [key: string]: string }
+      })) as Question[];
     },
   });
 
