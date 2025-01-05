@@ -35,7 +35,7 @@ const TeacherLogin = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // First, attempt to sign in
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
@@ -46,6 +46,7 @@ const TeacherLogin = () => {
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('role')
+        .eq('id', authData.user.id)
         .single();
 
       if (profileError) throw profileError;
