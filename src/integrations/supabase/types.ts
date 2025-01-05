@@ -9,27 +9,77 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      class_attendance: {
+        Row: {
+          class_schedule_id: string | null
+          created_at: string
+          homework: string | null
+          id: string
+          notes: string | null
+          status: string | null
+          topics_covered: string | null
+        }
+        Insert: {
+          class_schedule_id?: string | null
+          created_at?: string
+          homework?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          topics_covered?: string | null
+        }
+        Update: {
+          class_schedule_id?: string | null
+          created_at?: string
+          homework?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          topics_covered?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_attendance_class_schedule_id_fkey"
+            columns: ["class_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "class_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_schedules: {
         Row: {
           created_at: string
+          duration: unknown | null
           id: string
+          recurrence: string | null
           scheduled_at: string
           status: string | null
           student_id: string | null
+          teacher_id: string | null
+          timezone: string | null
         }
         Insert: {
           created_at?: string
+          duration?: unknown | null
           id?: string
+          recurrence?: string | null
           scheduled_at: string
           status?: string | null
           student_id?: string | null
+          teacher_id?: string | null
+          timezone?: string | null
         }
         Update: {
           created_at?: string
+          duration?: unknown | null
           id?: string
+          recurrence?: string | null
           scheduled_at?: string
           status?: string | null
           student_id?: string | null
+          teacher_id?: string | null
+          timezone?: string | null
         }
         Relationships: [
           {
@@ -37,6 +87,13 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_schedules_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -94,6 +151,44 @@ export type Database = {
           Employee_name?: string | null
         }
         Relationships: []
+      }
+      fee_configurations: {
+        Row: {
+          amount: number
+          classes_prepaid: number | null
+          created_at: string
+          id: string
+          payment_due_days: number | null
+          payment_schedule: string | null
+          student_id: string | null
+        }
+        Insert: {
+          amount: number
+          classes_prepaid?: number | null
+          created_at?: string
+          id?: string
+          payment_due_days?: number | null
+          payment_schedule?: string | null
+          student_id?: string | null
+        }
+        Update: {
+          amount?: number
+          classes_prepaid?: number | null
+          created_at?: string
+          id?: string
+          payment_due_days?: number | null
+          payment_schedule?: string | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fee_configurations_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       fee_payments: {
         Row: {
