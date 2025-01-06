@@ -25,7 +25,7 @@ const Quizzes = () => {
   const { toast } = useToast();
 
   // First, get the authenticated user and their role
-  const { data: userRole } = useQuery({
+  const { data: userRole, isLoading: isLoadingRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -35,16 +35,18 @@ const Quizzes = () => {
         .from('profiles')
         .select('role')
         .eq('id', user.id)
-        .maybeSingle();
+        .single();
       
       return profile?.role;
     },
   });
 
-  // Fetch all quizzes, including premium ones
+  // Then fetch quizzes, including premium ones if user has access
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
-    queryKey: ['quizzes', selectedType],
+    queryKey: ['quizzes', selectedType, userRole],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
       let query = supabase
         .from('quizzes')
         .select('*');
@@ -60,8 +62,10 @@ const Quizzes = () => {
         throw error;
       }
       
+      console.log('Fetched quizzes:', data);
       return data as Quiz[];
     },
+    enabled: !isLoadingRole, // Only fetch quizzes after we know the user's role
   });
 
   const verifyAccessCode = useMutation({
@@ -72,10 +76,9 @@ const Quizzes = () => {
         .eq('quiz_id', quizId)
         .eq('access_code', code)
         .eq('is_active', true)
-        .maybeSingle();
+        .single();
 
       if (error) throw error;
-      if (!data) throw new Error('Invalid access code');
       return data;
     },
     onSuccess: () => {
@@ -114,6 +117,8 @@ const Quizzes = () => {
     );
   }
 
+  const isLoading = isLoadingRole || isLoadingQuizzes;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
       <Navbar />
@@ -127,7 +132,7 @@ const Quizzes = () => {
           onTypeSelect={setSelectedType}
         />
 
-        {isLoadingQuizzes ? (
+        {isLoading ? (
           <div className="text-center">Loading quizzes...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
