@@ -4,8 +4,12 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Lock, LockOpen } from "lucide-react";
 import { Quiz } from "@/components/Quiz";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 type Quiz = {
   id: string;
@@ -18,6 +22,25 @@ type Quiz = {
 const Quizzes = () => {
   const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
+  const [accessCode, setAccessCode] = useState("");
+  const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const { data: userRole } = useQuery({
+    queryKey: ['user-role'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      
+      return profile?.role;
+    },
+  });
 
   const { data: quizzes, isLoading } = useQuery({
     queryKey: ['quizzes', selectedType],
@@ -32,11 +55,36 @@ const Quizzes = () => {
     },
   });
 
+  const handleAccessCodeSubmit = async () => {
+    const { data, error } = await supabase
+      .from('quiz_access_codes')
+      .select('*')
+      .eq('quiz_id', selectedQuizId)
+      .eq('access_code', accessCode)
+      .eq('is_active', true)
+      .single();
+
+    if (error || !data) {
+      toast({
+        title: "Invalid Access Code",
+        description: "Please check your access code and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setActiveQuiz(selectedQuizId);
+    setSelectedQuizId(null);
+    setAccessCode("");
+  };
+
   const quizTypes = [
     { value: 'scratch', label: 'Scratch' },
     { value: 'python', label: 'Python' },
     { value: 'ai', label: 'AI' },
   ];
+
+  const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
 
   if (activeQuiz) {
     return (
@@ -82,10 +130,19 @@ const Quizzes = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quizzes?.map((quiz) => (
-              <Card key={quiz.id}>
+              <Card key={quiz.id} className="relative">
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <CardTitle>{quiz.title}</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      {quiz.title}
+                      {quiz.is_premium && (
+                        quiz.is_premium && !canAccessPremiumQuiz ? (
+                          <Lock className="h-5 w-5 text-red-500" />
+                        ) : (
+                          <LockOpen className="h-5 w-5 text-green-500" />
+                        )
+                      )}
+                    </CardTitle>
                     {quiz.is_premium && (
                       <Badge className="bg-yellow-500">Premium</Badge>
                     )}
@@ -95,15 +152,42 @@ const Quizzes = () => {
                 <CardContent>
                   <Button 
                     className="w-full"
-                    onClick={() => setActiveQuiz(quiz.id)}
+                    onClick={() => {
+                      if (quiz.is_premium && !canAccessPremiumQuiz) {
+                        setSelectedQuizId(quiz.id);
+                      } else {
+                        setActiveQuiz(quiz.id);
+                      }
+                    }}
                   >
-                    Start Quiz
+                    {quiz.is_premium && !canAccessPremiumQuiz ? "Enter Access Code" : "Start Quiz"}
                   </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
         )}
+
+        <Dialog open={!!selectedQuizId} onOpenChange={() => setSelectedQuizId(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Enter Access Code</DialogTitle>
+              <DialogDescription>
+                This is a premium quiz. Please enter your access code to continue.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input
+                placeholder="Access Code"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+              />
+              <Button className="w-full" onClick={handleAccessCodeSubmit}>
+                Submit
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

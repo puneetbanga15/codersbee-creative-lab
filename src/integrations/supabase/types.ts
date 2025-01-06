@@ -344,6 +344,41 @@ export type Database = {
           },
         ]
       }
+      quiz_access_codes: {
+        Row: {
+          access_code: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          quiz_id: string | null
+        }
+        Insert: {
+          access_code: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          quiz_id?: string | null
+        }
+        Update: {
+          access_code?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          quiz_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_access_codes_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz_questions: {
         Row: {
           correct_answer: string
