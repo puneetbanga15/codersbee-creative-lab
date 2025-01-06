@@ -35,7 +35,7 @@ const Quizzes = () => {
         .from('profiles')
         .select('role')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
       
       return profile?.role;
     },
@@ -60,7 +60,6 @@ const Quizzes = () => {
         throw error;
       }
       
-      console.log('Fetched quizzes:', data);
       return data as Quiz[];
     },
   });
@@ -73,9 +72,10 @@ const Quizzes = () => {
         .eq('quiz_id', quizId)
         .eq('access_code', code)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Invalid access code');
       return data;
     },
     onSuccess: () => {
