@@ -24,7 +24,8 @@ const Quizzes = () => {
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const { data: userRole } = useQuery({
+  // First, get the authenticated user and their role
+  const { data: userRole, isLoading: isLoadingRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -40,9 +41,12 @@ const Quizzes = () => {
     },
   });
 
-  const { data: quizzes, isLoading } = useQuery({
-    queryKey: ['quizzes', selectedType],
+  // Then fetch quizzes, including premium ones if user has access
+  const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
+    queryKey: ['quizzes', selectedType, userRole],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
       let query = supabase
         .from('quizzes')
         .select('*');
@@ -58,9 +62,10 @@ const Quizzes = () => {
         throw error;
       }
       
-      console.log('Fetched quizzes:', data); // Debug log
+      console.log('Fetched quizzes:', data);
       return data as Quiz[];
     },
+    enabled: !isLoadingRole, // Only fetch quizzes after we know the user's role
   });
 
   const verifyAccessCode = useMutation({
@@ -111,6 +116,8 @@ const Quizzes = () => {
       </div>
     );
   }
+
+  const isLoading = isLoadingRole || isLoadingQuizzes;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
