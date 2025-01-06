@@ -1,13 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, LockOpen } from "lucide-react";
+import { Lock, LockOpen, Play } from "lucide-react";
 
 type QuizCardProps = {
   quiz: {
     id: string;
     title: string;
     description: string;
+    quiz_type: 'scratch' | 'python' | 'ai';
     is_premium: boolean;
   };
   canAccessPremiumQuiz: boolean;
@@ -21,14 +22,16 @@ export const QuizCard = ({
   onStartQuiz, 
   onRequestAccess 
 }: QuizCardProps) => {
+  const isLocked = quiz.is_premium && !canAccessPremiumQuiz;
+
   return (
-    <Card className="relative">
+    <Card className="relative transition-all hover:shadow-lg">
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="flex items-center gap-2">
             {quiz.title}
             {quiz.is_premium && (
-              quiz.is_premium && !canAccessPremiumQuiz ? (
+              isLocked ? (
                 <Lock className="h-5 w-5 text-red-500" />
               ) : (
                 <LockOpen className="h-5 w-5 text-green-500" />
@@ -36,7 +39,9 @@ export const QuizCard = ({
             )}
           </CardTitle>
           {quiz.is_premium && (
-            <Badge className="bg-yellow-500">Premium</Badge>
+            <Badge variant={isLocked ? "destructive" : "default"} className="bg-yellow-500">
+              Premium
+            </Badge>
           )}
         </div>
         <CardDescription>{quiz.description}</CardDescription>
@@ -44,15 +49,26 @@ export const QuizCard = ({
       <CardContent>
         <Button 
           className="w-full"
+          variant={isLocked ? "outline" : "default"}
           onClick={() => {
-            if (quiz.is_premium && !canAccessPremiumQuiz) {
+            if (isLocked) {
               onRequestAccess(quiz.id);
             } else {
               onStartQuiz(quiz.id);
             }
           }}
         >
-          {quiz.is_premium && !canAccessPremiumQuiz ? "Enter Access Code" : "Start Quiz"}
+          {isLocked ? (
+            <>
+              <Lock className="mr-2 h-4 w-4" />
+              Enter Access Code
+            </>
+          ) : (
+            <>
+              <Play className="mr-2 h-4 w-4" />
+              Start Quiz
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>

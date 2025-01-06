@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Quiz } from "@/components/Quiz";
 import { QuizCard } from "@/components/quiz/QuizCard";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
@@ -21,6 +21,7 @@ const Quizzes = () => {
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const { data: userRole } = useQuery({
@@ -52,27 +53,40 @@ const Quizzes = () => {
     },
   });
 
-  const handleAccessCodeSubmit = async () => {
-    const { data, error } = await supabase
-      .from('quiz_access_codes')
-      .select('*')
-      .eq('quiz_id', selectedQuizId)
-      .eq('access_code', accessCode)
-      .eq('is_active', true)
-      .single();
+  const verifyAccessCode = useMutation({
+    mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
+      const { data, error } = await supabase
+        .from('quiz_access_codes')
+        .select('*')
+        .eq('quiz_id', quizId)
+        .eq('access_code', code)
+        .eq('is_active', true)
+        .single();
 
-    if (error || !data) {
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
       toast({
-        title: "Invalid Access Code",
-        description: "Please check your access code and try again.",
-        variant: "destructive",
+        title: "Access Granted",
+        description: "You can now start the quiz!",
       });
-      return;
-    }
+      setActiveQuiz(selectedQuizId);
+      setSelectedQuizId(null);
+      setAccessCode("");
+      setVerificationError(null);
+    },
+    onError: () => {
+      setVerificationError("Invalid access code. Please try again.");
+    },
+  });
 
-    setActiveQuiz(selectedQuizId);
-    setSelectedQuizId(null);
-    setAccessCode("");
+  const handleAccessCodeSubmit = () => {
+    if (!selectedQuizId) return;
+    verifyAccessCode.mutate({ 
+      quizId: selectedQuizId, 
+      code: accessCode 
+    });
   };
 
   const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
@@ -119,10 +133,16 @@ const Quizzes = () => {
 
         <AccessCodeDialog
           isOpen={!!selectedQuizId}
-          onClose={() => setSelectedQuizId(null)}
+          onClose={() => {
+            setSelectedQuizId(null);
+            setAccessCode("");
+            setVerificationError(null);
+          }}
           accessCode={accessCode}
           onAccessCodeChange={setAccessCode}
           onSubmit={handleAccessCodeSubmit}
+          error={verificationError}
+          isLoading={verifyAccessCode.isPending}
         />
       </div>
     </div>
