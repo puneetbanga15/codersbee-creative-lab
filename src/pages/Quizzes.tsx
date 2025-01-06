@@ -24,6 +24,7 @@ const Quizzes = () => {
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // First, get the authenticated user and their role
   const { data: userRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
@@ -34,13 +35,14 @@ const Quizzes = () => {
         .from('profiles')
         .select('role')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
       
       return profile?.role;
     },
   });
 
-  const { data: quizzes, isLoading } = useQuery({
+  // Fetch all quizzes, including premium ones
+  const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ['quizzes', selectedType],
     queryFn: async () => {
       let query = supabase
@@ -58,7 +60,6 @@ const Quizzes = () => {
         throw error;
       }
       
-      console.log('Fetched quizzes:', data); // Debug log
       return data as Quiz[];
     },
   });
@@ -71,9 +72,10 @@ const Quizzes = () => {
         .eq('quiz_id', quizId)
         .eq('access_code', code)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Invalid access code');
       return data;
     },
     onSuccess: () => {
@@ -125,7 +127,7 @@ const Quizzes = () => {
           onTypeSelect={setSelectedType}
         />
 
-        {isLoading ? (
+        {isLoadingQuizzes ? (
           <div className="text-center">Loading quizzes...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
