@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Lock, LockOpen } from "lucide-react";
-import { Quiz } from "@/components/Quiz";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { Quiz } from "@/components/Quiz";
+import { QuizCard } from "@/components/quiz/QuizCard";
+import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
+import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
+import { supabase } from "@/integrations/supabase/client";
 
 type Quiz = {
   id: string;
@@ -78,12 +75,6 @@ const Quizzes = () => {
     setAccessCode("");
   };
 
-  const quizTypes = [
-    { value: 'scratch', label: 'Scratch' },
-    { value: 'python', label: 'Python' },
-    { value: 'ai', label: 'AI' },
-  ];
-
   const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
 
   if (activeQuiz) {
@@ -105,89 +96,34 @@ const Quizzes = () => {
           Learning <span className="text-codersbee-vivid">Quizzes</span>
         </h1>
 
-        <div className="flex justify-center gap-4 mb-8">
-          <Button
-            variant="outline"
-            onClick={() => setSelectedType(null)}
-            className={!selectedType ? "bg-codersbee-vivid text-white" : ""}
-          >
-            All
-          </Button>
-          {quizTypes.map((type) => (
-            <Button
-              key={type.value}
-              variant="outline"
-              onClick={() => setSelectedType(type.value as any)}
-              className={selectedType === type.value ? "bg-codersbee-vivid text-white" : ""}
-            >
-              {type.label}
-            </Button>
-          ))}
-        </div>
+        <QuizTypeFilter 
+          selectedType={selectedType}
+          onTypeSelect={setSelectedType}
+        />
 
         {isLoading ? (
           <div className="text-center">Loading quizzes...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quizzes?.map((quiz) => (
-              <Card key={quiz.id} className="relative">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="flex items-center gap-2">
-                      {quiz.title}
-                      {quiz.is_premium && (
-                        quiz.is_premium && !canAccessPremiumQuiz ? (
-                          <Lock className="h-5 w-5 text-red-500" />
-                        ) : (
-                          <LockOpen className="h-5 w-5 text-green-500" />
-                        )
-                      )}
-                    </CardTitle>
-                    {quiz.is_premium && (
-                      <Badge className="bg-yellow-500">Premium</Badge>
-                    )}
-                  </div>
-                  <CardDescription>{quiz.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    className="w-full"
-                    onClick={() => {
-                      if (quiz.is_premium && !canAccessPremiumQuiz) {
-                        setSelectedQuizId(quiz.id);
-                      } else {
-                        setActiveQuiz(quiz.id);
-                      }
-                    }}
-                  >
-                    {quiz.is_premium && !canAccessPremiumQuiz ? "Enter Access Code" : "Start Quiz"}
-                  </Button>
-                </CardContent>
-              </Card>
+              <QuizCard
+                key={quiz.id}
+                quiz={quiz}
+                canAccessPremiumQuiz={canAccessPremiumQuiz}
+                onStartQuiz={setActiveQuiz}
+                onRequestAccess={setSelectedQuizId}
+              />
             ))}
           </div>
         )}
 
-        <Dialog open={!!selectedQuizId} onOpenChange={() => setSelectedQuizId(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Enter Access Code</DialogTitle>
-              <DialogDescription>
-                This is a premium quiz. Please enter your access code to continue.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <Input
-                placeholder="Access Code"
-                value={accessCode}
-                onChange={(e) => setAccessCode(e.target.value)}
-              />
-              <Button className="w-full" onClick={handleAccessCodeSubmit}>
-                Submit
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <AccessCodeDialog
+          isOpen={!!selectedQuizId}
+          onClose={() => setSelectedQuizId(null)}
+          accessCode={accessCode}
+          onAccessCodeChange={setAccessCode}
+          onSubmit={handleAccessCodeSubmit}
+        />
       </div>
     </div>
   );
