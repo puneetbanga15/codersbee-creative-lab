@@ -25,58 +25,73 @@ const Quizzes = () => {
   const { toast } = useToast();
 
   // First, get the authenticated user and their role
-  const { data: userRole } = useQuery({
+  const { data: userRole, isError: isUserRoleError } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-      
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .maybeSingle();
-      
-      return profile?.role;
+      try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) throw authError;
+        if (!user) return null;
+        
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+        
+        if (profileError) throw profileError;
+        return profile?.role;
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+        return null;
+      }
     },
+    retry: 1
   });
 
   // Fetch all quizzes, including premium ones
-  const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
+  const { data: quizzes, isLoading: isLoadingQuizzes, isError: isQuizzesError } = useQuery({
     queryKey: ['quizzes', selectedType],
     queryFn: async () => {
-      let query = supabase
-        .from('quizzes')
-        .select('*');
-      
-      if (selectedType) {
-        query = query.eq('quiz_type', selectedType);
-      }
-      
-      const { data, error } = await query;
-      
-      if (error) {
+      try {
+        let query = supabase
+          .from('quizzes')
+          .select('*');
+        
+        if (selectedType) {
+          query = query.eq('quiz_type', selectedType);
+        }
+        
+        const { data, error } = await query;
+        
+        if (error) throw error;
+        return data as Quiz[];
+      } catch (error) {
         console.error('Error fetching quizzes:', error);
         throw error;
       }
-      
-      return data as Quiz[];
     },
+    retry: 1
   });
 
   const verifyAccessCode = useMutation({
     mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
-      const { data, error } = await supabase
-        .from('quiz_access_codes')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .eq('access_code', code)
-        .eq('is_active', true)
-        .maybeSingle();
+      try {
+        const { data, error } = await supabase
+          .from('quiz_access_codes')
+          .select('*')
+          .eq('quiz_id', quizId)
+          .eq('access_code', code)
+          .eq('is_active', true)
+          .maybeSingle();
 
-      if (error) throw error;
-      if (!data) throw new Error('Invalid access code');
-      return data;
+        if (error) throw error;
+        if (!data) throw new Error('Invalid access code');
+        return data;
+      } catch (error) {
+        console.error('Error verifying access code:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       toast({
@@ -102,6 +117,17 @@ const Quizzes = () => {
   };
 
   const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
+
+  if (isUserRoleError || isQuizzesError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+        <Navbar />
+        <div className="container mx-auto px-4 pt-24 text-center">
+          <p className="text-red-600">Error loading quizzes. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (activeQuiz) {
     return (
