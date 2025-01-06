@@ -43,12 +43,22 @@ const Quizzes = () => {
   const { data: quizzes, isLoading } = useQuery({
     queryKey: ['quizzes', selectedType],
     queryFn: async () => {
-      let query = supabase.from('quizzes').select('*');
+      let query = supabase
+        .from('quizzes')
+        .select('*');
+      
       if (selectedType) {
         query = query.eq('quiz_type', selectedType);
       }
+      
       const { data, error } = await query;
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Error fetching quizzes:', error);
+        throw error;
+      }
+      
+      console.log('Fetched quizzes:', data); // Debug log
       return data as Quiz[];
     },
   });
