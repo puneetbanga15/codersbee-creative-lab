@@ -450,6 +450,7 @@ export type Database = {
           description: string | null
           difficulty_level: string
           id: string
+          project_type: string | null
           project_url: string | null
           session_number: number
           title: string
@@ -459,6 +460,7 @@ export type Database = {
           description?: string | null
           difficulty_level: string
           id?: string
+          project_type?: string | null
           project_url?: string | null
           session_number: number
           title: string
@@ -468,6 +470,7 @@ export type Database = {
           description?: string | null
           difficulty_level?: string
           id?: string
+          project_type?: string | null
           project_url?: string | null
           session_number?: number
           title?: string
