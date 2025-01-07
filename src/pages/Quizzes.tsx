@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
@@ -8,11 +7,12 @@ import { ManageAccessCodeDialog } from "@/components/quiz/ManageAccessCodeDialog
 import { supabase } from "@/integrations/supabase/client";
 import { QuizContainer } from "@/components/quiz/QuizContainer";
 import { QuizLayout } from "@/components/quiz/QuizLayout";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { useUserRole } from "@/hooks/useUserRole";
 
 type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
 
 const Quizzes = () => {
-  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState<FilterType>(null);
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
@@ -21,73 +21,9 @@ const Quizzes = () => {
   const [isManageAccessCodeOpen, setIsManageAccessCodeOpen] = useState(false);
   const { toast } = useToast();
 
-  // Check authentication status
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        if (!session) {
-          console.log("No active session found, redirecting to login");
-          navigate("/teachers/login");
-          return;
-        }
-      } catch (error) {
-        console.error("Auth error:", error);
-        navigate("/teachers/login");
-      }
-    };
-
-    checkAuth();
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session) {
-        navigate("/teachers/login");
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
-
-  const { data: userRole } = useQuery({
-    queryKey: ['user-role'],
-    queryFn: async () => {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError) {
-        console.error("Auth error:", authError);
-        throw authError;
-      }
-      if (!user) {
-        console.log("No user found");
-        return null;
-      }
-      
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .maybeSingle();
-      
-      if (profileError) {
-        console.error("Profile error:", profileError);
-        throw profileError;
-      }
-      return profile?.role;
-    },
-    retry: false,
-    onError: (error) => {
-      console.error("Error fetching user role:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch user role. Please try logging in again.",
-        variant: "destructive",
-      });
-      navigate("/teachers/login");
-    }
-  });
+  // Use the new hooks
+  useAuthCheck();
+  const { data: userRole } = useUserRole();
 
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ['quizzes', selectedType],
