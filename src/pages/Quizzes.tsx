@@ -15,6 +15,7 @@ const Quizzes = () => {
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
   const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
   const { toast } = useToast();
 
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
@@ -37,31 +38,41 @@ const Quizzes = () => {
   });
 
   const verifyAccessCode = async (quizId: string, code: string) => {
+    console.log('Verifying access code:', code, 'for quiz:', quizId);
+    
     if (!code.trim()) {
       setVerificationError("Please enter an access code");
       return false;
     }
 
-    const { data, error } = await supabase
-      .from('quiz_access_codes')
-      .select('*')
-      .eq('quiz_id', quizId)
-      .eq('access_code', code.trim())
-      .eq('is_active', true)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('quiz_access_codes')
+        .select('*')
+        .eq('quiz_id', quizId)
+        .eq('access_code', code.trim())
+        .eq('is_active', true)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Access code verification error:', error);
-      setVerificationError("An error occurred while verifying the access code");
+      if (error) {
+        console.error('Access code verification error:', error);
+        setVerificationError("An error occurred while verifying the access code");
+        return false;
+      }
+
+      if (!data) {
+        console.log('Invalid or expired access code');
+        setVerificationError("Invalid or expired access code. Please try again.");
+        return false;
+      }
+
+      console.log('Access code verified successfully');
+      return true;
+    } catch (error) {
+      console.error('Unexpected error during verification:', error);
+      setVerificationError("An unexpected error occurred. Please try again.");
       return false;
     }
-
-    if (!data) {
-      setVerificationError("Invalid or expired access code. Please try again.");
-      return false;
-    }
-
-    return true;
   };
 
   const handleQuizAccess = (quizId: string) => {
@@ -73,16 +84,21 @@ const Quizzes = () => {
   const handleAccessCodeSubmit = async () => {
     if (!selectedQuizId) return;
 
-    const isValid = await verifyAccessCode(selectedQuizId, accessCode);
-    if (isValid) {
-      setActiveQuiz(selectedQuizId);
-      setSelectedQuizId(null);
-      setAccessCode("");
-      setVerificationError(null);
-      toast({
-        title: "Access granted",
-        description: "You can now start the quiz",
-      });
+    setIsVerifying(true);
+    try {
+      const isValid = await verifyAccessCode(selectedQuizId, accessCode);
+      if (isValid) {
+        setActiveQuiz(selectedQuizId);
+        setSelectedQuizId(null);
+        setAccessCode("");
+        setVerificationError(null);
+        toast({
+          title: "Access granted",
+          description: "You can now start the quiz",
+        });
+      }
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -120,7 +136,7 @@ const Quizzes = () => {
         onAccessCodeChange={setAccessCode}
         onSubmit={handleAccessCodeSubmit}
         error={verificationError}
-        isLoading={false}
+        isLoading={isVerifying}
       />
     </>
   );
