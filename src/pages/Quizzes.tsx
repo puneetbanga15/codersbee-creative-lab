@@ -48,10 +48,15 @@ const Quizzes = () => {
       .eq('quiz_id', quizId)
       .eq('access_code', code.trim())
       .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
       console.error('Access code verification error:', error);
+      setVerificationError("An error occurred while verifying the access code");
+      return false;
+    }
+
+    if (!data) {
       setVerificationError("Invalid or expired access code. Please try again.");
       return false;
     }
