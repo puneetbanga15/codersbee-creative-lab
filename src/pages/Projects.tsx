@@ -39,8 +39,8 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        // Convert the selected type to lowercase for case-insensitive comparison
-        query = query.ilike('project_type', selectedType.toLowerCase());
+        // Use ilike with % for partial matching
+        query = query.ilike('project_type', `%${selectedType}%`);
       }
       
       const { data, error } = await query;
@@ -111,11 +111,7 @@ const Projects = () => {
                   <CardDescription className="text-base">{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {project.project_url && (
-                    <Button variant="outline" className="w-full" onClick={() => window.open(project.project_url, '_blank')}>
-                      View Project
-                    </Button>
-                  )}
+                  {/* View Project button removed as requested */}
                 </CardContent>
               </Card>
             ))}
