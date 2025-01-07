@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 type QuizHeaderProps = {
   userRole: string | null;
-  onManageAccessCodes: () => void;
+  onManageAccessCodes?: () => void;
 };
 
 export const QuizHeader = ({ userRole, onManageAccessCodes }: QuizHeaderProps) => {
@@ -11,7 +11,7 @@ export const QuizHeader = ({ userRole, onManageAccessCodes }: QuizHeaderProps) =
       <h1 className="text-4xl md:text-5xl font-bold text-center text-codersbee-dark">
         Learning <span className="text-codersbee-vivid">Quizzes</span>
       </h1>
-      {userRole === 'admin' && (
+      {userRole === 'admin' && onManageAccessCodes && (
         <Button 
           onClick={onManageAccessCodes}
           className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"

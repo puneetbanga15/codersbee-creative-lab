@@ -2,14 +2,11 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
-import { Quiz } from "@/components/Quiz";
-import { QuizGrid } from "@/components/quiz/QuizGrid";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
-import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
-import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { ManageAccessCodeDialog } from "@/components/quiz/ManageAccessCodeDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { QuizContainer } from "@/components/quiz/QuizContainer";
+import { QuizLayout } from "@/components/quiz/QuizLayout";
 
 const Quizzes = () => {
   const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
@@ -18,7 +15,6 @@ const Quizzes = () => {
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const [isManageAccessCodeOpen, setIsManageAccessCodeOpen] = useState(false);
-  const [newAccessCode, setNewAccessCode] = useState("");
   const { toast } = useToast();
 
   // Fetch user role
@@ -38,20 +34,6 @@ const Quizzes = () => {
       if (profileError) throw profileError;
       return profile?.role;
     },
-  });
-
-  // Fetch access codes for admin
-  const { data: accessCodes, refetch: refetchAccessCodes } = useQuery({
-    queryKey: ['access-codes'],
-    queryFn: async () => {
-      if (userRole !== 'admin') return null;
-      const { data, error } = await supabase
-        .from('quiz_access_codes')
-        .select('*');
-      if (error) throw error;
-      return data;
-    },
-    enabled: userRole === 'admin',
   });
 
   // Fetch quizzes
@@ -100,34 +82,6 @@ const Quizzes = () => {
     },
   });
 
-  // Update access code
-  const updateAccessCode = useMutation({
-    mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
-      const { error } = await supabase
-        .from('quiz_access_codes')
-        .update({ access_code: code })
-        .eq('quiz_id', quizId);
-      
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Access code updated",
-        description: "The access code has been successfully updated.",
-      });
-      refetchAccessCodes();
-      setIsManageAccessCodeOpen(false);
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to update access code. Please try again.",
-        variant: "destructive",
-      });
-      console.error('Error updating access code:', error);
-    },
-  });
-
   const handleAccessCodeSubmit = () => {
     if (!selectedQuizId) return;
     verifyAccessCode.mutate({ 
@@ -136,89 +90,60 @@ const Quizzes = () => {
     });
   };
 
-  const handleUpdateAccessCode = () => {
-    if (!selectedQuizId || !newAccessCode.trim()) return;
-    updateAccessCode.mutate({
-      quizId: selectedQuizId,
-      code: newAccessCode.trim()
-    });
-  };
-
   const handleQuizAccess = (quizId: string) => {
     setSelectedQuizId(quizId);
-    if (userRole === 'admin') {
-      const currentAccessCode = accessCodes?.find(ac => ac.quiz_id === quizId)?.access_code || '';
-      setNewAccessCode(currentAccessCode);
-      setIsManageAccessCodeOpen(true);
-    }
   };
 
   const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
 
   if (activeQuiz) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
-        <Navbar />
-        <div className="container mx-auto px-4 pt-24">
-          <Button 
-            onClick={() => setActiveQuiz(null)} 
-            className="mb-4"
-            variant="outline"
-          >
-            Back to Quizzes
-          </Button>
-          <Quiz quizId={activeQuiz} />
-        </div>
-      </div>
+      <QuizContainer 
+        quizId={activeQuiz} 
+        onBack={() => setActiveQuiz(null)} 
+      />
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+    <>
       <Navbar />
-      <div className="container mx-auto px-4 pt-24">
-        <QuizHeader 
-          userRole={userRole} 
-          onManageAccessCodes={() => setIsManageAccessCodeOpen(true)} 
-        />
+      <QuizLayout
+        userRole={userRole}
+        selectedType={selectedType}
+        onTypeSelect={setSelectedType}
+        quizzes={quizzes || []}
+        canAccessPremiumQuiz={canAccessPremiumQuiz}
+        onStartQuiz={setActiveQuiz}
+        onRequestAccess={handleQuizAccess}
+        isLoadingQuizzes={isLoadingQuizzes}
+      />
 
-        <QuizTypeFilter 
-          selectedType={selectedType}
-          onTypeSelect={setSelectedType}
-        />
+      <AccessCodeDialog
+        isOpen={!!selectedQuizId}
+        onClose={() => {
+          setSelectedQuizId(null);
+          setAccessCode("");
+          setVerificationError(null);
+        }}
+        accessCode={accessCode}
+        onAccessCodeChange={setAccessCode}
+        onSubmit={handleAccessCodeSubmit}
+        error={verificationError}
+        isLoading={verifyAccessCode.isPending}
+      />
 
-        <QuizGrid
-          quizzes={quizzes}
-          canAccessPremiumQuiz={canAccessPremiumQuiz}
-          onStartQuiz={setActiveQuiz}
-          onRequestAccess={handleQuizAccess}
-          isLoading={isLoadingQuizzes}
-        />
-
-        <AccessCodeDialog
-          isOpen={!!selectedQuizId && !isManageAccessCodeOpen}
-          onClose={() => {
-            setSelectedQuizId(null);
-            setAccessCode("");
-            setVerificationError(null);
-          }}
-          accessCode={accessCode}
-          onAccessCodeChange={setAccessCode}
-          onSubmit={handleAccessCodeSubmit}
-          error={verificationError}
-          isLoading={verifyAccessCode.isPending}
-        />
-
+      {userRole === 'admin' && (
         <ManageAccessCodeDialog
           isOpen={isManageAccessCodeOpen}
           onClose={() => setIsManageAccessCodeOpen(false)}
-          newAccessCode={newAccessCode}
-          onAccessCodeChange={setNewAccessCode}
-          onUpdateAccessCode={handleUpdateAccessCode}
-          isUpdating={updateAccessCode.isPending}
+          newAccessCode=""
+          onAccessCodeChange={() => {}}
+          onUpdateAccessCode={() => {}}
+          isUpdating={false}
         />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
