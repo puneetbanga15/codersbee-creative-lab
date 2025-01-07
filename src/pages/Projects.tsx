@@ -39,8 +39,8 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        // Use ilike with % for partial matching
-        query = query.ilike('project_type', `%${selectedType}%`);
+        // Exact match with case-insensitive comparison
+        query = query.ilike('project_type', selectedType);
       }
       
       const { data, error } = await query;
