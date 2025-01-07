@@ -6,10 +6,10 @@ import { Quiz } from "@/components/Quiz";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
+import { QuizHeader } from "@/components/quiz/QuizHeader";
+import { ManageAccessCodeDialog } from "@/components/quiz/ManageAccessCodeDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Quizzes = () => {
   const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
@@ -160,6 +160,13 @@ const Quizzes = () => {
       <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
         <Navbar />
         <div className="container mx-auto px-4 pt-24">
+          <Button 
+            onClick={() => setActiveQuiz(null)} 
+            className="mb-4"
+            variant="outline"
+          >
+            Back to Quizzes
+          </Button>
           <Quiz quizId={activeQuiz} />
         </div>
       </div>
@@ -170,19 +177,10 @@ const Quizzes = () => {
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
       <Navbar />
       <div className="container mx-auto px-4 pt-24">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-codersbee-dark">
-            Learning <span className="text-codersbee-vivid">Quizzes</span>
-          </h1>
-          {userRole === 'admin' && (
-            <Button 
-              onClick={() => setIsManageAccessCodeOpen(true)}
-              className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
-            >
-              Manage Access Codes
-            </Button>
-          )}
-        </div>
+        <QuizHeader 
+          userRole={userRole} 
+          onManageAccessCodes={() => setIsManageAccessCodeOpen(true)} 
+        />
 
         <QuizTypeFilter 
           selectedType={selectedType}
@@ -211,33 +209,14 @@ const Quizzes = () => {
           isLoading={verifyAccessCode.isPending}
         />
 
-        <Dialog open={isManageAccessCodeOpen} onOpenChange={setIsManageAccessCodeOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Manage Access Code</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="accessCode" className="text-sm font-medium">
-                  Access Code
-                </label>
-                <Input
-                  id="accessCode"
-                  value={newAccessCode}
-                  onChange={(e) => setNewAccessCode(e.target.value)}
-                  placeholder="Enter new access code"
-                />
-              </div>
-              <Button 
-                onClick={handleUpdateAccessCode}
-                className="w-full"
-                disabled={!newAccessCode.trim() || updateAccessCode.isPending}
-              >
-                {updateAccessCode.isPending ? "Updating..." : "Update Access Code"}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <ManageAccessCodeDialog
+          isOpen={isManageAccessCodeOpen}
+          onClose={() => setIsManageAccessCodeOpen(false)}
+          newAccessCode={newAccessCode}
+          onAccessCodeChange={setNewAccessCode}
+          onUpdateAccessCode={handleUpdateAccessCode}
+          isUpdating={updateAccessCode.isPending}
+        />
       </div>
     </div>
   );

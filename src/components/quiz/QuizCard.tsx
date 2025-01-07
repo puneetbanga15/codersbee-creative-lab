@@ -23,7 +23,9 @@ export const QuizCard = ({
   onRequestAccess 
 }: QuizCardProps) => {
   const handleQuizStart = () => {
-    if (quiz.is_premium) {
+    if (quiz.is_premium && !canAccessPremiumQuiz) {
+      onRequestAccess(quiz.id);
+    } else if (quiz.is_premium) {
       onRequestAccess(quiz.id);
     } else {
       onStartQuiz(quiz.id);
