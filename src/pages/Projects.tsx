@@ -26,6 +26,13 @@ const difficultyColors = {
   Advanced: "bg-red-500",
 };
 
+const projectTypeColors = {
+  scratch: "bg-orange-500",
+  python: "bg-blue-500",
+  web: "bg-purple-500",
+  ai: "bg-emerald-500",
+};
+
 const Projects = () => {
   const { toast } = useToast();
   const [selectedType, setSelectedType] = useState<ProjectType>(null);
@@ -109,17 +116,22 @@ const Projects = () => {
             {projects?.map((project) => (
               <Card key={project.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="flex justify-between items-start gap-2 flex-wrap">
+                  <div className="flex justify-between items-start gap-2 flex-wrap mb-2">
                     <CardTitle className="text-xl">{project.title}</CardTitle>
                     <Badge className={difficultyColors[project.difficulty_level as keyof typeof difficultyColors]}>
                       {project.difficulty_level}
                     </Badge>
                   </div>
+                  <Badge 
+                    className={`mb-2 ${projectTypeColors[project.project_type as keyof typeof projectTypeColors] || "bg-gray-500"}`}
+                  >
+                    {project.project_type ? project.project_type.toUpperCase() : 'Unknown'}
+                  </Badge>
                   <CardDescription className="text-base">{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm text-gray-600">
-                    Session {project.session_number}
+                    {new Date(project.created_at).toLocaleDateString()}
                   </div>
                 </CardContent>
               </Card>
