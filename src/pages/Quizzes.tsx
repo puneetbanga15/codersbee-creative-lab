@@ -228,14 +228,7 @@ const Quizzes = () => {
                 quiz={quiz}
                 canAccessPremiumQuiz={canAccessPremiumQuiz}
                 onStartQuiz={setActiveQuiz}
-                onRequestAccess={(quizId) => {
-                  setSelectedQuizId(quizId);
-                  if (userRole === 'admin') {
-                    const currentAccessCode = accessCodes?.find(ac => ac.quiz_id === quizId)?.access_code || '';
-                    setNewAccessCode(currentAccessCode);
-                    setIsManageAccessCodeOpen(true);
-                  }
-                }}
+                onRequestAccess={setSelectedQuizId}
               />
             ))}
           </div>
