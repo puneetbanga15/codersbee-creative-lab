@@ -37,33 +37,38 @@ const Quizzes = () => {
   });
 
   const verifyAccessCode = async (quizId: string, code: string) => {
+    if (!code.trim()) {
+      setVerificationError("Please enter an access code");
+      return false;
+    }
+
     const { data, error } = await supabase
       .from('quiz_access_codes')
       .select('*')
       .eq('quiz_id', quizId)
-      .eq('access_code', code)
+      .eq('access_code', code.trim())
       .eq('is_active', true)
       .single();
 
     if (error || !data) {
-      setVerificationError("Invalid access code. Please try again.");
+      console.error('Access code verification error:', error);
+      setVerificationError("Invalid or expired access code. Please try again.");
       return false;
     }
+
     return true;
   };
 
   const handleQuizAccess = (quizId: string) => {
     setSelectedQuizId(quizId);
     setVerificationError(null);
+    setAccessCode("");
   };
 
   const handleAccessCodeSubmit = async () => {
-    if (!selectedQuizId || !accessCode.trim()) {
-      setVerificationError("Please enter an access code");
-      return;
-    }
+    if (!selectedQuizId) return;
 
-    const isValid = await verifyAccessCode(selectedQuizId, accessCode.trim());
+    const isValid = await verifyAccessCode(selectedQuizId, accessCode);
     if (isValid) {
       setActiveQuiz(selectedQuizId);
       setSelectedQuizId(null);
