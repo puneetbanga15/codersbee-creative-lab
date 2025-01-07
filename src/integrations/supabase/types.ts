@@ -514,7 +514,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      quiz_type: "scratch" | "python" | "ai"
+      quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
       user_role: "admin" | "teacher" | "parent"
     }
     CompositeTypes: {
