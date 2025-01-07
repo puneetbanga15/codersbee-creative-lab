@@ -46,13 +46,9 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        if (selectedType === 'Scratch') {
-          // For Scratch, exclude projects that are Python, Web, or AI
-          query = query.not('project_type', 'in', ['python', 'web', 'ai']);
-        } else {
-          // For other types, filter as normal
-          query = query.ilike('project_type', selectedType.toLowerCase());
-        }
+        // Convert the selected type to lowercase for comparison
+        const type = selectedType.toLowerCase();
+        query = query.eq('project_type', type);
       }
       
       const { data, error } = await query;
