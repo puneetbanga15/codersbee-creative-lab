@@ -3,21 +3,13 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 import { Quiz } from "@/components/Quiz";
-import { QuizCard } from "@/components/quiz/QuizCard";
+import { QuizGrid } from "@/components/quiz/QuizGrid";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-type Quiz = {
-  id: string;
-  title: string;
-  description: string;
-  quiz_type: 'scratch' | 'python' | 'ai';
-  is_premium: boolean;
-};
 
 const Quizzes = () => {
   const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
@@ -29,31 +21,26 @@ const Quizzes = () => {
   const [newAccessCode, setNewAccessCode] = useState("");
   const { toast } = useToast();
 
-  // First, get the authenticated user and their role
+  // Fetch user role
   const { data: userRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
-      try {
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError) throw authError;
-        if (!user) return null;
-        
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle();
-        
-        if (profileError) throw profileError;
-        return profile?.role;
-      } catch (error) {
-        console.error('Error fetching user role:', error);
-        return null;
-      }
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) throw authError;
+      if (!user) return null;
+      
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle();
+      
+      if (profileError) throw profileError;
+      return profile?.role;
     },
   });
 
-  // Fetch access codes if user is admin
+  // Fetch access codes for admin
   const { data: accessCodes, refetch: refetchAccessCodes } = useQuery({
     queryKey: ['access-codes'],
     queryFn: async () => {
@@ -67,34 +54,53 @@ const Quizzes = () => {
     enabled: userRole === 'admin',
   });
 
-  // Fetch all quizzes, including premium ones
-  const { data: quizzes, isLoading: isLoadingQuizzes, isError: isQuizzesError } = useQuery({
+  // Fetch quizzes
+  const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ['quizzes', selectedType],
     queryFn: async () => {
-      try {
-        let query = supabase
-          .from('quizzes')
-          .select('*');
-        
-        if (selectedType) {
-          query = query.eq('quiz_type', selectedType);
-        }
-        
-        const { data, error } = await query;
-        
-        if (error) throw error;
-        
-        return (data as Quiz[]).sort((a, b) => {
-          if (a.is_premium === b.is_premium) return 0;
-          return a.is_premium ? 1 : -1;
-        });
-      } catch (error) {
-        console.error('Error fetching quizzes:', error);
-        throw error;
+      let query = supabase.from('quizzes').select('*');
+      if (selectedType) {
+        query = query.eq('quiz_type', selectedType);
       }
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
     },
   });
 
+  // Verify access code
+  const verifyAccessCode = useMutation({
+    mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
+      const { data, error } = await supabase
+        .from('quiz_access_codes')
+        .select('*')
+        .eq('quiz_id', quizId)
+        .eq('access_code', code)
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) throw new Error('Invalid access code');
+      return data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Access Granted",
+        description: "You can now start the quiz!",
+      });
+      if (selectedQuizId) {
+        setActiveQuiz(selectedQuizId);
+      }
+      setSelectedQuizId(null);
+      setAccessCode("");
+      setVerificationError(null);
+    },
+    onError: () => {
+      setVerificationError("Invalid access code. Please try again.");
+    },
+  });
+
+  // Update access code
   const updateAccessCode = useMutation({
     mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
       const { error } = await supabase
@@ -122,35 +128,6 @@ const Quizzes = () => {
     },
   });
 
-  const verifyAccessCode = useMutation({
-    mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
-      const { data, error } = await supabase
-        .from('quiz_access_codes')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .eq('access_code', code)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (error) throw error;
-      if (!data) throw new Error('Invalid access code');
-      return data;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Access Granted",
-        description: "You can now start the quiz!",
-      });
-      setActiveQuiz(selectedQuizId);
-      setSelectedQuizId(null);
-      setAccessCode("");
-      setVerificationError(null);
-    },
-    onError: () => {
-      setVerificationError("Invalid access code. Please try again.");
-    },
-  });
-
   const handleAccessCodeSubmit = () => {
     if (!selectedQuizId) return;
     verifyAccessCode.mutate({ 
@@ -167,18 +144,16 @@ const Quizzes = () => {
     });
   };
 
-  const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
+  const handleQuizAccess = (quizId: string) => {
+    setSelectedQuizId(quizId);
+    if (userRole === 'admin') {
+      const currentAccessCode = accessCodes?.find(ac => ac.quiz_id === quizId)?.access_code || '';
+      setNewAccessCode(currentAccessCode);
+      setIsManageAccessCodeOpen(true);
+    }
+  };
 
-  if (isQuizzesError) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
-        <Navbar />
-        <div className="container mx-auto px-4 pt-24 text-center">
-          <p className="text-red-600">Error loading quizzes. Please try again later.</p>
-        </div>
-      </div>
-    );
-  }
+  const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
 
   if (activeQuiz) {
     return (
@@ -201,11 +176,7 @@ const Quizzes = () => {
           </h1>
           {userRole === 'admin' && (
             <Button 
-              onClick={() => {
-                const currentAccessCode = accessCodes?.find(ac => ac.quiz_id === selectedQuizId)?.access_code || '';
-                setNewAccessCode(currentAccessCode);
-                setIsManageAccessCodeOpen(true);
-              }}
+              onClick={() => setIsManageAccessCodeOpen(true)}
               className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
             >
               Manage Access Codes
@@ -218,21 +189,13 @@ const Quizzes = () => {
           onTypeSelect={setSelectedType}
         />
 
-        {isLoadingQuizzes ? (
-          <div className="text-center">Loading quizzes...</div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quizzes?.map((quiz) => (
-              <QuizCard
-                key={quiz.id}
-                quiz={quiz}
-                canAccessPremiumQuiz={canAccessPremiumQuiz}
-                onStartQuiz={setActiveQuiz}
-                onRequestAccess={setSelectedQuizId}
-              />
-            ))}
-          </div>
-        )}
+        <QuizGrid
+          quizzes={quizzes}
+          canAccessPremiumQuiz={canAccessPremiumQuiz}
+          onStartQuiz={setActiveQuiz}
+          onRequestAccess={handleQuizAccess}
+          isLoading={isLoadingQuizzes}
+        />
 
         <AccessCodeDialog
           isOpen={!!selectedQuizId && !isManageAccessCodeOpen}
