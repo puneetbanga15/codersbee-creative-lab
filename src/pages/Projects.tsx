@@ -39,12 +39,14 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        // Exact match with case-insensitive comparison
-        query = query.ilike('project_type', selectedType);
+        // Convert selectedType to lowercase for consistent comparison
+        query = query.ilike('project_type', `${selectedType.toLowerCase()}`);
       }
       
       const { data, error } = await query;
+      
       if (error) {
+        console.error('Query error:', error);
         toast({
           title: "Error",
           description: "Failed to load projects. Please try again.",
@@ -111,7 +113,9 @@ const Projects = () => {
                   <CardDescription className="text-base">{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {/* View Project button removed as requested */}
+                  <div className="text-sm text-gray-600">
+                    Session {project.session_number}
+                  </div>
                 </CardContent>
               </Card>
             ))}
