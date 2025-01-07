@@ -34,17 +34,59 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        // Add the project type filter if selected
-        query = query.ilike('description', `%${selectedType}%`);
+        // Update the filter to match exactly with the project type
+        query = query.eq('project_type', selectedType.toLowerCase());
       }
       
       const { data, error } = await query;
       if (error) throw error;
+      
+      // Add new AI projects if they don't exist
+      if (!data.some(p => p.title.includes('Chat with PDF'))) {
+        const newProjects = [
+          {
+            title: "Chat with PDF using LangChain",
+            description: "Build an AI-powered PDF chat application using LangChain and OpenAI. Learn about document processing, embeddings, and vector stores.",
+            difficulty_level: "Intermediate",
+            project_type: "ai",
+            project_url: "https://github.com/example/pdf-chat"
+          },
+          {
+            title: "AI Agents with Crew AI",
+            description: "Create autonomous AI agents that can collaborate and solve complex tasks using Crew AI framework.",
+            difficulty_level: "Advanced",
+            project_type: "ai",
+            project_url: "https://github.com/example/crew-ai-agents"
+          },
+          {
+            title: "Fine-tuning Open Source LLMs",
+            description: "Learn how to fine-tune open source language models like Llama 2 for specific tasks and domains.",
+            difficulty_level: "Advanced",
+            project_type: "ai",
+            project_url: "https://github.com/example/llm-finetuning"
+          },
+          {
+            title: "HuggingChat Models Integration",
+            description: "Integrate various HuggingFace models into your applications for tasks like text generation, classification, and more.",
+            difficulty_level: "Intermediate",
+            project_type: "ai",
+            project_url: "https://github.com/example/huggingchat-integration"
+          }
+        ];
+
+        const { error: insertError } = await supabase
+          .from('student_projects')
+          .insert(newProjects);
+
+        if (insertError) throw insertError;
+        
+        // Add the new projects to the returned data
+        data.push(...newProjects);
+      }
+
       return data as Project[];
     },
   });
-
-  const projectTypes: ProjectType[] = ['Scratch', 'Python', 'Web', 'AI'];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
@@ -72,11 +114,11 @@ const Projects = () => {
           >
             All Projects
           </Button>
-          {projectTypes.map((type) => (
+          {['Scratch', 'Python', 'Web', 'AI'].map((type) => (
             <Button
               key={type}
               variant="outline"
-              onClick={() => setSelectedType(type)}
+              onClick={() => setSelectedType(type as ProjectType)}
               className={selectedType === type ? "bg-codersbee-vivid text-white" : ""}
             >
               {type}
