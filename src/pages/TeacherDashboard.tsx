@@ -9,6 +9,7 @@ import { ParentsTab } from "@/components/dashboard/ParentsTab";
 import { ScheduleTable } from "@/components/dashboard/teacher/ScheduleTable";
 import { PaymentsTable } from "@/components/dashboard/teacher/PaymentsTable";
 import { ScheduleCalendar } from "@/components/dashboard/teacher/ScheduleCalendar";
+import { QuizAccessTab } from "@/components/dashboard/teacher/QuizAccessTab";
 import { startOfMonth, endOfMonth } from "date-fns";
 
 const TeacherDashboard = () => {
@@ -82,6 +83,7 @@ const TeacherDashboard = () => {
             <>
               <TabsTrigger value="teachers">Teachers</TabsTrigger>
               <TabsTrigger value="parents">Parents</TabsTrigger>
+              <TabsTrigger value="quiz-access">Quiz Access</TabsTrigger>
             </>
           )}
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
@@ -108,6 +110,17 @@ const TeacherDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <ParentsTab />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="quiz-access">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quiz Access Codes</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <QuizAccessTab />
                 </CardContent>
               </Card>
             </TabsContent>
