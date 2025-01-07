@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuthCheck } from "@/hooks/useAuthCheck";
-import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/hooks/use-toast";
 
 type Project = {
@@ -29,8 +27,6 @@ const difficultyColors = {
 };
 
 const Projects = () => {
-  useAuthCheck(); // Add authentication check
-  const { data: userRole } = useUserRole();
   const { toast } = useToast();
   const [selectedType, setSelectedType] = useState<ProjectType>(null);
 
@@ -56,68 +52,6 @@ const Projects = () => {
         throw error;
       }
       
-      // Only add new AI projects if user is admin or teacher
-      if ((userRole === 'admin' || userRole === 'teacher') && !data.some(p => p.title.includes('Chat with PDF'))) {
-        const currentTime = new Date().toISOString();
-        const newProjects = [
-          {
-            id: crypto.randomUUID(),
-            title: "Chat with PDF using LangChain",
-            description: "Build an AI-powered PDF chat application using LangChain and OpenAI. Learn about document processing, embeddings, and vector stores.",
-            difficulty_level: "Intermediate",
-            project_type: "ai",
-            project_url: "https://github.com/example/pdf-chat",
-            session_number: 1,
-            created_at: currentTime
-          },
-          {
-            id: crypto.randomUUID(),
-            title: "AI Agents with Crew AI",
-            description: "Create autonomous AI agents that can collaborate and solve complex tasks using Crew AI framework.",
-            difficulty_level: "Advanced",
-            project_type: "ai",
-            project_url: "https://github.com/example/crew-ai-agents",
-            session_number: 2,
-            created_at: currentTime
-          },
-          {
-            id: crypto.randomUUID(),
-            title: "Fine-tuning Open Source LLMs",
-            description: "Learn how to fine-tune open source language models like Llama 2 for specific tasks and domains.",
-            difficulty_level: "Advanced",
-            project_type: "ai",
-            project_url: "https://github.com/example/llm-finetuning",
-            session_number: 3,
-            created_at: currentTime
-          },
-          {
-            id: crypto.randomUUID(),
-            title: "HuggingChat Models Integration",
-            description: "Integrate various HuggingFace models into your applications for tasks like text generation, classification, and more.",
-            difficulty_level: "Intermediate",
-            project_type: "ai",
-            project_url: "https://github.com/example/huggingchat-integration",
-            session_number: 4,
-            created_at: currentTime
-          }
-        ];
-
-        const { error: insertError } = await supabase
-          .from('student_projects')
-          .insert(newProjects);
-
-        if (insertError) {
-          console.error('Error inserting new projects:', insertError);
-          toast({
-            title: "Error",
-            description: "Failed to create new AI projects.",
-            variant: "destructive",
-          });
-        } else {
-          data.push(...newProjects);
-        }
-      }
-
       return data as Project[];
     },
   });
