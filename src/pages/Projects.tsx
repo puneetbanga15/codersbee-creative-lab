@@ -14,6 +14,7 @@ type Project = {
   project_url: string | null;
   project_type: string;
   session_number: number;
+  created_at: string;
 };
 
 type ProjectType = 'Scratch' | 'Python' | 'Web' | 'AI' | null;
@@ -44,38 +45,47 @@ const Projects = () => {
       
       // Add new AI projects if they don't exist
       if (!data.some(p => p.title.includes('Chat with PDF'))) {
+        const currentTime = new Date().toISOString();
         const newProjects = [
           {
+            id: crypto.randomUUID(),
             title: "Chat with PDF using LangChain",
             description: "Build an AI-powered PDF chat application using LangChain and OpenAI. Learn about document processing, embeddings, and vector stores.",
             difficulty_level: "Intermediate",
             project_type: "ai",
             project_url: "https://github.com/example/pdf-chat",
-            session_number: 1
+            session_number: 1,
+            created_at: currentTime
           },
           {
+            id: crypto.randomUUID(),
             title: "AI Agents with Crew AI",
             description: "Create autonomous AI agents that can collaborate and solve complex tasks using Crew AI framework.",
             difficulty_level: "Advanced",
             project_type: "ai",
             project_url: "https://github.com/example/crew-ai-agents",
-            session_number: 2
+            session_number: 2,
+            created_at: currentTime
           },
           {
+            id: crypto.randomUUID(),
             title: "Fine-tuning Open Source LLMs",
             description: "Learn how to fine-tune open source language models like Llama 2 for specific tasks and domains.",
             difficulty_level: "Advanced",
             project_type: "ai",
             project_url: "https://github.com/example/llm-finetuning",
-            session_number: 3
+            session_number: 3,
+            created_at: currentTime
           },
           {
+            id: crypto.randomUUID(),
             title: "HuggingChat Models Integration",
             description: "Integrate various HuggingFace models into your applications for tasks like text generation, classification, and more.",
             difficulty_level: "Intermediate",
             project_type: "ai",
             project_url: "https://github.com/example/huggingchat-integration",
-            session_number: 4
+            session_number: 4,
+            created_at: currentTime
           }
         ];
 
