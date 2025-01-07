@@ -36,8 +36,44 @@ const Quizzes = () => {
     },
   });
 
+  const verifyAccessCode = async (quizId: string, code: string) => {
+    const { data, error } = await supabase
+      .from('quiz_access_codes')
+      .select('*')
+      .eq('quiz_id', quizId)
+      .eq('access_code', code)
+      .eq('is_active', true)
+      .single();
+
+    if (error || !data) {
+      setVerificationError("Invalid access code. Please try again.");
+      return false;
+    }
+    return true;
+  };
+
   const handleQuizAccess = (quizId: string) => {
     setSelectedQuizId(quizId);
+    setVerificationError(null);
+  };
+
+  const handleAccessCodeSubmit = async () => {
+    if (!selectedQuizId || !accessCode.trim()) {
+      setVerificationError("Please enter an access code");
+      return;
+    }
+
+    const isValid = await verifyAccessCode(selectedQuizId, accessCode.trim());
+    if (isValid) {
+      setActiveQuiz(selectedQuizId);
+      setSelectedQuizId(null);
+      setAccessCode("");
+      setVerificationError(null);
+      toast({
+        title: "Access granted",
+        description: "You can now start the quiz",
+      });
+    }
   };
 
   if (activeQuiz) {
@@ -72,14 +108,7 @@ const Quizzes = () => {
         }}
         accessCode={accessCode}
         onAccessCodeChange={setAccessCode}
-        onSubmit={() => {
-          // Handle access code verification
-          if (selectedQuizId) {
-            setActiveQuiz(selectedQuizId);
-          }
-          setSelectedQuizId(null);
-          setAccessCode("");
-        }}
+        onSubmit={handleAccessCodeSubmit}
         error={verificationError}
         isLoading={false}
       />
