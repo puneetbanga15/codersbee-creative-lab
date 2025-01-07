@@ -39,7 +39,8 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        query = query.eq('project_type', selectedType.toLowerCase());
+        // Convert the selected type to lowercase for case-insensitive comparison
+        query = query.ilike('project_type', selectedType.toLowerCase());
       }
       
       const { data, error } = await query;
