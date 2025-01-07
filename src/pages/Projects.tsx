@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { useUserRole } from "@/hooks/useUserRole";
+import { useToast } from "@/hooks/use-toast";
 
 type Project = {
   id: string;
@@ -26,6 +29,9 @@ const difficultyColors = {
 };
 
 const Projects = () => {
+  useAuthCheck(); // Add authentication check
+  const { data: userRole } = useUserRole();
+  const { toast } = useToast();
   const [selectedType, setSelectedType] = useState<ProjectType>(null);
 
   const { data: projects, isLoading } = useQuery({
@@ -41,10 +47,17 @@ const Projects = () => {
       }
       
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load projects. Please try again.",
+          variant: "destructive",
+        });
+        throw error;
+      }
       
-      // Add new AI projects if they don't exist
-      if (!data.some(p => p.title.includes('Chat with PDF'))) {
+      // Only add new AI projects if user is admin or teacher
+      if ((userRole === 'admin' || userRole === 'teacher') && !data.some(p => p.title.includes('Chat with PDF'))) {
         const currentTime = new Date().toISOString();
         const newProjects = [
           {
@@ -93,9 +106,16 @@ const Projects = () => {
           .from('student_projects')
           .insert(newProjects);
 
-        if (insertError) throw insertError;
-        
-        data.push(...newProjects);
+        if (insertError) {
+          console.error('Error inserting new projects:', insertError);
+          toast({
+            title: "Error",
+            description: "Failed to create new AI projects.",
+            variant: "destructive",
+          });
+        } else {
+          data.push(...newProjects);
+        }
       }
 
       return data as Project[];
