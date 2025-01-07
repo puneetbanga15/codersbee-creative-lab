@@ -26,16 +26,27 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
-  const { data: questions } = useQuery({
+  const { data: questions, isError } = useQuery({
     queryKey: ['quiz-questions', quizId],
     queryFn: async () => {
+      console.log('Fetching questions for quiz:', quizId);
       const { data, error } = await supabase
         .from('quiz_questions')
         .select('*')
         .eq('quiz_id', quizId);
       
-      if (error) throw error;
-      return (data as any[]).map(q => ({
+      if (error) {
+        console.error('Error fetching questions:', error);
+        throw error;
+      }
+      
+      if (!data || data.length === 0) {
+        console.log('No questions found for quiz:', quizId);
+        return [];
+      }
+
+      console.log('Found questions:', data.length);
+      return data.map(q => ({
         ...q,
         options: q.options as { [key: string]: string }
       })) as Question[];
@@ -68,7 +79,27 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
     }
   };
 
-  if (!currentQuestion || !questions) return null;
+  if (isError) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>
+          Failed to load quiz questions. Please try again later.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!questions || questions.length === 0) {
+    return (
+      <Alert>
+        <AlertDescription>
+          No questions available for this quiz.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!currentQuestion) return null;
 
   if (isQuizComplete) {
     return (
