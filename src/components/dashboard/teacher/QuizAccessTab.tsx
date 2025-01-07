@@ -12,9 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const QuizAccessTab = () => {
   const [accessCodes, setAccessCodes] = useState<{ [key: string]: string }>({});
+  const [bulkAccessCode, setBulkAccessCode] = useState("");
   const queryClient = useQueryClient();
 
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
@@ -29,10 +31,12 @@ export const QuizAccessTab = () => {
           is_premium,
           quiz_access_codes (
             access_code,
-            is_active
+            is_active,
+            created_at
           )
         `)
-        .eq('is_premium', true);
+        .eq('is_premium', true)
+        .order('created_at', { ascending: false });
       
       if (error) {
         console.error('Error fetching quizzes:', error);
@@ -46,6 +50,9 @@ export const QuizAccessTab = () => {
   const updateAccessCode = useMutation({
     mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
       console.log('Updating access code for quiz:', quizId, 'with code:', code);
+      
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
       
       // First, deactivate any existing access codes for this quiz
       const { error: deactivateError } = await supabase
@@ -65,7 +72,7 @@ export const QuizAccessTab = () => {
           quiz_id: quizId,
           access_code: code,
           is_active: true,
-          created_by: (await supabase.auth.getUser()).data.user?.id
+          created_by: user?.id
         })
         .select()
         .single();
@@ -89,28 +96,99 @@ export const QuizAccessTab = () => {
     },
   });
 
+  const updateAllAccessCodes = useMutation({
+    mutationFn: async (code: string) => {
+      if (!quizzes) return;
+      
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      // Deactivate all existing access codes
+      const { error: deactivateError } = await supabase
+        .from('quiz_access_codes')
+        .update({ is_active: false })
+        .in('quiz_id', quizzes.map(q => q.id));
+
+      if (deactivateError) throw deactivateError;
+
+      // Insert new access codes for all quizzes
+      const { error: insertError } = await supabase
+        .from('quiz_access_codes')
+        .insert(
+          quizzes.map(quiz => ({
+            quiz_id: quiz.id,
+            access_code: code,
+            is_active: true,
+            created_by: user?.id
+          }))
+        );
+
+      if (insertError) throw insertError;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-quizzes'] });
+      toast.success("All access codes updated successfully");
+      setBulkAccessCode("");
+    },
+    onError: (error) => {
+      console.error('Error in bulk update:', error);
+      toast.error("Failed to update access codes. Please try again.");
+    },
+  });
+
   if (isLoadingQuizzes) {
     return <div>Loading quiz access codes...</div>;
   }
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-50 p-4 rounded-lg border">
+        <h3 className="font-medium mb-2">Bulk Update Access Codes</h3>
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="New access code for all quizzes"
+            value={bulkAccessCode}
+            onChange={(e) => setBulkAccessCode(e.target.value)}
+            className="max-w-[300px]"
+          />
+          <Button
+            onClick={() => {
+              if (!bulkAccessCode?.trim()) {
+                toast.error("Please enter an access code");
+                return;
+              }
+              updateAllAccessCodes.mutate(bulkAccessCode.trim());
+            }}
+            disabled={updateAllAccessCodes.isPending}
+          >
+            Update All Codes
+          </Button>
+        </div>
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Quiz Title</TableHead>
               <TableHead>Current Access Code</TableHead>
+              <TableHead>Last Updated</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {quizzes?.map((quiz) => {
-              const currentCode = quiz.quiz_access_codes?.find(code => code.is_active)?.access_code || 'No code set';
+              const activeCode = quiz.quiz_access_codes?.find(code => code.is_active);
               return (
                 <TableRow key={quiz.id}>
                   <TableCell>{quiz.title}</TableCell>
-                  <TableCell>{currentCode}</TableCell>
+                  <TableCell>{activeCode?.access_code || 'No code set'}</TableCell>
+                  <TableCell>
+                    {activeCode?.created_at 
+                      ? new Date(activeCode.created_at).toLocaleDateString()
+                      : '-'
+                    }
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Input
