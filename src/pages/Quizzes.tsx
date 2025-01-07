@@ -8,8 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { QuizContainer } from "@/components/quiz/QuizContainer";
 import { QuizLayout } from "@/components/quiz/QuizLayout";
 
+type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
+
 const Quizzes = () => {
-  const [selectedType, setSelectedType] = useState<'scratch' | 'python' | 'ai' | null>(null);
+  const [selectedType, setSelectedType] = useState<FilterType>(null);
   const [activeQuiz, setActiveQuiz] = useState<string | null>(null);
   const [accessCode, setAccessCode] = useState("");
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
@@ -17,7 +19,6 @@ const Quizzes = () => {
   const [isManageAccessCodeOpen, setIsManageAccessCodeOpen] = useState(false);
   const { toast } = useToast();
 
-  // Fetch user role
   const { data: userRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
@@ -36,21 +37,26 @@ const Quizzes = () => {
     },
   });
 
-  // Fetch quizzes
+  // Updated quiz query to handle new filter types
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ['quizzes', selectedType],
     queryFn: async () => {
       let query = supabase.from('quizzes').select('*');
-      if (selectedType) {
+      
+      if (selectedType === 'free') {
+        query = query.eq('is_premium', false);
+      } else if (selectedType === 'premium') {
+        query = query.eq('is_premium', true);
+      } else if (selectedType) {
         query = query.eq('quiz_type', selectedType);
       }
+      
       const { data, error } = await query;
       if (error) throw error;
       return data;
     },
   });
 
-  // Verify access code
   const verifyAccessCode = useMutation({
     mutationFn: async ({ quizId, code }: { quizId: string; code: string }) => {
       const { data, error } = await supabase

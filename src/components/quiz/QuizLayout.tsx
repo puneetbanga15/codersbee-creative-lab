@@ -2,10 +2,12 @@ import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
 
+type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
+
 type QuizLayoutProps = {
   userRole: string | null;
-  selectedType: 'scratch' | 'python' | 'ai' | null;
-  onTypeSelect: (type: 'scratch' | 'python' | 'ai' | null) => void;
+  selectedType: FilterType;
+  onTypeSelect: (type: FilterType) => void;
   quizzes: any[];
   canAccessPremiumQuiz: boolean;
   onStartQuiz: (quizId: string) => void;
