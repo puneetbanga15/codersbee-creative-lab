@@ -25,7 +25,7 @@ const Quizzes = () => {
   const { toast } = useToast();
 
   // First, get the authenticated user and their role
-  const { data: userRole, isError: isUserRoleError } = useQuery({
+  const { data: userRole } = useQuery({
     queryKey: ['user-role'],
     queryFn: async () => {
       try {
@@ -46,7 +46,6 @@ const Quizzes = () => {
         return null;
       }
     },
-    retry: 1
   });
 
   // Fetch all quizzes, including premium ones
@@ -65,13 +64,17 @@ const Quizzes = () => {
         const { data, error } = await query;
         
         if (error) throw error;
-        return data as Quiz[];
+        
+        // Sort quizzes: non-premium first, then premium
+        return (data as Quiz[]).sort((a, b) => {
+          if (a.is_premium === b.is_premium) return 0;
+          return a.is_premium ? 1 : -1;
+        });
       } catch (error) {
         console.error('Error fetching quizzes:', error);
         throw error;
       }
     },
-    retry: 1
   });
 
   const verifyAccessCode = useMutation({
@@ -118,7 +121,7 @@ const Quizzes = () => {
 
   const canAccessPremiumQuiz = userRole === 'teacher' || userRole === 'parent' || userRole === 'admin';
 
-  if (isUserRoleError || isQuizzesError) {
+  if (isQuizzesError) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
         <Navbar />

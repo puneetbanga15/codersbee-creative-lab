@@ -29,7 +29,7 @@ export const Hero = () => {
             </Button>
           </div>
           <motion.div 
-            className="flex-1"
+            className="flex-1 md:flex-[1.2]" // Increased size ratio
             animate={{ y: [-10, 10] }}
             transition={{ 
               repeat: Infinity,
@@ -41,7 +41,7 @@ export const Hero = () => {
             <img 
               src="/lovable-uploads/d95b1d69-5a60-4de8-97e4-1cd0f750f9c6.png" 
               alt="Online Classroom" 
-              className="w-full max-w-lg mx-auto rounded-lg shadow-xl"
+              className="w-full max-w-2xl mx-auto rounded-lg shadow-xl" // Increased max-width
             />
           </motion.div>
         </div>
