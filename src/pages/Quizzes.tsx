@@ -49,8 +49,7 @@ const Quizzes = () => {
     }
 
     try {
-      // Step 1: First check if the quiz exists and is premium
-      console.log('Step 1: Verifying quiz');
+      // Step 1: Verify quiz exists and is premium
       const { data: quiz, error: quizError } = await supabase
         .from('quizzes')
         .select('*')
@@ -67,39 +66,22 @@ const Quizzes = () => {
         return true;
       }
 
-      // Step 2: Get ALL access codes for debugging
-      console.log('Step 2: Checking all access codes in the system');
-      const { data: allAccessCodes, error: allCodesError } = await supabase
-        .from('quiz_access_codes')
-        .select('*');
-
-      if (allCodesError) {
-        console.error('Error checking all codes:', allCodesError);
-        throw allCodesError;
-      }
-      console.log('Total access codes in system:', allAccessCodes?.length);
-
-      // Step 3: Get access codes for this specific quiz
-      console.log('Step 3: Getting access codes for quiz:', quizId);
-      const { data: quizCodes, error: quizCodesError } = await supabase
+      // Step 2: Check for matching active access code
+      const { data: accessCodes, error: accessCodeError } = await supabase
         .from('quiz_access_codes')
         .select('*')
-        .eq('quiz_id', quizId);
+        .eq('quiz_id', quizId)
+        .eq('access_code', code.trim())
+        .eq('is_active', true);
 
-      if (quizCodesError) {
-        console.error('Error fetching quiz codes:', quizCodesError);
-        throw quizCodesError;
+      if (accessCodeError) {
+        console.error('Error checking access code:', accessCodeError);
+        throw accessCodeError;
       }
-      console.log('Access codes for this quiz:', quizCodes);
 
-      // Step 4: Check for active matching code
-      const matchingCode = quizCodes?.find(
-        ac => ac.is_active && ac.access_code === code.trim()
-      );
+      console.log('Access codes found:', accessCodes);
 
-      console.log('Matching code found:', matchingCode);
-
-      if (!matchingCode) {
+      if (!accessCodes || accessCodes.length === 0) {
         setVerificationError("Invalid access code. Please try again.");
         return false;
       }
