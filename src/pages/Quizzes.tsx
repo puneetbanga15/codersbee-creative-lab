@@ -49,48 +49,65 @@ const Quizzes = () => {
     }
 
     try {
-      // Step 1: First get all access codes for this quiz without any filters
-      console.log('Step 1: Getting all access codes for quiz:', quizId);
-      const { data: allCodes, error: allCodesError } = await supabase
+      // Step 1: First check if the quiz exists and is premium
+      console.log('Step 1: Verifying quiz');
+      const { data: quiz, error: quizError } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('id', quizId)
+        .single();
+
+      if (quizError) {
+        console.error('Error fetching quiz:', quizError);
+        throw quizError;
+      }
+
+      if (!quiz.is_premium) {
+        console.log('Quiz is not premium, no access code needed');
+        return true;
+      }
+
+      // Step 2: Get ALL access codes for debugging
+      console.log('Step 2: Checking all access codes in the system');
+      const { data: allAccessCodes, error: allCodesError } = await supabase
+        .from('quiz_access_codes')
+        .select('*');
+
+      if (allCodesError) {
+        console.error('Error checking all codes:', allCodesError);
+        throw allCodesError;
+      }
+      console.log('Total access codes in system:', allAccessCodes?.length);
+
+      // Step 3: Get access codes for this specific quiz
+      console.log('Step 3: Getting access codes for quiz:', quizId);
+      const { data: quizCodes, error: quizCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId);
 
-      if (allCodesError) {
-        console.error('Error fetching all codes:', allCodesError);
-        throw allCodesError;
+      if (quizCodesError) {
+        console.error('Error fetching quiz codes:', quizCodesError);
+        throw quizCodesError;
       }
+      console.log('Access codes for this quiz:', quizCodes);
 
-      console.log('All access codes found:', allCodes);
+      // Step 4: Check for active matching code
+      const matchingCode = quizCodes?.find(
+        ac => ac.is_active && ac.access_code === code.trim()
+      );
 
-      // Step 2: Now get active access codes
-      console.log('Step 2: Getting active access codes');
-      const { data: activeCodes, error: activeCodesError } = await supabase
-        .from('quiz_access_codes')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .eq('is_active', true)
-        .eq('access_code', code);
+      console.log('Matching code found:', matchingCode);
 
-      if (activeCodesError) {
-        console.error('Error fetching active codes:', activeCodesError);
-        throw activeCodesError;
-      }
-
-      console.log('Active matching codes found:', activeCodes);
-
-      if (!activeCodes || activeCodes.length === 0) {
-        console.log('No matching active access code found');
+      if (!matchingCode) {
         setVerificationError("Invalid access code. Please try again.");
         return false;
       }
 
-      console.log('Valid access code found:', activeCodes[0]);
       return true;
 
     } catch (error) {
-      console.error('=== Verification Error ===');
-      console.error('Error details:', error);
+      console.error('Verification Error:', error);
       setVerificationError("An error occurred while verifying the access code");
       return false;
     }
