@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,20 +18,22 @@ const Quizzes = () => {
   const { toast } = useToast();
 
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
-    queryKey: ['quizzes', selectedType],
+    queryKey: ['quizzes'],
     queryFn: async () => {
-      let query = supabase.from('quizzes').select('*');
-      
-      if (selectedType === 'free') {
-        query = query.eq('is_premium', false);
-      } else if (selectedType === 'premium') {
-        query = query.eq('is_premium', true);
-      } else if (selectedType) {
-        query = query.eq('quiz_type', selectedType);
-      }
-      
-      const { data, error } = await query;
+      console.log('Fetching quizzes and access codes...');
+      const { data, error } = await supabase
+        .from('quizzes')
+        .select(`
+          *,
+          quiz_access_codes (
+            access_code,
+            is_active,
+            created_at
+          )
+        `);
+
       if (error) throw error;
+      console.log('Fetched quizzes:', data);
       return data;
     },
   });
@@ -46,7 +47,7 @@ const Quizzes = () => {
     }
 
     try {
-      // Query the quiz_access_codes table for an active code matching the input
+      // Query for active access codes for this quiz
       const { data, error } = await supabase
         .from('quiz_access_codes')
         .select('*')
@@ -61,7 +62,9 @@ const Quizzes = () => {
         return false;
       }
 
-      // If no matching active access code is found
+      // Log the full response for debugging
+      console.log('Verification response:', data);
+
       if (!data) {
         console.log('Invalid or expired access code');
         setVerificationError("Invalid or expired access code. Please try again.");
@@ -115,7 +118,6 @@ const Quizzes = () => {
 
   return (
     <>
-      <Navbar />
       <QuizLayout
         userRole={null}
         selectedType={selectedType}
