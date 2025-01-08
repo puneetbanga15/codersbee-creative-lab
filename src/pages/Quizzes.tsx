@@ -51,7 +51,6 @@ const Quizzes = () => {
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
-        .eq('access_code', code.trim())
         .eq('is_active', true);
 
       if (accessCodesError) {
@@ -68,15 +67,19 @@ const Quizzes = () => {
         return false;
       }
 
+      // Log the entered code and available codes for comparison
+      console.log('Code entered by user:', code.trim());
+      console.log('Available access codes in database:', accessCodes.map(ac => ac.access_code).join(', '));
+
       // Check if the access code matches exactly (case-sensitive)
       const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
       if (!matchingCode) {
-        console.log('No exact match found for access code');
+        console.log('Code comparison result: NO MATCH - Access codes do not match exactly');
         setVerificationError("Invalid access code. Please check and try again.");
         return false;
       }
 
-      console.log('Access code verified successfully:', matchingCode);
+      console.log('Code comparison result: MATCH - Access code verified successfully:', matchingCode);
       return true;
     } catch (error) {
       console.error('Unexpected error during verification:', error);
