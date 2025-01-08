@@ -53,17 +53,26 @@ const Quizzes = () => {
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
+        .eq('access_code', code.trim())
         .eq('is_active', true);
 
       if (accessCodesError) {
         console.error('=== Database Error ===');
         console.error('Error details:', accessCodesError);
+        console.error('Error message:', accessCodesError.message);
+        console.error('Error code:', accessCodesError.code);
         setVerificationError("An error occurred while verifying the access code");
         return false;
       }
 
       console.log('=== Database Query Results ===');
+      console.log('Query parameters:', {
+        quiz_id: quizId,
+        access_code: code.trim(),
+        is_active: true
+      });
       console.log('Number of access codes found:', accessCodes?.length || 0);
+      console.log('Access codes:', accessCodes);
       
       if (!accessCodes || accessCodes.length === 0) {
         console.log('=== No Access Codes Found ===');
@@ -72,25 +81,12 @@ const Quizzes = () => {
         return false;
       }
 
-      console.log('=== Access Code Comparison ===');
-      console.log('User entered code:', `"${code.trim()}"`);
-      console.log('Available access codes:', accessCodes.map(ac => `"${ac.access_code}"`).join(', '));
-
-      const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
-      
-      if (!matchingCode) {
-        console.log('=== Verification Failed ===');
-        console.log('Reason: No exact match found');
-        setVerificationError("Invalid access code. Please check and try again.");
-        return false;
-      }
-
       console.log('=== Verification Successful ===');
-      console.log('Matching code found:', matchingCode);
+      console.log('Matching access code found:', accessCodes[0]);
       return true;
     } catch (error) {
       console.error('=== Unexpected Error ===');
-      console.error('Error details:', error);
+      console.error('Error:', error);
       setVerificationError("An unexpected error occurred. Please try again.");
       return false;
     }
