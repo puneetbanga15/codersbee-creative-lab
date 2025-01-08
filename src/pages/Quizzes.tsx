@@ -49,48 +49,49 @@ const Quizzes = () => {
     }
 
     try {
-      // Step 1: First get all access codes for this quiz
-      console.log('Step 1: Fetching access codes for quiz:', quizId);
-      const { data: accessCodes, error: accessCodesError } = await supabase
+      // Step 1: First get all access codes for this quiz without any filters
+      console.log('Step 1: Getting all access codes for quiz:', quizId);
+      const { data: allCodes, error: allCodesError } = await supabase
+        .from('quiz_access_codes')
+        .select('*')
+        .eq('quiz_id', quizId);
+
+      if (allCodesError) {
+        console.error('Error fetching all codes:', allCodesError);
+        throw allCodesError;
+      }
+
+      console.log('All access codes found:', allCodes);
+
+      // Step 2: Now get active access codes
+      console.log('Step 2: Getting active access codes');
+      const { data: activeCodes, error: activeCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .eq('access_code', code);
 
-      if (accessCodesError) {
-        console.error('=== Database Error ===');
-        console.error('Error details:', accessCodesError);
-        setVerificationError("An error occurred while verifying the access code");
-        return false;
+      if (activeCodesError) {
+        console.error('Error fetching active codes:', activeCodesError);
+        throw activeCodesError;
       }
 
-      console.log('=== Access Codes Found ===');
-      console.log('Number of active access codes:', accessCodes?.length);
-      console.log('Access codes:', accessCodes);
+      console.log('Active matching codes found:', activeCodes);
 
-      if (!accessCodes || accessCodes.length === 0) {
-        console.log('No active access codes found for this quiz');
-        setVerificationError("No active access codes available for this quiz");
-        return false;
-      }
-
-      // Step 2: Check if any of the active codes match the entered code
-      const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
-      console.log('Matching code found:', matchingCode);
-
-      if (!matchingCode) {
-        console.log('=== Invalid Access Code ===');
+      if (!activeCodes || activeCodes.length === 0) {
+        console.log('No matching active access code found');
         setVerificationError("Invalid access code. Please try again.");
         return false;
       }
 
-      console.log('=== Valid Access Code Found ===');
+      console.log('Valid access code found:', activeCodes[0]);
       return true;
 
     } catch (error) {
-      console.error('=== Unexpected Error ===');
-      console.error('Error:', error);
-      setVerificationError("An unexpected error occurred. Please try again.");
+      console.error('=== Verification Error ===');
+      console.error('Error details:', error);
+      setVerificationError("An error occurred while verifying the access code");
       return false;
     }
   };
