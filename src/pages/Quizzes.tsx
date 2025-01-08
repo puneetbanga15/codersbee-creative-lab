@@ -49,13 +49,14 @@ const Quizzes = () => {
     }
 
     try {
-      // First, check if there's an active access code that matches
+      // Modified query to properly check for active access codes
       const { data: accessCodes, error: accessCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
         .eq('access_code', code.trim())
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
 
       if (accessCodesError) {
         console.error('=== Database Error ===');
