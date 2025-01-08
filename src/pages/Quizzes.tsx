@@ -47,46 +47,36 @@ const Quizzes = () => {
     }
 
     try {
-      // First, let's check what access codes exist for this quiz
-      const { data: allCodes, error: allCodesError } = await supabase
-        .from('quiz_access_codes')
-        .select('*')
-        .eq('quiz_id', quizId);
-      
-      console.log('All access codes for this quiz:', allCodes);
-
-      // Now check for the specific code
-      const { data, error } = await supabase
+      const { data: accessCodes, error: accessCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
         .eq('access_code', code.trim())
-        .eq('is_active', true)
-        .limit(1);
+        .eq('is_active', true);
 
-      if (error) {
-        console.error('Access code verification error:', error);
+      if (accessCodesError) {
+        console.error('Access code verification error:', accessCodesError);
         setVerificationError("An error occurred while verifying the access code");
         return false;
       }
 
-      // Log the full response for debugging
-      console.log('Verification response:', data);
-      console.log('Response type:', typeof data);
-      console.log('Is array:', Array.isArray(data));
+      console.log('Access codes found:', accessCodes);
       
-      if (!data || data.length === 0) {
-        console.log('Invalid or expired access code');
-        console.log('Searched for:', {
-          quiz_id: quizId,
-          access_code: code.trim(),
-          is_active: true
-        });
+      if (!accessCodes || accessCodes.length === 0) {
+        console.log('No matching access code found');
         setVerificationError("Invalid or expired access code. Please try again.");
         return false;
       }
 
-      console.log('Access code verified successfully:', data[0]);
+      // Check if the access code matches exactly (case-sensitive)
+      const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
+      if (!matchingCode) {
+        console.log('No exact match found for access code');
+        setVerificationError("Invalid access code. Please check and try again.");
+        return false;
+      }
+
+      console.log('Access code verified successfully:', matchingCode);
       return true;
     } catch (error) {
       console.error('Unexpected error during verification:', error);
