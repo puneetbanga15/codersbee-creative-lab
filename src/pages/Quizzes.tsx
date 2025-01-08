@@ -47,14 +47,14 @@ const Quizzes = () => {
     }
 
     try {
-      // Query for active access codes for this quiz
+      // Query for active access codes for this quiz with exact matching
       const { data, error } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
         .eq('access_code', code.trim())
         .eq('is_active', true)
-        .maybeSingle();
+        .limit(1);
 
       if (error) {
         console.error('Access code verification error:', error);
@@ -65,13 +65,13 @@ const Quizzes = () => {
       // Log the full response for debugging
       console.log('Verification response:', data);
 
-      if (!data) {
+      if (!data || data.length === 0) {
         console.log('Invalid or expired access code');
         setVerificationError("Invalid or expired access code. Please try again.");
         return false;
       }
 
-      console.log('Access code verified successfully:', data);
+      console.log('Access code verified successfully:', data[0]);
       return true;
     } catch (error) {
       console.error('Unexpected error during verification:', error);
