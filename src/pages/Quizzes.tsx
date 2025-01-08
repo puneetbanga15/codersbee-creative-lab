@@ -49,37 +49,45 @@ const Quizzes = () => {
     }
 
     try {
-      // Modified query to properly check for active access codes
-      const { data: accessCodes, error: accessCodesError } = await supabase
+      // Step 1: First get all access codes for this quiz
+      console.log('Step 1: Fetching access codes for quiz:', quizId);
+      const { data: allAccessCodes, error: accessCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
-        .eq('quiz_id', quizId)
-        .eq('access_code', code.trim())
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
+        .eq('quiz_id', quizId);
 
       if (accessCodesError) {
         console.error('=== Database Error ===');
         console.error('Error details:', accessCodesError);
-        console.error('Error message:', accessCodesError.message);
-        console.error('Error code:', accessCodesError.code);
         setVerificationError("An error occurred while verifying the access code");
         return false;
       }
 
-      console.log('=== Database Query Results ===');
-      console.log('Access codes found:', accessCodes);
-      
-      if (!accessCodes || accessCodes.length === 0) {
+      console.log('All access codes for quiz:', allAccessCodes);
+
+      if (!allAccessCodes || allAccessCodes.length === 0) {
+        console.log('No access codes found for this quiz');
+        setVerificationError("No access codes available for this quiz");
+        return false;
+      }
+
+      // Step 2: Filter for active access codes matching the entered code
+      console.log('Step 2: Checking for matching active access code');
+      const matchingCode = allAccessCodes.find(ac => 
+        ac.access_code === code.trim() && ac.is_active === true
+      );
+
+      console.log('Matching access code:', matchingCode);
+
+      if (!matchingCode) {
         console.log('=== Invalid Access Code ===');
-        console.log('No matching active access code found');
         setVerificationError("Invalid access code. Please try again.");
         return false;
       }
 
-      console.log('=== Verification Successful ===');
-      console.log('Matching access code found:', accessCodes[0]);
+      console.log('=== Valid Access Code Found ===');
       return true;
+
     } catch (error) {
       console.error('=== Unexpected Error ===');
       console.error('Error:', error);
