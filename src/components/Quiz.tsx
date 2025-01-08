@@ -29,27 +29,47 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
   const { data: questions, isError } = useQuery({
     queryKey: ['quiz-questions', quizId],
     queryFn: async () => {
-      console.log('Fetching questions for quiz:', quizId);
-      const { data, error } = await supabase
-        .from('quiz_questions')
-        .select('*')
-        .eq('quiz_id', quizId);
+      console.log('=== Quiz Questions Fetch Start ===');
+      console.log('Quiz ID:', quizId);
       
-      if (error) {
-        console.error('Error fetching questions:', error);
+      try {
+        const { data, error } = await supabase
+          .from('quiz_questions')
+          .select('*')
+          .eq('quiz_id', quizId);
+        
+        if (error) {
+          console.error('=== Supabase Error ===');
+          console.error('Error details:', error);
+          console.error('Error message:', error.message);
+          console.error('Error code:', error.code);
+          throw error;
+        }
+        
+        if (!data || data.length === 0) {
+          console.log('=== No Questions Found ===');
+          console.log('Quiz ID:', quizId);
+          console.log('Returned data:', data);
+          return [];
+        }
+
+        console.log('=== Questions Fetch Success ===');
+        console.log('Number of questions:', data.length);
+        console.log('First question preview:', {
+          id: data[0].id,
+          question: data[0].question,
+          optionsCount: Object.keys(data[0].options).length
+        });
+
+        return data.map(q => ({
+          ...q,
+          options: q.options as { [key: string]: string }
+        })) as Question[];
+      } catch (error) {
+        console.error('=== Unexpected Error ===');
+        console.error('Error:', error);
         throw error;
       }
-      
-      if (!data || data.length === 0) {
-        console.log('No questions found for quiz:', quizId);
-        return [];
-      }
-
-      console.log('Found questions:', data.length);
-      return data.map(q => ({
-        ...q,
-        options: q.options as { [key: string]: string }
-      })) as Question[];
     },
   });
 
@@ -57,29 +77,47 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
   const progress = questions ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleSubmitAnswer = () => {
-    if (!currentQuestion || !selectedAnswer) return;
+    console.log('=== Submit Answer ===');
+    console.log('Current question index:', currentQuestionIndex);
+    console.log('Selected answer:', selectedAnswer);
+    
+    if (!currentQuestion || !selectedAnswer) {
+      console.log('No question or answer selected');
+      return;
+    }
 
     const correct = selectedAnswer === currentQuestion.correct_answer;
+    console.log('Answer correct:', correct);
+    console.log('Correct answer:', currentQuestion.correct_answer);
+    
     setIsCorrect(correct);
     setShowFeedback(true);
 
     if (correct) {
       setScore(score + 10);
+      console.log('New score:', score + 10);
     }
   };
 
   const handleNextQuestion = () => {
+    console.log('=== Next Question ===');
+    console.log('Current index:', currentQuestionIndex);
+    console.log('Total questions:', questions?.length);
+    
     setShowFeedback(false);
     setSelectedAnswer("");
     
     if (currentQuestionIndex + 1 < (questions?.length ?? 0)) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      console.log('Moving to question:', currentQuestionIndex + 1);
     } else {
+      console.log('Quiz complete');
       setIsQuizComplete(true);
     }
   };
 
   if (isError) {
+    console.error('=== Quiz Error State ===');
     return (
       <Alert variant="destructive">
         <AlertDescription>
@@ -90,6 +128,7 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
   }
 
   if (!questions || questions.length === 0) {
+    console.log('=== No Questions Available ===');
     return (
       <Alert>
         <AlertDescription>
@@ -99,9 +138,17 @@ export const Quiz = ({ quizId }: { quizId: string }) => {
     );
   }
 
-  if (!currentQuestion) return null;
+  if (!currentQuestion) {
+    console.log('=== No Current Question ===');
+    return null;
+  }
 
   if (isQuizComplete) {
+    console.log('=== Quiz Complete ===');
+    console.log('Final score:', score);
+    console.log('Questions answered correctly:', score / 10);
+    console.log('Total questions:', questions.length);
+    
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
         <div className="text-center space-y-4">
