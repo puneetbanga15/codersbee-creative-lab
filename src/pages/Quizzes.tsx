@@ -40,8 +40,8 @@ const Quizzes = () => {
 
   const verifyAccessCode = async (quizId: string, code: string) => {
     console.log('=== Starting Access Code Verification ===');
-    console.log(`Quiz ID: ${quizId}`);
-    console.log(`Access Code Entered: "${code}"`);
+    console.log('Quiz ID:', quizId);
+    console.log('Access Code Entered:', code);
     
     if (!code.trim()) {
       setVerificationError("Please enter an access code");
@@ -49,11 +49,27 @@ const Quizzes = () => {
     }
 
     try {
+      // First, let's check if the quiz exists
+      const { data: quiz, error: quizError } = await supabase
+        .from('quizzes')
+        .select('id, title')
+        .eq('id', quizId)
+        .single();
+
+      if (quizError) {
+        console.error('=== Quiz Lookup Error ===');
+        console.error('Error:', quizError);
+        setVerificationError("Could not verify quiz information");
+        return false;
+      }
+
+      console.log('Quiz found:', quiz);
+
+      // Now let's check for access codes
       const { data: accessCodes, error: accessCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
         .eq('quiz_id', quizId)
-        .eq('access_code', code.trim())
         .eq('is_active', true);
 
       if (accessCodesError) {
@@ -66,23 +82,27 @@ const Quizzes = () => {
       }
 
       console.log('=== Database Query Results ===');
-      console.log('Query parameters:', {
-        quiz_id: quizId,
-        access_code: code.trim(),
-        is_active: true
-      });
-      console.log('Number of access codes found:', accessCodes?.length || 0);
-      console.log('Access codes:', accessCodes);
+      console.log('All active access codes for quiz:', accessCodes);
       
       if (!accessCodes || accessCodes.length === 0) {
-        console.log('=== No Access Codes Found ===');
+        console.log('=== No Active Access Codes Found ===');
         console.log('No active access codes exist for this quiz');
-        setVerificationError("Invalid or expired access code. Please try again.");
+        setVerificationError("No active access codes found for this quiz");
+        return false;
+      }
+
+      // Check if the entered code matches any of the active codes
+      const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
+      
+      if (!matchingCode) {
+        console.log('=== Invalid Access Code ===');
+        console.log('Entered code does not match any active codes');
+        setVerificationError("Invalid access code. Please try again.");
         return false;
       }
 
       console.log('=== Verification Successful ===');
-      console.log('Matching access code found:', accessCodes[0]);
+      console.log('Matching access code found:', matchingCode);
       return true;
     } catch (error) {
       console.error('=== Unexpected Error ===');
