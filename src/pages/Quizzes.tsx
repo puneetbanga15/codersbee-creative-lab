@@ -51,10 +51,11 @@ const Quizzes = () => {
     try {
       // Step 1: First get all access codes for this quiz
       console.log('Step 1: Fetching access codes for quiz:', quizId);
-      const { data: allAccessCodes, error: accessCodesError } = await supabase
+      const { data: accessCodes, error: accessCodesError } = await supabase
         .from('quiz_access_codes')
         .select('*')
-        .eq('quiz_id', quizId);
+        .eq('quiz_id', quizId)
+        .eq('is_active', true);
 
       if (accessCodesError) {
         console.error('=== Database Error ===');
@@ -63,21 +64,19 @@ const Quizzes = () => {
         return false;
       }
 
-      console.log('All access codes for quiz:', allAccessCodes);
+      console.log('=== Access Codes Found ===');
+      console.log('Number of active access codes:', accessCodes?.length);
+      console.log('Access codes:', accessCodes);
 
-      if (!allAccessCodes || allAccessCodes.length === 0) {
-        console.log('No access codes found for this quiz');
-        setVerificationError("No access codes available for this quiz");
+      if (!accessCodes || accessCodes.length === 0) {
+        console.log('No active access codes found for this quiz');
+        setVerificationError("No active access codes available for this quiz");
         return false;
       }
 
-      // Step 2: Filter for active access codes matching the entered code
-      console.log('Step 2: Checking for matching active access code');
-      const matchingCode = allAccessCodes.find(ac => 
-        ac.access_code === code.trim() && ac.is_active === true
-      );
-
-      console.log('Matching access code:', matchingCode);
+      // Step 2: Check if any of the active codes match the entered code
+      const matchingCode = accessCodes.find(ac => ac.access_code === code.trim());
+      console.log('Matching code found:', matchingCode);
 
       if (!matchingCode) {
         console.log('=== Invalid Access Code ===');
