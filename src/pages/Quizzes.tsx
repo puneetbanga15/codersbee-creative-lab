@@ -47,7 +47,15 @@ const Quizzes = () => {
     }
 
     try {
-      // Query for active access codes for this quiz with exact matching
+      // First, let's check what access codes exist for this quiz
+      const { data: allCodes, error: allCodesError } = await supabase
+        .from('quiz_access_codes')
+        .select('*')
+        .eq('quiz_id', quizId);
+      
+      console.log('All access codes for this quiz:', allCodes);
+
+      // Now check for the specific code
       const { data, error } = await supabase
         .from('quiz_access_codes')
         .select('*')
@@ -64,9 +72,16 @@ const Quizzes = () => {
 
       // Log the full response for debugging
       console.log('Verification response:', data);
-
+      console.log('Response type:', typeof data);
+      console.log('Is array:', Array.isArray(data));
+      
       if (!data || data.length === 0) {
         console.log('Invalid or expired access code');
+        console.log('Searched for:', {
+          quiz_id: quizId,
+          access_code: code.trim(),
+          is_active: true
+        });
         setVerificationError("Invalid or expired access code. Please try again.");
         return false;
       }
