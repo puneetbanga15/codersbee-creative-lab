@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ParentFormFields } from "./ParentFormFields";
 import { ChildInputField } from "./ChildInputField";
 import { ScrollArea } from "./ui/scroll-area";
+import { AuthError } from "@supabase/supabase-js";
 
 const formSchema = z.object({
   parentName: z.string().min(2, "Name must be at least 2 characters"),
@@ -25,6 +26,17 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const getErrorMessage = (error: AuthError) => {
+  switch (error.message) {
+    case 'Invalid login credentials':
+      return 'Failed to create account. Please try again.';
+    case 'User already registered':
+      return 'An account with this email already exists.';
+    default:
+      return error.message;
+  }
+};
+
 export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -40,7 +52,6 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      // First create the auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -53,8 +64,15 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
         },
       });
 
-      if (authError) throw authError;
-      if (!authData.user) throw new Error('No user data returned');
+      if (authError) {
+        toast.error(getErrorMessage(authError));
+        return;
+      }
+
+      if (!authData.user) {
+        toast.error('No user data returned');
+        return;
+      }
 
       // Wait for the trigger to create the profile
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -71,7 +89,10 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           .select()
           .single();
 
-        if (studentError) throw studentError;
+        if (studentError) {
+          toast.error(`Failed to create student: ${child.name}`);
+          return;
+        }
 
         const { error: enrollmentError } = await supabase
           .from('course_enrollments')
@@ -81,7 +102,10 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
             teacher_id: child.teacherId,
           });
 
-        if (enrollmentError) throw enrollmentError;
+        if (enrollmentError) {
+          toast.error(`Failed to enroll student: ${child.name}`);
+          return;
+        }
       }
 
       toast.success("Parent and children added successfully!");
