@@ -15,6 +15,7 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   timezone: z.string().min(1, "Please select a timezone"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   children: z.array(z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     courseName: z.string().min(2, "Course name must be at least 2 characters"),
@@ -32,6 +33,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       email: "",
       phone: "",
       timezone: "",
+      password: "",
       children: [{ name: "", courseName: "", teacherId: "" }],
     },
   });
@@ -41,7 +43,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       // First create the auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
-        password: "tempPass123!", // You might want to generate this randomly
+        password: values.password,
         options: {
           data: {
             full_name: values.parentName,
