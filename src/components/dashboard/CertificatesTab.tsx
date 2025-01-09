@@ -15,10 +15,13 @@ import { Download } from "lucide-react";
 
 const formSchema = z.object({
   studentId: z.string().min(1, "Please select a student"),
-  file: z.any().refine((file) => file instanceof File, "Please upload a file"),
+  file: z.instanceof(File, { message: "Please upload a file" })
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  studentId: string;
+  file: File;
+};
 
 export const CertificatesTab = () => {
   const [showAddCertificate, setShowAddCertificate] = useState(false);
@@ -62,7 +65,7 @@ export const CertificatesTab = () => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const file = values.file[0];
+      const file = values.file;
       const fileExt = file.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
@@ -158,14 +161,19 @@ export const CertificatesTab = () => {
                 <FormField
                   control={form.control}
                   name="file"
-                  render={({ field: { onChange, ...field } }) => (
+                  render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>Certificate File</FormLabel>
                       <FormControl>
                         <Input
                           type="file"
                           accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => onChange(e.target.files)}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              onChange(file);
+                            }
+                          }}
                           {...field}
                         />
                       </FormControl>
