@@ -52,6 +52,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
+      // First create the auth user with password
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,

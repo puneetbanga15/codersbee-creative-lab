@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
   studentId: z.string().min(1, "Please select a student"),
@@ -25,6 +26,7 @@ type FormValues = {
 
 export const CertificatesTab = () => {
   const [showAddCertificate, setShowAddCertificate] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
@@ -65,16 +67,24 @@ export const CertificatesTab = () => {
 
   const onSubmit = async (values: FormValues) => {
     try {
+      setUploadProgress(0);
       const file = values.file;
       const fileExt = file.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
+      // Upload file to storage
       const { error: uploadError } = await supabase.storage
         .from('certificates')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          onUploadProgress: (progress) => {
+            const percent = (progress.loaded / progress.total) * 100;
+            setUploadProgress(percent);
+          }
+        });
 
       if (uploadError) throw uploadError;
 
+      // Create certificate record in database
       const { error: dbError } = await supabase
         .from('certificates')
         .insert({
@@ -94,6 +104,8 @@ export const CertificatesTab = () => {
     } catch (error) {
       console.error('Error uploading certificate:', error);
       toast.error("Failed to upload certificate");
+    } finally {
+      setUploadProgress(0);
     }
   };
 
@@ -118,7 +130,11 @@ export const CertificatesTab = () => {
   };
 
   if (studentsLoading || certificatesLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -161,7 +177,7 @@ export const CertificatesTab = () => {
                 <FormField
                   control={form.control}
                   name="file"
-                  render={({ field: { onChange, value, ...field } }) => (
+                  render={({ field: { onChange, ...field } }) => (
                     <FormItem>
                       <FormLabel>Certificate File</FormLabel>
                       <FormControl>
@@ -181,7 +197,12 @@ export const CertificatesTab = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Upload</Button>
+                {uploadProgress > 0 && (
+                  <Progress value={uploadProgress} className="w-full" />
+                )}
+                <Button type="submit" disabled={uploadProgress > 0}>
+                  {uploadProgress > 0 ? 'Uploading...' : 'Upload'}
+                </Button>
               </form>
             </Form>
           </DialogContent>
