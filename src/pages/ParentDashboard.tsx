@@ -9,6 +9,7 @@ import { DashboardHeader } from "@/components/dashboard/parent/DashboardHeader";
 import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
 import { StudentInformation } from "@/components/dashboard/parent/StudentInformation";
+import { CertificatesSection } from "@/components/dashboard/parent/CertificatesSection";
 
 interface Student {
   id: string;
@@ -101,7 +102,7 @@ const ParentDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 pb-8 space-y-6">
         <DashboardHeader />
         
         {students.length === 0 ? (
@@ -109,11 +110,14 @@ const ParentDashboard = () => {
             <p>No students found. Please contact support to add your children.</p>
           </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <UpcomingClasses schedules={schedules} />
-            <RecentPayments payments={payments} />
-            <StudentInformation students={students} />
-          </div>
+          <>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <UpcomingClasses schedules={schedules} />
+              <RecentPayments payments={payments} />
+              <StudentInformation students={students} />
+            </div>
+            <CertificatesSection />
+          </>
         )}
       </div>
     </div>
