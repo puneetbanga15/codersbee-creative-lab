@@ -195,7 +195,6 @@ export const CertificatesTab = () => {
                             }
                           }}
                           {...field}
-                          // Remove the value prop as it's not needed for file inputs
                         />
                       </FormControl>
                       <FormMessage />
