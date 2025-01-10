@@ -80,18 +80,31 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
       // Create students and enroll them in courses
       for (const child of values.children) {
-        const { data: studentData, error: studentError } = await supabase
+        const { error: studentError } = await supabase
           .from('students')
           .insert({
             full_name: child.name,
             parent_id: authData.user.id,
             timezone: values.timezone,
-          })
-          .select()
-          .single();
+          });
 
         if (studentError) {
-          toast.error(`Failed to create student: ${child.name}`);
+          console.error('Student creation error:', studentError);
+          toast.error(`Failed to create student ${child.name}: ${studentError.message}`);
+          return;
+        }
+
+        // Get the created student to use their ID
+        const { data: studentData, error: fetchError } = await supabase
+          .from('students')
+          .select('id')
+          .eq('parent_id', authData.user.id)
+          .eq('full_name', child.name)
+          .single();
+
+        if (fetchError || !studentData) {
+          console.error('Error fetching student:', fetchError);
+          toast.error(`Failed to fetch student data for ${child.name}`);
           return;
         }
 
@@ -104,7 +117,8 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           });
 
         if (enrollmentError) {
-          toast.error(`Failed to enroll student: ${child.name}`);
+          console.error('Enrollment error:', enrollmentError);
+          toast.error(`Failed to enroll student ${child.name}: ${enrollmentError.message}`);
           return;
         }
       }
@@ -113,7 +127,7 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       onSuccess();
     } catch (error) {
       console.error('Error adding parent:', error);
-      toast.error("Failed to add parent and children");
+      toast.error("Failed to add parent and children. Please try again.");
     }
   };
 

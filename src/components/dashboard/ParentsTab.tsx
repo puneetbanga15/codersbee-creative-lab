@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
@@ -10,9 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { AddParentForm } from "../AddParentForm";
 
 export const ParentsTab = () => {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedParent, setSelectedParent] = useState<any>(null);
+
   const { data: parents, isLoading, refetch } = useQuery({
     queryKey: ['parents'],
     queryFn: async () => {
@@ -41,7 +51,7 @@ export const ParentsTab = () => {
         .from('fee_payments')
         .insert({
           student_id: studentId,
-          amount: 0, // Placeholder amount
+          amount: 0,
           status: status,
           description: 'Manual status update'
         });
@@ -53,6 +63,11 @@ export const ParentsTab = () => {
       console.error('Error updating fee status:', error);
       toast.error('Failed to update fee status');
     }
+  };
+
+  const handleEdit = (parent: any) => {
+    setSelectedParent(parent);
+    setEditDialogOpen(true);
   };
 
   return (
@@ -111,15 +126,38 @@ export const ParentsTab = () => {
                   ))}
                 </TableCell>
                 <TableCell>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
+                  <div className="space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(parent)}
+                    >
+                      Edit
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
+
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Parent Information</DialogTitle>
+          </DialogHeader>
+          {selectedParent && (
+            <AddParentForm
+              onSuccess={() => {
+                setEditDialogOpen(false);
+                refetch();
+                toast.success("Parent information updated successfully!");
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
