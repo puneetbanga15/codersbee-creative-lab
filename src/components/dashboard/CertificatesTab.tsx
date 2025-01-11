@@ -178,7 +178,7 @@ export const CertificatesTab = () => {
                 <FormField
                   control={form.control}
                   name="file"
-                  render={({ field: { onChange, ...field } }) => (
+                  render={({ field: { value, onChange, ...field } }) => (
                     <FormItem>
                       <FormLabel>Certificate File</FormLabel>
                       <FormControl>
