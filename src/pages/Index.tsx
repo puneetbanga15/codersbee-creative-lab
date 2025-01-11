@@ -9,6 +9,7 @@ import { InnovationHighlight } from "@/components/InnovationHighlight";
 import { SuccessStories } from "@/components/SuccessStories";
 import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
+import { VisualEquation } from "@/components/VisualEquation";
 
 const Index = () => {
   const courses = [
@@ -39,6 +40,7 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
+      <VisualEquation />
       <ProblemAgitation />
       <InnovationHighlight />
       <SuccessStories />
@@ -89,7 +91,6 @@ const Index = () => {
       </section>
 
       <FAQ />
-
       <CTASection />
     </div>
   );
