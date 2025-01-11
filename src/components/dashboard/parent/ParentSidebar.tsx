@@ -13,7 +13,7 @@ import {
   GraduationCap, 
   Calendar, 
   CreditCard, 
-  Certificate,
+  Scroll,
   MessageSquare,
   Settings
 } from "lucide-react";
@@ -46,7 +46,7 @@ export function ParentSidebar() {
     },
     {
       title: "Certificates",
-      icon: Certificate,
+      icon: Scroll,
       path: "/parents/dashboard/certificates"
     },
     {
