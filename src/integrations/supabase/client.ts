@@ -21,6 +21,20 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   fetch: (url, options) => {
     // Remove any trailing colons from the URL
     const cleanUrl = url.replace(/:\/?$/, '');
-    return fetch(cleanUrl, options);
+    // Add proper error handling
+    return fetch(cleanUrl, options).then(async (response) => {
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        console.error('Supabase request failed:', {
+          url: cleanUrl,
+          status: response.status,
+          error
+        });
+      }
+      return response;
+    }).catch((error) => {
+      console.error('Network error:', error);
+      throw error;
+    });
   }
 });
