@@ -34,13 +34,19 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log("Attempting login with email:", values.email);
+
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
+      console.log("Sign in response:", { authData, error: signInError });
+
       if (signInError) throw signInError;
+
+      console.log("User authenticated successfully:", authData.user.id);
 
       // After successful sign in, check if the user is a teacher or admin
       const { data: profileData, error: profileError } = await supabase
@@ -49,7 +55,11 @@ const TeacherLogin = () => {
         .eq('id', authData.user.id)
         .single();
 
+      console.log("Profile data response:", { profileData, error: profileError });
+
       if (profileError) throw profileError;
+
+      console.log("User role:", profileData?.role);
 
       if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
         // If not a teacher or admin, sign out and throw error
@@ -57,6 +67,7 @@ const TeacherLogin = () => {
         throw new Error('Not authorized as a teacher or admin');
       }
 
+      console.log("Authorization successful, navigating to dashboard");
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
     } catch (error) {
