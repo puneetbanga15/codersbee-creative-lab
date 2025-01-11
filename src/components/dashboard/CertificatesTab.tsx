@@ -19,10 +19,7 @@ const formSchema = z.object({
   file: z.instanceof(File, { message: "Please upload a file" })
 });
 
-type FormValues = {
-  studentId: string;
-  file: File;
-};
+type FormValues = z.infer<typeof formSchema>;
 
 export const CertificatesTab = () => {
   const [showAddCertificate, setShowAddCertificate] = useState(false);
