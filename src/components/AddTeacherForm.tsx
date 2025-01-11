@@ -35,14 +35,16 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      // First check if the user already exists
-      const { data: existingUser, error: userCheckError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', values.email)
-        .single();
+      // First check if the user already exists in auth
+      const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers({
+        filters: {
+          email: values.email
+        }
+      });
 
-      if (existingUser) {
+      if (getUserError) throw getUserError;
+
+      if (users && users.length > 0) {
         toast.error("A teacher with this email already exists");
         return;
       }
@@ -60,7 +62,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
       });
 
       if (authError) {
-        if (authError.message === "User already registered") {
+        if (authError.message.includes("already registered")) {
           toast.error("A teacher with this email already exists");
           return;
         }
@@ -70,9 +72,13 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
       toast.success("Teacher added successfully!");
       onSuccess();
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding teacher:', error);
-      toast.error("Failed to add teacher");
+      if (error.message?.includes("already registered") || error.message?.includes("already exists")) {
+        toast.error("A teacher with this email already exists");
+      } else {
+        toast.error("Failed to add teacher. Please try again.");
+      }
     }
   };
 
