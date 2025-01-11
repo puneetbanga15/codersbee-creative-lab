@@ -1,4 +1,5 @@
 import { Database as DatabaseGenerated } from '@/integrations/supabase/types';
+import { supabase } from '@/integrations/supabase/client';
 
 export type Database = DatabaseGenerated;
 export type Tables = Database['public']['Tables'];
