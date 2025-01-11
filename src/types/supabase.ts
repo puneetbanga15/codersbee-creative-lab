@@ -1,5 +1,4 @@
 import { Database as DatabaseGenerated } from '@/integrations/supabase/types';
-import { supabase } from '@/integrations/supabase/client';
 
 export type Database = DatabaseGenerated;
 export type Tables = Database['public']['Tables'];
@@ -31,32 +30,8 @@ export function handleQueryResponse<T>(response: { data: T | null; error: any })
 }
 
 // Type-safe database query helpers
-export const dbHelpers = {
-  async getProfileById(id: string): Promise<Profile | null> {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    return handleQueryResponse({ data, error });
-  },
-
-  async getStudentsByParentId(parentId: string): Promise<Student[] | null> {
-    const { data, error } = await supabase
-      .from('students')
-      .select('*')
-      .eq('parent_id', parentId);
-    
-    return handleQueryResponse({ data, error });
-  },
-
-  async getClassSchedules(studentId: string): Promise<ClassSchedule[] | null> {
-    const { data, error } = await supabase
-      .from('class_schedules')
-      .select('*')
-      .eq('student_id', studentId);
-    
-    return handleQueryResponse({ data, error });
-  }
+export type DbHelpers = {
+  getProfileById(id: string): Promise<Profile | null>;
+  getStudentsByParentId(parentId: string): Promise<Student[] | null>;
+  getClassSchedules(studentId: string): Promise<ClassSchedule[] | null>;
 };

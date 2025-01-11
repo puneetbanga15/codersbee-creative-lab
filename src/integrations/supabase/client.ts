@@ -1,24 +1,32 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
 
+// Remove trailing colon from URL if present
+const sanitizeUrl = (url: string) => url.replace(/:\/?$/, '');
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-  },
-  global: {
-    headers: {
-      'x-application-name': 'codersbee',
+export const supabase = createClient<Database>(
+  sanitizeUrl(supabaseUrl),
+  supabaseAnonKey,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
     },
-  },
-});
+    global: {
+      headers: {
+        'x-application-name': 'codersbee',
+      },
+    },
+  }
+);
 
 // Add error handling and response type helpers
 export async function handleDatabaseResponse<T>(
