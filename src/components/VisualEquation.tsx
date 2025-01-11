@@ -54,7 +54,7 @@ export const VisualEquation = () => {
             <div className="w-24 h-24 rounded-full bg-codersbee-purple/30 flex items-center justify-center mb-3 shadow-lg">
               <User className="w-12 h-12 text-codersbee-dark" />
             </div>
-            <p className="text-lg font-medium text-codersbee-dark">Parents</p>
+            <p className="text-lg font-medium text-codersbee-dark">Parents Who Act</p>
           </motion.div>
 
           {/* Plus Sign */}
@@ -84,7 +84,7 @@ export const VisualEquation = () => {
             +
           </motion.div>
 
-          {/* Expert CodersBee Mentors */}
+          {/* Expert Mentors */}
           <motion.div 
             variants={itemVariants}
             className="flex flex-col items-center"
@@ -92,7 +92,7 @@ export const VisualEquation = () => {
             <div className="w-24 h-24 rounded-full bg-codersbee-orange flex items-center justify-center mb-3 shadow-lg">
               <Users className="w-12 h-12 text-codersbee-dark" />
             </div>
-            <p className="text-lg font-medium text-codersbee-dark">Expert CodersBee Mentors</p>
+            <p className="text-lg font-medium text-codersbee-dark">Expert Mentors</p>
           </motion.div>
 
           {/* Plus Sign */}
@@ -130,9 +130,9 @@ export const VisualEquation = () => {
           >
             <motion.div 
               variants={rocketVariants}
-              className="w-32 h-32 rounded-full bg-gradient-to-br from-codersbee-vivid via-codersbee-purple to-codersbee-orange flex items-center justify-center mb-3 shadow-xl"
+              className="w-36 h-36 rounded-full bg-gradient-to-br from-codersbee-vivid via-codersbee-purple to-codersbee-orange flex items-center justify-center mb-3 shadow-xl"
             >
-              <div className="text-4xl animate-float">🚀</div>
+              <div className="text-5xl animate-float">🚀</div>
             </motion.div>
             <p className="text-xl font-bold bg-gradient-to-r from-codersbee-vivid to-codersbee-dark bg-clip-text text-transparent">
               Future Innovator
