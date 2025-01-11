@@ -35,6 +35,7 @@ const TeacherLogin = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log("Attempting login with email:", values.email);
+      console.log("Using Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
 
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -42,9 +43,14 @@ const TeacherLogin = () => {
         password: values.password,
       });
 
-      console.log("Sign in response:", { authData, error: signInError });
-
-      if (signInError) throw signInError;
+      if (signInError) {
+        console.error('Sign in error:', signInError);
+        if (signInError.message.includes('Invalid API key')) {
+          toast.error("Authentication service configuration error. Please contact support.");
+          return;
+        }
+        throw signInError;
+      }
 
       console.log("User authenticated successfully:", authData.user.id);
 
@@ -55,9 +61,10 @@ const TeacherLogin = () => {
         .eq('id', authData.user.id)
         .single();
 
-      console.log("Profile data response:", { profileData, error: profileError });
-
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Profile fetch error:', profileError);
+        throw profileError;
+      }
 
       console.log("User role:", profileData?.role);
 
@@ -81,6 +88,8 @@ const TeacherLogin = () => {
           errorMessage = "Invalid email or password.";
         } else if (error.message === 'Not authorized as a teacher or admin') {
           errorMessage = "This account is not authorized as a teacher or admin.";
+        } else if (error.message.includes('Invalid API key')) {
+          errorMessage = "System configuration error. Please contact support.";
         }
       }
       toast.error(errorMessage);
