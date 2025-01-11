@@ -1,40 +1,38 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from './types';
+import { Database } from '@/types/supabase';
 
-const SUPABASE_URL = "https://jjshsfsmgbrhypotcwvx.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impqc2hzZnNtZ2JyaHlwb3Rjd3Z4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2MzA0MDksImV4cCI6MjA0OTIwNjQwOX0.f4hLGrX8ZeYe6L4GpfpOnCnnA7NzxdJne3eLrbLQGHw";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Initialize the Supabase client with proper configuration and error handling
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
+    persistSession: true,
   },
   global: {
     headers: {
-      'X-Client-Info': 'supabase-js-web'
-    }
+      'x-application-name': 'codersbee',
+    },
   },
-  // Add proper error handling for network requests
-  fetch: (url, options) => {
-    // Remove any trailing colons from the URL
-    const cleanUrl = url.replace(/:\/?$/, '');
-    // Add proper error handling
-    return fetch(cleanUrl, options).then(async (response) => {
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        console.error('Supabase request failed:', {
-          url: cleanUrl,
-          status: response.status,
-          error
-        });
-      }
-      return response;
-    }).catch((error) => {
-      console.error('Network error:', error);
-      throw error;
-    });
-  }
 });
+
+// Add error handling and response type helpers
+export async function handleDatabaseResponse<T>(
+  promise: Promise<{ data: T | null; error: any }>
+): Promise<T | null> {
+  try {
+    const { data, error } = await promise;
+    if (error) {
+      console.error('Database error:', error);
+      return null;
+    }
+    return data;
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    return null;
+  }
+}
