@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Navbar } from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,6 +9,8 @@ import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
 import { StudentInformation } from "@/components/dashboard/parent/StudentInformation";
 import { CertificatesSection } from "@/components/dashboard/parent/CertificatesSection";
+import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 interface Student {
   id: string;
@@ -100,27 +101,36 @@ const ParentDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-8 space-y-6">
-        <DashboardHeader />
-        
-        {students.length === 0 ? (
-          <Card className="p-6">
-            <p>No students found. Please contact support to add your children.</p>
-          </Card>
-        ) : (
-          <>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <UpcomingClasses schedules={schedules} />
-              <RecentPayments payments={payments} />
-              <StudentInformation students={students} />
+    <SidebarProvider>
+      <div className="min-h-screen bg-gray-50 flex w-full">
+        <ParentSidebar />
+        <main className="flex-1">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center mb-6">
+              <SidebarTrigger className="mr-4" />
+              <DashboardHeader />
             </div>
-            <CertificatesSection />
-          </>
-        )}
+            
+            {students.length === 0 ? (
+              <Card className="p-6">
+                <p>No students found. Please contact support to add your children.</p>
+              </Card>
+            ) : (
+              <>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <UpcomingClasses schedules={schedules} />
+                  <RecentPayments payments={payments} />
+                  <StudentInformation students={students} />
+                </div>
+                <div className="mt-6">
+                  <CertificatesSection />
+                </div>
+              </>
+            )}
+          </div>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
