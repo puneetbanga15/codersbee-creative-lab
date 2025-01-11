@@ -1,9 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
 
-// Remove trailing colon from URL if present
-const sanitizeUrl = (url: string) => url.replace(/:\/?$/, '');
-
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -25,7 +22,7 @@ if (!supabaseAnonKey.includes('.')) {
 }
 
 export const supabase = createClient<Database>(
-  sanitizeUrl(supabaseUrl),
+  supabaseUrl,
   supabaseAnonKey,
   {
     auth: {
