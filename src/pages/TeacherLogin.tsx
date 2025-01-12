@@ -51,24 +51,16 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log("Starting login process...");
-      console.log("Using Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
-      console.log("API Key status:", import.meta.env.VITE_SUPABASE_ANON_KEY ? "Present" : "Missing");
-      
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      console.log("Sign in response:", { authData, error: signInError });
-
       if (signInError) {
         console.error("Sign in error:", signInError);
         throw signInError;
       }
-
-      console.log("Successfully signed in, checking profile...");
 
       // After successful sign in, check if the user exists in profiles
       const { data: profileData, error: profileError } = await supabase
@@ -77,16 +69,12 @@ const TeacherLogin = () => {
         .eq('id', authData.user.id)
         .single();
 
-      console.log("Profile check response:", { profileData, error: profileError });
-
       if (profileError) {
         console.error("Profile fetch error:", profileError);
         // If there's an error fetching the profile, sign out and throw error
         await supabase.auth.signOut();
         throw new Error('Error fetching user profile');
       }
-
-      console.log("Retrieved profile with role:", profileData?.role);
 
       // Check if user is either a teacher or admin
       if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
@@ -95,8 +83,6 @@ const TeacherLogin = () => {
         await supabase.auth.signOut();
         throw new Error('Unauthorized access');
       }
-
-      console.log("Role check passed, proceeding with login...");
 
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
