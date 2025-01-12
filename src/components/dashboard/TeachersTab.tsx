@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Users, Phone, CheckCircle } from "lucide-react";
+import { Users, CheckCircle } from "lucide-react";
 
 export const TeachersTab = () => {
   const { data: teachers, isLoading } = useQuery({
@@ -14,7 +14,11 @@ export const TeachersTab = () => {
         .select('*')
         .eq('role', 'teacher');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching teachers:', error);
+        throw error;
+      }
+      
       return data;
     },
   });
