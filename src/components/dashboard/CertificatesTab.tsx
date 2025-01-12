@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Trash2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
@@ -130,6 +130,31 @@ export const CertificatesTab = () => {
     }
   };
 
+  const deleteCertificate = async (id: string, filePath: string) => {
+    try {
+      // First delete the file from storage
+      const { error: storageError } = await supabase.storage
+        .from('certificates')
+        .remove([filePath]);
+
+      if (storageError) throw storageError;
+
+      // Then delete the database record
+      const { error: dbError } = await supabase
+        .from('certificates')
+        .delete()
+        .eq('id', id);
+
+      if (dbError) throw dbError;
+
+      toast.success("Certificate deleted successfully!");
+      refetch();
+    } catch (error) {
+      console.error('Error deleting certificate:', error);
+      toast.error("Failed to delete certificate");
+    }
+  };
+
   if (studentsLoading || certificatesLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -228,14 +253,24 @@ export const CertificatesTab = () => {
               <TableCell>{cert.filename}</TableCell>
               <TableCell>{new Date(cert.uploaded_at).toLocaleDateString()}</TableCell>
               <TableCell>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => downloadCertificate(cert.file_path, cert.filename)}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => downloadCertificate(cert.file_path, cert.filename)}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deleteCertificate(cert.id, cert.file_path)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}

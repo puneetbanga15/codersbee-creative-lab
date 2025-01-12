@@ -80,7 +80,8 @@ export const ParentsTab = () => {
             <TableRow>
               <TableHead>Parent Name</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Children & Courses</TableHead>
+              <TableHead>Children</TableHead>
+              <TableHead>Courses</TableHead>
               <TableHead>Fee Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -95,13 +96,19 @@ export const ParentsTab = () => {
                     {parent.students?.map((student: any) => (
                       <div key={student.id} className="border-b pb-2 last:border-0">
                         <p className="font-medium">{student.full_name}</p>
-                        <div className="text-sm text-gray-500">
-                          {student.course_enrollments?.map((enrollment: any) => (
-                            <p key={enrollment.id}>
-                              {enrollment.course_name} - Teacher: {enrollment.teacher?.full_name}
-                            </p>
-                          ))}
-                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-2">
+                    {parent.students?.map((student: any) => (
+                      <div key={student.id} className="border-b pb-2 last:border-0">
+                        {student.course_enrollments?.map((enrollment: any) => (
+                          <p key={enrollment.id} className="text-sm text-gray-500">
+                            {enrollment.course_name} - Teacher: {enrollment.teacher?.full_name}
+                          </p>
+                        ))}
                       </div>
                     ))}
                   </div>
