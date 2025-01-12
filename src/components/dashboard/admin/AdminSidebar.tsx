@@ -16,7 +16,9 @@ import {
   Settings,
   UserPlus,
   ScrollText,
-  FolderOpen
+  FolderOpen,
+  Calendar,
+  CreditCard
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -28,7 +30,7 @@ export function AdminSidebar() {
     {
       title: "Overview",
       icon: Home,
-      path: "/teachers/dashboard"
+      path: "/teachers/dashboard/overview"
     },
     {
       title: "Teachers",
@@ -54,6 +56,16 @@ export function AdminSidebar() {
       title: "Documents",
       icon: FolderOpen,
       path: "/teachers/dashboard/documents"
+    },
+    {
+      title: "Scheduling",
+      icon: Calendar,
+      path: "/teachers/dashboard/scheduling"
+    },
+    {
+      title: "Fee Management",
+      icon: CreditCard,
+      path: "/teachers/dashboard/fees"
     },
     {
       title: "Settings",

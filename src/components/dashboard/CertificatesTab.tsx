@@ -3,12 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { AddCertificateDialog } from "./certificates/AddCertificateDialog";
+import { CreateCertificateDialog } from "./certificates/CreateCertificateDialog";
 import { CertificatesTable } from "./certificates/CertificatesTable";
 
 export const CertificatesTab = () => {
   const [showAddCertificate, setShowAddCertificate] = useState(false);
+  const [showCreateCertificate, setShowCreateCertificate] = useState(false);
 
   const { data: students, isLoading: studentsLoading } = useQuery({
     queryKey: ['students'],
@@ -54,16 +56,32 @@ export const CertificatesTab = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
         <Dialog open={showAddCertificate} onOpenChange={setShowAddCertificate}>
           <DialogTrigger asChild>
-            <Button>Upload Certificate</Button>
+            <Button variant="outline">
+              <Plus className="w-4 h-4 mr-2" />
+              Upload Certificate
+            </Button>
           </DialogTrigger>
           <AddCertificateDialog
             open={showAddCertificate}
             onOpenChange={setShowAddCertificate}
             students={students || []}
             onSuccess={refetch}
+          />
+        </Dialog>
+
+        <Dialog open={showCreateCertificate} onOpenChange={setShowCreateCertificate}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Create Certificate
+            </Button>
+          </DialogTrigger>
+          <CreateCertificateDialog
+            open={showCreateCertificate}
+            onOpenChange={setShowCreateCertificate}
           />
         </Dialog>
       </div>
