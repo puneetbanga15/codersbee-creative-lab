@@ -57,6 +57,9 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
     form.reset();
   };
 
+  // Get the current domain for the verification URL
+  const verificationUrl = `${window.location.origin}/certificate`;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
@@ -147,7 +150,7 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                     <div className="flex flex-col items-center w-32">
                       <p className="text-xs text-gray-600 mb-2 text-center">Validate this certificate</p>
                       <QRCodeSVG
-                        value={`https://verify.codersbee.com/certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
+                        value={`${verificationUrl}?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
                         size={80}
                       />
                     </div>
