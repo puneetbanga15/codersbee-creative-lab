@@ -67,8 +67,8 @@ const TeacherLogin = () => {
         .from('profiles')
         .select('role')
         .eq('id', authData.user.id)
-        .single();
-
+        .maybeSingle();
+      
       if (profileError) {
         console.error("Profile fetch error:", profileError);
         // If there's an error fetching the profile, sign out and throw error
@@ -76,9 +76,15 @@ const TeacherLogin = () => {
         throw new Error('Error fetching user profile');
       }
 
+      if (!profileData) {
+        console.error("No profile found for user");
+        await supabase.auth.signOut();
+        throw new Error('No user profile found');
+      }
+
       // Check if user is either a teacher or admin
-      if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
-        console.log("Unauthorized role:", profileData?.role);
+      if (profileData.role !== 'teacher' && profileData.role !== 'admin') {
+        console.log("Unauthorized role:", profileData.role);
         // If not a teacher or admin, sign out and throw error
         await supabase.auth.signOut();
         throw new Error('Unauthorized access');
@@ -99,6 +105,8 @@ const TeacherLogin = () => {
           errorMessage = "This account is not authorized as a teacher or admin.";
         } else if (error.message === 'Error fetching user profile') {
           errorMessage = "Error accessing user profile. Please try again.";
+        } else if (error.message === 'No user profile found') {
+          errorMessage = "No user profile found. Please contact support.";
         }
       }
       toast.error(errorMessage);
