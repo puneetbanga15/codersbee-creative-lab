@@ -16,26 +16,30 @@ import Projects from "./pages/Projects";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/parents/login" element={<ParentsLogin />} />
-          <Route path="/parents/register" element={<ParentsRegister />} />
-          <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
-          <Route path="/teachers/login" element={<TeacherLogin />} />
-          <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
-          <Route path="/quizzes" element={<Quizzes />} />
-          <Route path="/projects" element={<Projects />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/parents/login" element={<ParentsLogin />} />
+              <Route path="/parents/register" element={<ParentsRegister />} />
+              <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
+              <Route path="/teachers/login" element={<TeacherLogin />} />
+              <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
+              <Route path="/quizzes" element={<Quizzes />} />
+              <Route path="/projects" element={<Projects />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+};
 
 export default App;
