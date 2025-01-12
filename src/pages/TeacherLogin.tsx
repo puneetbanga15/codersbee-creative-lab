@@ -34,27 +34,15 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log("Attempting login with email:", values.email);
-      console.log("Using Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
-
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (signInError) {
-        console.error('Sign in error:', signInError);
-        if (signInError.message.includes('Invalid API key')) {
-          toast.error("Authentication service configuration error. Please contact support.");
-          return;
-        }
-        throw signInError;
-      }
+      if (signInError) throw signInError;
 
-      console.log("User authenticated successfully:", authData.user.id);
-
-      // After successful sign in, check if the user is a teacher or admin
+      // After successful sign in, check if the user exists in profiles
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('role')
@@ -62,34 +50,31 @@ const TeacherLogin = () => {
         .single();
 
       if (profileError) {
-        console.error('Profile fetch error:', profileError);
-        throw profileError;
+        // If there's an error fetching the profile, sign out and throw error
+        await supabase.auth.signOut();
+        throw new Error('Error fetching user profile');
       }
 
-      console.log("User role:", profileData?.role);
-
+      // Check if user is either a teacher or admin
       if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
         // If not a teacher or admin, sign out and throw error
         await supabase.auth.signOut();
-        throw new Error('Not authorized as a teacher or admin');
+        throw new Error('Unauthorized access');
       }
 
-      console.log("Authorization successful, navigating to dashboard");
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
     } catch (error) {
       console.error('Login error:', error);
-      // Sign out if there was an error
-      await supabase.auth.signOut();
       
-      let errorMessage = "Login failed. Please check your credentials.";
+      let errorMessage = "Login failed. Please try again.";
       if (error instanceof Error) {
         if (error.message === 'Invalid login credentials') {
           errorMessage = "Invalid email or password.";
-        } else if (error.message === 'Not authorized as a teacher or admin') {
+        } else if (error.message === 'Unauthorized access') {
           errorMessage = "This account is not authorized as a teacher or admin.";
-        } else if (error.message.includes('Invalid API key')) {
-          errorMessage = "System configuration error. Please contact support.";
+        } else if (error.message === 'Error fetching user profile') {
+          errorMessage = "Error accessing user profile. Please try again.";
         }
       }
       toast.error(errorMessage);
