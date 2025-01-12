@@ -5,8 +5,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Add detailed validation and logging
-console.log('Supabase URL:', supabaseUrl);
-console.log('Supabase Anon Key:', supabaseAnonKey ? 'Present' : 'Missing');
+console.log('Initializing Supabase client with URL:', supabaseUrl);
+console.log('API Key status:', supabaseAnonKey ? 'Present' : 'Missing');
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase environment variables');
