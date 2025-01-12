@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { AddCertificateDialog } from "./certificates/AddCertificateDialog";
 import { CertificatesTable } from "./certificates/CertificatesTable";
@@ -55,19 +55,18 @@ export const CertificatesTab = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <DialogTrigger asChild>
-          <Button onClick={() => setShowAddCertificate(true)}>
-            Upload Certificate
-          </Button>
-        </DialogTrigger>
+        <Dialog open={showAddCertificate} onOpenChange={setShowAddCertificate}>
+          <DialogTrigger asChild>
+            <Button>Upload Certificate</Button>
+          </DialogTrigger>
+          <AddCertificateDialog
+            open={showAddCertificate}
+            onOpenChange={setShowAddCertificate}
+            students={students || []}
+            onSuccess={refetch}
+          />
+        </Dialog>
       </div>
-
-      <AddCertificateDialog
-        open={showAddCertificate}
-        onOpenChange={setShowAddCertificate}
-        students={students || []}
-        onSuccess={refetch}
-      />
 
       <CertificatesTable 
         certificates={certificates || []} 
