@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { QRCodeSVG } from "qrcode.react";
 
 const formSchema = z.object({
   studentName: z.string().min(1, "Student name is required"),
@@ -132,8 +133,20 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                     {form.watch("performance") || "[Performance Details]"}
                   </p>
                   <div className="mt-12 pt-8 border-t border-codersbee-orange/30">
+                    <img 
+                      src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
+                      alt="Director's Signature"
+                      className="mx-auto h-12 mb-2"
+                    />
                     <p className="font-semibold">Manisha Kapoor</p>
                     <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                  </div>
+                  <div className="absolute bottom-8 right-8 text-center">
+                    <p className="text-xs text-gray-600 mb-2">Scan this to validate the authenticity of this certificate</p>
+                    <QRCodeSVG
+                      value={`https://codersbee.com/verify-certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
+                      size={80}
+                    />
                   </div>
                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
                     <div className="flex justify-between px-8">
