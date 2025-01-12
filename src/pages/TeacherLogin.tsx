@@ -51,6 +51,8 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log("Attempting to sign in with email:", values.email);
+      
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -62,12 +64,16 @@ const TeacherLogin = () => {
         throw signInError;
       }
 
+      console.log("Sign in successful, user data:", authData.user);
+
       // After successful sign in, check if the user exists in profiles
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', authData.user.id)
         .maybeSingle();
+      
+      console.log("Profile data:", profileData, "Profile error:", profileError);
       
       if (profileError) {
         console.error("Profile fetch error:", profileError);
@@ -81,6 +87,8 @@ const TeacherLogin = () => {
         await supabase.auth.signOut();
         throw new Error('No user profile found');
       }
+
+      console.log("User role:", profileData.role);
 
       // Check if user is either a teacher or admin
       if (profileData.role !== 'teacher' && profileData.role !== 'admin') {
