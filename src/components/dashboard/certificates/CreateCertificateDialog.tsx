@@ -60,7 +60,7 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
   // Get the current domain for the verification URL
   const verificationUrl = window.location.hostname === 'localhost' 
     ? `${window.location.origin}/certificate`
-    : `https://codersbee.com/certificate`;
+    : `https://bright-froyo-1a1f7e.netlify.app/certificate`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
