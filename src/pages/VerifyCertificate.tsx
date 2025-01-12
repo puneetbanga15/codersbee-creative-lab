@@ -25,6 +25,9 @@ export default function VerifyCertificate() {
             <p>Student Name: {name}</p>
             <p>Course: {course}</p>
           </div>
+          <p className="text-sm text-gray-500">
+            This certificate was verified on {new Date().toLocaleDateString()}
+          </p>
         </CardContent>
       </Card>
     </div>
