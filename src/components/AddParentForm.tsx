@@ -26,6 +26,21 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+interface AddParentFormProps {
+  onSuccess: () => void;
+  initialData?: {
+    full_name: string;
+    phone_number: string;
+    students?: Array<{
+      full_name: string;
+      course_enrollments?: Array<{
+        course_name: string;
+        teacher?: { id: string };
+      }>;
+    }>;
+  };
+}
+
 const getErrorMessage = (error: AuthError) => {
   switch (error.message) {
     case 'Invalid login credentials':
@@ -37,16 +52,20 @@ const getErrorMessage = (error: AuthError) => {
   }
 };
 
-export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
+export const AddParentForm = ({ onSuccess, initialData }: AddParentFormProps) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      parentName: "",
+      parentName: initialData?.full_name || "",
       email: "",
-      phone: "",
+      phone: initialData?.phone_number || "",
       timezone: "",
       password: "",
-      children: [{ name: "", courseName: "", teacherId: "" }],
+      children: initialData?.students?.map(student => ({
+        name: student.full_name,
+        courseName: student.course_enrollments?.[0]?.course_name || "",
+        teacherId: student.course_enrollments?.[0]?.teacher?.id || "",
+      })) || [{ name: "", courseName: "", teacherId: "" }],
     },
   });
 
@@ -162,4 +181,4 @@ export const AddParentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       </Form>
     </ScrollArea>
   );
-};
+});

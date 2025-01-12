@@ -29,7 +29,7 @@ export const TeachersTab = () => {
     },
     {
       title: "Active Teachers",
-      value: teachers?.filter(t => t.status !== 'inactive')?.length || 0,
+      value: teachers?.length || 0,
       icon: CheckCircle,
       color: "bg-codersbee-green",
       textColor: "text-green-700"
