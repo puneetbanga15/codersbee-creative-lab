@@ -58,7 +58,9 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
   };
 
   // Get the current domain for the verification URL
-  const verificationUrl = `${window.location.protocol}//${window.location.host}/certificate`;
+  const verificationUrl = window.location.hostname === 'localhost' 
+    ? `${window.location.origin}/certificate`
+    : `https://codersbee.com/certificate`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
