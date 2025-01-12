@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { AddParentForm } from "../AddParentForm";
 import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users, GraduationCap, CreditCard } from "lucide-react";
 
 export const ParentsTab = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -76,11 +76,56 @@ export const ParentsTab = () => {
     setEditDialogOpen(true);
   };
 
+  const totalStudents = parents?.reduce((acc, parent) => acc + (parent.students?.length || 0), 0) || 0;
+  const totalCourses = parents?.reduce((acc, parent) => 
+    acc + parent.students?.reduce((sum: number, student: any) => 
+      sum + (student.course_enrollments?.length || 0), 0
+    ) || 0, 0
+  ) || 0;
+
+  const stats = [
+    {
+      title: "Total Parents",
+      value: parents?.length || 0,
+      icon: Users,
+      color: "bg-codersbee-purple",
+      textColor: "text-codersbee-vivid"
+    },
+    {
+      title: "Total Students",
+      value: totalStudents,
+      icon: GraduationCap,
+      color: "bg-codersbee-green",
+      textColor: "text-green-700"
+    },
+    {
+      title: "Course Enrollments",
+      value: totalCourses,
+      icon: CreditCard,
+      color: "bg-codersbee-yellow",
+      textColor: "text-yellow-700"
+    }
+  ];
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {stats.map((stat, index) => (
+          <Card key={index} className={`p-6 ${stat.color} bg-opacity-10 border-none`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                <p className={`text-3xl font-bold ${stat.textColor}`}>{stat.value}</p>
+              </div>
+              <stat.icon className={`w-12 h-12 ${stat.textColor} opacity-80`} />
+            </div>
+          </Card>
+        ))}
+      </div>
+
       <Card className="p-6 bg-white shadow-sm">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">Parents</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">Parents & Students</h2>
         </div>
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
@@ -101,7 +146,7 @@ export const ParentsTab = () => {
             <TableBody>
               {parents?.map((parent) => (
                 <TableRow key={parent.id} className="hover:bg-gray-50">
-                  <TableCell>{parent.full_name}</TableCell>
+                  <TableCell className="font-medium">{parent.full_name}</TableCell>
                   <TableCell>{parent.phone_number}</TableCell>
                   <TableCell>
                     <div className="space-y-2">

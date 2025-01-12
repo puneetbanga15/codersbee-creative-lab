@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { TeacherDashboardHeader } from "@/components/TeacherDashboardHeader";
 import { TeachersTab } from "@/components/dashboard/TeachersTab";
 import { ParentsTab } from "@/components/dashboard/ParentsTab";
@@ -27,7 +27,7 @@ const TeacherDashboard = () => {
             </div>
             
             <Routes>
-              <Route index element={<TeachersTab />} />
+              <Route index element={<Navigate to="teachers" replace />} />
               <Route path="teachers" element={<TeachersTab />} />
               <Route path="parents" element={<ParentsTab />} />
               {isAdmin && <Route path="admins" element={<AdminsTab />} />}
