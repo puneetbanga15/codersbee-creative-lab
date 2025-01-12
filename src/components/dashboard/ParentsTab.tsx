@@ -109,6 +109,16 @@ export const ParentsTab = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-900">Parents & Students Management</h2>
+        <Button 
+          onClick={() => setEditDialogOpen(true)}
+          className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+        >
+          Add Parent
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, index) => (
           <Card key={index} className={`p-6 ${stat.color} bg-opacity-10 border-none`}>
@@ -124,9 +134,6 @@ export const ParentsTab = () => {
       </div>
 
       <Card className="p-6 bg-white shadow-sm">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">Parents & Students</h2>
-        </div>
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-codersbee-vivid" />
@@ -190,16 +197,14 @@ export const ParentsTab = () => {
                     ))}
                   </TableCell>
                   <TableCell>
-                    <div className="space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleEdit(parent)}
-                        className="hover:bg-gray-100"
-                      >
-                        Edit
-                      </Button>
-                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(parent)}
+                      className="hover:bg-gray-100"
+                    >
+                      Edit
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -211,17 +216,18 @@ export const ParentsTab = () => {
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Parent Information</DialogTitle>
+            <DialogTitle>
+              {selectedParent ? 'Edit Parent Information' : 'Add New Parent'}
+            </DialogTitle>
           </DialogHeader>
-          {selectedParent && (
-            <AddParentForm
-              onSuccess={() => {
-                setEditDialogOpen(false);
-                refetch();
-                toast.success("Parent information updated successfully!");
-              }}
-            />
-          )}
+          <AddParentForm
+            initialData={selectedParent}
+            onSuccess={() => {
+              setEditDialogOpen(false);
+              refetch();
+              toast.success(selectedParent ? "Parent information updated successfully!" : "Parent added successfully!");
+            }}
+          />
         </DialogContent>
       </Dialog>
     </div>
