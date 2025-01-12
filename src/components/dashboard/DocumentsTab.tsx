@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Download, FileUpload, Loader2, Trash2 } from "lucide-react";
+import { Download, Upload, Loader2, Trash2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 
@@ -160,7 +160,7 @@ export const DocumentsTab = () => {
         <Dialog open={showAddDocument} onOpenChange={setShowAddDocument}>
           <DialogTrigger asChild>
             <Button className="bg-codersbee-vivid hover:bg-codersbee-vivid/90">
-              <FileUpload className="w-4 h-4 mr-2" />
+              <Upload className="w-4 h-4 mr-2" />
               Upload Document
             </Button>
           </DialogTrigger>

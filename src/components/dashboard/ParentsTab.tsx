@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AddParentForm } from "../AddParentForm";
+import { Card } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 export const ParentsTab = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -176,3 +178,4 @@ export const ParentsTab = () => {
     </div>
   );
 };
+
