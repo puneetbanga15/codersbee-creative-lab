@@ -37,21 +37,7 @@ export const AddAdminForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { data: existingProfiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', values.email)
-        .single();
-
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError;
-      }
-
-      if (existingProfiles) {
-        toast.error("An admin with this email already exists");
-        return;
-      }
-
+      // First, try to sign up the user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -71,16 +57,17 @@ export const AddAdminForm = ({ onSuccess }: { onSuccess: () => void }) => {
         throw authError;
       }
 
+      if (!authData.user) {
+        toast.error("Failed to create admin account");
+        return;
+      }
+
       toast.success("Admin added successfully!");
       onSuccess();
       form.reset();
     } catch (error: any) {
       console.error('Error adding admin:', error);
-      if (error.message?.includes("already registered") || error.message?.includes("already exists")) {
-        toast.error("An admin with this email already exists");
-      } else {
-        toast.error("Failed to add admin. Please try again.");
-      }
+      toast.error(error.message || "Failed to add admin. Please try again.");
     }
   };
 
