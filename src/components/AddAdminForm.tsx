@@ -17,14 +17,14 @@ import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address").endsWith("@teacher.codersbee.com", "Email must end with @teacher.codersbee.com"),
+  email: z.string().email("Invalid email address").endsWith("@admin.codersbee.com", "Email must end with @admin.codersbee.com"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
+export const AddAdminForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,7 +48,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
       }
 
       if (existingProfiles) {
-        toast.error("A teacher with this email already exists");
+        toast.error("An admin with this email already exists");
         return;
       }
 
@@ -65,21 +65,21 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
       if (authError) {
         if (authError.message.includes("already registered")) {
-          toast.error("A teacher with this email already exists");
+          toast.error("An admin with this email already exists");
           return;
         }
         throw authError;
       }
 
-      toast.success("Teacher added successfully!");
+      toast.success("Admin added successfully!");
       onSuccess();
       form.reset();
     } catch (error: any) {
-      console.error('Error adding teacher:', error);
+      console.error('Error adding admin:', error);
       if (error.message?.includes("already registered") || error.message?.includes("already exists")) {
-        toast.error("A teacher with this email already exists");
+        toast.error("An admin with this email already exists");
       } else {
-        toast.error("Failed to add teacher. Please try again.");
+        toast.error("Failed to add admin. Please try again.");
       }
     }
   };
@@ -94,7 +94,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
             <FormItem>
               <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter teacher's name" {...field} />
+                <Input placeholder="Enter admin's name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +108,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="name@teacher.codersbee.com" {...field} />
+                <Input type="email" placeholder="name@admin.codersbee.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,7 +143,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
 
-        <Button type="submit" className="w-full">Add Teacher</Button>
+        <Button type="submit" className="w-full">Add Admin</Button>
       </form>
     </Form>
   );

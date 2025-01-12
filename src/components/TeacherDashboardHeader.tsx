@@ -5,12 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AddParentForm } from "./AddParentForm";
 import { AddTeacherForm } from "./AddTeacherForm";
+import { AddAdminForm } from "./AddAdminForm";
 import { useQuery } from "@tanstack/react-query";
 
 export const TeacherDashboardHeader = () => {
   const navigate = useNavigate();
   const [showAddParent, setShowAddParent] = React.useState(false);
   const [showAddTeacher, setShowAddTeacher] = React.useState(false);
+  const [showAddAdmin, setShowAddAdmin] = React.useState(false);
 
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
@@ -65,6 +67,18 @@ export const TeacherDashboardHeader = () => {
                   <DialogTitle>Add New Teacher</DialogTitle>
                 </DialogHeader>
                 <AddTeacherForm onSuccess={() => setShowAddTeacher(false)} />
+              </DialogContent>
+            </Dialog>
+
+            <Dialog open={showAddAdmin} onOpenChange={setShowAddAdmin}>
+              <DialogTrigger asChild>
+                <Button>Add Admin</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Add New Admin</DialogTitle>
+                </DialogHeader>
+                <AddAdminForm onSuccess={() => setShowAddAdmin(false)} />
               </DialogContent>
             </Dialog>
           </>

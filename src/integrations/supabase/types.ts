@@ -482,6 +482,50 @@ export type Database = {
         }
         Relationships: []
       }
+      student_documents: {
+        Row: {
+          content_type: string | null
+          description: string | null
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_path: string
+          filename: string
+          id: string
+          student_id: string | null
+          uploaded_at: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          content_type?: string | null
+          description?: string | null
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_path: string
+          filename: string
+          id?: string
+          student_id?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          content_type?: string | null
+          description?: string | null
+          document_type?: Database["public"]["Enums"]["document_type"]
+          file_path?: string
+          filename?: string
+          id?: string
+          student_id?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_documents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_projects: {
         Row: {
           created_at: string
@@ -555,6 +599,11 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      document_type:
+        | "certificate"
+        | "appreciation_letter"
+        | "project_details"
+        | "other"
       quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
       user_role: "admin" | "teacher" | "parent"
     }
