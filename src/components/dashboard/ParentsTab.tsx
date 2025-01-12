@@ -31,11 +31,15 @@ export const ParentsTab = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select(`
-          *,
+          id,
+          full_name,
+          phone_number,
           students(
-            *,
+            id,
+            full_name,
             course_enrollments(
-              *,
+              id,
+              course_name,
               teacher:profiles(full_name)
             )
           )
@@ -178,4 +182,3 @@ export const ParentsTab = () => {
     </div>
   );
 };
-
