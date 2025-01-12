@@ -7,7 +7,6 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -109,13 +108,17 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                 )}
               />
 
-              <div id="certificate-template" className="p-8 bg-white border rounded-lg mb-4">
-                <div className="text-center space-y-6">
+              <div id="certificate-template" className="p-8 bg-gradient-to-b from-codersbee-purple/20 to-white border-8 border-codersbee-orange/30 rounded-lg mb-4 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-16 h-16 bg-codersbee-yellow rounded-br-full animate-float" />
+                <div className="absolute top-0 right-0 w-16 h-16 bg-codersbee-yellow rounded-bl-full animate-float" />
+                <div className="text-center space-y-6 relative z-10">
                   <img 
-                    src="/lovable-uploads/codersbee-logo.png" 
+                    src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
                     alt="Codersbee Logo" 
                     className="mx-auto h-20"
                   />
+                  <div className="absolute -right-4 top-20 w-12 h-12 bg-codersbee-orange/40 rounded-full animate-float" />
+                  <div className="absolute -left-4 top-32 w-8 h-8 bg-codersbee-yellow/40 rounded-full animate-float" />
                   <h1 className="text-3xl font-bold text-gray-900">Certificate of Completion</h1>
                   <p className="text-lg">This is to certify that</p>
                   <p className="text-2xl font-bold text-codersbee-vivid">
@@ -128,9 +131,16 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                   <p className="text-base italic">
                     {form.watch("performance") || "[Performance Details]"}
                   </p>
-                  <div className="mt-12 pt-8 border-t">
+                  <div className="mt-12 pt-8 border-t border-codersbee-orange/30">
                     <p className="font-semibold">Manisha Kapoor</p>
                     <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                  </div>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
+                    <div className="flex justify-between px-8">
+                      <div className="w-8 h-8 bg-codersbee-yellow/40 rounded-full animate-float" />
+                      <div className="w-6 h-6 bg-codersbee-orange/30 rounded-full animate-float" />
+                      <div className="w-10 h-10 bg-codersbee-purple/30 rounded-full animate-float" />
+                    </div>
                   </div>
                 </div>
               </div>
