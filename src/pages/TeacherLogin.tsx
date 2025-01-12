@@ -34,13 +34,22 @@ const TeacherLogin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log("Starting login process...");
+      
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (signInError) throw signInError;
+      console.log("Sign in response:", { authData, error: signInError });
+
+      if (signInError) {
+        console.error("Sign in error:", signInError);
+        throw signInError;
+      }
+
+      console.log("Successfully signed in, checking profile...");
 
       // After successful sign in, check if the user exists in profiles
       const { data: profileData, error: profileError } = await supabase
@@ -49,23 +58,31 @@ const TeacherLogin = () => {
         .eq('id', authData.user.id)
         .single();
 
+      console.log("Profile check response:", { profileData, error: profileError });
+
       if (profileError) {
+        console.error("Profile fetch error:", profileError);
         // If there's an error fetching the profile, sign out and throw error
         await supabase.auth.signOut();
         throw new Error('Error fetching user profile');
       }
 
+      console.log("Retrieved profile with role:", profileData?.role);
+
       // Check if user is either a teacher or admin
       if (profileData?.role !== 'teacher' && profileData?.role !== 'admin') {
+        console.log("Unauthorized role:", profileData?.role);
         // If not a teacher or admin, sign out and throw error
         await supabase.auth.signOut();
         throw new Error('Unauthorized access');
       }
 
+      console.log("Role check passed, proceeding with login...");
+
       toast.success("Login successful!");
       navigate("/teachers/dashboard");
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Detailed login error:', error);
       
       let errorMessage = "Login failed. Please try again.";
       if (error instanceof Error) {
