@@ -181,4 +181,4 @@ export const AddParentForm = ({ onSuccess, initialData }: AddParentFormProps) =>
       </Form>
     </ScrollArea>
   );
-});
+};

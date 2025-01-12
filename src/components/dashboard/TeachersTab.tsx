@@ -33,13 +33,6 @@ export const TeachersTab = () => {
       icon: CheckCircle,
       color: "bg-codersbee-green",
       textColor: "text-green-700"
-    },
-    {
-      title: "With Phone",
-      value: teachers?.filter(t => t.phone_number)?.length || 0,
-      icon: Phone,
-      color: "bg-codersbee-yellow",
-      textColor: "text-yellow-700"
     }
   ];
 
