@@ -120,7 +120,7 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                   />
                   <div className="absolute -right-4 top-20 w-12 h-12 bg-codersbee-orange/40 rounded-full animate-float" />
                   <div className="absolute -left-4 top-32 w-8 h-8 bg-codersbee-yellow/40 rounded-full animate-float" />
-                  <h1 className="text-3xl font-bold text-gray-900">Certificate of Completion</h1>
+                  <h1 className="text-3xl font-bold text-gray-900 tracking-wide">Certificate of Completion</h1>
                   <p className="text-lg">This is to certify that</p>
                   <p className="text-2xl font-bold text-codersbee-vivid">
                     {form.watch("studentName") || "[Student Name]"}
@@ -129,25 +129,27 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                   <p className="text-xl font-semibold">
                     {form.watch("courseName") || "[Course Name]"}
                   </p>
-                  <p className="text-base italic">
+                  <p className="text-base italic max-w-3xl mx-auto">
                     {form.watch("performance") || "[Performance Details]"}
                   </p>
-                  <div className="mt-12 pt-8 border-t border-codersbee-orange/30">
-                    <img 
-                      src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
-                      alt="Director's Signature"
-                      className="mx-auto h-12 mb-2"
-                    />
-                    <p className="font-semibold">Manisha Kapoor</p>
-                    <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                  <div className="mt-12 pt-8 border-t border-codersbee-orange/30 flex justify-between items-end px-12">
+                    <div className="text-center">
+                      <img 
+                        src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
+                        alt="Director's Signature"
+                        className="h-12 mb-2"
+                      />
+                      <p className="font-semibold">Manisha Kapoor</p>
+                      <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                    </div>
+                    <div className="flex flex-col items-center w-32">
+                      <p className="text-xs text-gray-600 mb-2 text-center">Validate this certificate</p>
+                      <QRCodeSVG
+                        value={`https://verify.codersbee.com/certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
+                        size={80}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="absolute bottom-8 right-8 flex flex-col items-center w-24">
-                  <p className="text-xs text-gray-600 mb-2 text-center">Scan this to validate the authenticity of this certificate</p>
-                  <QRCodeSVG
-                    value={`https://codersbee.com/verify-certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
-                    size={80}
-                  />
                 </div>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
                   <div className="flex justify-between px-8">
