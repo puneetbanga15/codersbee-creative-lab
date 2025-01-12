@@ -141,19 +141,19 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                     <p className="font-semibold">Manisha Kapoor</p>
                     <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
                   </div>
-                  <div className="absolute bottom-8 right-8 text-center">
-                    <p className="text-xs text-gray-600 mb-2">Scan this to validate the authenticity of this certificate</p>
-                    <QRCodeSVG
-                      value={`https://codersbee.com/verify-certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
-                      size={80}
-                    />
-                  </div>
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
-                    <div className="flex justify-between px-8">
-                      <div className="w-8 h-8 bg-codersbee-yellow/40 rounded-full animate-float" />
-                      <div className="w-6 h-6 bg-codersbee-orange/30 rounded-full animate-float" />
-                      <div className="w-10 h-10 bg-codersbee-purple/30 rounded-full animate-float" />
-                    </div>
+                </div>
+                <div className="absolute bottom-8 right-8 flex flex-col items-center w-24">
+                  <p className="text-xs text-gray-600 mb-2 text-center">Scan this to validate the authenticity of this certificate</p>
+                  <QRCodeSVG
+                    value={`https://codersbee.com/verify-certificate?name=${form.watch("studentName")}&course=${form.watch("courseName")}`}
+                    size={80}
+                  />
+                </div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full">
+                  <div className="flex justify-between px-8">
+                    <div className="w-8 h-8 bg-codersbee-yellow/40 rounded-full animate-float" />
+                    <div className="w-6 h-6 bg-codersbee-orange/30 rounded-full animate-float" />
+                    <div className="w-10 h-10 bg-codersbee-purple/30 rounded-full animate-float" />
                   </div>
                 </div>
               </div>
