@@ -2,8 +2,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -15,7 +15,8 @@ import {
   FileText,
   Settings,
   UserPlus,
-  ScrollText
+  ScrollText,
+  FolderOpen
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -51,7 +52,7 @@ export function AdminSidebar() {
     },
     {
       title: "Documents",
-      icon: FileText,
+      icon: FolderOpen,
       path: "/teachers/dashboard/documents"
     },
     {
@@ -62,10 +63,10 @@ export function AdminSidebar() {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar className="border-r border-gray-200">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-sm font-medium text-gray-500">Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -73,6 +74,11 @@ export function AdminSidebar() {
                   <SidebarMenuButton 
                     onClick={() => navigate(item.path)}
                     isActive={location.pathname === item.path}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                      location.pathname === item.path 
+                        ? 'bg-codersbee-vivid text-white' 
+                        : 'hover:bg-gray-100'
+                    }`}
                     tooltip={item.title}
                   >
                     <item.icon className="w-4 h-4" />

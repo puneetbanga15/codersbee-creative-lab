@@ -217,6 +217,47 @@ export type Database = {
           },
         ]
       }
+      documents: {
+        Row: {
+          content_type: string | null
+          description: string | null
+          file_path: string
+          filename: string
+          id: string
+          student_id: string | null
+          uploaded_at: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          content_type?: string | null
+          description?: string | null
+          file_path: string
+          filename: string
+          id?: string
+          student_id?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          content_type?: string | null
+          description?: string | null
+          file_path?: string
+          filename?: string
+          id?: string
+          student_id?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emp: {
         Row: {
           Emp_id: number
