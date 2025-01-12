@@ -13,6 +13,7 @@ import TeacherLogin from "./pages/TeacherLogin";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import Quizzes from "./pages/Quizzes";
 import Projects from "./pages/Projects";
+import VerifyCertificate from "./pages/VerifyCertificate";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => {
               <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
               <Route path="/quizzes" element={<Quizzes />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/certificate" element={<VerifyCertificate />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

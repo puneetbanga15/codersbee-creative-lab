@@ -133,14 +133,16 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                     {form.watch("performance") || "[Performance Details]"}
                   </p>
                   <div className="mt-12 pt-8 border-t border-codersbee-orange/30 flex justify-between items-end px-12">
-                    <div className="text-center">
-                      <img 
-                        src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
-                        alt="Director's Signature"
-                        className="h-12 mb-2"
-                      />
-                      <p className="font-semibold">Manisha Kapoor</p>
-                      <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                    <div className="text-center flex-1">
+                      <div className="flex flex-col items-center">
+                        <img 
+                          src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
+                          alt="Director's Signature"
+                          className="h-12 mb-2"
+                        />
+                        <p className="font-semibold">Manisha Kapoor</p>
+                        <p className="text-sm text-gray-600">Director, Codersbee Education LLP</p>
+                      </div>
                     </div>
                     <div className="flex flex-col items-center w-32">
                       <p className="text-xs text-gray-600 mb-2 text-center">Validate this certificate</p>
