@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AuthError, AuthApiError } from '@supabase/supabase-js';
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -32,9 +33,27 @@ const TeacherLogin = () => {
     },
   });
 
+  const getErrorMessage = (error: AuthError) => {
+    console.error('Detailed login error:', error);
+    
+    if (error instanceof AuthApiError) {
+      switch (error.status) {
+        case 401:
+          return "Invalid login credentials or API configuration. Please try again.";
+        case 400:
+          return "Invalid email or password format.";
+        default:
+          return `Authentication error: ${error.message}`;
+      }
+    }
+    return "An unexpected error occurred. Please try again.";
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log("Starting login process...");
+      console.log("Using Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+      console.log("API Key status:", import.meta.env.VITE_SUPABASE_ANON_KEY ? "Present" : "Missing");
       
       // First, attempt to sign in
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -86,7 +105,9 @@ const TeacherLogin = () => {
       
       let errorMessage = "Login failed. Please try again.";
       if (error instanceof Error) {
-        if (error.message === 'Invalid login credentials') {
+        if (error instanceof AuthApiError) {
+          errorMessage = getErrorMessage(error);
+        } else if (error.message === 'Invalid login credentials') {
           errorMessage = "Invalid email or password.";
         } else if (error.message === 'Unauthorized access') {
           errorMessage = "This account is not authorized as a teacher or admin.";
