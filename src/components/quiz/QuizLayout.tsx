@@ -1,6 +1,8 @@
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
+import { QuizSidebar } from "@/components/quiz/QuizSidebar";
 
 type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
 
@@ -27,25 +29,35 @@ export const QuizLayout = ({
 }: QuizLayoutProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
-      <div className="container mx-auto px-4 pt-24">
-        <QuizHeader 
-          userRole={userRole} 
-          onManageAccessCodes={undefined} 
-        />
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <QuizSidebar 
+            selectedType={selectedType}
+            onTypeSelect={onTypeSelect}
+          />
+          <main className="flex-1">
+            <div className="container mx-auto px-4 pt-24">
+              <QuizHeader 
+                userRole={userRole} 
+                onManageAccessCodes={undefined} 
+              />
 
-        <QuizTypeFilter 
-          selectedType={selectedType}
-          onTypeSelect={onTypeSelect}
-        />
+              <QuizTypeFilter 
+                selectedType={selectedType}
+                onTypeSelect={onTypeSelect}
+              />
 
-        <QuizGrid
-          quizzes={quizzes}
-          canAccessPremiumQuiz={canAccessPremiumQuiz}
-          onStartQuiz={onStartQuiz}
-          onRequestAccess={onRequestAccess}
-          isLoading={isLoadingQuizzes}
-        />
-      </div>
+              <QuizGrid
+                quizzes={quizzes}
+                canAccessPremiumQuiz={canAccessPremiumQuiz}
+                onStartQuiz={onStartQuiz}
+                onRequestAccess={onRequestAccess}
+                isLoading={isLoadingQuizzes}
+              />
+            </div>
+          </main>
+        </div>
+      </SidebarProvider>
     </div>
   );
 };
