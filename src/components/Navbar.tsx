@@ -7,7 +7,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,10 +62,45 @@ export const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-4">
-            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Courses</a>
-            <Link to="/quizzes" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Quizzes</Link>
-            <Link to="/projects" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Projects</Link>
-            <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">About Us</Link>
+            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Courses
+            </a>
+
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
+                    Student's Corner
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid gap-3 p-6 w-[400px]">
+                      <NavigationMenuLink asChild>
+                        <Link to="/quizzes" className="block p-2 hover:bg-gray-100 rounded-md">
+                          <div className="text-sm font-medium">Quizzes</div>
+                          <div className="text-xs text-gray-500">Practice with interactive quizzes</div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link to="/projects" className="block p-2 hover:bg-gray-100 rounded-md">
+                          <div className="text-sm font-medium">Projects</div>
+                          <div className="text-xs text-gray-500">Explore student projects</div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link to="/resources" className="block p-2 hover:bg-gray-100 rounded-md">
+                          <div className="text-sm font-medium">Learning Resources</div>
+                          <div className="text-xs text-gray-500">Access educational materials</div>
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
+            <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              About Us
+            </Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -102,9 +150,15 @@ export const Navbar = () => {
             
             {isMobileMenuOpen && (
               <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
-                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
-                <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
-                <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
+                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">
+                  Courses
+                </a>
+                <div className="space-y-2">
+                  <div className="font-medium text-[#9b87f5]">Student's Corner</div>
+                  <Link to="/quizzes" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
+                  <Link to="/projects" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
+                  <Link to="/resources" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Learning Resources</Link>
+                </div>
                 <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
                 <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
                 <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
