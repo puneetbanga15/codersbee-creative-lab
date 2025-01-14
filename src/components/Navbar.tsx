@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
+import { User, Star, BookOpen, Trophy, GraduationCap } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -70,26 +70,45 @@ export const Navbar = () => {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
+                    <GraduationCap className="w-4 h-4 mr-2" />
                     Student's Corner
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[400px]">
+                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg">
                       <NavigationMenuLink asChild>
-                        <Link to="/quizzes" className="block p-2 hover:bg-gray-100 rounded-md">
-                          <div className="text-sm font-medium">Quizzes</div>
-                          <div className="text-xs text-gray-500">Practice with interactive quizzes</div>
+                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
+                            <Trophy className="w-5 h-5 text-[#9b87f5] mr-3" />
+                            <div>
+                              <div className="text-sm font-medium flex items-center">
+                                Quizzes
+                                <Star className="w-4 h-4 text-yellow-500 ml-2" />
+                              </div>
+                              <div className="text-xs text-gray-500">Test your knowledge with interactive quizzes</div>
+                            </div>
+                          </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/projects" className="block p-2 hover:bg-gray-100 rounded-md">
-                          <div className="text-sm font-medium">Projects</div>
-                          <div className="text-xs text-gray-500">Explore student projects</div>
+                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
+                            <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3" />
+                            <div>
+                              <div className="text-sm font-medium">Projects Gallery</div>
+                              <div className="text-xs text-gray-500">Explore student projects and achievements</div>
+                            </div>
+                          </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/resources" className="block p-2 hover:bg-gray-100 rounded-md">
-                          <div className="text-sm font-medium">Learning Resources</div>
-                          <div className="text-xs text-gray-500">Access educational materials</div>
+                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
+                            <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3" />
+                            <div>
+                              <div className="text-sm font-medium">Learning Resources</div>
+                              <div className="text-xs text-gray-500">Access comprehensive learning materials</div>
+                            </div>
+                          </div>
                         </Link>
                       </NavigationMenuLink>
                     </div>
@@ -155,9 +174,18 @@ export const Navbar = () => {
                 </a>
                 <div className="space-y-2">
                   <div className="font-medium text-[#9b87f5]">Student's Corner</div>
-                  <Link to="/quizzes" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
-                  <Link to="/projects" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
-                  <Link to="/resources" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB]">Learning Resources</Link>
+                  <Link to="/quizzes" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <Trophy className="w-4 h-4 mr-2" />
+                    Quizzes
+                  </Link>
+                  <Link to="/projects" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Projects
+                  </Link>
+                  <Link to="/resources" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Learning Resources
+                  </Link>
                 </div>
                 <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
                 <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>

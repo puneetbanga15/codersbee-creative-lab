@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Lock } from "lucide-react";
+import { Lock, Star, BookOpen, Code, Cloud, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Resources = () => {
   const resources = {
@@ -30,6 +31,38 @@ const Resources = () => {
     ]
   };
 
+  const getIcon = (category: string) => {
+    switch (category) {
+      case "Scratch":
+        return Code;
+      case "HTML and CSS":
+        return BookOpen;
+      case "JavaScript":
+        return Code;
+      case "Cloud and Hosting":
+        return Cloud;
+      case "Generative AI":
+        return Sparkles;
+      default:
+        return BookOpen;
+    }
+  };
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
       <Navbar />
@@ -38,17 +71,30 @@ const Resources = () => {
           Learning <span className="text-codersbee-vivid">Resources</span>
         </h1>
         
-        <div className="space-y-8">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="space-y-8"
+        >
           {Object.entries(resources).map(([category, items]) => (
-            <div key={category}>
-              <h2 className="text-2xl font-bold mb-4 text-codersbee-dark">{category}</h2>
+            <motion.div key={category} variants={item}>
+              <h2 className="text-2xl font-bold mb-4 text-codersbee-dark flex items-center">
+                {React.createElement(getIcon(category), { className: "w-6 h-6 mr-2 text-codersbee-vivid" })}
+                {category}
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {items.map((item, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
+                  <Card key={index} className="hover:shadow-lg transition-shadow relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-codersbee-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <CardTitle className="text-xl">{item.title}</CardTitle>
-                        {item.locked && <Lock className="h-5 w-5 text-yellow-500" />}
+                        {item.locked ? (
+                          <Lock className="h-5 w-5 text-yellow-500" />
+                        ) : (
+                          <Star className="h-5 w-5 text-green-500" />
+                        )}
                       </div>
                       <CardDescription>{item.description}</CardDescription>
                     </CardHeader>
@@ -66,9 +112,9 @@ const Resources = () => {
                   </Card>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
