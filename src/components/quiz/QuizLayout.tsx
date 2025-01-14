@@ -2,14 +2,13 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
-import { QuizSidebar } from "@/components/quiz/QuizSidebar";
-
-type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
+import { QuizSidebar, QuizType } from "@/components/quiz/QuizSidebar";
+import { Navbar } from "@/components/Navbar";
 
 type QuizLayoutProps = {
   userRole: string | null;
-  selectedType: FilterType;
-  onTypeSelect: (type: FilterType) => void;
+  selectedType: QuizType;
+  onTypeSelect: (type: QuizType) => void;
   quizzes: any[];
   canAccessPremiumQuiz: boolean;
   onStartQuiz: (quizId: string) => void;
@@ -29,6 +28,7 @@ export const QuizLayout = ({
 }: QuizLayoutProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+      <Navbar />
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <QuizSidebar 

@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-type QuizType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
+export type QuizType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
 
 type QuizSidebarProps = {
   selectedType: QuizType;
@@ -18,7 +18,7 @@ type QuizSidebarProps = {
 };
 
 export function QuizSidebar({ selectedType, onTypeSelect }: QuizSidebarProps) {
-  const quizCategories = [
+  const quizCategories: { value: QuizType; label: string }[] = [
     { value: null, label: 'All Quizzes' },
     { value: 'scratch', label: 'Scratch' },
     { value: 'python', label: 'Python' },
