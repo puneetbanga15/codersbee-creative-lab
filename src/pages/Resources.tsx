@@ -1,3 +1,4 @@
+import React from "react";
 import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lock, Star, BookOpen, Code, Cloud, Sparkles } from "lucide-react";
