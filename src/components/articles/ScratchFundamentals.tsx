@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Users, Lightbulb, Target } from "lucide-react";
+import { BookOpen, Users, Lightbulb, Target, Music, RefreshCcw, Database, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const ScratchFundamentals = () => {
@@ -10,9 +10,10 @@ export const ScratchFundamentals = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="space-y-8"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-8 text-codersbee-dark">
-            Let's Learn <span className="text-codersbee-vivid">Scratch! 🐱</span>
+            Introduction to <span className="text-codersbee-vivid">Scratch! 🐱</span>
           </h1>
           <p className="text-xl text-center text-gray-600 mb-12">A fun guide for young programmers</p>
 
@@ -27,7 +28,8 @@ export const ScratchFundamentals = () => {
                 <div className="bg-white rounded-lg p-6 mb-6">
                   <p className="text-lg text-gray-700">
                     Scratch is like building with LEGO blocks, but instead of physical blocks, 
-                    you use coding blocks to create games, stories, and animations!
+                    you use coding blocks to create games, stories, and animations! It's a fun way 
+                    to learn programming concepts while creating amazing projects.
                   </p>
                 </div>
                 <div className="bg-codersbee-yellow p-4 rounded-lg">
@@ -88,11 +90,101 @@ export const ScratchFundamentals = () => {
               </CardContent>
             </Card>
 
+            {/* Sound & Events */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold mb-6 text-codersbee-dark flex items-center gap-2">
+                  <Music className="h-6 w-6 text-codersbee-vivid" />
+                  Sound & Events
+                </h2>
+                
+                <div className="bg-yellow-50 p-6 rounded-lg mb-6">
+                  <h3 className="text-xl font-semibold text-yellow-700 mb-3">Events Blocks (Yellow)</h3>
+                  <p className="mb-3">Make things happen when something else happens!</p>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <li>When green flag clicked</li>
+                    <li>When space key pressed</li>
+                    <li>When sprite clicked</li>
+                  </ul>
+                </div>
+
+                <div className="bg-codersbee-green p-4 rounded-lg">
+                  <p className="flex items-start gap-2">
+                    <Music className="h-5 w-5 mt-1 flex-shrink-0" />
+                    <span>
+                      <strong className="text-codersbee-dark">Fun Fact:</strong>{" "}
+                      You can make your own music in Scratch using the Sound blocks!
+                    </span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Loops & Control */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold mb-6 text-codersbee-dark flex items-center gap-2">
+                  <RefreshCcw className="h-6 w-6 text-codersbee-vivid" />
+                  Loops & Control
+                </h2>
+                
+                <div className="bg-orange-50 p-6 rounded-lg mb-6">
+                  <h3 className="text-xl font-semibold text-orange-700 mb-3">Control Blocks (Orange)</h3>
+                  <p className="mb-3">Make decisions and repeat actions!</p>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Repeat blocks</li>
+                    <li>If...then blocks</li>
+                    <li>Wait blocks</li>
+                  </ul>
+                </div>
+
+                <div className="bg-codersbee-yellow p-4 rounded-lg">
+                  <p className="flex items-start gap-2">
+                    <Target className="h-5 w-5 mt-1 flex-shrink-0" />
+                    <span>
+                      <strong className="text-codersbee-dark">Teaching Strategy:</strong>{" "}
+                      Compare loops to real-life repetitive actions, like brushing teeth or playing a song on repeat.
+                    </span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Variables & Lists */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold mb-6 text-codersbee-dark flex items-center gap-2">
+                  <Database className="h-6 w-6 text-codersbee-vivid" />
+                  Variables & Lists
+                </h2>
+                
+                <div className="bg-orange-50 p-6 rounded-lg mb-6">
+                  <h3 className="text-xl font-semibold text-orange-700 mb-3">Data Blocks (Orange)</h3>
+                  <p className="mb-3">Store and track information!</p>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Create a score counter</li>
+                    <li>Keep track of lives</li>
+                    <li>Remember player names</li>
+                  </ul>
+                </div>
+
+                <div className="bg-codersbee-green p-4 rounded-lg">
+                  <p className="flex items-start gap-2">
+                    <Lightbulb className="h-5 w-5 mt-1 flex-shrink-0" />
+                    <span>
+                      <strong className="text-codersbee-dark">Project Idea:</strong>{" "}
+                      Create a simple number guessing game using variables to store the secret number and count attempts!
+                    </span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Tips for Success */}
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold mb-6 text-codersbee-dark flex items-center gap-2">
-                  <Lightbulb className="h-6 w-6 text-codersbee-vivid" />
+                  <Sparkles className="h-6 w-6 text-codersbee-vivid" />
                   Tips for Success
                 </h2>
 
@@ -130,15 +222,15 @@ export const ScratchFundamentals = () => {
                       </li>
                       <li className="flex items-center gap-2">
                         <div className="h-2 w-2 bg-codersbee-vivid rounded-full"></div>
-                        Use pair programming to develop collaboration
+                        Use pair programming to develop collaboration skills
                       </li>
                       <li className="flex items-center gap-2">
                         <div className="h-2 w-2 bg-codersbee-vivid rounded-full"></div>
-                        Connect projects to other subjects
+                        Connect projects to other subjects (art, music, math)
                       </li>
                       <li className="flex items-center gap-2">
                         <div className="h-2 w-2 bg-codersbee-vivid rounded-full"></div>
-                        Celebrate both success and failures
+                        Celebrate both success and failures as learning opportunities
                       </li>
                     </ul>
                   </div>
@@ -175,7 +267,7 @@ export const ScratchFundamentals = () => {
                 </div>
                 <div className="bg-codersbee-yellow p-4 rounded-lg">
                   <p className="flex items-start gap-2">
-                    <Users className="h-5 w-5 mt-1 flex-shrink-0" />
+                    <Sparkles className="h-5 w-5 mt-1 flex-shrink-0" />
                     <span>
                       <strong className="text-codersbee-dark">Remember:</strong>{" "}
                       Every great programmer started with small steps. Encourage persistence and creativity!
