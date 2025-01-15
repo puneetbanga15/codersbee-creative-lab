@@ -13,6 +13,7 @@ import ParentDashboard from "./pages/ParentDashboard";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import { ScratchFundamentals } from "./components/articles/ScratchFundamentals";
 import Projects from "./pages/Projects";
+import Quizzes from "./pages/Quizzes";
 import { Toaster } from "@/components/ui/toaster";
 import "./App.css";
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
         <Route path="/verify-certificate" element={<VerifyCertificate />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/quizzes" element={<Quizzes />} />
       </Routes>
       <Toaster />
     </Router>
