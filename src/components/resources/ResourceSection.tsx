@@ -7,6 +7,7 @@ type Resource = {
   title: string;
   description: string;
   locked: boolean;
+  link?: string;
 };
 
 type ResourceSectionProps = {
@@ -29,6 +30,7 @@ export const ResourceSection = ({ title, icon: Icon, resources }: ResourceSectio
             title={resource.title}
             description={resource.description}
             locked={resource.locked}
+            link={resource.link}
           />
         ))}
       </div>
