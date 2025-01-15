@@ -13,7 +13,7 @@ type ResourceCardProps = {
 export const ResourceCard = ({ title, description, locked, link }: ResourceCardProps) => {
   const CardWrapper = ({ children }: { children: React.ReactNode }) => {
     if (link && !locked) {
-      return <Link to={link} className="block no-underline">{children}</Link>;
+      return <Link to={link}>{children}</Link>;
     }
     return <>{children}</>;
   };
@@ -22,7 +22,7 @@ export const ResourceCard = ({ title, description, locked, link }: ResourceCardP
     <CardWrapper>
       <Card className={`hover:shadow-lg transition-shadow relative overflow-hidden group ${!locked && link ? 'cursor-pointer' : ''}`}>
         <div className="absolute inset-0 bg-gradient-to-r from-codersbee-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <CardHeader>
+        <CardHeader className="text-left">
           <div className="flex justify-between items-start">
             <CardTitle className="text-xl">{title}</CardTitle>
             {locked ? (
@@ -33,7 +33,7 @@ export const ResourceCard = ({ title, description, locked, link }: ResourceCardP
           </div>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="text-left">
           {locked ? (
             <p className="text-sm text-yellow-600">
               This content is available for enrolled students
