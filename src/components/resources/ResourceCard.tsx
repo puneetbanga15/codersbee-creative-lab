@@ -12,15 +12,15 @@ type ResourceCardProps = {
 
 export const ResourceCard = ({ title, description, locked, link }: ResourceCardProps) => {
   const CardWrapper = ({ children }: { children: React.ReactNode }) => {
-    if (link) {
-      return <Link to={link} className="block">{children}</Link>;
+    if (link && !locked) {
+      return <Link to={link} className="block no-underline">{children}</Link>;
     }
     return <>{children}</>;
   };
 
   return (
     <CardWrapper>
-      <Card className="hover:shadow-lg transition-shadow relative overflow-hidden group cursor-pointer">
+      <Card className={`hover:shadow-lg transition-shadow relative overflow-hidden group ${!locked && link ? 'cursor-pointer' : ''}`}>
         <div className="absolute inset-0 bg-gradient-to-r from-codersbee-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <CardHeader>
           <div className="flex justify-between items-start">
