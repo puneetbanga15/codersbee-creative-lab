@@ -56,7 +56,7 @@ export const Navbar = () => {
             </Link>
           </div>
           
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
@@ -131,7 +131,7 @@ export const Navbar = () => {
 
             <Button 
               variant="outline"
-              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2 px-3"
               onClick={handleWhatsAppClick}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -141,7 +141,7 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB]"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3 whitespace-nowrap"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
