@@ -74,7 +74,7 @@ export const Navbar = () => {
                     Student's Corner
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg">
+                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
                         <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
                           <div className="flex items-center">
