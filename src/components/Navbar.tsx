@@ -46,28 +46,28 @@ export const Navbar = () => {
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+                src="/lovable-uploads/b50fbc0a-2707-4de8-97e4-1cd0f750f9c6.png" 
                 alt="CodersBee Logo" 
                 className="h-12" 
               />
+              <span className="text-xl font-bold text-[#9b87f5]">CodersBee</span>
             </Link>
-          </div>
-          
-          <div className="hidden md:flex items-center space-x-2">
-            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
-              Courses
-            </a>
+            
+            <div className="hidden md:flex items-center gap-6">
+              <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+                Courses
+              </a>
 
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
-                    <GraduationCap className="w-4 h-4 mr-2" />
-                    Student's Corner
-                  </NavigationMenuTrigger>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
+                      <GraduationCap className="w-4 h-4 mr-2" />
+                      Student's Corner
+                    </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
@@ -108,10 +108,13 @@ export const Navbar = () => {
                       </NavigationMenuLink>
                     </div>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -141,7 +144,7 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3 whitespace-nowrap"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
