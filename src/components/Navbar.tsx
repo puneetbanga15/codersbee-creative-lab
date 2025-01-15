@@ -45,33 +45,32 @@ export const Navbar = () => {
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-2">
-              <img 
-                src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
-                alt="CodersBee Logo" 
-                className="h-12" 
-              />
-              <span className="text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-transparent bg-clip-text">
-                CodersBee
-              </span>
-            </Link>
-            
-            <div className="hidden md:flex items-center gap-4 ml-4">
-              <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
-                Courses
-              </a>
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img 
+              src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+              alt="CodersBee Logo" 
+              className="h-12" 
+            />
+            <span className="text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-transparent bg-clip-text">
+              CodersBee
+            </span>
+          </Link>
+          
+          <div className="hidden md:flex items-center gap-4">
+            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Courses
+            </a>
 
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
-                      <GraduationCap className="w-4 h-4 mr-2" />
-                      Student's Corner
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Student's Corner
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
                         <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
@@ -108,15 +107,12 @@ export const Navbar = () => {
                           </div>
                         </Link>
                       </NavigationMenuLink>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-3">
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -136,7 +132,7 @@ export const Navbar = () => {
 
             <Button 
               variant="outline"
-              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2 px-3"
+              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
               onClick={handleWhatsAppClick}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -146,13 +142,13 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3 whitespace-nowrap"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white whitespace-nowrap"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
             </Button>
           </div>
-          
+
           <div className="md:hidden">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
