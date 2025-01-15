@@ -44,8 +44,8 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center gap-4">
+      <div className="max-w-[1400px] mx-auto px-6 py-3">
+        <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2">
             <img 
               src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
@@ -57,7 +57,7 @@ export const Navbar = () => {
             </span>
           </Link>
           
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-6">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
