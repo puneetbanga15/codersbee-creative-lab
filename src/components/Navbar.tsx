@@ -37,21 +37,19 @@ export const Navbar = () => {
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-6 py-3">
-        <div className="flex items-center gap-x-8">
+        <div className="flex items-center">
           {/* Logo and Brand Section - Left Aligned */}
-          <div className="flex items-center gap-x-2">
-            <Link to="/" className="flex items-center gap-x-2">
-              <img 
-                src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
-                alt="CodersBee Logo" 
-                className="h-12" 
-              />
-              <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center gap-x-2">
+            <img 
+              src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+              alt="CodersBee Logo" 
+              className="h-12" 
+            />
+            <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
+          </Link>
 
           {/* Navigation Links - With consistent spacing */}
-          <div className="hidden md:flex items-center gap-x-6 flex-1">
+          <div className="hidden md:flex items-center gap-x-6 ml-8">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
@@ -61,6 +59,22 @@ export const Navbar = () => {
             <Link to="/projects" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Projects
             </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+                Learning Resources
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link to="/tutorials" className="w-full">Tutorials</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/blog" className="w-full">Blog</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/resources" className="w-full">Free Resources</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               About Us
             </Link>
@@ -123,6 +137,12 @@ export const Navbar = () => {
             <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
             <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
             <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
+            <div className="py-2">
+              <span className="block text-[#9b87f5] font-medium mb-2">Learning Resources</span>
+              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Tutorials</Link>
+              <Link to="/blog" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Blog</Link>
+              <Link to="/resources" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Free Resources</Link>
+            </div>
             <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
             <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
             <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
