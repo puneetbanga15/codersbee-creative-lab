@@ -46,17 +46,19 @@ export const Navbar = () => {
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/b50fbc0a-2707-4de8-97e4-1cd0f750f9c6.png" 
+                src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
                 alt="CodersBee Logo" 
                 className="h-12" 
               />
-              <span className="text-xl font-bold text-[#9b87f5]">CodersBee</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-transparent bg-clip-text">
+                CodersBee
+              </span>
             </Link>
             
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-4 ml-4">
               <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
                 Courses
               </a>
@@ -68,8 +70,8 @@ export const Navbar = () => {
                       <GraduationCap className="w-4 h-4 mr-2" />
                       Student's Corner
                     </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
+                    <NavigationMenuContent>
+                      <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
                         <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
@@ -106,8 +108,8 @@ export const Navbar = () => {
                           </div>
                         </Link>
                       </NavigationMenuLink>
-                    </div>
-                  </NavigationMenuContent>
+                      </div>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
@@ -144,7 +146,7 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-3 whitespace-nowrap"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
