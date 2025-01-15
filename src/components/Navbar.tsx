@@ -45,7 +45,7 @@ export const Navbar = () => {
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2">
             <img 
               src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
@@ -149,7 +149,7 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden ml-auto">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-[#9b87f5] p-2"
