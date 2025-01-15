@@ -71,13 +71,13 @@ export const Navbar = () => {
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
-                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
                             <Trophy className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
-                              <div className="text-sm font-medium flex items-center">
+                              <div className="text-sm font-medium">
                                 Quizzes
-                                <Star className="w-4 h-4 text-yellow-500 ml-2" />
+                                <Star className="w-4 h-4 text-yellow-500 ml-2 inline-block" />
                               </div>
                               <div className="text-xs text-gray-500">Test your knowledge with interactive quizzes</div>
                             </div>
@@ -85,7 +85,7 @@ export const Navbar = () => {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
                             <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
@@ -96,7 +96,7 @@ export const Navbar = () => {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
                             <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
