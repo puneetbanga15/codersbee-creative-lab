@@ -36,32 +36,46 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/">
+      <div className="max-w-[1400px] mx-auto px-6 py-3">
+        <div className="flex items-center gap-x-8">
+          {/* Logo and Brand Section - Left Aligned */}
+          <div className="flex items-center gap-x-2">
+            <Link to="/" className="flex items-center gap-x-2">
               <img 
                 src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
                 alt="CodersBee Logo" 
                 className="h-12" 
               />
+              <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
             </Link>
           </div>
-          
-          <div className="hidden md:flex items-center space-x-4">
-            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Courses</a>
-            <Link to="/quizzes" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Quizzes</Link>
-            <Link to="/projects" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">Projects</Link>
-            <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">About Us</Link>
-            
+
+          {/* Navigation Links - With consistent spacing */}
+          <div className="hidden md:flex items-center gap-x-6 flex-1">
+            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Courses
+            </a>
+            <Link to="/quizzes" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Quizzes
+            </Link>
+            <Link to="/projects" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Projects
+            </Link>
+            <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              About Us
+            </Link>
+          </div>
+
+          {/* Action Buttons - Right side with consistent spacing */}
+          <div className="hidden md:flex items-center gap-x-4 ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   <span>Login</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Link to="/parents/login" className="w-full">Parent Login</Link>
                 </DropdownMenuItem>
@@ -73,6 +87,7 @@ export const Navbar = () => {
 
             <Button 
               variant="outline"
+              size="sm"
               className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
               onClick={handleWhatsAppClick}
             >
@@ -83,47 +98,48 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB]"
+              size="sm"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
             </Button>
           </div>
-          
-          <div className="md:hidden">
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-[#9b87f5] p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            
-            {isMobileMenuOpen && (
-              <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
-                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
-                <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
-                <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
-                <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
-                <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
-                <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
-                <Button 
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                  onClick={handleWhatsAppClick}
-                >
-                  Message on WhatsApp
-                </Button>
-                <Button 
-                  className="w-full bg-[#9b87f5] hover:bg-[#7E69AB]"
-                  onClick={handleTrialClick}
-                >
-                  Book FREE Trial Now
-                </Button>
-              </div>
-            )}
-          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden ml-auto text-[#9b87f5] p-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-6 space-y-4">
+            <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
+            <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
+            <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
+            <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
+            <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
+            <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
+            <Button 
+              className="w-full bg-green-500 hover:bg-green-600 text-white"
+              onClick={handleWhatsAppClick}
+            >
+              Message on WhatsApp
+            </Button>
+            <Button 
+              className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+              onClick={handleTrialClick}
+            >
+              Book FREE Trial Now
+            </Button>
+          </div>
+        )}
       </div>
     </nav>
   );
