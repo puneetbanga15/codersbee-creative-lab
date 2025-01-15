@@ -71,8 +71,8 @@ export const Navbar = () => {
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
-                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group text-center">
-                          <div className="flex items-center justify-center">
+                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
                             <Trophy className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium flex items-center">
@@ -85,8 +85,8 @@ export const Navbar = () => {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group text-center">
-                          <div className="flex items-center justify-center">
+                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
                             <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium">Projects Gallery</div>
@@ -96,8 +96,8 @@ export const Navbar = () => {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group text-center">
-                          <div className="flex items-center justify-center">
+                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors group">
+                          <div className="flex items-center">
                             <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium">Learning Resources</div>
