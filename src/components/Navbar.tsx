@@ -1,4 +1,13 @@
-import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { User, Star, BookOpen, Trophy, GraduationCap } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,185 +16,185 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
-import { Trophy, BookOpen, GraduationCap, Star, Facebook } from "lucide-react";
 
 export const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
+  const navigate = useNavigate();
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/917087884023', '_blank');
+    window.open('https://wa.me/919996465023', '_blank');
   };
 
   const handleTrialClick = () => {
     window.open('https://calendly.com/codersbee/class-slot', '_blank');
   };
 
-  const handleFacebookClick = () => {
-    window.open('https://facebook.com/codersbee', '_blank');
+  const handleCoursesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/#courses');
+    } else {
+      const coursesSection = document.getElementById('courses');
+      if (coursesSection) {
+        coursesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
-    <nav className="bg-white border-b fixed w-full top-0 z-50 shadow-sm">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
+    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/">
               <img 
                 src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
                 alt="CodersBee Logo" 
-                className="h-8 w-auto"
+                className="h-12" 
               />
-              <span className="text-xl font-bold text-gray-800">CodersBee</span>
             </Link>
+          </div>
+          
+          <div className="hidden md:flex items-center space-x-4">
+            <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              Courses
+            </a>
 
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger
-                    className={isActive("/") ? "text-blue-600" : ""}
-                  >
-                    Home
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="p-4 w-[250px] bg-white rounded-lg shadow-lg">
-                      <Link
-                        to="/"
-                        className="block p-2 hover:bg-gray-50 rounded-md transition-colors"
-                      >
-                        Homepage
-                      </Link>
-                      <Link
-                        to="/about-us"
-                        className="block p-2 hover:bg-gray-50 rounded-md transition-colors"
-                      >
-                        About Us
-                      </Link>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger
-                    className={
-                      ["/quizzes", "/projects", "/resources"].some((path) =>
-                        isActive(path)
-                      )
-                        ? "text-blue-600"
-                        : ""
-                    }
-                  >
+                  <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
+                    <GraduationCap className="w-4 h-4 mr-2" />
                     Student's Corner
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="p-6 w-[400px] bg-white rounded-lg shadow-lg">
+                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
                       <NavigationMenuLink asChild>
-                        <Link 
-                          to="/quizzes" 
-                          className="block p-4 hover:bg-gray-50 rounded-md transition-colors"
-                        >
+                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
-                            <Trophy className="w-5 h-5 text-[#9b87f5] mr-3 flex-shrink-0" />
+                            <Trophy className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium">
                                 Quizzes
                                 <Star className="w-4 h-4 text-yellow-500 ml-2 inline-block" />
                               </div>
-                              <div className="text-xs text-gray-500">
-                                Test your knowledge with interactive quizzes
-                              </div>
+                              <div className="text-xs text-gray-500">Test your knowledge with interactive quizzes</div>
                             </div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
-
                       <NavigationMenuLink asChild>
-                        <Link 
-                          to="/projects" 
-                          className="block p-4 hover:bg-gray-50 rounded-md transition-colors"
-                        >
+                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
-                            <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3 flex-shrink-0" />
+                            <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium">Projects Gallery</div>
-                              <div className="text-xs text-gray-500">
-                                Explore student projects and achievements
-                              </div>
+                              <div className="text-xs text-gray-500">Explore student projects and achievements</div>
                             </div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
-
                       <NavigationMenuLink asChild>
-                        <Link 
-                          to="/resources" 
-                          className="block p-4 hover:bg-gray-50 rounded-md transition-colors"
-                        >
+                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
                           <div className="flex items-center">
-                            <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3 flex-shrink-0" />
+                            <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3" />
                             <div>
                               <div className="text-sm font-medium">Learning Resources</div>
-                              <div className="text-xs text-gray-500">
-                                Access educational materials and guides
-                              </div>
+                              <div className="text-xs text-gray-500">Access comprehensive learning materials</div>
                             </div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger
-                    className={isActive("/courses") ? "text-blue-600" : ""}
-                  >
-                    Courses
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="p-4 w-[250px] bg-white rounded-lg shadow-lg">
-                      <Link
-                        to="/courses"
-                        className="block p-2 hover:bg-gray-50 rounded-md transition-colors"
-                      >
-                        All Courses
-                      </Link>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-          </div>
 
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2"
-              onClick={handleFacebookClick}
-            >
-              <Facebook className="h-4 w-4" />
-              Message on Facebook
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link to="/parents/login" className="w-full">Parent Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/teachers/login" className="w-full">Teacher Login</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button 
               variant="outline"
-              className="flex items-center gap-2"
+              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
               onClick={handleWhatsAppClick}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
               </svg>
-              Message on WhatsApp
+              WhatsApp
             </Button>
+            
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB]"
               onClick={handleTrialClick}
             >
-              Book Trial Class
+              Book FREE Trial Now
             </Button>
-            <Link to="/parents">
-              <Button variant="outline">Parent Login</Button>
-            </Link>
+          </div>
+          
+          <div className="md:hidden">
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-[#9b87f5] p-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            
+            {isMobileMenuOpen && (
+              <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
+                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">
+                  Courses
+                </a>
+                <div className="space-y-2">
+                  <div className="font-medium text-[#9b87f5]">Student's Corner</div>
+                  <Link to="/quizzes" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <Trophy className="w-4 h-4 mr-2" />
+                    Quizzes
+                  </Link>
+                  <Link to="/projects" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Projects
+                  </Link>
+                  <Link to="/resources" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Learning Resources
+                  </Link>
+                </div>
+                <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
+                <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
+                <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
+                <Button 
+                  className="w-full bg-green-500 hover:bg-green-600 text-white"
+                  onClick={handleWhatsAppClick}
+                >
+                  Message on WhatsApp
+                </Button>
+                <Button 
+                  className="w-full bg-[#9b87f5] hover:bg-[#7E69AB]"
+                  onClick={handleTrialClick}
+                >
+                  Book FREE Trial Now
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
