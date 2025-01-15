@@ -3,11 +3,17 @@ import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { Code, BookOpen, Cloud, Sparkles } from "lucide-react";
 import { ResourceSection } from "@/components/resources/ResourceSection";
+import { Link } from "react-router-dom";
 
 const Resources = () => {
   const resources = {
     "Scratch": [
-      { title: "Introduction to Scratch", description: "Learn the basics of Scratch programming", locked: false },
+      { 
+        title: "Introduction to Scratch", 
+        description: "Learn the basics of Scratch programming", 
+        locked: false,
+        link: "/resources/scratch-fundamentals"  // Add link to the article
+      },
       { title: "Game Development with Scratch", description: "Create your first game using Scratch", locked: false },
       { title: "Advanced Scratch Projects", description: "Complex projects and animations", locked: true }
     ],
