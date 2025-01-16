@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/Navbar";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
@@ -27,6 +28,7 @@ export const QuizLayout = ({
 }: QuizLayoutProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+      <Navbar />
       <div className="container mx-auto px-4 pt-24">
         <QuizHeader 
           userRole={userRole} 
