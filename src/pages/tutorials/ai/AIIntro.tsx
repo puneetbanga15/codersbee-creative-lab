@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  BrainCircuit, Bot, Sparkles, Camera, 
+  Bot, BrainCircuit, Camera, 
   MessageSquare, Lightbulb, Shield, Rocket
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -31,6 +31,13 @@ const AIIntro = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="prose max-w-none">
+              <div className="mb-6">
+                <img 
+                  src="/lovable-uploads/7c318289-2705-45cb-87bc-48136d3d5c41.png"
+                  alt="AI Robot teaching basics"
+                  className="w-full rounded-lg shadow-lg mb-4"
+                />
+              </div>
               <p className="text-lg">
                 Imagine teaching a computer to think and learn, just like you do! That's what AI is all about. 
                 It's like giving computers a super-smart brain that can:
@@ -45,7 +52,7 @@ const AIIntro = () => {
                   Understand and speak languages 🗣️
                 </li>
                 <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  <BrainCircuit className="h-4 w-4 text-violet-500" />
                   Create art and music 🎨
                 </li>
               </ul>

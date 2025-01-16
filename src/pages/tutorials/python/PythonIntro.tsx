@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  InfoIcon, Code, Terminal, Variable, Binary, 
+  Python, Code, Terminal, Variable, 
   BrainCircuit, Lightbulb, BookOpen, Sparkles 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -15,7 +15,7 @@ const PythonIntro = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
             <span className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-4">
-              <Terminal className="h-6 w-6 text-blue-500" />
+              <Python className="h-6 w-6 text-blue-500" />
             </span>
             <h1 className="text-4xl font-bold mb-4">
               Python for <span className="text-blue-500">Young Coders!</span> 🚀
@@ -37,7 +37,7 @@ const PythonIntro = () => {
               </p>
               
               <Alert className="my-4 bg-blue-50 border-blue-200">
-                <InfoIcon className="h-4 w-4 text-blue-500" />
+                <Lightbulb className="h-4 w-4 text-blue-500" />
                 <AlertDescription>
                   <strong>Fun Fact:</strong> Python is named after the TV show "Monty Python," not the snake! 
                   Though we still use a snake as its symbol. 🐍
@@ -84,10 +84,10 @@ print("Hi! I'm " + name)`}</code>
             </Card>
           </div>
 
-          <Card className="mb-8 border-2 border-yellow-100">
+          <Card className="mb-8">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Binary className="h-5 w-5 text-yellow-500" />
+                <BrainCircuit className="h-5 w-5 text-pink-500" />
                 <CardTitle>Making Decisions with If Statements</CardTitle>
               </div>
             </CardHeader>
@@ -108,12 +108,9 @@ else:
             </CardContent>
           </Card>
 
-          <Card className="mb-8">
+          <Card>
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <BrainCircuit className="h-5 w-5 text-pink-500" />
-                <CardTitle>Fun Projects to Try</CardTitle>
-              </div>
+              <CardTitle>Tips for Success</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">

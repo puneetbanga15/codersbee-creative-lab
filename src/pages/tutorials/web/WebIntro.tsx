@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  InfoIcon, Code, Palette, Sparkles, 
+  Html5, Code, Palette, Sparkles, 
   Layout, Globe, Lightbulb, BookOpen 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -36,7 +36,7 @@ const WebIntro = () => {
               </p>
               <div className="grid md:grid-cols-3 gap-4 my-6">
                 <div className="p-4 bg-blue-50 rounded-lg text-center">
-                  <Code className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+                  <Html5 className="h-6 w-6 text-blue-500 mx-auto mb-2" />
                   <h3 className="font-semibold">HTML</h3>
                   <p className="text-sm">The building blocks</p>
                 </div>
@@ -106,29 +106,6 @@ h1 {
               </CardContent>
             </Card>
           </div>
-
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-yellow-500" />
-                <CardTitle>JavaScript - Adding Magic!</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
-                <code>{`function changeText() {
-  document.getElementById("message")
-    .innerHTML = "Wow, you clicked me!";
-}`}</code>
-              </pre>
-              <Alert className="bg-yellow-50 border-yellow-200">
-                <Lightbulb className="h-4 w-4 text-yellow-500" />
-                <AlertDescription>
-                  <strong>Fun Fact:</strong> With JavaScript, you can make your website respond when visitors click, type, or move their mouse!
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
 
           <Card>
             <CardHeader>
