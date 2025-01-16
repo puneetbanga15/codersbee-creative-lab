@@ -1,7 +1,16 @@
-import { Facebook, Youtube, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Youtube, Instagram, Linkedin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export const Footer = () => {
+  const handleWhatsAppClick = () => {
+    window.open('https://wa.me/917087884023', '_blank');
+  };
+
+  const handleTrialClick = () => {
+    window.open('https://calendly.com/codersbee/class-slot', '_blank');
+  };
+
   const socialLinks = [
     {
       icon: Facebook,
@@ -27,8 +36,38 @@ export const Footer = () => {
 
   return (
     <footer className="bg-white border-t mt-auto">
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-[1400px] mx-auto">
+        {/* CTA Section */}
+        <div className="border-b">
+          <div className="px-6 py-12 text-center">
+            <h2 className="text-3xl font-bold mb-4 text-codersbee-dark">
+              Start Your Child's AI Journey Today
+            </h2>
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+              Join thousands of parents who have empowered their children with future-ready skills through CodersBee's innovative learning programs.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2"
+                onClick={handleWhatsAppClick}
+              >
+                Connect on WhatsApp
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button 
+                className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white flex items-center justify-center gap-2"
+                onClick={handleTrialClick}
+              >
+                Book Your FREE Trial Class
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Footer Content */}
+        <div className="px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo and Description */}
           <div className="space-y-4">
             <img 
               src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
@@ -40,6 +79,7 @@ export const Footer = () => {
             </p>
           </div>
           
+          {/* Quick Links */}
           <div>
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
@@ -50,6 +90,7 @@ export const Footer = () => {
             </ul>
           </div>
           
+          {/* Contact Information */}
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
@@ -58,8 +99,12 @@ export const Footer = () => {
             </ul>
           </div>
           
+          {/* Connect With Us */}
           <div>
-            <h3 className="font-semibold mb-4">Follow Us</h3>
+            <h3 className="font-semibold mb-4">Connect With Us</h3>
+            <p className="text-gray-600 mb-4">
+              Follow us on social media for updates, success stories, and educational content.
+            </p>
             <div className="flex space-x-4">
               {socialLinks.map((link, index) => {
                 const Icon = link.icon;
@@ -79,9 +124,12 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-        
-        <div className="mt-8 pt-8 border-t text-center text-gray-600">
-          <p>© {new Date().getFullYear()} CodersBee. All rights reserved.</p>
+
+        {/* Copyright */}
+        <div className="border-t px-6 py-6">
+          <div className="text-center text-gray-600">
+            <p>© {new Date().getFullYear()} CodersBee. All Rights Reserved.</p>
+          </div>
         </div>
       </div>
     </footer>
