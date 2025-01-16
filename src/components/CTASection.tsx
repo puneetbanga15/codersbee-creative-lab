@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 export const CTASection = () => {
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/917087884023', '_blank');
+    window.open('https://wa.me/919996465023', '_blank');
   };
 
   const handleTrialClick = () => {

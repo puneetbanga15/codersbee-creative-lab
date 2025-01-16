@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export const Footer = () => {
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/917087884023', '_blank');
+    window.open('https://wa.me/919996465023', '_blank');
   };
 
   const handleTrialClick = () => {
@@ -92,10 +92,11 @@ export const Footer = () => {
           
           {/* Contact Information */}
           <div>
-            <h3 className="font-semibold mb-4">Contact</h3>
+            <h3 className="font-semibold mb-4">Reach Us On</h3>
             <ul className="space-y-2">
-              <li className="text-gray-600">Email: info@codersbee.com</li>
-              <li className="text-gray-600">WhatsApp: +91 9996465023</li>
+              <li className="text-gray-600">Email: admin@codersbee.com</li>
+              <li className="text-gray-600">Phone: +91-7087884023</li>
+              <li className="text-gray-600">WhatsApp: +91-9996465023</li>
             </ul>
           </div>
           
