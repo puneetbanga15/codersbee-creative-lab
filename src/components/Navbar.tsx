@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap } from "lucide-react";
+import { User, GraduationCap, BookOpen, Trophy, CheckCircle2 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -59,27 +59,36 @@ export const Navbar = () => {
                 Student's Corner
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64 bg-white">
-                <DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
-                    <div>
-                      <div className="font-medium">Quizzes</div>
-                      <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Quizzes</div>
+                        <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                      </div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/projects" className="w-full">
-                    <div>
-                      <div className="font-medium">Projects Gallery</div>
-                      <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                    <div className="flex items-start gap-3">
+                      <Trophy className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Projects Gallery</div>
+                        <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                      </div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/tutorials" className="w-full">
-                    <div>
-                      <div className="font-medium">Learning Resources</div>
-                      <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                    <div className="flex items-start gap-3">
+                      <BookOpen className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Learning Resources</div>
+                        <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                      </div>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -148,21 +157,30 @@ export const Navbar = () => {
             <div className="py-2">
               <span className="block text-[#9b87f5] font-medium mb-2">Student's Corner</span>
               <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
-                <div className="py-2">
-                  <div>Quizzes</div>
-                  <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                <div className="flex items-start gap-3 py-2">
+                  <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Quizzes</div>
+                    <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                  </div>
                 </div>
               </Link>
               <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
-                <div className="py-2">
-                  <div>Projects Gallery</div>
-                  <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                <div className="flex items-start gap-3 py-2">
+                  <Trophy className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Projects Gallery</div>
+                    <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                  </div>
                 </div>
               </Link>
               <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
-                <div className="py-2">
-                  <div>Learning Resources</div>
-                  <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                <div className="flex items-start gap-3 py-2">
+                  <BookOpen className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Learning Resources</div>
+                    <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                  </div>
                 </div>
               </Link>
             </div>
