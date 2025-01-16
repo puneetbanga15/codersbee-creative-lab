@@ -35,10 +35,10 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white border-t mt-auto">
+    <footer className="bg-gradient-to-r from-codersbee-purple to-codersbee-vivid/20 mt-auto">
       <div className="max-w-[1400px] mx-auto">
         {/* CTA Section */}
-        <div className="border-b">
+        <div className="border-b border-white/10">
           <div className="px-6 py-12 text-center">
             <h2 className="text-3xl font-bold mb-4 text-codersbee-dark">
               Start Your Child's AI Journey Today
@@ -83,10 +83,10 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/about" className="text-gray-600 hover:text-[#9b87f5]">About Us</Link></li>
-              <li><Link to="/tutorials" className="text-gray-600 hover:text-[#9b87f5]">Tutorials</Link></li>
-              <li><Link to="/projects" className="text-gray-600 hover:text-[#9b87f5]">Projects</Link></li>
-              <li><Link to="/quizzes" className="text-gray-600 hover:text-[#9b87f5]">Quizzes</Link></li>
+              <li><Link to="/about" className="text-gray-600 hover:text-codersbee-vivid">About Us</Link></li>
+              <li><Link to="/tutorials" className="text-gray-600 hover:text-codersbee-vivid">Tutorials</Link></li>
+              <li><Link to="/projects" className="text-gray-600 hover:text-codersbee-vivid">Projects</Link></li>
+              <li><Link to="/quizzes" className="text-gray-600 hover:text-codersbee-vivid">Quizzes</Link></li>
             </ul>
           </div>
           
@@ -115,7 +115,7 @@ export const Footer = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#9b87f5] transition-colors"
+                    className="text-gray-600 hover:text-codersbee-vivid transition-colors"
                     aria-label={link.label}
                   >
                     <Icon className="h-6 w-6" />
@@ -127,7 +127,7 @@ export const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t px-6 py-6">
+        <div className="border-t border-white/10 px-6 py-6">
           <div className="text-center text-gray-600">
             <p>© {new Date().getFullYear()} CodersBee. All Rights Reserved.</p>
           </div>
