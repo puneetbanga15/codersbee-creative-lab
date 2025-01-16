@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, BookOpen, Trophy, CheckCircle2, Facebook, Youtube, Instagram, Linkedin } from "lucide-react";
+import { User, GraduationCap, BookOpen, Trophy, CheckCircle2 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -13,29 +13,6 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const socialLinks = [
-    {
-      icon: Facebook,
-      href: "https://facebook.com/codersbee",
-      label: "Facebook"
-    },
-    {
-      icon: Youtube,
-      href: "https://www.youtube.com/@codersbee",
-      label: "YouTube"
-    },
-    {
-      icon: Instagram,
-      href: "https://www.instagram.com/codersbee/",
-      label: "Instagram"
-    },
-    {
-      icon: Linkedin,
-      href: "https://www.linkedin.com/in/manisha-kapoor-codersbee/",
-      label: "LinkedIn"
-    }
-  ];
 
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/919996465023', '_blank');
@@ -120,25 +97,6 @@ export const Navbar = () => {
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               About Us
             </Link>
-          </div>
-
-          {/* Social Links */}
-          <div className="hidden md:flex items-center gap-x-4 ml-4">
-            {socialLinks.map((link, index) => {
-              const Icon = link.icon;
-              return (
-                <a
-                  key={index}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors"
-                  aria-label={link.label}
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              );
-            })}
           </div>
 
           {/* Action Buttons */}
@@ -241,25 +199,6 @@ export const Navbar = () => {
             >
               Book FREE Trial Now
             </Button>
-
-            {/* Social Links in Mobile Menu */}
-            <div className="flex justify-center space-x-6 py-4 border-t">
-              {socialLinks.map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={index}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors"
-                    aria-label={link.label}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </a>
-                );
-              })}
-            </div>
           </div>
         )}
       </div>

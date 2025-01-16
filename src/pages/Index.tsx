@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { CourseCard } from "@/components/CourseCard";
 import { Features } from "@/components/Features";
@@ -92,6 +93,7 @@ const Index = () => {
 
       <FAQ />
       <CTASection />
+      <Footer />
     </div>
   );
 };
