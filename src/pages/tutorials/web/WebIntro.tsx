@@ -1,11 +1,8 @@
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Code, Palette, Globe, 
-  Layout, Lightbulb, BookOpen 
-} from "lucide-react";
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
+import { Code, Palette, Lightbulb, Star } from "lucide-react";
 
 const WebIntro = () => {
   return (
@@ -14,134 +11,62 @@ const WebIntro = () => {
       <div className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
-            <span className="inline-flex items-center justify-center p-2 bg-pink-100 rounded-full mb-4">
-              <Globe className="h-6 w-6 text-pink-500" />
+            <span className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-4">
+              <Code className="h-6 w-6 text-blue-500" />
             </span>
             <h1 className="text-4xl font-bold mb-4">
-              Web Development for <span className="text-pink-500">Kids!</span> 🚀
+              Web Development for Kids! <span className="text-blue-500">🌈</span>
             </h1>
             <p className="text-xl text-gray-600">Build your own amazing websites!</p>
           </div>
 
-          <Card className="mb-8 border-2 border-pink-100">
+          <Card className="mb-8 border-2 border-blue-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Layout className="h-5 w-5 text-pink-500" />
-                What is Web Development?
+                <Palette className="h-5 w-5 text-blue-500" />
+                The Building Blocks of the Web
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-lg mb-6">
+            <CardContent className="prose max-w-none">
+              <p className="text-lg mb-4">
                 Web development is like building a digital house with three main tools:
+                HTML (structure), CSS (style), and JavaScript (behavior)!
               </p>
-              <div className="grid md:grid-cols-3 gap-4 my-6">
-                <div className="p-4 bg-blue-50 rounded-lg text-center">
-                  <Code className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-                  <h3 className="font-semibold">HTML</h3>
-                  <p className="text-sm">The building blocks</p>
-                </div>
-                <div className="p-4 bg-pink-50 rounded-lg text-center">
-                  <Palette className="h-6 w-6 text-pink-500 mx-auto mb-2" />
-                  <h3 className="font-semibold">CSS</h3>
-                  <p className="text-sm">The paint and decorations</p>
-                </div>
-                <div className="p-4 bg-yellow-50 rounded-lg text-center">
-                  <Code className="h-6 w-6 text-yellow-500 mx-auto mb-2" />
-                  <h3 className="font-semibold">JavaScript</h3>
-                  <p className="text-sm">The magic that makes things move</p>
-                </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 className="font-semibold mb-2">Your First HTML Code:</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+                  {`<h1>Welcome to My Website!</h1>
+<p>This is my first webpage.</p>`}
+                </pre>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="font-semibold">What You Can Create:</h3>
+                <ul className="list-none space-y-2">
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-blue-500" />
+                    Your own personal website
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-blue-500" />
+                    Interactive games and animations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-blue-500" />
+                    Beautiful designs with CSS
+                  </li>
+                </ul>
               </div>
             </CardContent>
           </Card>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card className="border-2 border-blue-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Code className="h-5 w-5 text-blue-500" />
-                  <CardTitle>HTML - Building Your Website</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code>{`<!DOCTYPE html>
-<html>
-  <head>
-    <title>My Awesome Website</title>
-  </head>
-  <body>
-    <h1>Welcome!</h1>
-    <p>This is my first website.</p>
-  </body>
-</html>`}</code>
-                </pre>
-                <p className="mt-4 text-gray-700">
-                  Think of HTML tags as containers. Each container can hold text, images, or even other containers!
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-pink-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Palette className="h-5 w-5 text-pink-500" />
-                  <CardTitle>CSS - Making it Pretty!</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code>{`body {
-  background-color: lightblue;
-  font-family: Arial;
-}
-
-h1 {
-  color: purple;
-  text-align: center;
-}`}</code>
-                </pre>
-                <p className="mt-4 text-gray-700">
-                  CSS is like having a magic paintbrush - you can change how anything looks!
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Tips for Success</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-semibold mb-2">🎨 Design Tips:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-pink-500" />
-                      Keep your design simple and clean
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-pink-500" />
-                      Use colors that work well together
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">💡 Learning Tips:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-yellow-500" />
-                      Start with simple projects
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-yellow-500" />
-                      Practice coding every day
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Alert className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <Lightbulb className="h-4 w-4 text-blue-500" />
+            <AlertDescription>
+              <strong>Pro Tip:</strong> Start small and build up to bigger projects!
+            </AlertDescription>
+          </Alert>
         </div>
       </div>
       <Footer />

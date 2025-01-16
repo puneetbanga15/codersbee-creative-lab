@@ -1,11 +1,8 @@
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Bot, BrainCircuit, Camera, 
-  MessageSquare, Lightbulb, Shield, Rocket, Star
-} from "lucide-react";
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
+import { Bot, BrainCircuit, Camera, MessageSquare, Lightbulb, Shield, Rocket, Star } from "lucide-react";
 
 const AIIntro = () => {
   return (

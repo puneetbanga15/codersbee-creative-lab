@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Lock } from "lucide-react";
 
 const Tutorials = () => {
-  const tutorials = [
+
+const tutorials = [
     {
       title: "Scratch Programming",
       description: "Learn the basics of programming with Scratch",

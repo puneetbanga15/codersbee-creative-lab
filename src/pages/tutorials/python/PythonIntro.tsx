@@ -1,11 +1,8 @@
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Code, Terminal, Variable, 
-  BrainCircuit, Lightbulb, BookOpen, Rocket 
-} from "lucide-react";
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
+import { Code, Terminal, Lightbulb, Star } from "lucide-react";
 
 const PythonIntro = () => {
   return (
@@ -14,91 +11,61 @@ const PythonIntro = () => {
       <div className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
-            <span className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-4">
-              <Code className="h-6 w-6 text-blue-500" />
+            <span className="inline-flex items-center justify-center p-2 bg-green-100 rounded-full mb-4">
+              <Code className="h-6 w-6 text-green-500" />
             </span>
             <h1 className="text-4xl font-bold mb-4">
-              Python for <span className="text-blue-500">Young Coders!</span> 🚀
+              Python for Young Coders! <span className="text-green-500">🚀</span>
             </h1>
             <p className="text-xl text-gray-600">Where coding meets creativity and fun!</p>
           </div>
 
-          <Card className="mb-8 border-2 border-blue-100">
+          <Card className="mb-8 border-2 border-green-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Terminal className="h-5 w-5 text-blue-500" />
-                Your First Python Program
+                <Terminal className="h-5 w-5 text-green-500" />
+                Getting Started with Python
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code>print("Hello, Young Coder!")</code>
-              </pre>
-              <p className="mt-4 text-gray-700">
-                When you run this, Python will show the message on your screen!
+            <CardContent className="prose max-w-none">
+              <p className="text-lg mb-4">
+                Python is like having a robot friend who does exactly what you tell it to do! 
+                It's one of the easiest programming languages to learn because it uses simple English-like words.
               </p>
-            </CardContent>
-          </Card>
-
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Variable className="h-5 w-5 text-blue-500" />
-                <CardTitle>Variables - Your Code's Memory Boxes</CardTitle>
+              
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 className="font-semibold mb-2">Your First Python Program:</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+                  print("Hello, Young Coder!")
+                </pre>
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4">Variables are like labeled boxes where you can store things:</p>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
-                <code>{`age = 10
-name = "Alex"
-print("Hi! I'm " + name)
-print("I am " + str(age) + " years old")`}</code>
-              </pre>
-              <Alert className="bg-blue-50 border-blue-200">
-                <Lightbulb className="h-4 w-4 text-blue-500" />
-                <AlertDescription>
-                  <strong>Cool Trick:</strong> You can store any type of information in variables!
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Tips for Success</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-semibold mb-2">🎮 Project Ideas:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <Rocket className="h-4 w-4 text-purple-500" />
-                      Create a digital pet that responds to commands
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Rocket className="h-4 w-4 text-purple-500" />
-                      Build a simple quiz game
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">📚 Learning Tips:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-blue-500" />
-                      Practice typing code instead of copy-pasting
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-blue-500" />
-                      Keep a coding journal to track what you learn
-                    </li>
-                  </ul>
-                </div>
+              <div className="space-y-4">
+                <h3 className="font-semibold">Fun Things You Can Do with Python:</h3>
+                <ul className="list-none space-y-2">
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-green-500" />
+                    Create your own games and animations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-green-500" />
+                    Build calculators and problem solvers
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-green-500" />
+                    Make art with code
+                  </li>
+                </ul>
               </div>
             </CardContent>
           </Card>
+
+          <Alert className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50">
+            <Lightbulb className="h-4 w-4 text-green-500" />
+            <AlertDescription>
+              <strong>Remember:</strong> The best way to learn Python is by trying things out yourself!
+            </AlertDescription>
+          </Alert>
         </div>
       </div>
       <Footer />
