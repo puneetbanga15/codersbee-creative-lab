@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
@@ -6,6 +5,7 @@ import {
   BrainCircuit, Lightbulb, BookOpen, Rocket 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
 const PythonIntro = () => {
   return (
@@ -26,83 +26,39 @@ const PythonIntro = () => {
           <Card className="mb-8 border-2 border-blue-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Code className="h-5 w-5 text-blue-500" />
-                Welcome to Python!
+                <Terminal className="h-5 w-5 text-blue-500" />
+                Your First Python Program
               </CardTitle>
             </CardHeader>
-            <CardContent className="prose max-w-none">
-              <p className="text-lg">
-                Python is like having a robot friend who does exactly what you tell it to do! 
-                It's one of the easiest programming languages to learn because it uses simple English-like words.
+            <CardContent>
+              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+                <code>print("Hello, Young Coder!")</code>
+              </pre>
+              <p className="mt-4 text-gray-700">
+                When you run this, Python will show the message on your screen!
               </p>
-              
-              <Alert className="my-4 bg-blue-50 border-blue-200">
-                <Lightbulb className="h-4 w-4 text-blue-500" />
-                <AlertDescription>
-                  <strong>Fun Fact:</strong> Python is named after the TV show "Monty Python," not the snake! 
-                  Though we still use a snake as its symbol. 🐍
-                </AlertDescription>
-              </Alert>
             </CardContent>
           </Card>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card className="border-2 border-green-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Terminal className="h-5 w-5 text-green-500" />
-                  <CardTitle>Your First Python Program</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code>print("Hello, Young Coder!")</code>
-                </pre>
-                <p className="mt-4 text-gray-700">
-                  When you run this, Python will show the message on your screen!
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-purple-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Variable className="h-5 w-5 text-purple-500" />
-                  <CardTitle>Variables - Code's Memory Boxes</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <code>{`age = 10
-name = "Alex"
-print("Hi! I'm " + name)`}</code>
-                </pre>
-                <p className="mt-4 text-gray-700">
-                  Variables are like labeled boxes where you can store things!
-                </p>
-              </CardContent>
-            </Card>
-          </div>
 
           <Card className="mb-8">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <BrainCircuit className="h-5 w-5 text-pink-500" />
-                <CardTitle>Making Decisions with If Statements</CardTitle>
+                <Variable className="h-5 w-5 text-blue-500" />
+                <CardTitle>Variables - Your Code's Memory Boxes</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
+              <p className="mb-4">Variables are like labeled boxes where you can store things:</p>
               <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
-                <code>{`temperature = 30
-if temperature > 25:
-    print("It's hot! Get some ice cream! 🍦")
-else:
-    print("It's cool! Maybe hot chocolate? ☕")`}</code>
+                <code>{`age = 10
+name = "Alex"
+print("Hi! I'm " + name)
+print("I am " + str(age) + " years old")`}</code>
               </pre>
-              <Alert className="bg-yellow-50 border-yellow-200">
-                <Lightbulb className="h-4 w-4 text-yellow-500" />
+              <Alert className="bg-blue-50 border-blue-200">
+                <Lightbulb className="h-4 w-4 text-blue-500" />
                 <AlertDescription>
-                  <strong>Cool Trick:</strong> You can use if statements to make your program respond differently based on conditions!
+                  <strong>Cool Trick:</strong> You can store any type of information in variables!
                 </AlertDescription>
               </Alert>
             </CardContent>
@@ -128,15 +84,15 @@ else:
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">🎯 Tips for Success:</h3>
+                  <h3 className="font-semibold mb-2">📚 Learning Tips:</h3>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4 text-blue-500" />
-                      Type code carefully - spelling matters!
+                      Practice typing code instead of copy-pasting
                     </li>
                     <li className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4 text-blue-500" />
-                      Save your code often
+                      Keep a coding journal to track what you learn
                     </li>
                   </ul>
                 </div>

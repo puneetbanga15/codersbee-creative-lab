@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
@@ -6,6 +5,7 @@ import {
   Layout, Lightbulb, BookOpen 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
 const WebIntro = () => {
   return (
@@ -30,8 +30,8 @@ const WebIntro = () => {
                 What is Web Development?
               </CardTitle>
             </CardHeader>
-            <CardContent className="prose max-w-none">
-              <p className="text-lg">
+            <CardContent>
+              <p className="text-lg mb-6">
                 Web development is like building a digital house with three main tools:
               </p>
               <div className="grid md:grid-cols-3 gap-4 my-6">

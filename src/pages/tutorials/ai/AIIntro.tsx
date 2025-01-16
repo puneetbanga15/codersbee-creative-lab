@@ -15,7 +15,7 @@ const AIIntro = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
             <span className="inline-flex items-center justify-center p-2 bg-violet-100 rounded-full mb-4">
-              <BrainCircuit className="h-6 w-6 text-violet-500" />
+              <Bot className="h-6 w-6 text-violet-500" />
             </span>
             <h1 className="text-4xl font-bold mb-4">
               AI Adventures: Your Guide to <span className="text-violet-500">Artificial Intelligence!</span> 🚀
@@ -56,14 +56,6 @@ const AIIntro = () => {
                   Create art and music 🎨
                 </li>
               </ul>
-              
-              <Alert className="my-4 bg-violet-50 border-violet-200">
-                <Lightbulb className="h-4 w-4 text-violet-500" />
-                <AlertDescription>
-                  <strong>Fun Fact:</strong> The term "Artificial Intelligence" was first used in 1956 - 
-                  that's before your parents were born!
-                </AlertDescription>
-              </Alert>
             </CardContent>
           </Card>
 
