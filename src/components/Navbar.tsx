@@ -38,7 +38,7 @@ export const Navbar = () => {
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-6 py-3">
         <div className="flex items-center">
-          {/* Logo and Brand Section - Left Aligned */}
+          {/* Logo and Brand Section */}
           <Link to="/" className="flex items-center gap-x-2">
             <img 
               src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
@@ -48,7 +48,7 @@ export const Navbar = () => {
             <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
           </Link>
 
-          {/* Navigation Links - With consistent spacing */}
+          {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-x-6 ml-8">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
@@ -58,15 +58,30 @@ export const Navbar = () => {
                 <GraduationCap className="h-4 w-4" />
                 Student's Corner
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-64 bg-white">
                 <DropdownMenuItem>
-                  <Link to="/quizzes" className="w-full">Quizzes</Link>
+                  <Link to="/quizzes" className="w-full">
+                    <div>
+                      <div className="font-medium">Quizzes</div>
+                      <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                    </div>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/projects" className="w-full">Projects</Link>
+                  <Link to="/projects" className="w-full">
+                    <div>
+                      <div className="font-medium">Projects Gallery</div>
+                      <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                    </div>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/tutorials" className="w-full">Learning Resources</Link>
+                  <Link to="/tutorials" className="w-full">
+                    <div>
+                      <div className="font-medium">Learning Resources</div>
+                      <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                    </div>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -75,7 +90,7 @@ export const Navbar = () => {
             </Link>
           </div>
 
-          {/* Action Buttons - Right side with consistent spacing */}
+          {/* Action Buttons */}
           <div className="hidden md:flex items-center gap-x-4 ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -132,9 +147,24 @@ export const Navbar = () => {
             <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
             <div className="py-2">
               <span className="block text-[#9b87f5] font-medium mb-2">Student's Corner</span>
-              <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Quizzes</Link>
-              <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Projects</Link>
-              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Learning Resources</Link>
+              <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="py-2">
+                  <div>Quizzes</div>
+                  <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                </div>
+              </Link>
+              <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="py-2">
+                  <div>Projects Gallery</div>
+                  <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                </div>
+              </Link>
+              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="py-2">
+                  <div>Learning Resources</div>
+                  <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                </div>
+              </Link>
             </div>
             <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
             <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
