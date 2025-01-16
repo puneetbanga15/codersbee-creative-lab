@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
+import { User, GraduationCap } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -53,25 +53,20 @@ export const Navbar = () => {
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
-            <Link to="/quizzes" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
-              Quizzes
-            </Link>
-            <Link to="/projects" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
-              Projects
-            </Link>
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
-                Learning Resources
+              <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" />
+                Student's Corner
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link to="/tutorials" className="w-full">Tutorials</Link>
+                  <Link to="/quizzes" className="w-full">Quizzes</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/blog" className="w-full">Blog</Link>
+                  <Link to="/projects" className="w-full">Projects</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/resources" className="w-full">Free Resources</Link>
+                  <Link to="/tutorials" className="w-full">Learning Resources</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -135,13 +130,11 @@ export const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-6 space-y-4">
             <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
-            <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB]">Quizzes</Link>
-            <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB]">Projects</Link>
             <div className="py-2">
-              <span className="block text-[#9b87f5] font-medium mb-2">Learning Resources</span>
-              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Tutorials</Link>
-              <Link to="/blog" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Blog</Link>
-              <Link to="/resources" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Free Resources</Link>
+              <span className="block text-[#9b87f5] font-medium mb-2">Student's Corner</span>
+              <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Quizzes</Link>
+              <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Projects</Link>
+              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">Learning Resources</Link>
             </div>
             <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
             <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
