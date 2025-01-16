@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, Star, BookOpen, Trophy, GraduationCap } from "lucide-react";
+import { User, GraduationCap, BookOpen, Trophy, CheckCircle2 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -8,14 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -45,82 +37,78 @@ export const Navbar = () => {
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-6 py-3">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2">
+        <div className="flex items-center">
+          {/* Logo and Brand Section */}
+          <Link to="/" className="flex items-center gap-x-2">
             <img 
               src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
               alt="CodersBee Logo" 
               className="h-12" 
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-transparent bg-clip-text">
-              CodersBee
-            </span>
+            <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
           </Link>
-          
-          <div className="hidden md:flex items-center gap-6">
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-x-6 ml-8">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
-
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB]">
-                    <GraduationCap className="w-4 h-4 mr-2" />
-                    Student's Corner
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[400px] bg-white rounded-lg shadow-lg z-[100]">
-                      <NavigationMenuLink asChild>
-                        <Link to="/quizzes" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
-                          <div className="flex items-center">
-                            <Trophy className="w-5 h-5 text-[#9b87f5] mr-3" />
-                            <div>
-                              <div className="text-sm font-medium">
-                                Quizzes
-                                <Star className="w-4 h-4 text-yellow-500 ml-2 inline-block" />
-                              </div>
-                              <div className="text-xs text-gray-500">Test your knowledge with interactive quizzes</div>
-                            </div>
-                          </div>
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link to="/projects" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
-                          <div className="flex items-center">
-                            <BookOpen className="w-5 h-5 text-[#9b87f5] mr-3" />
-                            <div>
-                              <div className="text-sm font-medium">Projects Gallery</div>
-                              <div className="text-xs text-gray-500">Explore student projects and achievements</div>
-                            </div>
-                          </div>
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link to="/resources" className="block p-4 hover:bg-gray-50 rounded-md transition-colors">
-                          <div className="flex items-center">
-                            <GraduationCap className="w-5 h-5 text-[#9b87f5] mr-3" />
-                            <div>
-                              <div className="text-sm font-medium">Learning Resources</div>
-                              <div className="text-xs text-gray-500">Access comprehensive learning materials</div>
-                            </div>
-                          </div>
-                        </Link>
-                      </NavigationMenuLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" />
+                Student's Corner
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64 bg-white">
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
+                  <Link to="/quizzes" className="w-full">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Quizzes</div>
+                        <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                      </div>
                     </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
+                  <Link to="/projects" className="w-full">
+                    <div className="flex items-start gap-3">
+                      <Trophy className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Projects Gallery</div>
+                        <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                      </div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
+                  <Link to="/tutorials" className="w-full">
+                    <div className="flex items-start gap-3">
+                      <BookOpen className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Learning Resources</div>
+                        <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                      </div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
+              About Us
+            </Link>
+          </div>
 
+          {/* Action Buttons */}
+          <div className="hidden md:flex items-center gap-x-4 ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   <span>Login</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Link to="/parents/login" className="w-full">Parent Login</Link>
                 </DropdownMenuItem>
@@ -132,6 +120,7 @@ export const Navbar = () => {
 
             <Button 
               variant="outline"
+              size="sm"
               className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
               onClick={handleWhatsAppClick}
             >
@@ -142,62 +131,76 @@ export const Navbar = () => {
             </Button>
             
             <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white whitespace-nowrap"
+              size="sm"
+              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
               onClick={handleTrialClick}
             >
               Book FREE Trial Now
             </Button>
           </div>
 
-          <div className="md:hidden ml-auto">
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-[#9b87f5] p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            
-            {isMobileMenuOpen && (
-              <div className="absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-4 space-y-4">
-                <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">
-                  Courses
-                </a>
-                <div className="space-y-2">
-                  <div className="font-medium text-[#9b87f5]">Student's Corner</div>
-                  <Link to="/quizzes" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Quizzes
-                  </Link>
-                  <Link to="/projects" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Projects
-                  </Link>
-                  <Link to="/resources" className="block pl-4 text-[#9b87f5] hover:text-[#7E69AB] flex items-center">
-                    <GraduationCap className="w-4 h-4 mr-2" />
-                    Learning Resources
-                  </Link>
-                </div>
-                <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
-                <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
-                <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
-                <Button 
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                  onClick={handleWhatsAppClick}
-                >
-                  Message on WhatsApp
-                </Button>
-                <Button 
-                  className="w-full bg-[#9b87f5] hover:bg-[#7E69AB]"
-                  onClick={handleTrialClick}
-                >
-                  Book FREE Trial Now
-                </Button>
-              </div>
-            )}
-          </div>
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden ml-auto text-[#9b87f5] p-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 px-6 space-y-4">
+            <a href="/#courses" onClick={handleCoursesClick} className="block text-[#9b87f5] hover:text-[#7E69AB]">Courses</a>
+            <div className="py-2">
+              <span className="block text-[#9b87f5] font-medium mb-2">Student's Corner</span>
+              <Link to="/quizzes" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="flex items-start gap-3 py-2">
+                  <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Quizzes</div>
+                    <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
+                  </div>
+                </div>
+              </Link>
+              <Link to="/projects" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="flex items-start gap-3 py-2">
+                  <Trophy className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Projects Gallery</div>
+                    <div className="text-sm text-gray-500">Explore student projects and achievements</div>
+                  </div>
+                </div>
+              </Link>
+              <Link to="/tutorials" className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4">
+                <div className="flex items-start gap-3 py-2">
+                  <BookOpen className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                  <div>
+                    <div>Learning Resources</div>
+                    <div className="text-sm text-gray-500">Access comprehensive learning materials</div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            <Link to="/about" className="block text-[#9b87f5] hover:text-[#7E69AB]">About Us</Link>
+            <Link to="/parents/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Parent Login</Link>
+            <Link to="/teachers/login" className="block text-[#9b87f5] hover:text-[#7E69AB]">Teacher Login</Link>
+            <Button 
+              className="w-full bg-green-500 hover:bg-green-600 text-white"
+              onClick={handleWhatsAppClick}
+            >
+              Message on WhatsApp
+            </Button>
+            <Button 
+              className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+              onClick={handleTrialClick}
+            >
+              Book FREE Trial Now
+            </Button>
+          </div>
+        )}
       </div>
     </nav>
   );

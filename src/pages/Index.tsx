@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { CourseCard } from "@/components/CourseCard";
 import { Features } from "@/components/Features";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
-import { CTASection } from "@/components/CTASection";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { InnovationHighlight } from "@/components/InnovationHighlight";
 import { SuccessStories } from "@/components/SuccessStories";
@@ -91,7 +91,7 @@ const Index = () => {
       </section>
 
       <FAQ />
-      <CTASection />
+      <Footer />
     </div>
   );
 };

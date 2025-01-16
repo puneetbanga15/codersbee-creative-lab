@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { toast } from "sonner";
 
 const ParentsLogin = () => {
@@ -171,19 +172,21 @@ const ParentsLogin = () => {
                     },
                     anchor: {
                       color: 'rgb(139, 92, 246)',
+                      display: 'none', // Hide all links
                     },
                   },
                 }}
                 theme="light"
                 providers={[]}
                 view="sign_in"
-                showLinks={true}
+                showLinks={false}
                 redirectTo={window.location.origin + "/parents/dashboard"}
               />
             </CardContent>
           </Card>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

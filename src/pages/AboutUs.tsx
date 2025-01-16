@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 
@@ -107,6 +108,7 @@ const AboutUs = () => {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

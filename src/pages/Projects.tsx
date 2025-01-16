@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,6 @@ const Projects = () => {
         .order('created_at', { ascending: false });
       
       if (selectedType) {
-        // Convert the selected type to lowercase for comparison
         const type = selectedType.toLowerCase();
         query = query.eq('project_type', type);
       }
@@ -135,6 +135,7 @@ const Projects = () => {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

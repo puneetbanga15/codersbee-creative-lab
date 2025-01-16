@@ -1,8 +1,8 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
 import { QuizTypeFilter } from "@/components/quiz/QuizTypeFilter";
 import { QuizGrid } from "@/components/quiz/QuizGrid";
-import { Navbar } from "@/components/Navbar";
 
 export type QuizType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
 
@@ -36,19 +36,17 @@ export const QuizLayout = ({
     : quizzes;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white flex flex-col">
       <Navbar />
-      <main className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 flex-grow">
         <QuizHeader 
           userRole={userRole} 
           onManageAccessCodes={undefined} 
         />
-
         <QuizTypeFilter 
           selectedType={selectedType}
           onTypeSelect={onTypeSelect}
         />
-
         <QuizGrid
           quizzes={filteredQuizzes}
           canAccessPremiumQuiz={canAccessPremiumQuiz}
@@ -56,7 +54,8 @@ export const QuizLayout = ({
           onRequestAccess={onRequestAccess}
           isLoading={isLoadingQuizzes}
         />
-      </main>
+      </div>
+      <Footer />
     </div>
   );
 };

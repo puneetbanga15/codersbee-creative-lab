@@ -5,6 +5,7 @@ import { AccessCodeDialog } from "@/components/quiz/AccessCodeDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { QuizContainer } from "@/components/quiz/QuizContainer";
 import { QuizLayout } from "@/components/quiz/QuizLayout";
+import { Navbar } from "@/components/Navbar";
 
 type FilterType = 'scratch' | 'python' | 'ai' | 'web' | 'cloud' | 'free' | 'premium' | null;
 
