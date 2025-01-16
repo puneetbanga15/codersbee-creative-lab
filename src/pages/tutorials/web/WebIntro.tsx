@@ -36,8 +36,47 @@ const WebIntro = () => {
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 className="font-semibold mb-2">Your First HTML Code:</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
-                  {`<h1>Welcome to My Website!</h1>
-<p>This is my first webpage.</p>`}
+{`<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Awesome Website</title>
+  </head>
+  <body>
+    <h1>Welcome to My Page!</h1>
+    <p>This is my first website.</p>
+  </body>
+</html>`}
+                </pre>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 className="font-semibold mb-2">Making it Pretty with CSS:</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+{`body {
+  background-color: lightblue;
+  font-family: Arial;
+}
+
+h1 {
+  color: purple;
+  text-align: center;
+}
+
+.cool-box {
+  border: 3px solid pink;
+  padding: 10px;
+  border-radius: 10px;
+}`}
+                </pre>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 className="font-semibold mb-2">Adding Magic with JavaScript:</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+{`function changeText() {
+  document.getElementById("message")
+    .innerHTML = "Wow, you clicked me!";
+}`}
                 </pre>
               </div>
 

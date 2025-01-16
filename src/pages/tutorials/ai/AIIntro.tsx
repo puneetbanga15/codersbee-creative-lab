@@ -53,6 +53,28 @@ const AIIntro = () => {
                   Create art and music 🎨
                 </li>
               </ul>
+
+              <div className="mt-8">
+                <h3 className="font-semibold mb-4">How Does AI Learn?</h3>
+                <div className="grid md:grid-cols-2 gap-4 bg-violet-50 p-4 rounded-lg">
+                  <div>
+                    <h4 className="font-medium mb-2">How You Learn</h4>
+                    <ul className="space-y-2">
+                      <li>Looking at pictures in books</li>
+                      <li>Practice writing letters</li>
+                      <li>Learning from mistakes</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">How AI Learns</h4>
+                    <ul className="space-y-2">
+                      <li>Analyzing thousands of images</li>
+                      <li>Training on text examples</li>
+                      <li>Adjusting based on errors</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 

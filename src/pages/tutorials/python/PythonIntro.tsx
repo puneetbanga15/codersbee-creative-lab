@@ -57,6 +57,37 @@ const PythonIntro = () => {
                   </li>
                 </ul>
               </div>
+
+              <div className="mt-8 space-y-6">
+                <h3 className="font-semibold">Variables - Your Code's Memory Boxes</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+{`age = 10
+name = "Alex"
+favorite_color = "blue"
+print("Hi! I'm " + name)
+print("I am " + str(age) + " years old")`}
+                </pre>
+
+                <h3 className="font-semibold">Making Decisions with If Statements</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+{`temperature = 30
+if temperature > 25:
+    print("It's hot! Get some ice cream! 🍦")
+else:
+    print("It's cool! Maybe hot chocolate? ☕")`}
+                </pre>
+
+                <h3 className="font-semibold">Fun Projects to Try</h3>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+{`import random
+secret = random.randint(1, 10)
+guess = int(input("Guess the number (1-10): "))
+if guess == secret:
+    print("You won! 🎉")
+else:
+    print("Try again! 🎲")`}
+                </pre>
+              </div>
             </CardContent>
           </Card>
 
@@ -66,6 +97,50 @@ const PythonIntro = () => {
               <strong>Remember:</strong> The best way to learn Python is by trying things out yourself!
             </AlertDescription>
           </Alert>
+
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Tips for Success</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold mb-2">For Young Coders:</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Type code carefully - spelling matters!
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Don't be afraid of errors - they help you learn!
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Save your code often
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Learning Tips:</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Practice typing code instead of copy-pasting
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Keep a coding journal
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-500" />
+                      Share your projects with friends!
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
       <Footer />
