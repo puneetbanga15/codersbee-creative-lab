@@ -172,13 +172,14 @@ const ParentsLogin = () => {
                     },
                     anchor: {
                       color: 'rgb(139, 92, 246)',
+                      display: 'none', // Hide all links
                     },
                   },
                 }}
                 theme="light"
                 providers={[]}
                 view="sign_in"
-                showLinks={true}
+                showLinks={false}
                 redirectTo={window.location.origin + "/parents/dashboard"}
               />
             </CardContent>
