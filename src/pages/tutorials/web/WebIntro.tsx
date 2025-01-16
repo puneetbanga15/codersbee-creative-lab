@@ -2,8 +2,8 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  Html5, Code, Palette, Sparkles, 
-  Layout, Globe, Lightbulb, BookOpen 
+  Code, Palette, Globe, 
+  Layout, Lightbulb, BookOpen 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
 
@@ -36,7 +36,7 @@ const WebIntro = () => {
               </p>
               <div className="grid md:grid-cols-3 gap-4 my-6">
                 <div className="p-4 bg-blue-50 rounded-lg text-center">
-                  <Html5 className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+                  <Code className="h-6 w-6 text-blue-500 mx-auto mb-2" />
                   <h3 className="font-semibold">HTML</h3>
                   <p className="text-sm">The building blocks</p>
                 </div>
@@ -46,7 +46,7 @@ const WebIntro = () => {
                   <p className="text-sm">The paint and decorations</p>
                 </div>
                 <div className="p-4 bg-yellow-50 rounded-lg text-center">
-                  <Sparkles className="h-6 w-6 text-yellow-500 mx-auto mb-2" />
+                  <Code className="h-6 w-6 text-yellow-500 mx-auto mb-2" />
                   <h3 className="font-semibold">JavaScript</h3>
                   <p className="text-sm">The magic that makes things move</p>
                 </div>

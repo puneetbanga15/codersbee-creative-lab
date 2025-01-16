@@ -2,8 +2,8 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  Python, Code, Terminal, Variable, 
-  BrainCircuit, Lightbulb, BookOpen, Sparkles 
+  Code, Terminal, Variable, 
+  BrainCircuit, Lightbulb, BookOpen, Rocket 
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
 
@@ -15,7 +15,7 @@ const PythonIntro = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
             <span className="inline-flex items-center justify-center p-2 bg-blue-100 rounded-full mb-4">
-              <Python className="h-6 w-6 text-blue-500" />
+              <Code className="h-6 w-6 text-blue-500" />
             </span>
             <h1 className="text-4xl font-bold mb-4">
               Python for <span className="text-blue-500">Young Coders!</span> 🚀
@@ -118,11 +118,11 @@ else:
                   <h3 className="font-semibold mb-2">🎮 Project Ideas:</h3>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-purple-500" />
+                      <Rocket className="h-4 w-4 text-purple-500" />
                       Create a digital pet that responds to commands
                     </li>
                     <li className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-purple-500" />
+                      <Rocket className="h-4 w-4 text-purple-500" />
                       Build a simple quiz game
                     </li>
                   </ul>

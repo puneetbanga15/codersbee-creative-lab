@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   Bot, BrainCircuit, Camera, 
-  MessageSquare, Lightbulb, Shield, Rocket
+  MessageSquare, Lightbulb, Shield, Rocket, Star
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
@@ -106,15 +106,15 @@ const AIIntro = () => {
               </p>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Help solve big world problems like climate change
                 </li>
                 <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Create new medicines to help sick people
                 </li>
                 <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Make school learning more fun and personal
                 </li>
               </ul>
