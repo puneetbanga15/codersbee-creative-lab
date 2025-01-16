@@ -1,0 +1,89 @@
+import { Facebook, Youtube, Instagram, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
+
+export const Footer = () => {
+  const socialLinks = [
+    {
+      icon: Facebook,
+      href: "https://facebook.com/codersbee",
+      label: "Facebook"
+    },
+    {
+      icon: Youtube,
+      href: "https://www.youtube.com/@codersbee",
+      label: "YouTube"
+    },
+    {
+      icon: Instagram,
+      href: "https://www.instagram.com/codersbee/",
+      label: "Instagram"
+    },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/manisha-kapoor-codersbee/",
+      label: "LinkedIn"
+    }
+  ];
+
+  return (
+    <footer className="bg-white border-t mt-auto">
+      <div className="max-w-[1400px] mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-4">
+            <img 
+              src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+              alt="CodersBee Logo" 
+              className="h-12" 
+            />
+            <p className="text-gray-600">
+              Empowering young minds with coding and AI skills for the future.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li><Link to="/about" className="text-gray-600 hover:text-[#9b87f5]">About Us</Link></li>
+              <li><Link to="/tutorials" className="text-gray-600 hover:text-[#9b87f5]">Tutorials</Link></li>
+              <li><Link to="/projects" className="text-gray-600 hover:text-[#9b87f5]">Projects</Link></li>
+              <li><Link to="/quizzes" className="text-gray-600 hover:text-[#9b87f5]">Quizzes</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold mb-4">Contact</h3>
+            <ul className="space-y-2">
+              <li className="text-gray-600">Email: info@codersbee.com</li>
+              <li className="text-gray-600">WhatsApp: +91 9996465023</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold mb-4">Follow Us</h3>
+            <div className="flex space-x-4">
+              {socialLinks.map((link, index) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={index}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-[#9b87f5] transition-colors"
+                    aria-label={link.label}
+                  >
+                    <Icon className="h-6 w-6" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-8 pt-8 border-t text-center text-gray-600">
+          <p>© {new Date().getFullYear()} CodersBee. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
