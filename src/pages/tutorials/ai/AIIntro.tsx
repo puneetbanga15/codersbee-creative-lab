@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
@@ -6,6 +5,7 @@ import {
   MessageSquare, Lightbulb, Shield, Rocket
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
 const AIIntro = () => {
   return (
@@ -32,27 +32,24 @@ const AIIntro = () => {
             </CardHeader>
             <CardContent className="prose max-w-none">
               <p className="text-lg">
-                Imagine teaching a computer to think and learn, just like you do! That's what AI is all about.
+                Imagine teaching a computer to think and learn, just like you do! That's what AI is all about. 
                 It's like giving computers a super-smart brain that can:
               </p>
+              <ul className="list-none space-y-2 mt-4">
+                <li className="flex items-center gap-2">
+                  <Camera className="h-4 w-4 text-violet-500" />
+                  Recognize pictures and faces 🖼️
+                </li>
+                <li className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4 text-violet-500" />
+                  Understand and speak languages 🗣️
+                </li>
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  Create art and music 🎨
+                </li>
+              </ul>
               
-              <div className="grid md:grid-cols-2 gap-4 my-6">
-                <div className="flex items-start gap-2 p-4 bg-gray-50 rounded-lg">
-                  <Camera className="h-5 w-5 text-violet-500 mt-1" />
-                  <div>
-                    <h3 className="font-semibold">Computer Vision</h3>
-                    <p className="text-sm text-gray-600">Recognizes pictures and faces</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 p-4 bg-gray-50 rounded-lg">
-                  <MessageSquare className="h-5 w-5 text-violet-500 mt-1" />
-                  <div>
-                    <h3 className="font-semibold">Language Processing</h3>
-                    <p className="text-sm text-gray-600">Understands and speaks languages</p>
-                  </div>
-                </div>
-              </div>
-
               <Alert className="my-4 bg-violet-50 border-violet-200">
                 <Lightbulb className="h-4 w-4 text-violet-500" />
                 <AlertDescription>
@@ -63,87 +60,63 @@ const AIIntro = () => {
             </CardContent>
           </Card>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card className="border-2 border-pink-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-pink-500" />
-                  <CardTitle>Generative AI: The Creative Robot</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4">Generative AI is like having a super creative friend who can:</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-pink-500" />
-                    Write stories and poems
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-pink-500" />
-                    Create pictures from descriptions
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-pink-500" />
-                    Compose music
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-blue-100">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-blue-500" />
-                  <CardTitle>AI Safety and Ethics</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4">Important Things to Remember:</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-blue-500" />
-                    Always have a grown-up help you when using AI tools
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-blue-500" />
-                    Don't share personal information with AI
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-violet-500" />
+                <CardTitle>AI Safety and Ethics</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <h3 className="font-semibold mb-4">Important Things to Remember:</h3>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  Always have a grown-up help you when using AI tools
+                </li>
+                <li className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  Don't share personal information with AI
+                </li>
+                <li className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  Remember that AI can make mistakes
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Rocket className="h-5 w-5 text-green-500" />
+                <Rocket className="h-5 w-5 text-violet-500" />
                 <CardTitle>The Future of AI</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="mb-4">Amazing Things AI Might Do in the Future:</p>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Rocket className="h-4 w-4 text-green-500" />
-                    Help solve big world problems
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Rocket className="h-4 w-4 text-green-500" />
-                    Create new medicines
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Rocket className="h-4 w-4 text-green-500" />
-                    Make school learning more fun
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Rocket className="h-4 w-4 text-green-500" />
-                    Help us explore space
-                  </div>
-                </div>
-              </div>
+              <p className="text-lg mb-4">
+                Amazing Things AI Might Do in the Future:
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  Help solve big world problems like climate change
+                </li>
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  Create new medicines to help sick people
+                </li>
+                <li className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-violet-500" />
+                  Make school learning more fun and personal
+                </li>
+              </ul>
+              <Alert className="mt-6 bg-gradient-to-r from-violet-50 to-purple-50">
+                <Lightbulb className="h-4 w-4 text-violet-500" />
+                <AlertDescription>
+                  <strong>Remember:</strong> You might be the one who creates these amazing AI tools in the future!
+                </AlertDescription>
+              </Alert>
             </CardContent>
           </Card>
         </div>
