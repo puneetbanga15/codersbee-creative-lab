@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  BrainCircuit, Robot, Sparkles, Camera, 
+  BrainCircuit, Bot, Sparkles, Camera, 
   MessageSquare, Lightbulb, Shield, Rocket
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -26,7 +26,7 @@ const AIIntro = () => {
           <Card className="mb-8 border-2 border-violet-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Robot className="h-5 w-5 text-violet-500" />
+                <Bot className="h-5 w-5 text-violet-500" />
                 What is Artificial Intelligence?
               </CardTitle>
             </CardHeader>
