@@ -33,7 +33,7 @@ const AIIntro = () => {
             <CardContent className="prose max-w-none">
               <div className="mb-6">
                 <img 
-                  src="/lovable-uploads/7c318289-2705-45cb-87bc-48136d3d5c41.png"
+                  src="/lovable-uploads/5fc57204-8f93-46fc-8741-f12cb6e4069b.png"
                   alt="AI Robot teaching basics"
                   className="w-full rounded-lg shadow-lg mb-4"
                 />
@@ -70,15 +70,15 @@ const AIIntro = () => {
               <h3 className="font-semibold mb-4">Important Things to Remember:</h3>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Always have a grown-up help you when using AI tools
                 </li>
                 <li className="flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Don't share personal information with AI
                 </li>
                 <li className="flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-violet-500" />
+                  <Star className="h-4 w-4 text-violet-500" />
                   Remember that AI can make mistakes
                 </li>
               </ul>

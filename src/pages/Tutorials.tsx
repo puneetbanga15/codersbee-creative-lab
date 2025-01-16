@@ -33,7 +33,7 @@ const Tutorials = () => {
       title: "AI Basics",
       description: "Introduction to Artificial Intelligence",
       link: "/tutorials/ai/intro",
-      image: "/lovable-uploads/b2323e0e-df5b-4ee7-8e19-7c263d1a853b.png",
+      image: "/lovable-uploads/5fc57204-8f93-46fc-8741-f12cb6e4069b.png",
       isAvailable: true
     }
   ];

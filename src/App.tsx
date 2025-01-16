@@ -15,6 +15,9 @@ import Quizzes from "./pages/Quizzes";
 import Projects from "./pages/Projects";
 import Tutorials from "./pages/Tutorials";
 import ScratchIntro from "./pages/tutorials/scratch/ScratchIntro";
+import PythonIntro from "./pages/tutorials/python/PythonIntro";
+import WebIntro from "./pages/tutorials/web/WebIntro";
+import AIIntro from "./pages/tutorials/ai/AIIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
 
 const queryClient = new QueryClient();
@@ -39,6 +42,9 @@ const App = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/tutorials" element={<Tutorials />} />
               <Route path="/tutorials/scratch/intro" element={<ScratchIntro />} />
+              <Route path="/tutorials/python/intro" element={<PythonIntro />} />
+              <Route path="/tutorials/web/intro" element={<WebIntro />} />
+              <Route path="/tutorials/ai/intro" element={<AIIntro />} />
               <Route path="/certificate" element={<VerifyCertificate />} />
             </Routes>
           </BrowserRouter>
