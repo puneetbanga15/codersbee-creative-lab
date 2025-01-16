@@ -13,6 +13,8 @@ import TeacherLogin from "./pages/TeacherLogin";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import Quizzes from "./pages/Quizzes";
 import Projects from "./pages/Projects";
+import Tutorials from "./pages/Tutorials";
+import ScratchIntro from "./pages/tutorials/scratch/ScratchIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => {
               <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
               <Route path="/quizzes" element={<Quizzes />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/tutorials" element={<Tutorials />} />
+              <Route path="/tutorials/scratch/intro" element={<ScratchIntro />} />
               <Route path="/certificate" element={<VerifyCertificate />} />
             </Routes>
           </BrowserRouter>
