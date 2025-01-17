@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Quiz } from "@/components/Quiz";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,9 @@ export const QuizContainer = ({ quizId, onBack }: QuizContainerProps) => {
       <div className="container mx-auto px-4 pt-24">
         <Button 
           onClick={onBack} 
-          className="mb-8 hover:bg-codersbee-vivid hover:text-white"
+          className="mb-4"
           variant="outline"
-          size="lg"
         >
-          <ChevronLeft className="w-4 h-4 mr-2" />
           Back to Quizzes
         </Button>
         <Quiz quizId={quizId} />

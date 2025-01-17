@@ -8,10 +8,15 @@ import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lu
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -68,6 +73,26 @@ const ParentsLogin = () => {
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email + "@parent.codersbee.com",
+        password,
+      });
+
+      if (error) throw error;
+      navigate("/parents/dashboard");
+    } catch (error: any) {
+      console.error("Error during login:", error);
+      toast.error(error.message || "Error during login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -161,27 +186,40 @@ const ParentsLogin = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <Auth
-                supabaseClient={supabase}
-                appearance={{ 
-                  theme: ThemeSupa,
-                  style: {
-                    button: {
-                      background: 'rgb(139, 92, 246)',
-                      color: 'white',
-                    },
-                    anchor: {
-                      color: 'rgb(139, 92, 246)',
-                      display: 'none', // Hide all links
-                    },
-                  },
-                }}
-                theme="light"
-                providers={[]}
-                view="sign_in"
-                showLinks={false}
-                redirectTo={window.location.origin + "/parents/dashboard"}
-              />
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Username</Label>
+                  <div className="flex">
+                    <Input
+                      id="email"
+                      type="text"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="rounded-r-none"
+                      placeholder="username"
+                    />
+                    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                      @parent.codersbee.com
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing in..." : "Sign in"}
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </div>
