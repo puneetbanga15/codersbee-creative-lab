@@ -1,16 +1,14 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard, Award, FileText } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -142,11 +140,11 @@ const ParentsLogin = () => {
               <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
                 <CardContent className="flex items-start gap-4 p-4">
                   <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <MessageCircle className="w-6 h-6 text-codersbee-vivid" />
+                    <FileText className="w-6 h-6 text-codersbee-vivid" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Direct Teacher Communication</h3>
-                    <p className="text-gray-600">Share feedback and stay connected with teachers</p>
+                    <h3 className="font-semibold mb-1">Student Feedback</h3>
+                    <p className="text-gray-600">Access detailed feedback and progress reports after each class</p>
                   </div>
                 </CardContent>
               </Card>
@@ -154,11 +152,11 @@ const ParentsLogin = () => {
               <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
                 <CardContent className="flex items-start gap-4 p-4">
                   <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <BookOpen className="w-6 h-6 text-codersbee-vivid" />
+                    <Award className="w-6 h-6 text-codersbee-vivid" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Learning Resources</h3>
-                    <p className="text-gray-600">Access curated videos and advanced courses</p>
+                    <h3 className="font-semibold mb-1">Certificate Downloads</h3>
+                    <p className="text-gray-600">Download and share your child's achievement certificates</p>
                   </div>
                 </CardContent>
               </Card>
@@ -220,6 +218,17 @@ const ParentsLogin = () => {
                   {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
               </form>
+              <div className="mt-6 text-center text-sm text-gray-600">
+                <p>Already joined CodersBee but don't have login information?</p>
+                <p>Having trouble logging in?</p>
+                <Button 
+                  variant="link" 
+                  className="text-codersbee-vivid mt-2"
+                  onClick={() => window.open('https://wa.me/919996465023', '_blank')}
+                >
+                  Reach out to us on WhatsApp
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

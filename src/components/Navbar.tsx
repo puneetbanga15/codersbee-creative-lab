@@ -41,7 +41,7 @@ export const Navbar = () => {
           {/* Logo and Brand Section */}
           <Link to="/" className="flex items-center gap-x-2">
             <img 
-              src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+              src="/lovable-uploads/90b2e389-3499-4dd5-b250-48a897f04da9.png" 
               alt="CodersBee Logo" 
               className="h-12" 
             />
