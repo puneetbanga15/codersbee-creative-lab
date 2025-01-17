@@ -70,7 +70,7 @@ export const Footer = () => {
           {/* Logo and Description */}
           <div className="space-y-4">
             <img 
-              src="/lovable-uploads/90b2e389-3499-4dd5-b250-48a897f04da9.png" 
+              src="/lovable-uploads/Logo Transparent PNG.png" 
               alt="CodersBee Logo" 
               className="h-12" 
             />
@@ -126,7 +126,6 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="border-t border-white/10 px-6 py-6">
           <div className="text-center text-gray-600">
             <p>© {new Date().getFullYear()} CodersBee. All Rights Reserved.</p>
