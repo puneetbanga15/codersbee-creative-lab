@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard, Award, FileText } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard, Award, FileText, Download, MessageSquare } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { toast } from "sonner";
@@ -100,6 +100,34 @@ const ParentsLogin = () => {
     );
   }
 
+  const benefits = [
+    {
+      icon: MessageSquare,
+      title: "Student Feedback",
+      description: "Access detailed feedback and progress reports after each class"
+    },
+    {
+      icon: Download,
+      title: "Certificate Downloads",
+      description: "Download and share your child's achievement certificates"
+    },
+    {
+      icon: Calendar,
+      title: "Class Scheduling",
+      description: "View and manage your child's class schedule with ease"
+    },
+    {
+      icon: CreditCard,
+      title: "Easy Fee Payments",
+      description: "Manage and track fee payments securely online"
+    },
+    {
+      icon: Award,
+      title: "Progress Tracking",
+      description: "Monitor your child's achievements and milestones"
+    }
+  ];
+
   return (
     <>
       <Navbar />
@@ -113,65 +141,19 @@ const ParentsLogin = () => {
             </h1>
             
             <div className="grid gap-4">
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <GraduationCap className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Track Learning Progress</h3>
-                    <p className="text-gray-600">Monitor your child's achievements and growth in real-time</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <Calendar className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Class Scheduling</h3>
-                    <p className="text-gray-600">View and request class rescheduling with ease</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <FileText className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Student Feedback</h3>
-                    <p className="text-gray-600">Access detailed feedback and progress reports after each class</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <Award className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Certificate Downloads</h3>
-                    <p className="text-gray-600">Download and share your child's achievement certificates</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <CreditCard className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Easy Fee Payments</h3>
-                    <p className="text-gray-600">Manage and track fee payments securely online</p>
-                  </div>
-                </CardContent>
-              </Card>
+              {benefits.map((benefit, index) => (
+                <Card key={index} className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
+                  <CardContent className="flex items-start gap-4 p-4">
+                    <div className="p-2 bg-codersbee-purple/20 rounded-lg">
+                      <benefit.icon className="w-6 h-6 text-codersbee-vivid" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                      <p className="text-gray-600">{benefit.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
 
