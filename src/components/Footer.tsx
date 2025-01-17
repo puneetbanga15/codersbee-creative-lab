@@ -37,7 +37,6 @@ export const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-codersbee-purple to-codersbee-vivid/20 mt-auto">
       <div className="max-w-[1400px] mx-auto">
-        {/* CTA Section */}
         <div className="border-b border-white/10">
           <div className="px-6 py-12 text-center">
             <h2 className="text-3xl font-bold mb-4 text-codersbee-dark">
@@ -70,7 +69,7 @@ export const Footer = () => {
           {/* Logo and Description */}
           <div className="space-y-4">
             <img 
-              src="/lovable-uploads/Logo Transparent PNG.png" 
+              src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" 
               alt="CodersBee Logo" 
               className="h-12" 
             />
