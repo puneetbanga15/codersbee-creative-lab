@@ -119,7 +119,7 @@ export const CreateCertificateDialog = ({ open, onOpenChange }: CreateCertificat
                 <div className="absolute top-0 right-0 w-16 h-16 bg-codersbee-yellow rounded-bl-full animate-float" />
                 <div className="text-center space-y-6 relative z-10">
                   <img 
-                    src="/lovable-uploads/b50fbc0a-2707-4d3e-867a-240d788493a0.png" 
+                    src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" 
                     alt="Codersbee Logo" 
                     className="mx-auto h-20"
                   />

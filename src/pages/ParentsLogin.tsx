@@ -1,16 +1,14 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard } from "lucide-react";
+import { BookOpen, MessageCircle, GraduationCap, Calendar, CreditCard, Award, FileText, Download, MessageSquare } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const ParentsLogin = () => {
   const navigate = useNavigate();
@@ -102,6 +100,34 @@ const ParentsLogin = () => {
     );
   }
 
+  const benefits = [
+    {
+      icon: MessageSquare,
+      title: "Student Feedback",
+      description: "Access detailed feedback and progress reports after each class"
+    },
+    {
+      icon: Download,
+      title: "Certificate Downloads",
+      description: "Download and share your child's achievement certificates"
+    },
+    {
+      icon: Calendar,
+      title: "Class Scheduling",
+      description: "View and manage your child's class schedule with ease"
+    },
+    {
+      icon: CreditCard,
+      title: "Easy Fee Payments",
+      description: "Manage and track fee payments securely online"
+    },
+    {
+      icon: Award,
+      title: "Progress Tracking",
+      description: "Monitor your child's achievements and milestones"
+    }
+  ];
+
   return (
     <>
       <Navbar />
@@ -115,65 +141,19 @@ const ParentsLogin = () => {
             </h1>
             
             <div className="grid gap-4">
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <GraduationCap className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Track Learning Progress</h3>
-                    <p className="text-gray-600">Monitor your child's achievements and growth in real-time</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <Calendar className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Class Scheduling</h3>
-                    <p className="text-gray-600">View and request class rescheduling with ease</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <MessageCircle className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Direct Teacher Communication</h3>
-                    <p className="text-gray-600">Share feedback and stay connected with teachers</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <BookOpen className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Learning Resources</h3>
-                    <p className="text-gray-600">Access curated videos and advanced courses</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
-                <CardContent className="flex items-start gap-4 p-4">
-                  <div className="p-2 bg-codersbee-purple/20 rounded-lg">
-                    <CreditCard className="w-6 h-6 text-codersbee-vivid" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Easy Fee Payments</h3>
-                    <p className="text-gray-600">Manage and track fee payments securely online</p>
-                  </div>
-                </CardContent>
-              </Card>
+              {benefits.map((benefit, index) => (
+                <Card key={index} className="border-l-4 border-l-codersbee-vivid hover:shadow-lg transition-shadow">
+                  <CardContent className="flex items-start gap-4 p-4">
+                    <div className="p-2 bg-codersbee-purple/20 rounded-lg">
+                      <benefit.icon className="w-6 h-6 text-codersbee-vivid" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                      <p className="text-gray-600">{benefit.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
 
@@ -220,6 +200,17 @@ const ParentsLogin = () => {
                   {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
               </form>
+              <div className="mt-6 text-center text-sm text-gray-600">
+                <p>Already joined CodersBee but don't have login information?</p>
+                <p>Having trouble logging in?</p>
+                <Button 
+                  variant="link" 
+                  className="text-codersbee-vivid mt-2"
+                  onClick={() => window.open('https://wa.me/919996465023', '_blank')}
+                >
+                  Reach out to us on WhatsApp
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
