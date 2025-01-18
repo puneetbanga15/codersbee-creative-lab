@@ -49,31 +49,35 @@ const TeacherLogin = () => {
       const cleanEmail = email.trim().toLowerCase();
       const fullEmail = cleanEmail.includes('@') ? cleanEmail : cleanEmail + domain;
 
+      console.log('Attempting login with email:', fullEmail); // Debug log
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: fullEmail,
-        password,
+        password: password.trim(),
       });
 
       if (error) {
         console.error('Login error:', error);
-        if (error.message.includes("Invalid login credentials")) {
-          toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: "Invalid username or password. Please check your credentials and try again.",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Login Error",
-            description: error.message,
-          });
-        }
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: error.message === "Invalid login credentials" 
+            ? "Invalid username or password. Please check your credentials and try again."
+            : error.message,
+        });
         return;
       }
 
-      if (data.session) {
+      if (data?.session) {
+        console.log('Login successful, redirecting...'); // Debug log
         navigate("/teachers/dashboard");
+      } else {
+        console.error('No session after successful login'); // Debug log
+        toast({
+          variant: "destructive",
+          title: "Login Error",
+          description: "Failed to create session. Please try again.",
+        });
       }
     } catch (error: any) {
       console.error('Unexpected error:', error);
