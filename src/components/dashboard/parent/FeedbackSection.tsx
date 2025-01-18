@@ -43,7 +43,7 @@ export const FeedbackSection = () => {
           student:students(
             full_name
           ),
-          created_by:profiles!student_feedback_created_by_fkey(
+          created_by:profiles(
             full_name,
             role
           )
