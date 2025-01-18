@@ -37,11 +37,13 @@ export const FeedbackSection = () => {
       const { data, error } = await supabase
         .from('student_feedback')
         .select(`
-          *,
+          id,
+          feedback_date,
+          feedback_text,
           student:students(
             full_name
           ),
-          created_by:profiles(
+          created_by:profiles!student_feedback_created_by_fkey(
             full_name,
             role
           )
