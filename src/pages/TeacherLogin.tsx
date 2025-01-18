@@ -17,24 +17,70 @@ const TeacherLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email + domain,
-        password,
-      });
-
-      if (error) throw error;
-
-      navigate("/teachers/dashboard");
-    } catch (error: any) {
+  const validateInputs = () => {
+    if (!email.trim()) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: "Please enter your username",
+      });
+      return false;
+    }
+    if (!password.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please enter your password",
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateInputs()) return;
+    
+    setIsLoading(true);
+
+    try {
+      // Clean the email input and concatenate with domain
+      const cleanEmail = email.trim().toLowerCase();
+      const fullEmail = cleanEmail.includes('@') ? cleanEmail : cleanEmail + domain;
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: fullEmail,
+        password,
+      });
+
+      if (error) {
+        console.error('Login error:', error);
+        if (error.message.includes("Invalid login credentials")) {
+          toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: "Invalid username or password. Please check your credentials and try again.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Login Error",
+            description: error.message,
+          });
+        }
+        return;
+      }
+
+      if (data.session) {
+        navigate("/teachers/dashboard");
+      }
+    } catch (error: any) {
+      console.error('Unexpected error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -65,8 +111,13 @@ const TeacherLogin = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="rounded-md"
                     placeholder="username"
+                    disabled={isLoading}
                   />
-                  <Select value={domain} onValueChange={setDomain}>
+                  <Select 
+                    value={domain} 
+                    onValueChange={setDomain}
+                    disabled={isLoading}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select domain" />
                     </SelectTrigger>
@@ -85,6 +136,7 @@ const TeacherLogin = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
                 />
               </div>
 
