@@ -17,6 +17,7 @@ export const ParentsTab = () => {
   const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<{ id: string; name: string } | null>(null);
+  const [feeDialogOpen, setFeeDialogOpen] = useState(false);
 
   const { data: parents, isLoading, refetch } = useQuery({
     queryKey: ['parents'],
@@ -57,6 +58,33 @@ export const ParentsTab = () => {
   const handleAddPayment = (studentId: string, studentName: string) => {
     setSelectedStudent({ id: studentId, name: studentName });
     setPaymentDialogOpen(true);
+  };
+
+  const handleAddFee = (studentId: string, studentName: string) => {
+    setSelectedStudent({ id: studentId, name: studentName });
+    setFeeDialogOpen(true);
+  };
+
+  const handleAddFeeSubmit = async (data: any) => {
+    try {
+      const { error } = await supabase
+        .from('fee_management')
+        .insert({
+          student_id: selectedStudent?.id,
+          amount: data.amount,
+          due_date: data.dueDate,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      toast.success("Fee details added successfully");
+      setFeeDialogOpen(false);
+      refetch();
+    } catch (error) {
+      console.error('Error adding fee:', error);
+      toast.error("Failed to add fee details");
+    }
   };
 
   const totalStudents = parents?.reduce((acc, parent) => acc + (parent.students?.length || 0), 0) || 0;
@@ -157,6 +185,13 @@ export const ParentsTab = () => {
                             >
                               Update Payment
                             </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAddFee(student.id, student.full_name)}
+                            >
+                              Add Fee Details
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -226,6 +261,42 @@ export const ParentsTab = () => {
             onOpenChange={setPaymentDialogOpen}
             onSuccess={refetch}
           />
+          <Dialog open={feeDialogOpen} onOpenChange={setFeeDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Fee Details for {selectedStudent.name}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleAddFeeSubmit({
+                  amount: parseFloat(formData.get('amount') as string),
+                  dueDate: formData.get('dueDate')
+                });
+              }} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Amount</label>
+                  <input
+                    type="number"
+                    name="amount"
+                    required
+                    className="w-full p-2 border rounded"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Due Date</label>
+                  <input
+                    type="date"
+                    name="dueDate"
+                    required
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <Button type="submit">Add Fee Details</Button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </>
       )}
     </div>
