@@ -13,7 +13,7 @@ const TeacherLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [domain, setDomain] = useState("@teacher.codersbee.com");
+  const [domain, setDomain] = useState("@admin.codersbee.com");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -126,8 +126,8 @@ const TeacherLogin = () => {
                       <SelectValue placeholder="Select domain" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="@teacher.codersbee.com">@teacher.codersbee.com</SelectItem>
                       <SelectItem value="@admin.codersbee.com">@admin.codersbee.com</SelectItem>
+                      <SelectItem value="@teacher.codersbee.com">@teacher.codersbee.com</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
