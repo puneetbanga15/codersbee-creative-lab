@@ -5,6 +5,19 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
 import { Loader2, MessageSquare } from "lucide-react";
 
+interface FeedbackData {
+  id: string;
+  feedback_date: string;
+  feedback_text: string;
+  student: {
+    full_name: string;
+  };
+  created_by: {
+    full_name: string;
+    role: string;
+  } | null;
+}
+
 export const FeedbackSection = () => {
   const { data: feedback, isLoading } = useQuery({
     queryKey: ['parent-feedback'],
@@ -37,7 +50,7 @@ export const FeedbackSection = () => {
         .order('feedback_date', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data as FeedbackData[];
     },
   });
 

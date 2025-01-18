@@ -6,8 +6,30 @@ import { format } from "date-fns";
 import { Loader2, CreditCard, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+interface PaymentTracking {
+  id: string;
+  paid_until_date: string;
+  payment_mode: string | null;
+  payment_reference: string | null;
+  student: {
+    full_name: string;
+  };
+}
+
+interface FeeManagement {
+  id: string;
+  amount: number;
+  status: string;
+  due_date: string;
+}
+
+interface PaymentData {
+  payments: PaymentTracking[];
+  pendingFees: FeeManagement[];
+}
+
 export const PaymentTrackingSection = () => {
-  const { data: payments, isLoading } = useQuery({
+  const { data: payments, isLoading } = useQuery<PaymentData>({
     queryKey: ['parent-payment-tracking'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -18,7 +40,7 @@ export const PaymentTrackingSection = () => {
         .select('id')
         .eq('parent_id', user.id);
 
-      if (!students?.length) return [];
+      if (!students?.length) return { payments: [], pendingFees: [] };
 
       const studentIds = students.map(s => s.id);
 
