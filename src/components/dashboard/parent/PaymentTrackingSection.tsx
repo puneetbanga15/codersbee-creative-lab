@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
-import { Loader2, CreditCard } from "lucide-react";
+import { Loader2, CreditCard, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const PaymentTrackingSection = () => {
   const { data: payments, isLoading } = useQuery({
@@ -21,19 +22,30 @@ export const PaymentTrackingSection = () => {
 
       const studentIds = students.map(s => s.id);
 
-      const { data, error } = await supabase
-        .from('payment_tracking')
-        .select(`
-          *,
-          student:students(
-            full_name
-          )
-        `)
-        .in('student_id', studentIds)
-        .order('paid_until_date', { ascending: false });
+      // Get both payment tracking and fee management data
+      const [paymentTrackingData, feeManagementData] = await Promise.all([
+        supabase
+          .from('payment_tracking')
+          .select(`
+            *,
+            student:students(
+              full_name
+            )
+          `)
+          .in('student_id', studentIds)
+          .order('paid_until_date', { ascending: false }),
+        
+        supabase
+          .from('fee_management')
+          .select('*')
+          .in('student_id', studentIds)
+          .eq('status', 'pending')
+      ]);
 
-      if (error) throw error;
-      return data;
+      return {
+        payments: paymentTrackingData.data || [],
+        pendingFees: feeManagementData.data || []
+      };
     },
   });
 
@@ -50,11 +62,20 @@ export const PaymentTrackingSection = () => {
           <div className="flex items-center justify-center p-4">
             <Loader2 className="h-6 w-6 animate-spin" />
           </div>
-        ) : payments?.length === 0 ? (
+        ) : !payments?.payments.length ? (
           <p className="text-center text-muted-foreground">No payment records available.</p>
         ) : (
           <div className="space-y-4">
-            {payments?.map((payment) => (
+            {payments.pendingFees.length > 0 && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  You have {payments.pendingFees.length} pending payment(s). Please contact administration.
+                </AlertDescription>
+              </Alert>
+            )}
+            
+            {payments.payments.map((payment) => (
               <div key={payment.id} className="border-b pb-4 last:border-0">
                 <div className="flex justify-between items-start">
                   <div>

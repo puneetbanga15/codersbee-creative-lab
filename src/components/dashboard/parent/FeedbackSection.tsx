@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
+import { Loader2, MessageSquare } from "lucide-react";
 
 export const FeedbackSection = () => {
   const { data: feedback, isLoading } = useQuery({
@@ -27,6 +27,10 @@ export const FeedbackSection = () => {
           *,
           student:students(
             full_name
+          ),
+          created_by:profiles(
+            full_name,
+            role
           )
         `)
         .in('student_id', studentIds)
@@ -40,7 +44,10 @@ export const FeedbackSection = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Student Feedback</CardTitle>
+        <div className="flex items-center gap-2">
+          <MessageSquare className="w-5 h-5 text-codersbee-vivid" />
+          <CardTitle>Student Feedback</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -59,6 +66,11 @@ export const FeedbackSection = () => {
                     <p className="text-sm text-muted-foreground">
                       {format(new Date(item.feedback_date), 'PPP')}
                     </p>
+                    {item.created_by && (
+                      <p className="text-xs text-muted-foreground">
+                        By: {item.created_by.full_name} ({item.created_by.role})
+                      </p>
+                    )}
                   </div>
                 </div>
                 <p className="text-sm">{item.feedback_text}</p>
