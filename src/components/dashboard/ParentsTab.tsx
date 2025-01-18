@@ -3,27 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AddParentForm } from "../AddParentForm";
 import { Card } from "@/components/ui/card";
 import { Loader2, Users, GraduationCap, CreditCard } from "lucide-react";
+import { AddFeedbackDialog } from "./admin/AddFeedbackDialog";
+import { AddPaymentTrackingDialog } from "./admin/AddPaymentTrackingDialog";
 
 export const ParentsTab = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedParent, setSelectedParent] = useState<any>(null);
+  const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<{ id: string; name: string } | null>(null);
 
   const { data: parents, isLoading, refetch } = useQuery({
     queryKey: ['parents'],
@@ -51,29 +44,19 @@ export const ParentsTab = () => {
     },
   });
 
-  const updateFeeStatus = async (studentId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('fee_payments')
-        .insert({
-          student_id: studentId,
-          amount: 0,
-          status: status,
-          description: 'Manual status update'
-        });
-
-      if (error) throw error;
-      toast.success('Fee status updated successfully');
-      refetch();
-    } catch (error) {
-      console.error('Error updating fee status:', error);
-      toast.error('Failed to update fee status');
-    }
-  };
-
   const handleEdit = (parent: any) => {
     setSelectedParent(parent);
     setEditDialogOpen(true);
+  };
+
+  const handleAddFeedback = (studentId: string, studentName: string) => {
+    setSelectedStudent({ id: studentId, name: studentName });
+    setFeedbackDialogOpen(true);
+  };
+
+  const handleAddPayment = (studentId: string, studentName: string) => {
+    setSelectedStudent({ id: studentId, name: studentName });
+    setPaymentDialogOpen(true);
   };
 
   const totalStudents = parents?.reduce((acc, parent) => acc + (parent.students?.length || 0), 0) || 0;
@@ -146,7 +129,6 @@ export const ParentsTab = () => {
                 <TableHead>Phone</TableHead>
                 <TableHead>Children</TableHead>
                 <TableHead>Courses</TableHead>
-                <TableHead>Fee Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -160,6 +142,22 @@ export const ParentsTab = () => {
                       {parent.students?.map((student: any) => (
                         <div key={student.id} className="border-b pb-2 last:border-0">
                           <p className="font-medium">{student.full_name}</p>
+                          <div className="flex gap-2 mt-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAddFeedback(student.id, student.full_name)}
+                            >
+                              Add Feedback
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAddPayment(student.id, student.full_name)}
+                            >
+                              Update Payment
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -176,25 +174,6 @@ export const ParentsTab = () => {
                         </div>
                       ))}
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    {parent.students?.map((student: any) => (
-                      <div key={student.id} className="mb-2">
-                        <Select
-                          onValueChange={(value) => updateFeeStatus(student.id, value)}
-                          defaultValue="pending"
-                        >
-                          <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Select status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="paid">Paid</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="overdue">Overdue</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ))}
                   </TableCell>
                   <TableCell>
                     <Button 
@@ -230,6 +209,25 @@ export const ParentsTab = () => {
           />
         </DialogContent>
       </Dialog>
+
+      {selectedStudent && (
+        <>
+          <AddFeedbackDialog
+            studentId={selectedStudent.id}
+            studentName={selectedStudent.name}
+            open={feedbackDialogOpen}
+            onOpenChange={setFeedbackDialogOpen}
+            onSuccess={refetch}
+          />
+          <AddPaymentTrackingDialog
+            studentId={selectedStudent.id}
+            studentName={selectedStudent.name}
+            open={paymentDialogOpen}
+            onOpenChange={setPaymentDialogOpen}
+            onSuccess={refetch}
+          />
+        </>
+      )}
     </div>
   );
 };

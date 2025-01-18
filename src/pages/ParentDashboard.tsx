@@ -9,6 +9,8 @@ import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
 import { StudentInformation } from "@/components/dashboard/parent/StudentInformation";
 import { CertificatesSection } from "@/components/dashboard/parent/CertificatesSection";
+import { FeedbackSection } from "@/components/dashboard/parent/FeedbackSection";
+import { PaymentTrackingSection } from "@/components/dashboard/parent/PaymentTrackingSection";
 import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -121,6 +123,10 @@ const ParentDashboard = () => {
                   <UpcomingClasses schedules={schedules} />
                   <RecentPayments payments={payments} />
                   <StudentInformation students={students} />
+                </div>
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                  <FeedbackSection />
+                  <PaymentTrackingSection />
                 </div>
                 <div className="mt-6">
                   <CertificatesSection />

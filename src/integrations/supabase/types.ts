@@ -402,6 +402,44 @@ export type Database = {
           },
         ]
       }
+      payment_tracking: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          paid_until_date: string
+          payment_mode: string | null
+          payment_reference: string | null
+          student_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          paid_until_date: string
+          payment_mode?: string | null
+          payment_reference?: string | null
+          student_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          paid_until_date?: string
+          payment_mode?: string | null
+          payment_reference?: string | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_tracking_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -601,6 +639,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "student_documents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_feedback: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          feedback_date: string
+          feedback_text: string
+          id: string
+          student_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          feedback_date?: string
+          feedback_text: string
+          id?: string
+          student_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          feedback_date?: string
+          feedback_text?: string
+          id?: string
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_feedback_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
