@@ -69,7 +69,7 @@ const ParentDashboard = () => {
             .limit(10);
 
           if (schedulesError) throw schedulesError;
-          setSchedules(schedulesData || []);
+          setSchedules(schedulesData as ClassSchedule[] || []);
 
           // Fetch recent payments
           const { data: paymentsData, error: paymentsError } = await supabase

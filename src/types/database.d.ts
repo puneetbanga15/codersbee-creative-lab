@@ -4,6 +4,7 @@ export interface Student {
   full_name: string;
   parent_id?: string;
   timezone?: string;
+  readable_id: string;
 }
 
 export interface ClassSchedule {
@@ -12,6 +13,9 @@ export interface ClassSchedule {
   status: string;
   student_id?: string;
   teacher_id?: string;
+  teacher: {
+    full_name: string;
+  };
 }
 
 export interface FeePayment {
