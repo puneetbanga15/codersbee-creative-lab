@@ -13,16 +13,22 @@ import { FeedbackSection } from "@/components/dashboard/parent/FeedbackSection";
 import { PaymentTrackingSection } from "@/components/dashboard/parent/PaymentTrackingSection";
 import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { format } from "date-fns";
+import { formatInTimeZone } from 'date-fns-tz';
 
 interface Student {
   id: string;
   full_name: string;
+  readable_id: string;
 }
 
 interface ClassSchedule {
   id: string;
   scheduled_at: string;
   status: string;
+  teacher: {
+    full_name: string;
+  };
 }
 
 interface FeePayment {
@@ -53,27 +59,46 @@ const ParentDashboard = () => {
       try {
         const { data: studentsData, error: studentsError } = await supabase
           .from('students')
-          .select('*')
+          .select(`
+            id,
+            full_name,
+            readable_id,
+            class_schedules(
+              id,
+              scheduled_at,
+              status,
+              teacher:profiles(full_name)
+            )
+          `)
           .eq('parent_id', session.user.id);
 
         if (studentsError) throw studentsError;
         setStudents(studentsData || []);
 
-        if (studentsData && studentsData.length > 0) {
+        // Fetch upcoming classes for all students
+        const studentIds = studentsData?.map(s => s.id) || [];
+        if (studentIds.length > 0) {
           const { data: schedulesData, error: schedulesError } = await supabase
             .from('class_schedules')
-            .select('*')
-            .eq('student_id', studentsData[0].id)
+            .select(`
+              id,
+              scheduled_at,
+              status,
+              teacher:profiles(full_name)
+            `)
+            .in('student_id', studentIds)
+            .gte('scheduled_at', new Date().toISOString())
             .order('scheduled_at', { ascending: true })
-            .limit(5);
+            .limit(10);
 
           if (schedulesError) throw schedulesError;
           setSchedules(schedulesData || []);
 
+          // Fetch recent payments
           const { data: paymentsData, error: paymentsError } = await supabase
             .from('fee_payments')
             .select('*')
-            .eq('student_id', studentsData[0].id)
+            .in('student_id', studentIds)
             .order('payment_date', { ascending: false })
             .limit(5);
 
@@ -93,6 +118,12 @@ const ParentDashboard = () => {
 
     checkAuth();
   }, [navigate, toast]);
+
+  const formatClassTime = (dateStr: string) => {
+    const istTime = formatInTimeZone(new Date(dateStr), 'Asia/Kolkata', 'h:mm a z');
+    const centralTime = formatInTimeZone(new Date(dateStr), 'America/Chicago', 'h:mm a z');
+    return `${istTime} / ${centralTime}`;
+  };
 
   if (loading) {
     return (
@@ -120,7 +151,12 @@ const ParentDashboard = () => {
             ) : (
               <>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <UpcomingClasses schedules={schedules} />
+                  <UpcomingClasses 
+                    schedules={schedules.map(schedule => ({
+                      ...schedule,
+                      scheduled_at: formatClassTime(schedule.scheduled_at)
+                    }))} 
+                  />
                   <RecentPayments payments={payments} />
                   <StudentInformation students={students} />
                 </div>

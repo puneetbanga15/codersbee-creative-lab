@@ -177,6 +177,7 @@ export type Database = {
       }
       course_enrollments: {
         Row: {
+          class_frequency: string | null
           course_name: string
           created_at: string
           id: string
@@ -185,6 +186,7 @@ export type Database = {
           teacher_id: string | null
         }
         Insert: {
+          class_frequency?: string | null
           course_name: string
           created_at?: string
           id?: string
@@ -193,6 +195,7 @@ export type Database = {
           teacher_id?: string | null
         }
         Update: {
+          class_frequency?: string | null
           course_name?: string
           created_at?: string
           id?: string
@@ -447,6 +450,7 @@ export type Database = {
           id: string
           is_parent: boolean | null
           phone_number: string | null
+          preferred_timezone: string | null
           role: Database["public"]["Enums"]["user_role"] | null
         }
         Insert: {
@@ -455,6 +459,7 @@ export type Database = {
           id: string
           is_parent?: boolean | null
           phone_number?: string | null
+          preferred_timezone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
         }
         Update: {
@@ -463,6 +468,7 @@ export type Database = {
           id?: string
           is_parent?: boolean | null
           phone_number?: string | null
+          preferred_timezone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
         }
         Relationships: []
@@ -727,6 +733,7 @@ export type Database = {
           full_name: string
           id: string
           parent_id: string | null
+          readable_id: string | null
           timezone: string | null
         }
         Insert: {
@@ -734,6 +741,7 @@ export type Database = {
           full_name: string
           id?: string
           parent_id?: string | null
+          readable_id?: string | null
           timezone?: string | null
         }
         Update: {
@@ -741,6 +749,7 @@ export type Database = {
           full_name?: string
           id?: string
           parent_id?: string | null
+          readable_id?: string | null
           timezone?: string | null
         }
         Relationships: [
