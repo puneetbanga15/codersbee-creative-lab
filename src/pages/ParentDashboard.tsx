@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/dashboard/parent/DashboardHeader";
 import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
@@ -13,31 +13,7 @@ import { FeedbackSection } from "@/components/dashboard/parent/FeedbackSection";
 import { PaymentTrackingSection } from "@/components/dashboard/parent/PaymentTrackingSection";
 import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { format } from "date-fns";
 import { formatInTimeZone } from 'date-fns-tz';
-
-interface Student {
-  id: string;
-  full_name: string;
-  readable_id: string;
-}
-
-interface ClassSchedule {
-  id: string;
-  scheduled_at: string;
-  status: string;
-  teacher: {
-    full_name: string;
-  };
-}
-
-interface FeePayment {
-  id: string;
-  amount: number;
-  payment_date: string;
-  status: string;
-  description: string;
-}
 
 const ParentDashboard = () => {
   const navigate = useNavigate();
