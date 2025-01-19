@@ -37,17 +37,14 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { data: existingProfiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', values.email)
-        .single();
-
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError;
+      // First check if user exists in auth.users
+      const { data: authUser, error: authCheckError } = await supabase.auth.admin.getUserByEmail(values.email);
+      
+      if (authCheckError && authCheckError.message !== "User not found") {
+        throw authCheckError;
       }
 
-      if (existingProfiles) {
+      if (authUser) {
         toast.error("A teacher with this email already exists");
         return;
       }
