@@ -14,6 +14,7 @@ import { PaymentTrackingSection } from "@/components/dashboard/parent/PaymentTra
 import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { formatInTimeZone } from 'date-fns-tz';
+import type { Student, ClassSchedule, FeePayment } from "@/types/database";
 
 const ParentDashboard = () => {
   const navigate = useNavigate();
