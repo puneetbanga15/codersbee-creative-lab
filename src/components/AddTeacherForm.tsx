@@ -37,25 +37,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      // Check if user exists by attempting to sign in with a dummy password
-      const { data: existingUser, error: existingUserError } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: "dummy_password_for_check",
-      });
-
-      // If we get an invalid login credentials error, the user doesn't exist
-      // If we get any other error or a successful login, the user exists
-      if (existingUserError && !existingUserError.message.includes("Invalid login credentials")) {
-        toast.error("A teacher with this email already exists");
-        return;
-      }
-
-      if (existingUser?.user) {
-        toast.error("A teacher with this email already exists");
-        return;
-      }
-
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -66,12 +48,12 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
         },
       });
 
-      if (authError) {
-        if (authError.message.includes("already registered")) {
+      if (signUpError) {
+        if (signUpError.message.includes("already registered")) {
           toast.error("A teacher with this email already exists");
           return;
         }
-        throw authError;
+        throw signUpError;
       }
 
       toast.success("Teacher added successfully!");
