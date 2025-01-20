@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, Trophy, Cup, Milestone, GraduationCap, Brain, Rocket } from "lucide-react";
+import { Check, Trophy, Award, GraduationCap, Brain, Rocket } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface Milestone {
@@ -24,14 +24,14 @@ export const LearningJourneyVisual = () => {
       title: "Web Development",
       description: "HTML, CSS and JavaScript basics",
       completed: true,
-      icon: <Cup className="w-8 h-8" />,
+      icon: <Award className="w-8 h-8" />,
       date: "October 2024"
     },
     {
       title: "Python Programming",
       description: "Python fundamentals and algorithms",
       completed: true,
-      icon: <Cup className="w-8 h-8" />,
+      icon: <Award className="w-8 h-8" />,
       date: "November 2024"
     },
     {
