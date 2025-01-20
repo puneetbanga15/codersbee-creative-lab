@@ -37,23 +37,46 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      // First, check if the user already exists
+      const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers({
+        filters: {
+          email: values.email
+        }
+      });
+
+      if (getUserError) {
+        console.error('Error checking existing user:', getUserError);
+        toast.error("Failed to check if user exists. Please try again.");
+        return;
+      }
+
+      if (users && users.length > 0) {
+        toast.error("A teacher with this email already exists");
+        return;
+      }
+
+      // If user doesn't exist, create new account
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
           data: {
             full_name: values.fullName,
             phone_number: values.phone,
+            role: 'teacher'
           },
         },
       });
 
       if (signUpError) {
-        if (signUpError.message.includes("already registered")) {
-          toast.error("A teacher with this email already exists");
-          return;
-        }
-        throw signUpError;
+        console.error('Error creating teacher:', signUpError);
+        toast.error(signUpError.message);
+        return;
+      }
+
+      if (!data.user) {
+        toast.error("Failed to create teacher account");
+        return;
       }
 
       toast.success("Teacher added successfully!");
@@ -61,11 +84,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
       form.reset();
     } catch (error: any) {
       console.error('Error adding teacher:', error);
-      if (error.message?.includes("already registered") || error.message?.includes("already exists")) {
-        toast.error("A teacher with this email already exists");
-      } else {
-        toast.error("Failed to add teacher. Please try again.");
-      }
+      toast.error(error.message || "Failed to add teacher. Please try again.");
     }
   };
 
