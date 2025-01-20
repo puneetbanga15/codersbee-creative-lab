@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, Trophy, Award, GraduationCap, Brain, Rocket } from "lucide-react";
+import { Check, Trophy, Award, Milestone, GraduationCap, Brain, Rocket } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface Milestone {
