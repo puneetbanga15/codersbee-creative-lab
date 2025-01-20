@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/dashboard/parent/DashboardHeader";
+import { LearningJourneyVisual } from "@/components/dashboard/parent/LearningJourneyVisual";
 import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
 import { StudentInformation } from "@/components/dashboard/parent/StudentInformation";
@@ -127,6 +128,9 @@ const ParentDashboard = () => {
               </Card>
             ) : (
               <>
+                <div className="mb-6">
+                  <LearningJourneyVisual />
+                </div>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   <UpcomingClasses 
                     schedules={schedules.map(schedule => ({
