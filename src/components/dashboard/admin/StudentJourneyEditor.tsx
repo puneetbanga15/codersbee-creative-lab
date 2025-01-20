@@ -12,9 +12,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type MilestoneType = 
+  | 'scratch_fundamentals'
+  | 'scratch_advanced'
+  | 'web_fundamentals'
+  | 'web_advanced'
+  | 'python_basics'
+  | 'python_advanced'
+  | 'ai_fundamentals'
+  | 'generative_ai_creativity'
+  | 'advanced_generative_ai'
+  | 'ai_master';
+
 export const StudentJourneyEditor = () => {
   const [selectedStudent, setSelectedStudent] = useState<string>("");
-  const [selectedMilestone, setSelectedMilestone] = useState<string>("");
+  const [selectedMilestone, setSelectedMilestone] = useState<MilestoneType | "">("");
 
   const { data: students } = useQuery({
     queryKey: ['students'],
@@ -26,7 +38,7 @@ export const StudentJourneyEditor = () => {
     }
   });
 
-  const milestoneTypes = [
+  const milestoneTypes: { value: MilestoneType; label: string }[] = [
     { value: 'scratch_fundamentals', label: 'Scratch Fundamentals' },
     { value: 'scratch_advanced', label: 'Scratch Advanced' },
     { value: 'web_fundamentals', label: 'Web Development Fundamentals' },
@@ -93,7 +105,7 @@ export const StudentJourneyEditor = () => {
           <label className="block text-sm font-medium mb-2">Select Milestone</label>
           <Select
             value={selectedMilestone}
-            onValueChange={setSelectedMilestone}
+            onValueChange={(value) => setSelectedMilestone(value as MilestoneType)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a milestone" />
