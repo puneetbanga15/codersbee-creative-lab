@@ -694,6 +694,44 @@ export type Database = {
           },
         ]
       }
+      student_journey_milestones: {
+        Row: {
+          completed_at: string | null
+          completion_status: string | null
+          created_at: string | null
+          id: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          student_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          id?: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          student_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          id?: string
+          milestone_type?: Database["public"]["Enums"]["milestone_type"]
+          student_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_journey_milestones_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_projects: {
         Row: {
           created_at: string
@@ -775,6 +813,17 @@ export type Database = {
         | "appreciation_letter"
         | "project_details"
         | "other"
+      milestone_type:
+        | "scratch_fundamentals"
+        | "scratch_advanced"
+        | "web_fundamentals"
+        | "web_advanced"
+        | "python_basics"
+        | "python_advanced"
+        | "ai_fundamentals"
+        | "generative_ai_creativity"
+        | "advanced_generative_ai"
+        | "ai_master"
       quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
       user_role: "admin" | "teacher" | "parent"
     }
