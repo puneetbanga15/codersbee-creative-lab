@@ -3,6 +3,7 @@ import { Check, Trophy, Award, Milestone, GraduationCap, Brain, Globe, Terminal 
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 interface Track {
   name: string;
@@ -20,29 +21,51 @@ interface Milestone {
 }
 
 export const LearningJourneyVisual = () => {
-  const { data: milestones = [] } = useQuery({
+  const { data: milestones = [], isLoading, error } = useQuery({
     queryKey: ['student-milestones'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
 
-      const { data: students } = await supabase
-        .from('students')
-        .select('id')
-        .eq('parent_id', user.id)
-        .single();
+        const { data: students } = await supabase
+          .from('students')
+          .select('id')
+          .eq('parent_id', user.id)
+          .maybeSingle();
 
-      if (!students) return [];
+        if (!students) return [];
 
-      const { data } = await supabase
-        .from('student_journey_milestones')
-        .select('*')
-        .eq('student_id', students.id)
-        .order('created_at', { ascending: true });
+        const { data } = await supabase
+          .from('student_journey_milestones')
+          .select('*')
+          .eq('student_id', students.id)
+          .order('created_at', { ascending: true });
 
-      return data || [];
-    }
+        return data || [];
+      } catch (err) {
+        console.error('Error fetching milestones:', err);
+        return [];
+      }
+    },
+    retry: false
   });
+
+  if (isLoading) {
+    return (
+      <Card className="p-6 flex justify-center items-center min-h-[200px]">
+        <Loader2 className="h-8 w-8 animate-spin text-codersbee-vivid" />
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="p-6">
+        <p className="text-center text-red-500">Failed to load learning journey. Please try again later.</p>
+      </Card>
+    );
+  }
 
   const tracks: Track[] = [
     {
@@ -53,14 +76,14 @@ export const LearningJourneyVisual = () => {
         {
           title: "Scratch Fundamentals",
           description: "Basic programming concepts with Scratch",
-          completed: milestones.some(m => m.milestone_type === 'scratch_fundamentals' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'scratch_fundamentals' && m?.completion_status === 'completed'),
           icon: <GraduationCap className="w-6 h-6" />,
           type: 'scratch_fundamentals'
         },
         {
           title: "Scratch Advanced",
           description: "Advanced Scratch programming",
-          completed: milestones.some(m => m.milestone_type === 'scratch_advanced' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'scratch_advanced' && m?.completion_status === 'completed'),
           icon: <Award className="w-6 h-6" />,
           type: 'scratch_advanced'
         }
@@ -74,14 +97,14 @@ export const LearningJourneyVisual = () => {
         {
           title: "Web Development Fundamentals",
           description: "HTML, CSS basics",
-          completed: milestones.some(m => m.milestone_type === 'web_fundamentals' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'web_fundamentals' && m?.completion_status === 'completed'),
           icon: <Globe className="w-6 h-6" />,
           type: 'web_fundamentals'
         },
         {
           title: "Web Development Advanced",
           description: "JavaScript and interactive websites",
-          completed: milestones.some(m => m.milestone_type === 'web_advanced' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'web_advanced' && m?.completion_status === 'completed'),
           icon: <Award className="w-6 h-6" />,
           type: 'web_advanced'
         }
@@ -95,14 +118,14 @@ export const LearningJourneyVisual = () => {
         {
           title: "Python Basics",
           description: "Introduction to Python programming",
-          completed: milestones.some(m => m.milestone_type === 'python_basics' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'python_basics' && m?.completion_status === 'completed'),
           icon: <Terminal className="w-6 h-6" />,
           type: 'python_basics'
         },
         {
           title: "Python Advanced",
           description: "Advanced Python concepts",
-          completed: milestones.some(m => m.milestone_type === 'python_advanced' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'python_advanced' && m?.completion_status === 'completed'),
           icon: <Award className="w-6 h-6" />,
           type: 'python_advanced'
         }
@@ -116,28 +139,28 @@ export const LearningJourneyVisual = () => {
         {
           title: "AI Fundamentals",
           description: "Basic AI and ML concepts",
-          completed: milestones.some(m => m.milestone_type === 'ai_fundamentals' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'ai_fundamentals' && m?.completion_status === 'completed'),
           icon: <Brain className="w-6 h-6" />,
           type: 'ai_fundamentals'
         },
         {
           title: "Generative AI for Creativity",
           description: "Creative applications of AI",
-          completed: milestones.some(m => m.milestone_type === 'generative_ai_creativity' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'generative_ai_creativity' && m?.completion_status === 'completed'),
           icon: <Brain className="w-6 h-6" />,
           type: 'generative_ai_creativity'
         },
         {
           title: "Advanced Generative AI",
           description: "Advanced AI applications",
-          completed: milestones.some(m => m.milestone_type === 'advanced_generative_ai' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'advanced_generative_ai' && m?.completion_status === 'completed'),
           icon: <Brain className="w-6 h-6" />,
           type: 'advanced_generative_ai'
         },
         {
           title: "AI Master",
           description: "Complete AI mastery achieved",
-          completed: milestones.some(m => m.milestone_type === 'ai_master' && m.completion_status === 'completed'),
+          completed: milestones.some(m => m?.milestone_type === 'ai_master' && m?.completion_status === 'completed'),
           icon: <Trophy className="w-8 h-8 text-yellow-500" />,
           type: 'ai_master'
         }
@@ -157,7 +180,6 @@ export const LearningJourneyVisual = () => {
             transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
             className="relative"
           >
-            {/* Track Header */}
             <div className="flex items-center gap-2 mb-4">
               <div className={`p-2 rounded-full bg-gradient-to-r ${track.color}`}>
                 {track.icon}
@@ -165,13 +187,11 @@ export const LearningJourneyVisual = () => {
               <h3 className="text-lg font-semibold">{track.name}</h3>
             </div>
 
-            {/* Track Line */}
             <div className="absolute left-0 top-16 w-full h-0.5 bg-gradient-to-r opacity-30 rounded-full shadow-sm"
-                 style={{
-                   background: `linear-gradient(to right, ${track.color.split(' ')[1].replace('/50', '')}, ${track.color.split(' ')[3].replace('/50', '')})`
-                 }} />
+              style={{
+                background: `linear-gradient(to right, ${track.color.split(' ')[1]?.replace('/50', '') || '#000'}, ${track.color.split(' ')[3]?.replace('/50', '') || '#000'})`
+              }} />
 
-            {/* Milestones */}
             <div className="relative flex justify-between items-start px-4">
               {track.milestones.map((milestone, index) => (
                 <motion.div
