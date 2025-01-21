@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, Trophy, Award, Milestone, GraduationCap, Brain, Globe, Terminal } from "lucide-react";
+import { Check, Trophy, Award, Brain, Globe, Terminal, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,7 +70,7 @@ export const LearningJourneyVisual = () => {
   const tracks: Track[] = [
     {
       name: "Scratch",
-      color: "from-yellow-400/50 to-yellow-500/50",
+      color: "from-yellow-400 to-yellow-500",
       icon: <GraduationCap className="w-6 h-6" />,
       milestones: [
         {
@@ -91,7 +91,7 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "Web Development",
-      color: "from-blue-400/50 to-blue-500/50",
+      color: "from-blue-400 to-blue-500",
       icon: <Globe className="w-6 h-6" />,
       milestones: [
         {
@@ -112,7 +112,7 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "Python",
-      color: "from-green-400/50 to-green-500/50",
+      color: "from-green-400 to-green-500",
       icon: <Terminal className="w-6 h-6" />,
       milestones: [
         {
@@ -133,7 +133,7 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "AI",
-      color: "from-purple-400/50 to-purple-500/50",
+      color: "from-purple-400 to-purple-500",
       icon: <Brain className="w-6 h-6" />,
       milestones: [
         {
@@ -171,7 +171,7 @@ export const LearningJourneyVisual = () => {
   return (
     <Card className="p-6 bg-gradient-to-r from-codersbee-purple/20 to-white overflow-x-auto">
       <h2 className="text-2xl font-bold mb-8 text-center">Learning Journey</h2>
-      <div className="min-w-[1000px] space-y-12 pb-4">
+      <div className="min-w-[1000px] space-y-24 pb-4 relative">
         {tracks.map((track, trackIndex) => (
           <motion.div
             key={track.name}
@@ -187,46 +187,62 @@ export const LearningJourneyVisual = () => {
               <h3 className="text-lg font-semibold">{track.name}</h3>
             </div>
 
-            <div className="absolute left-0 top-16 w-full h-0.5 bg-gradient-to-r opacity-30 rounded-full shadow-sm"
-              style={{
-                background: `linear-gradient(to right, ${track.color.split(' ')[1]?.replace('/50', '') || '#000'}, ${track.color.split(' ')[3]?.replace('/50', '') || '#000'})`
-              }} />
+            <div className="relative">
+              {/* Connecting Lines */}
+              <svg className="absolute top-16 left-0 w-full h-8 overflow-visible">
+                <motion.path
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, delay: trackIndex * 0.3 }}
+                  d={`M 50,16 
+                     ${track.milestones.map((_, i) => 
+                       `${(i + 1) * (900 / track.milestones.length)},${i % 2 === 0 ? 16 : 16}`
+                     ).join(' ')}
+                  `}
+                  fill="none"
+                  strokeWidth="2"
+                  className={`stroke-current ${track.color}`}
+                  strokeDasharray={track.milestones.some(m => !m.completed) ? "5,5" : "none"}
+                />
+              </svg>
 
-            <div className="relative flex justify-between items-start px-4">
-              {track.milestones.map((milestone, index) => (
-                <motion.div
-                  key={milestone.type}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: (trackIndex * 0.2) + (index * 0.1) }}
-                  className="relative flex flex-col items-center"
-                  style={{ flex: 1 }}
-                >
-                  <div className={`relative flex items-center justify-center w-12 h-12 rounded-full 
-                    ${milestone.completed 
-                      ? 'bg-green-100 border-2 border-green-500' 
-                      : 'bg-white border-2 border-gray-300'
-                    } shadow-lg backdrop-blur-sm`}
+              {/* Milestones */}
+              <div className="relative flex justify-between items-start px-4 mt-8">
+                {track.milestones.map((milestone, index) => (
+                  <motion.div
+                    key={milestone.type}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: (trackIndex * 0.2) + (index * 0.1) }}
+                    className="relative flex flex-col items-center"
+                    style={{ flex: 1 }}
                   >
-                    <div className={milestone.completed ? 'text-green-500' : 'text-gray-400'}>
-                      {milestone.icon}
+                    <div className={`relative flex items-center justify-center w-12 h-12 rounded-full 
+                      ${milestone.completed 
+                        ? 'bg-green-100 border-2 border-green-500' 
+                        : 'bg-white border-2 border-gray-300'
+                      } shadow-lg backdrop-blur-sm`}
+                    >
+                      <div className={milestone.completed ? 'text-green-500' : 'text-gray-400'}>
+                        {milestone.icon}
+                      </div>
+                      {milestone.completed && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1"
+                        >
+                          <Check className="w-3 h-3 text-white" />
+                        </motion.div>
+                      )}
                     </div>
-                    {milestone.completed && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1"
-                      >
-                        <Check className="w-3 h-3 text-white" />
-                      </motion.div>
-                    )}
-                  </div>
-                  <div className="mt-4 text-center max-w-[200px]">
-                    <p className="font-semibold text-sm">{milestone.title}</p>
-                    <p className="text-xs text-gray-600 mt-1">{milestone.description}</p>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="mt-4 text-center max-w-[200px]">
+                      <p className="font-semibold text-sm">{milestone.title}</p>
+                      <p className="text-xs text-gray-600 mt-1">{milestone.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         ))}
