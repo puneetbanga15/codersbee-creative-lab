@@ -11,71 +11,78 @@ export const Path = ({ track, trackIndex }: PathProps) => {
     hidden: { pathLength: 0 },
     visible: { 
       pathLength: 1,
-      transition: { duration: 1, ease: "easeInOut" }
+      transition: { duration: 1, ease: "easeInOut", delay: trackIndex * 0.2 }
     }
   };
 
-  const generatePath = (track: any) => {
-    const startX = 100;
-    const startY = trackIndex * 200 + 50; // Increased vertical spacing between tracks
-    const width = 800;
-    const spacing = width / (track.milestones.length + 1);
-    
-    let paths = [];
-    
-    // Generate straight lines between milestones in the same track
+  const generatePath = () => {
+    const startX = 200; // Starting X position
+    const trackSpacing = 200; // Vertical spacing between tracks
+    const milestoneSpacing = 300; // Horizontal spacing between milestones
+    const trackY = trackIndex * trackSpacing + 100;
+    const paths = [];
+
+    // Horizontal arrows within the same track
     for (let i = 0; i < track.milestones.length - 1; i++) {
-      const x1 = startX + i * spacing + 100;
-      const x2 = startX + (i + 1) * spacing + 100;
+      const x1 = startX + (i * milestoneSpacing);
+      const x2 = startX + ((i + 1) * milestoneSpacing);
       paths.push({
-        d: `M ${x1},${startY} L ${x2},${startY}`,
+        d: `M ${x1 + 60},${trackY} L ${x2 - 60},${trackY}`,
         gradient: `gradient-${trackIndex}-horizontal`
       });
     }
-    
-    // Add diagonal connections to next track if not the last track
+
+    // Diagonal arrows to next track (if not the last track)
     if (trackIndex < 3) {
-      const lastX = startX + (track.milestones.length - 1) * spacing + 100;
-      const nextY = startY + 200; // Connect to next track
+      const lastMilestoneX = startX + ((track.milestones.length - 1) * milestoneSpacing);
+      const nextTrackFirstX = startX;
+      const nextTrackY = (trackIndex + 1) * trackSpacing + 100;
+
       paths.push({
-        d: `M ${lastX},${startY} L ${lastX + 100},${nextY}`,
+        d: `M ${lastMilestoneX + 60},${trackY + 30} L ${nextTrackFirstX - 60},${nextTrackY - 30}`,
         gradient: `gradient-${trackIndex}-diagonal`
       });
     }
-    
+
     return paths;
   };
 
   return (
     <svg className="absolute top-0 left-0 w-full h-full overflow-visible">
       <defs>
-        {/* Horizontal gradient for each track */}
+        {/* Gradient definitions for each track */}
         <linearGradient id={`gradient-${trackIndex}-horizontal`} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" className={`text-${track.color.split('-')[1]}`} stopOpacity="0.8" />
-          <stop offset="100%" className={`text-${track.color.split('-')[2]}`} stopOpacity="0.8" />
+          <stop offset="0%" className={`text-${track.color.split('-')[1]}-400`} stopOpacity="1" />
+          <stop offset="100%" className={`text-${track.color.split('-')[2]}-500`} stopOpacity="1" />
         </linearGradient>
-        {/* Diagonal gradient for connections between tracks */}
-        <linearGradient id={`gradient-${trackIndex}-diagonal`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" className={`text-${track.color.split('-')[2]}`} stopOpacity="0.6" />
-          <stop offset="100%" className={`text-${track.color.split('-')[1]}`} stopOpacity="0.6" />
+        <linearGradient 
+          id={`gradient-${trackIndex}-diagonal`} 
+          x1="0%" 
+          y1="0%" 
+          x2="100%" 
+          y2="100%"
+        >
+          <stop offset="0%" className={`text-${track.color.split('-')[2]}-500`} stopOpacity="1" />
+          <stop offset="100%" className={`text-${track.color.split('-')[1]}-400`} stopOpacity="1" />
         </linearGradient>
+        
         {/* Arrow marker definition */}
         <marker
           id={`arrowhead-${trackIndex}`}
           markerWidth="10"
           markerHeight="7"
-          refX="9"
+          refX="10"
           refY="3.5"
           orient="auto"
         >
           <polygon
             points="0 0, 10 3.5, 0 7"
-            className={`fill-${track.color.split('-')[2]}`}
+            fill={`url(#gradient-${trackIndex}-horizontal)`}
           />
         </marker>
       </defs>
       
-      {generatePath(track).map((path, index) => (
+      {generatePath().map((path, index) => (
         <motion.path
           key={`${trackIndex}-${index}`}
           initial="hidden"
@@ -88,7 +95,7 @@ export const Path = ({ track, trackIndex }: PathProps) => {
           markerEnd={`url(#arrowhead-${trackIndex})`}
           className="transition-all duration-300"
           style={{
-            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))"
+            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
           }}
         />
       ))}

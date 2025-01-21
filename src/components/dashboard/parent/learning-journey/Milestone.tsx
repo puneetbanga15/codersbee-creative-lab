@@ -17,11 +17,12 @@ export const Milestone = ({ milestone, index, trackIndex }: MilestoneProps) => {
       className="relative flex flex-col items-center"
       style={{ flex: 1 }}
     >
-      <div className={`relative flex items-center justify-center w-12 h-12 rounded-full 
-        ${milestone.completed 
-          ? 'bg-green-100 border-2 border-green-500' 
-          : 'bg-white border-2 border-gray-300'
-        } shadow-lg backdrop-blur-sm`}
+      <div 
+        className={`relative flex items-center justify-center w-16 h-16 rounded-full 
+          ${milestone.completed 
+            ? 'bg-white border-2 border-green-500' 
+            : 'bg-white border-2 border-gray-300'
+          } shadow-lg backdrop-blur-sm hover:scale-105 transition-transform duration-200`}
       >
         <div className={milestone.completed ? 'text-green-500' : 'text-gray-400'}>
           {milestone.icon}
