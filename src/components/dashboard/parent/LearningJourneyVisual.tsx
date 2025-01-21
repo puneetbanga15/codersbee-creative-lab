@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, GraduationCap, Award, Brain, Trophy, Globe, Terminal } from "lucide-react";
+import { Loader2, GraduationCap, Award, Brain, Globe, Terminal, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Track } from "./learning-journey/Track";
 import type { Track as TrackType } from "./learning-journey/types";
@@ -55,8 +55,8 @@ export const LearningJourneyVisual = () => {
   const tracks: TrackType[] = [
     {
       name: "Scratch",
-      color: "from-yellow-400 to-orange-500",
-      icon: <GraduationCap className="w-6 h-6 text-yellow-600" />,
+      color: "from-amber-400 to-orange-500",
+      icon: <GraduationCap className="w-6 h-6 text-amber-600" />,
       milestones: [
         {
           title: "Scratch Fundamentals",
@@ -97,8 +97,8 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "Python",
-      color: "from-green-400 to-emerald-500",
-      icon: <Terminal className="w-6 h-6 text-green-600" />,
+      color: "from-emerald-400 to-green-500",
+      icon: <Terminal className="w-6 h-6 text-emerald-600" />,
       milestones: [
         {
           title: "Python Basics",
@@ -118,8 +118,8 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "AI",
-      color: "from-purple-400 to-violet-500",
-      icon: <Brain className="w-6 h-6 text-purple-600" />,
+      color: "from-violet-400 to-purple-500",
+      icon: <Brain className="w-6 h-6 text-violet-600" />,
       milestones: [
         {
           title: "AI Fundamentals",
@@ -154,9 +154,9 @@ export const LearningJourneyVisual = () => {
   ];
 
   return (
-    <Card className="p-6 bg-gradient-to-r from-codersbee-purple/20 to-white overflow-x-auto">
-      <h2 className="text-2xl font-bold mb-8 text-center">Learning Journey</h2>
-      <div className="min-w-[1000px] space-y-24 pb-4 relative">
+    <Card className="p-8 bg-gradient-to-br from-gray-50 to-white overflow-x-auto">
+      <h2 className="text-2xl font-bold mb-12 text-center">Learning Journey</h2>
+      <div className="min-w-[1000px] space-y-8 pb-4 relative">
         {tracks.map((track, trackIndex) => (
           <Track key={track.name} track={track} trackIndex={trackIndex} />
         ))}

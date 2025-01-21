@@ -14,16 +14,16 @@ export const Track = ({ track, trackIndex }: TrackProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
-      className="relative"
+      className="relative mb-32" // Increased margin between tracks
     >
-      <div className="flex items-center gap-2 mb-4">
-        <div className={`p-2 rounded-full bg-gradient-to-r ${track.color}`}>
+      <div className="flex items-center gap-2 mb-8">
+        <div className={`p-2 rounded-full bg-gradient-to-r ${track.color} shadow-lg`}>
           {track.icon}
         </div>
         <h3 className="text-lg font-semibold">{track.name}</h3>
       </div>
 
-      <div className="relative">
+      <div className="relative min-h-[100px]">
         <Path track={track} trackIndex={trackIndex} />
         <div className="relative flex justify-between items-start px-4 mt-8">
           {track.milestones.map((milestone, index) => (
