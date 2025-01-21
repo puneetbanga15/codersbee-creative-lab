@@ -5,17 +5,16 @@ import type { Milestone as MilestoneType } from "./types";
 interface MilestoneProps {
   milestone: MilestoneType;
   index: number;
-  trackIndex: number;
+  isLast: boolean;
 }
 
-export const Milestone = ({ milestone, index, trackIndex }: MilestoneProps) => {
+export const Milestone = ({ milestone, index, isLast }: MilestoneProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: (trackIndex * 0.2) + (index * 0.1) }}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
       className="relative flex flex-col items-center"
-      style={{ flex: 1 }}
     >
       <div 
         className={`relative flex items-center justify-center w-16 h-16 rounded-full 
@@ -41,6 +40,9 @@ export const Milestone = ({ milestone, index, trackIndex }: MilestoneProps) => {
         <p className="font-semibold text-sm">{milestone.title}</p>
         <p className="text-xs text-gray-600 mt-1">{milestone.description}</p>
       </div>
+      {!isLast && (
+        <div className="absolute right-[-50%] top-[30px] w-full h-[2px] bg-gradient-to-r from-gray-300 to-gray-400" />
+      )}
     </motion.div>
   );
 };
