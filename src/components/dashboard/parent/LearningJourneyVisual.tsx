@@ -55,8 +55,8 @@ export const LearningJourneyVisual = () => {
   const tracks: TrackType[] = [
     {
       name: "Scratch",
-      color: "from-yellow-400 to-yellow-500",
-      icon: <GraduationCap className="w-6 h-6" />,
+      color: "from-yellow-400 to-orange-500",
+      icon: <GraduationCap className="w-6 h-6 text-yellow-600" />,
       milestones: [
         {
           title: "Scratch Fundamentals",
@@ -76,8 +76,8 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "Web Development",
-      color: "from-blue-400 to-blue-500",
-      icon: <Globe className="w-6 h-6" />,
+      color: "from-blue-400 to-indigo-500",
+      icon: <Globe className="w-6 h-6 text-blue-600" />,
       milestones: [
         {
           title: "Web Development Fundamentals",
@@ -97,8 +97,8 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "Python",
-      color: "from-green-400 to-green-500",
-      icon: <Terminal className="w-6 h-6" />,
+      color: "from-green-400 to-emerald-500",
+      icon: <Terminal className="w-6 h-6 text-green-600" />,
       milestones: [
         {
           title: "Python Basics",
@@ -118,8 +118,8 @@ export const LearningJourneyVisual = () => {
     },
     {
       name: "AI",
-      color: "from-purple-400 to-purple-500",
-      icon: <Brain className="w-6 h-6" />,
+      color: "from-purple-400 to-violet-500",
+      icon: <Brain className="w-6 h-6 text-purple-600" />,
       milestones: [
         {
           title: "AI Fundamentals",
