@@ -176,6 +176,29 @@ export const LearningJourneyVisual = () => {
     }
   };
 
+  const generatePath = (track: any, index: number) => {
+    const startX = 50;
+    const startY = 16;
+    const width = 900;
+    const height = 100;
+    
+    let path = `M ${startX},${startY} `;
+    
+    track.milestones.forEach((milestone: any, i: number) => {
+      const x = (i + 1) * (width / track.milestones.length);
+      const y = startY;
+      
+      // Add curves between points
+      const controlPoint1X = x - (width / track.milestones.length) * 0.7;
+      const controlPoint2X = x - (width / track.milestones.length) * 0.3;
+      const controlPointY = y + (i % 2 === 0 ? height : -height);
+      
+      path += `C ${controlPoint1X},${y} ${controlPoint2X},${controlPointY} ${x},${y} `;
+    });
+    
+    return path;
+  };
+
   return (
     <Card className="p-6 bg-gradient-to-r from-codersbee-purple/20 to-white overflow-x-auto">
       <h2 className="text-2xl font-bold mb-8 text-center">Learning Journey</h2>
@@ -197,21 +220,12 @@ export const LearningJourneyVisual = () => {
 
             <div className="relative">
               {/* Connecting Lines */}
-              <svg className="absolute top-16 left-0 w-full h-8 overflow-visible">
+              <svg className="absolute top-16 left-0 w-full h-32 overflow-visible">
                 <motion.path
                   initial="hidden"
                   animate="visible"
                   variants={pathVariants}
-                  d={`M 50,16 
-                     ${track.milestones.map((milestone, i) => {
-                       const x = (i + 1) * (900 / track.milestones.length);
-                       const y = 16 + (i % 2 === 0 ? 0 : 0);
-                       // Add curves between points for a more organic flow
-                       const controlPoint1X = x - (900 / track.milestones.length) / 2;
-                       const controlPoint2X = x - (900 / track.milestones.length) / 4;
-                       return `C ${controlPoint1X},${y} ${controlPoint2X},${y} ${x},${y}`;
-                     }).join(' ')}
-                  `}
+                  d={generatePath(track, trackIndex)}
                   fill="none"
                   strokeWidth="2"
                   className={`stroke-current ${track.color}`}
