@@ -1,24 +1,9 @@
-import { motion } from "framer-motion";
-import { Check, Trophy, Award, Brain, Globe, Terminal, GraduationCap } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
-
-interface Track {
-  name: string;
-  color: string;
-  icon: JSX.Element;
-  milestones: Milestone[];
-}
-
-interface Milestone {
-  title: string;
-  description: string;
-  completed: boolean;
-  icon: JSX.Element;
-  type: string;
-}
+import { Loader2, GraduationCap, Award, Brain, Trophy } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Track } from "./learning-journey/Track";
+import type { Track as TrackType } from "./learning-journey/types";
 
 export const LearningJourneyVisual = () => {
   const { data: milestones = [], isLoading, error } = useQuery({
@@ -67,7 +52,7 @@ export const LearningJourneyVisual = () => {
     );
   }
 
-  const tracks: Track[] = [
+  const tracks: TrackType[] = [
     {
       name: "Scratch",
       color: "from-yellow-400 to-yellow-500",
@@ -168,110 +153,12 @@ export const LearningJourneyVisual = () => {
     }
   ];
 
-  const pathVariants = {
-    hidden: { pathLength: 0 },
-    visible: { 
-      pathLength: 1,
-      transition: { duration: 2, ease: "easeInOut" }
-    }
-  };
-
-  const generatePath = (track: any, index: number) => {
-    const startX = 50;
-    const startY = 16;
-    const width = 900;
-    const height = 100;
-    
-    let path = `M ${startX},${startY} `;
-    
-    track.milestones.forEach((milestone: any, i: number) => {
-      const x = (i + 1) * (width / track.milestones.length);
-      const y = startY;
-      
-      // Add curves between points
-      const controlPoint1X = x - (width / track.milestones.length) * 0.7;
-      const controlPoint2X = x - (width / track.milestones.length) * 0.3;
-      const controlPointY = y + (i % 2 === 0 ? height : -height);
-      
-      path += `C ${controlPoint1X},${y} ${controlPoint2X},${controlPointY} ${x},${y} `;
-    });
-    
-    return path;
-  };
-
   return (
     <Card className="p-6 bg-gradient-to-r from-codersbee-purple/20 to-white overflow-x-auto">
       <h2 className="text-2xl font-bold mb-8 text-center">Learning Journey</h2>
       <div className="min-w-[1000px] space-y-24 pb-4 relative">
         {tracks.map((track, trackIndex) => (
-          <motion.div
-            key={track.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
-            className="relative"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <div className={`p-2 rounded-full bg-gradient-to-r ${track.color}`}>
-                {track.icon}
-              </div>
-              <h3 className="text-lg font-semibold">{track.name}</h3>
-            </div>
-
-            <div className="relative">
-              {/* Connecting Lines */}
-              <svg className="absolute top-16 left-0 w-full h-32 overflow-visible">
-                <motion.path
-                  initial="hidden"
-                  animate="visible"
-                  variants={pathVariants}
-                  d={generatePath(track, trackIndex)}
-                  fill="none"
-                  strokeWidth="2"
-                  className={`stroke-current ${track.color}`}
-                  strokeDasharray={track.milestones.some(m => !m.completed) ? "5,5" : "none"}
-                />
-              </svg>
-
-              {/* Milestones */}
-              <div className="relative flex justify-between items-start px-4 mt-8">
-                {track.milestones.map((milestone, index) => (
-                  <motion.div
-                    key={milestone.type}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: (trackIndex * 0.2) + (index * 0.1) }}
-                    className="relative flex flex-col items-center"
-                    style={{ flex: 1 }}
-                  >
-                    <div className={`relative flex items-center justify-center w-12 h-12 rounded-full 
-                      ${milestone.completed 
-                        ? 'bg-green-100 border-2 border-green-500' 
-                        : 'bg-white border-2 border-gray-300'
-                      } shadow-lg backdrop-blur-sm`}
-                    >
-                      <div className={milestone.completed ? 'text-green-500' : 'text-gray-400'}>
-                        {milestone.icon}
-                      </div>
-                      {milestone.completed && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1"
-                        >
-                          <Check className="w-3 h-3 text-white" />
-                        </motion.div>
-                      )}
-                    </div>
-                    <div className="mt-4 text-center max-w-[200px]">
-                      <p className="font-semibold text-sm">{milestone.title}</p>
-                      <p className="text-xs text-gray-600 mt-1">{milestone.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+          <Track key={track.name} track={track} trackIndex={trackIndex} />
         ))}
       </div>
     </Card>
