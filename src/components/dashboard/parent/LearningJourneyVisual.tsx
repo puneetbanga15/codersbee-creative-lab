@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, GraduationCap, Award, Brain, Trophy, Globe as globe, Terminal as terminal } from "lucide-react";
+import { Loader2, GraduationCap, Award, Brain, Trophy, Globe, Terminal } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Track } from "./learning-journey/Track";
 import type { Track as TrackType } from "./learning-journey/types";
@@ -77,13 +77,13 @@ export const LearningJourneyVisual = () => {
     {
       name: "Web Development",
       color: "from-blue-400 to-blue-500",
-      icon: <globe className="w-6 h-6" />,
+      icon: <Globe className="w-6 h-6" />,
       milestones: [
         {
           title: "Web Development Fundamentals",
           description: "HTML, CSS basics",
           completed: milestones.some(m => m?.milestone_type === 'web_fundamentals' && m?.completion_status === 'completed'),
-          icon: <globe className="w-6 h-6" />,
+          icon: <Globe className="w-6 h-6" />,
           type: 'web_fundamentals'
         },
         {
@@ -98,13 +98,13 @@ export const LearningJourneyVisual = () => {
     {
       name: "Python",
       color: "from-green-400 to-green-500",
-      icon: <terminal className="w-6 h-6" />,
+      icon: <Terminal className="w-6 h-6" />,
       milestones: [
         {
           title: "Python Basics",
           description: "Introduction to Python programming",
           completed: milestones.some(m => m?.milestone_type === 'python_basics' && m?.completion_status === 'completed'),
-          icon: <terminal className="w-6 h-6" />,
+          icon: <Terminal className="w-6 h-6" />,
           type: 'python_basics'
         },
         {
