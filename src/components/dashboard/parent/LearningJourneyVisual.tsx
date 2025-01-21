@@ -168,6 +168,14 @@ export const LearningJourneyVisual = () => {
     }
   ];
 
+  const pathVariants = {
+    hidden: { pathLength: 0 },
+    visible: { 
+      pathLength: 1,
+      transition: { duration: 2, ease: "easeInOut" }
+    }
+  };
+
   return (
     <Card className="p-6 bg-gradient-to-r from-codersbee-purple/20 to-white overflow-x-auto">
       <h2 className="text-2xl font-bold mb-8 text-center">Learning Journey</h2>
@@ -191,13 +199,18 @@ export const LearningJourneyVisual = () => {
               {/* Connecting Lines */}
               <svg className="absolute top-16 left-0 w-full h-8 overflow-visible">
                 <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, delay: trackIndex * 0.3 }}
+                  initial="hidden"
+                  animate="visible"
+                  variants={pathVariants}
                   d={`M 50,16 
-                     ${track.milestones.map((_, i) => 
-                       `${(i + 1) * (900 / track.milestones.length)},${i % 2 === 0 ? 16 : 16}`
-                     ).join(' ')}
+                     ${track.milestones.map((milestone, i) => {
+                       const x = (i + 1) * (900 / track.milestones.length);
+                       const y = 16 + (i % 2 === 0 ? 0 : 0);
+                       // Add curves between points for a more organic flow
+                       const controlPoint1X = x - (900 / track.milestones.length) / 2;
+                       const controlPoint2X = x - (900 / track.milestones.length) / 4;
+                       return `C ${controlPoint1X},${y} ${controlPoint2X},${y} ${x},${y}`;
+                     }).join(' ')}
                   `}
                   fill="none"
                   strokeWidth="2"
