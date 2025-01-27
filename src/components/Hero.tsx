@@ -12,9 +12,9 @@ export const Hero = () => {
               </span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-[#1A1F2C] mb-6">
-              <span className="text-[#9b87f5]">Future-Ready</span>
-              <br />Coding and
-              <br />AI School
+              Ready to Start Your
+              <br />Child's Coding and
+              <br /><span className="text-[#9b87f5]">AI Journey?</span>
             </h1>
             <p className="text-xl mb-8 text-[#403E43] max-w-2xl">
               While AI is transforming the world at lightning speed, give your child the edge they need. 
