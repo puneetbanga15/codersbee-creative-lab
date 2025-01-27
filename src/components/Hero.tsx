@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 
 export const Hero = () => {
   return (
@@ -22,12 +21,15 @@ export const Hero = () => {
               Start their journey with personalized 1:1 classes.
             </p>
             <div className="max-w-xl mx-auto md:mx-0">
+              <div className="bg-[#9b87f5]/10 p-6 rounded-xl mb-4 text-lg font-medium text-[#1A1F2C]">
+                Watch How Your Child Can Build Their First Coding and AI Projects in 7 Days
+                <span className="block text-base mt-1 opacity-90">(Free Trial Included)</span>
+              </div>
               <Button 
-                className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-12 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
               >
-                Watch How Your Child Can Build Their First Coding and AI Projects in 7 Days
-                <span className="block text-sm mt-1 opacity-90">(Free Trial Included)</span>
+                Start Today with a Free Trial
               </Button>
             </div>
             
@@ -48,30 +50,23 @@ export const Hero = () => {
             </div>
           </div>
           
-          <motion.div 
-            className="flex-1 md:flex-[1.5] relative rounded-2xl overflow-hidden shadow-2xl" // Increased size ratio
-            animate={{ y: [-10, 10] }}
-            transition={{ 
-              repeat: Infinity,
-              repeatType: "reverse",
-              duration: 2,
-              ease: "easeInOut"
-            }}
-          >
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-              className="w-full h-full object-cover rounded-2xl"
-            >
-              <source 
-                src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
-                type="video/mp4" 
-              />
-              Your browser does not support the video tag.
-            </video>
-          </motion.div>
+          <div className="flex-1 md:flex-[1.8] relative">
+            <div className="rounded-2xl overflow-hidden border-4 border-[#9b87f5]/20 shadow-2xl">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover rounded-xl"
+              >
+                <source 
+                  src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
+                  type="video/mp4" 
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
     </div>
