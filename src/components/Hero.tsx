@@ -21,13 +21,15 @@ export const Hero = () => {
               While AI is transforming the world at lightning speed, give your child the edge they need. 
               Start their journey with personalized 1:1 classes.
             </p>
-            <Button 
-              className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-            >
-              Watch How Your Child Can Build Their First Coding and AI Projects in 7 Days
-              <span className="block text-sm mt-1 opacity-90">(Free Trial Included)</span>
-            </Button>
+            <div className="max-w-xl mx-auto md:mx-0">
+              <Button 
+                className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
+              >
+                Watch How Your Child Can Build Their First Coding and AI Projects in 7 Days
+                <span className="block text-sm mt-1 opacity-90">(Free Trial Included)</span>
+              </Button>
+            </div>
             
             <div className="mt-6 text-sm text-gray-600 flex items-center justify-center md:justify-start gap-4">
               <div className="flex items-center gap-2">
@@ -47,7 +49,7 @@ export const Hero = () => {
           </div>
           
           <motion.div 
-            className="flex-1 md:flex-[1.2] relative rounded-2xl overflow-hidden shadow-2xl"
+            className="flex-1 md:flex-[1.5] relative rounded-2xl overflow-hidden shadow-2xl" // Increased size ratio
             animate={{ y: [-10, 10] }}
             transition={{ 
               repeat: Infinity,
