@@ -21,9 +21,9 @@ export const Hero = () => {
               Start their journey with personalized 1:1 classes.
             </p>
             <div className="max-w-xl mx-auto md:mx-0">
-              <div className="bg-[#9b87f5]/10 p-6 rounded-xl mb-4 text-lg font-medium text-[#1A1F2C]">
+              <div className="bg-[#9b87f5]/20 p-8 rounded-xl mb-6 text-xl font-semibold text-[#1A1F2C] shadow-lg">
                 Watch How Your Child Can Build Their First Coding and AI Projects in 7 Days
-                <span className="block text-base mt-1 opacity-90">(Free Trial Included)</span>
+                <span className="block text-lg mt-2 opacity-90 font-medium">(Free Trial Included)</span>
               </div>
               <Button 
                 className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-12 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
@@ -50,8 +50,8 @@ export const Hero = () => {
             </div>
           </div>
           
-          <div className="flex-1 md:flex-[1.8] relative">
-            <div className="rounded-2xl overflow-hidden border-4 border-[#9b87f5]/20 shadow-2xl">
+          <div className="flex-1 md:flex-[2] relative">
+            <div className="rounded-2xl overflow-hidden border-4 border-[#9b87f5]/30 shadow-2xl">
               <video 
                 autoPlay 
                 loop 
