@@ -6,13 +6,13 @@ export const Hero = () => {
     <div className="relative min-h-[90vh] overflow-hidden">
       {/* Background Video Layer */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF]/80 via-white/60 to-white/80 backdrop-blur-[2px] z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF]/80 via-white/60 to-white/80 md:backdrop-blur-[2px] z-10" />
         <video 
           autoPlay 
           loop 
           muted 
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-80 md:opacity-100"
         >
           <source 
             src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
@@ -31,22 +31,22 @@ export const Hero = () => {
                 Empower Your Child to Lead the AI Revolution
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-[#1A1F2C] mb-8 leading-tight">
+            <h1 className="text-4xl md:text-7xl font-bold text-[#1A1F2C] mb-6 md:mb-8 leading-tight">
               1:1 Live Classes Where Kids Build
               <br />Coding and AI Projects
               <br /><span className="text-[#9b87f5]">From Day 1</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-12 text-[#403E43] max-w-3xl mx-auto">
+            <p className="text-lg md:text-2xl mb-8 md:mb-12 text-[#403E43] max-w-3xl mx-auto px-4 md:px-0">
               As AI reshapes careers, equip your child with future-proof skills: creative problem-solving, coding, and AI fluency. 
               Our certified trainers guide them step-by-step in live sessions.
             </p>
             
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 max-w-2xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 max-w-2xl mx-auto px-4 md:px-0">
               {/* Video Dialog */}
               <Dialog>
                 <DialogTrigger asChild>
                   <Button 
-                    className="w-full md:w-auto bg-[#1A1F2C] hover:bg-[#2A2F3C] text-white px-8 py-6 text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+                    className="w-full md:w-auto bg-[#1A1F2C] hover:bg-[#2A2F3C] text-white px-6 md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
                   >
                     <span>▶️</span> Watch a 12-Year-Old Shuvam Build His First AI App
                   </Button>
@@ -65,7 +65,7 @@ export const Hero = () => {
               </Dialog>
 
               <Button 
-                className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-6 md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
               >
                 Claim Your Free Trial Class → Join 50+ Young Coders
@@ -73,13 +73,13 @@ export const Hero = () => {
             </div>
             
             {/* Trust Elements */}
-            <div className="mt-12 flex flex-col items-center space-y-4">
-              <div className="bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#9b87f5]/20 shadow-sm">
-                <p className="text-[#1A1F2C] font-medium">
+            <div className="mt-8 md:mt-12 flex flex-col items-center space-y-3 md:space-y-4 px-4 md:px-0">
+              <div className="bg-white/80 backdrop-blur-sm px-4 md:px-6 py-2 rounded-full border border-[#9b87f5]/20 shadow-sm w-full md:w-auto">
+                <p className="text-[#1A1F2C] font-medium text-sm md:text-base">
                   🎓 US Certified Educators | AI curriculum from Industry Leaders
                 </p>
               </div>
-              <p className="text-[#403E43] font-medium">
+              <p className="text-[#403E43] font-medium text-sm md:text-base">
                 👥 Small Class Sizes → Personalized for Every Child
               </p>
             </div>
