@@ -6,13 +6,13 @@ export const Hero = () => {
     <div className="relative min-h-[90vh] overflow-hidden">
       {/* Background Video Layer */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#E5DEFF]/95 to-white/95 backdrop-blur-sm z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF]/80 via-white/60 to-white/80 backdrop-blur-[2px] z-10" />
         <video 
           autoPlay 
           loop 
           muted 
           playsInline
-          className="w-full h-full object-cover opacity-70"
+          className="w-full h-full object-cover"
         >
           <source 
             src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
@@ -41,7 +41,7 @@ export const Hero = () => {
               Our certified trainers guide them step-by-step in live sessions.
             </p>
             
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 max-w-2xl mx-auto">
               {/* Video Dialog */}
               <Dialog>
                 <DialogTrigger asChild>
@@ -73,7 +73,7 @@ export const Hero = () => {
             </div>
             
             {/* Trust Elements */}
-            <div className="mt-8 flex flex-col items-center space-y-4">
+            <div className="mt-12 flex flex-col items-center space-y-4">
               <div className="bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#9b87f5]/20 shadow-sm">
                 <p className="text-[#1A1F2C] font-medium">
                   🎓 US Certified Educators | AI curriculum from Industry Leaders
