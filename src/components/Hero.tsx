@@ -12,7 +12,7 @@ export const Hero = () => {
           loop 
           muted 
           playsInline
-          className="w-full h-full object-cover opacity-80 md:opacity-100 md:aspect-auto aspect-[9/16] md:object-center object-[30%_50%]"
+          className="w-full h-full object-cover opacity-80 md:opacity-100 md:aspect-auto aspect-[9/16] md:object-center object-[20%_50%]"
         >
           <source 
             src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
