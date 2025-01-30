@@ -1,39 +1,42 @@
 import { motion } from "framer-motion";
-import { Milestone } from "lucide-react";
+import { GraduationCap, Code, Brain, Award, Milestone } from "lucide-react";
 
 export const LearningJourney = () => {
   const milestones = [
     {
-      title: "Fundamentals",
-      description: "Scratch, Javascript or Python based on age and prior knowledge",
-      date: "2-3 months"
+      title: "Scratch Fundamentals",
+      description: "Basic programming concepts with Scratch",
+      date: "2-3 months",
+      icon: <GraduationCap className="w-6 h-6 text-amber-500" />,
+      color: "bg-amber-100 border-amber-200"
     },
     {
-      title: "Building Foundations",
-      description: "Detailed understanding of advanced concepts",
-      date: "2-3 months"
-    },
-    {
-      title: "Creating Coding Projects",
-      description: "Building real-world applications",
+      title: "JavaScript Basics",
+      description: "Core JavaScript programming concepts",
       date: "3-4 months",
-      branch: "coding"
+      icon: <Code className="w-6 h-6 text-yellow-500" />,
+      color: "bg-yellow-100 border-yellow-200"
     },
     {
-      title: "Creating AI Projects",
-      description: "Developing AI-powered solutions",
+      title: "Advanced JavaScript",
+      description: "Advanced concepts and real-world applications",
       date: "3-4 months",
-      branch: "ai"
+      icon: <Award className="w-6 h-6 text-yellow-600" />,
+      color: "bg-yellow-100 border-yellow-200"
     },
     {
-      title: "Advanced Concepts",
-      description: "Complex problem-solving and integration",
-      date: "4-5 months"
+      title: "AI Fundamentals",
+      description: "Introduction to AI and Machine Learning",
+      date: "2-3 months",
+      icon: <Brain className="w-6 h-6 text-purple-500" />,
+      color: "bg-purple-100 border-purple-200"
     },
     {
-      title: "Senior Hackathons",
-      description: "Ready for advanced competitions",
-      date: "Final Stage"
+      title: "AI Projects",
+      description: "Building AI-powered applications",
+      date: "3-4 months",
+      icon: <Award className="w-6 h-6 text-purple-600" />,
+      color: "bg-purple-100 border-purple-200"
     }
   ];
 
@@ -43,12 +46,13 @@ export const LearningJourney = () => {
         <h2 className="text-3xl font-bold text-center mb-10 text-codersbee-dark">
           Your Learning Journey
           <span className="block text-sm text-gray-600 mt-2">
-            Typically 2 classes per week
+            A structured path to mastery
           </span>
         </h2>
+        
         <div className="relative">
           {/* Main Connection Line */}
-          <div className="absolute left-1/2 top-0 h-full w-0.5 bg-codersbee-vivid/20 -translate-x-1/2" />
+          <div className="absolute left-1/2 top-0 h-full w-0.5 bg-gradient-to-b from-amber-300 via-yellow-400 to-purple-400 -translate-x-1/2" />
           
           {/* Milestones */}
           <div className="space-y-16">
@@ -70,8 +74,8 @@ export const LearningJourney = () => {
                   <p className="text-sm text-codersbee-vivid mt-1">{milestone.date}</p>
                 </div>
                 
-                <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full border-2 border-codersbee-vivid z-10">
-                  <Milestone className="w-6 h-6 text-codersbee-vivid" />
+                <div className={`relative flex items-center justify-center w-16 h-16 rounded-full border-2 ${milestone.color} z-10`}>
+                  {milestone.icon}
                 </div>
                 
                 <div className="flex-1" />
