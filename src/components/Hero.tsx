@@ -1,6 +1,6 @@
 import React from "react";
 
-const Hero = () => {
+export const Hero = () => {
   return (
     <section className="relative py-20 bg-gray-100">
       <div className="container mx-auto px-4">
@@ -18,5 +18,3 @@ const Hero = () => {
     </section>
   );
 };
-
-export default Hero;
