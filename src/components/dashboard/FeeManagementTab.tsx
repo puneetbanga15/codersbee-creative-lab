@@ -5,9 +5,11 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export const FeeManagementTab = () => {
-  const { data: fees, isLoading } = useQuery({
+  const { data: fees, isLoading, refetch } = useQuery({
     queryKey: ['fees'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -25,6 +27,43 @@ export const FeeManagementTab = () => {
       return data;
     },
   });
+
+  const handleMarkAsPaid = async (feeId: string) => {
+    try {
+      const { error } = await supabase
+        .from('fee_management')
+        .update({ 
+          status: 'paid',
+          payment_date: new Date().toISOString()
+        })
+        .eq('id', feeId);
+
+      if (error) throw error;
+
+      toast.success("Payment status updated successfully");
+      refetch();
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      toast.error("Failed to update payment status");
+    }
+  };
+
+  const handleMarkAsOverdue = async (feeId: string) => {
+    try {
+      const { error } = await supabase
+        .from('fee_management')
+        .update({ status: 'overdue' })
+        .eq('id', feeId);
+
+      if (error) throw error;
+
+      toast.success("Fee marked as overdue");
+      refetch();
+    } catch (error) {
+      console.error('Error marking fee as overdue:', error);
+      toast.error("Failed to mark fee as overdue");
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -46,6 +85,7 @@ export const FeeManagementTab = () => {
                 <TableHead>Due Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Payment Date</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -66,6 +106,27 @@ export const FeeManagementTab = () => {
                   </TableCell>
                   <TableCell>
                     {fee.payment_date ? format(new Date(fee.payment_date), 'PPP') : '-'}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      {fee.status !== 'paid' && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleMarkAsPaid(fee.id)}
+                        >
+                          Mark as Paid
+                        </Button>
+                      )}
+                      {fee.status === 'pending' && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleMarkAsOverdue(fee.id)}
+                        >
+                          Mark Overdue
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

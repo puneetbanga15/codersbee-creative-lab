@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 interface Student {
   id: string;
   full_name: string;
+  readable_id: string;
 }
 
 export const StudentInformation = ({ students }: { students: Student[] }) => {
@@ -17,7 +18,7 @@ export const StudentInformation = ({ students }: { students: Student[] }) => {
         {students.map((student) => (
           <div key={student.id} className="p-3 bg-gray-50 rounded-lg">
             <p className="font-medium">{student.full_name}</p>
-            <p className="text-sm text-gray-500">Student ID: {student.id}</p>
+            <p className="text-sm text-gray-500">ID: {student.readable_id}</p>
           </div>
         ))}
       </div>

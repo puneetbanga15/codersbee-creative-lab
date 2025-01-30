@@ -37,38 +37,40 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { data: existingProfiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', values.email)
-        .single();
+      // Check if user exists by attempting to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: "dummy-password", // Use a dummy password for checking
+      });
 
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError;
-      }
-
-      if (existingProfiles) {
+      // If no error or error is not "Invalid credentials", user might exist
+      if (!signInError || signInError.message !== "Invalid login credentials") {
         toast.error("A teacher with this email already exists");
         return;
       }
 
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // If we get here, user doesn't exist, so create new account
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
           data: {
             full_name: values.fullName,
             phone_number: values.phone,
+            role: 'teacher'
           },
         },
       });
 
-      if (authError) {
-        if (authError.message.includes("already registered")) {
-          toast.error("A teacher with this email already exists");
-          return;
-        }
-        throw authError;
+      if (signUpError) {
+        console.error('Error creating teacher:', signUpError);
+        toast.error(signUpError.message);
+        return;
+      }
+
+      if (!data.user) {
+        toast.error("Failed to create teacher account");
+        return;
       }
 
       toast.success("Teacher added successfully!");
@@ -76,11 +78,7 @@ export const AddTeacherForm = ({ onSuccess }: { onSuccess: () => void }) => {
       form.reset();
     } catch (error: any) {
       console.error('Error adding teacher:', error);
-      if (error.message?.includes("already registered") || error.message?.includes("already exists")) {
-        toast.error("A teacher with this email already exists");
-      } else {
-        toast.error("Failed to add teacher. Please try again.");
-      }
+      toast.error(error.message || "Failed to add teacher. Please try again.");
     }
   };
 

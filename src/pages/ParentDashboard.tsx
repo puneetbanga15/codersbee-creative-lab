@@ -3,33 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { DashboardHeader } from "@/components/dashboard/parent/DashboardHeader";
+import { LearningJourneyVisual } from "@/components/dashboard/parent/LearningJourneyVisual";
 import { UpcomingClasses } from "@/components/dashboard/parent/UpcomingClasses";
 import { RecentPayments } from "@/components/dashboard/parent/RecentPayments";
 import { StudentInformation } from "@/components/dashboard/parent/StudentInformation";
 import { CertificatesSection } from "@/components/dashboard/parent/CertificatesSection";
+import { FeedbackSection } from "@/components/dashboard/parent/FeedbackSection";
+import { PaymentTrackingSection } from "@/components/dashboard/parent/PaymentTrackingSection";
 import { ParentSidebar } from "@/components/dashboard/parent/ParentSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-
-interface Student {
-  id: string;
-  full_name: string;
-}
-
-interface ClassSchedule {
-  id: string;
-  scheduled_at: string;
-  status: string;
-}
-
-interface FeePayment {
-  id: string;
-  amount: number;
-  payment_date: string;
-  status: string;
-  description: string;
-}
+import { formatInTimeZone } from 'date-fns-tz';
+import type { Student, ClassSchedule, FeePayment } from "@/types/database";
 
 const ParentDashboard = () => {
   const navigate = useNavigate();
@@ -51,27 +37,46 @@ const ParentDashboard = () => {
       try {
         const { data: studentsData, error: studentsError } = await supabase
           .from('students')
-          .select('*')
+          .select(`
+            id,
+            full_name,
+            readable_id,
+            class_schedules(
+              id,
+              scheduled_at,
+              status,
+              teacher:profiles(full_name)
+            )
+          `)
           .eq('parent_id', session.user.id);
 
         if (studentsError) throw studentsError;
         setStudents(studentsData || []);
 
-        if (studentsData && studentsData.length > 0) {
+        // Fetch upcoming classes for all students
+        const studentIds = studentsData?.map(s => s.id) || [];
+        if (studentIds.length > 0) {
           const { data: schedulesData, error: schedulesError } = await supabase
             .from('class_schedules')
-            .select('*')
-            .eq('student_id', studentsData[0].id)
+            .select(`
+              id,
+              scheduled_at,
+              status,
+              teacher:profiles(full_name)
+            `)
+            .in('student_id', studentIds)
+            .gte('scheduled_at', new Date().toISOString())
             .order('scheduled_at', { ascending: true })
-            .limit(5);
+            .limit(10);
 
           if (schedulesError) throw schedulesError;
-          setSchedules(schedulesData || []);
+          setSchedules(schedulesData as ClassSchedule[] || []);
 
+          // Fetch recent payments
           const { data: paymentsData, error: paymentsError } = await supabase
             .from('fee_payments')
             .select('*')
-            .eq('student_id', studentsData[0].id)
+            .in('student_id', studentIds)
             .order('payment_date', { ascending: false })
             .limit(5);
 
@@ -91,6 +96,12 @@ const ParentDashboard = () => {
 
     checkAuth();
   }, [navigate, toast]);
+
+  const formatClassTime = (dateStr: string) => {
+    const istTime = formatInTimeZone(new Date(dateStr), 'Asia/Kolkata', 'h:mm a z');
+    const centralTime = formatInTimeZone(new Date(dateStr), 'America/Chicago', 'h:mm a z');
+    return `${istTime} / ${centralTime}`;
+  };
 
   if (loading) {
     return (
@@ -117,10 +128,22 @@ const ParentDashboard = () => {
               </Card>
             ) : (
               <>
+                <div className="mb-6">
+                  <LearningJourneyVisual />
+                </div>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <UpcomingClasses schedules={schedules} />
+                  <UpcomingClasses 
+                    schedules={schedules.map(schedule => ({
+                      ...schedule,
+                      scheduled_at: formatClassTime(schedule.scheduled_at)
+                    }))} 
+                  />
                   <RecentPayments payments={payments} />
                   <StudentInformation students={students} />
+                </div>
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                  <FeedbackSection />
+                  <PaymentTrackingSection />
                 </div>
                 <div className="mt-6">
                   <CertificatesSection />

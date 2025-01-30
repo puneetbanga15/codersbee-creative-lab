@@ -6,6 +6,9 @@ interface ClassSchedule {
   id: string;
   scheduled_at: string;
   status: string;
+  teacher: {
+    full_name: string;
+  };
 }
 
 export const UpcomingClasses = ({ schedules }: { schedules: ClassSchedule[] }) => {
@@ -20,14 +23,16 @@ export const UpcomingClasses = ({ schedules }: { schedules: ClassSchedule[] }) =
       ) : (
         <div className="space-y-3">
           {schedules.map((schedule) => (
-            <div key={schedule.id} className="flex justify-between items-center">
-              <div>
-                <p className="font-medium">{format(new Date(schedule.scheduled_at), "PPP")}</p>
-                <p className="text-sm text-gray-500">{format(new Date(schedule.scheduled_at), "p")}</p>
+            <div key={schedule.id} className="flex flex-col space-y-1">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-medium">With {schedule.teacher.full_name}</p>
+                  <p className="text-sm text-gray-500">{schedule.scheduled_at}</p>
+                </div>
+                <span className="px-2 py-1 text-xs rounded-full bg-codersbee-purple text-codersbee-vivid">
+                  {schedule.status}
+                </span>
               </div>
-              <span className="px-2 py-1 text-xs rounded-full bg-codersbee-purple text-codersbee-vivid">
-                {schedule.status}
-              </span>
             </div>
           ))}
         </div>

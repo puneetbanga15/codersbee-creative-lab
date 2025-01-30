@@ -177,6 +177,7 @@ export type Database = {
       }
       course_enrollments: {
         Row: {
+          class_frequency: string | null
           course_name: string
           created_at: string
           id: string
@@ -185,6 +186,7 @@ export type Database = {
           teacher_id: string | null
         }
         Insert: {
+          class_frequency?: string | null
           course_name: string
           created_at?: string
           id?: string
@@ -193,6 +195,7 @@ export type Database = {
           teacher_id?: string | null
         }
         Update: {
+          class_frequency?: string | null
           course_name?: string
           created_at?: string
           id?: string
@@ -402,6 +405,44 @@ export type Database = {
           },
         ]
       }
+      payment_tracking: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          paid_until_date: string
+          payment_mode: string | null
+          payment_reference: string | null
+          student_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          paid_until_date: string
+          payment_mode?: string | null
+          payment_reference?: string | null
+          student_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          paid_until_date?: string
+          payment_mode?: string | null
+          payment_reference?: string | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_tracking_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -409,6 +450,7 @@ export type Database = {
           id: string
           is_parent: boolean | null
           phone_number: string | null
+          preferred_timezone: string | null
           role: Database["public"]["Enums"]["user_role"] | null
         }
         Insert: {
@@ -417,6 +459,7 @@ export type Database = {
           id: string
           is_parent?: boolean | null
           phone_number?: string | null
+          preferred_timezone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
         }
         Update: {
@@ -425,6 +468,7 @@ export type Database = {
           id?: string
           is_parent?: boolean | null
           phone_number?: string | null
+          preferred_timezone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
         }
         Relationships: []
@@ -608,6 +652,86 @@ export type Database = {
           },
         ]
       }
+      student_feedback: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          feedback_date: string
+          feedback_text: string
+          id: string
+          student_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          feedback_date?: string
+          feedback_text: string
+          id?: string
+          student_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          feedback_date?: string
+          feedback_text?: string
+          id?: string
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_feedback_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_feedback_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_journey_milestones: {
+        Row: {
+          completed_at: string | null
+          completion_status: string | null
+          created_at: string | null
+          id: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          student_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          id?: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          student_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          id?: string
+          milestone_type?: Database["public"]["Enums"]["milestone_type"]
+          student_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_journey_milestones_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_projects: {
         Row: {
           created_at: string
@@ -647,6 +771,7 @@ export type Database = {
           full_name: string
           id: string
           parent_id: string | null
+          readable_id: string | null
           timezone: string | null
         }
         Insert: {
@@ -654,6 +779,7 @@ export type Database = {
           full_name: string
           id?: string
           parent_id?: string | null
+          readable_id?: string | null
           timezone?: string | null
         }
         Update: {
@@ -661,6 +787,7 @@ export type Database = {
           full_name?: string
           id?: string
           parent_id?: string | null
+          readable_id?: string | null
           timezone?: string | null
         }
         Relationships: [
@@ -686,6 +813,17 @@ export type Database = {
         | "appreciation_letter"
         | "project_details"
         | "other"
+      milestone_type:
+        | "scratch_fundamentals"
+        | "scratch_advanced"
+        | "web_fundamentals"
+        | "web_advanced"
+        | "python_basics"
+        | "python_advanced"
+        | "ai_fundamentals"
+        | "generative_ai_creativity"
+        | "advanced_generative_ai"
+        | "ai_master"
       quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
       user_role: "admin" | "teacher" | "parent"
     }
