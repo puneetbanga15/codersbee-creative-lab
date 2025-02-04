@@ -41,7 +41,7 @@ export const Milestone = ({ milestone, index, isLast }: MilestoneProps) => {
         <p className="text-xs text-gray-600 mt-1">{milestone.description}</p>
       </div>
       {!isLast && (
-        <div className="absolute right-[-50%] top-[30px] w-full h-[2px] bg-gradient-to-r from-gray-300 to-gray-400" />
+        <div className="absolute left-[64px] top-8 w-[256px] h-[2px] bg-gradient-to-r from-gray-300 to-gray-200" />
       )}
     </motion.div>
   );

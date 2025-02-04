@@ -35,8 +35,7 @@ export const LearningJourneyVisual = () => {
         const { data, error } = await supabase
           .from('student_journey_milestones')
           .select('*')
-          .eq('student_id', students.id)
-          .order('created_at', { ascending: true });
+          .eq('student_id', students.id);
 
         if (error) {
           console.error("Error fetching milestones:", error);
@@ -82,14 +81,14 @@ export const LearningJourneyVisual = () => {
         {
           title: "Scratch Fundamentals",
           description: "Basic programming concepts with Scratch",
-          completed: milestones.some(m => m?.milestone_type === 'scratch_fundamentals' && m?.completion_status === 'completed'),
+          completed: milestones.some(m => m.milestone_type === 'scratch_fundamentals' && m.completion_status === 'completed'),
           icon: <GraduationCap className="w-6 h-6" />,
           type: 'scratch_fundamentals'
         },
         {
           title: "Scratch Advanced",
           description: "Advanced Scratch programming",
-          completed: milestones.some(m => m?.milestone_type === 'scratch_advanced' && m?.completion_status === 'completed'),
+          completed: milestones.some(m => m.milestone_type === 'scratch_advanced' && m.completion_status === 'completed'),
           icon: <Award className="w-6 h-6" />,
           type: 'scratch_advanced'
         }
@@ -103,15 +102,15 @@ export const LearningJourneyVisual = () => {
         {
           title: "AI Fundamentals",
           description: "Basic AI and ML concepts",
-          completed: milestones.some(m => m?.milestone_type === 'ai_fundamentals' && m?.completion_status === 'completed'),
+          completed: milestones.some(m => m.milestone_type === 'ai_fundamentals' && m.completion_status === 'completed'),
           icon: <Brain className="w-6 h-6" />,
           type: 'ai_fundamentals'
         },
         {
           title: "AI Master",
           description: "Complete AI mastery achieved",
-          completed: milestones.some(m => m?.milestone_type === 'ai_master' && m?.completion_status === 'completed'),
-          icon: <Award className="w-8 h-8" />,
+          completed: milestones.some(m => m.milestone_type === 'ai_master' && m.completion_status === 'completed'),
+          icon: <Award className="w-6 h-6" />,
           type: 'ai_master'
         }
       ]
@@ -123,7 +122,7 @@ export const LearningJourneyVisual = () => {
   return (
     <Card className="p-8 bg-gradient-to-br from-gray-50 to-white">
       <h2 className="text-2xl font-bold mb-12 text-center">Learning Journey</h2>
-      <div className="space-y-8">
+      <div className="space-y-16">
         {tracks.map((track, index) => (
           <Track 
             key={track.name} 
