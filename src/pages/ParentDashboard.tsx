@@ -136,10 +136,8 @@ const ParentDashboard = () => {
                 <p>No students found. Please contact support to add your children.</p>
               </Card>
             ) : (
-              <>
-                <div className="mb-8">
-                  <LearningJourneyVisual />
-                </div>
+              <div className="space-y-8">
+                <LearningJourneyVisual />
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   <UpcomingClasses 
                     schedules={schedules.map(schedule => ({
@@ -150,14 +148,14 @@ const ParentDashboard = () => {
                   <RecentPayments payments={payments} />
                   <StudentInformation students={students} />
                 </div>
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <FeedbackSection />
                   <PaymentTrackingSection />
                 </div>
-                <div className="mt-6">
+                <div>
                   <CertificatesSection />
                 </div>
-              </>
+              </div>
             )}
           </div>
         </main>
