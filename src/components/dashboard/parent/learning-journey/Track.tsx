@@ -15,17 +15,17 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
-      className="relative"
+      className="relative mb-24 last:mb-0"
     >
-      <div className="flex items-center gap-2 mb-8">
-        <div className={`p-2 rounded-full bg-gradient-to-r ${track.color} shadow-lg`}>
+      <div className="flex items-center gap-4 mb-12">
+        <div className={`p-4 rounded-full bg-gradient-to-r ${track.color} shadow-lg`}>
           {track.icon}
         </div>
-        <h3 className="text-lg font-semibold">{track.name}</h3>
+        <h3 className="text-2xl font-semibold">{track.name}</h3>
       </div>
 
-      <div className="relative">
-        <div className="flex justify-start gap-32 px-4">
+      <div className="relative pl-8">
+        <div className="flex justify-start gap-48">
           {track.milestones.map((milestone, index) => (
             <Milestone
               key={milestone.type}
@@ -38,9 +38,13 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
       </div>
 
       {!isLastTrack && (
-        <div className="absolute -bottom-12 left-32">
-          <ArrowDownRight className="w-8 h-8 text-gray-400" />
-        </div>
+        <motion.div 
+          className="absolute -bottom-16 left-12"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <ArrowDownRight className="w-10 h-10 text-gray-400" />
+        </motion.div>
       )}
     </motion.div>
   );
