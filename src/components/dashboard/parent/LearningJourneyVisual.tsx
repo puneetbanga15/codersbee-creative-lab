@@ -10,23 +10,40 @@ export const LearningJourneyVisual = () => {
     queryKey: ['student-milestones'],
     queryFn: async () => {
       try {
+        console.log("Fetching user data...");
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return [];
+        if (!user) {
+          console.log("No user found");
+          return [];
+        }
+        console.log("User found:", user.id);
 
+        console.log("Fetching student data...");
         const { data: students } = await supabase
           .from('students')
           .select('id')
           .eq('parent_id', user.id)
           .maybeSingle();
 
-        if (!students) return [];
+        if (!students) {
+          console.log("No student found");
+          return [];
+        }
+        console.log("Student found:", students.id);
 
-        const { data } = await supabase
+        console.log("Fetching milestones...");
+        const { data, error } = await supabase
           .from('student_journey_milestones')
           .select('*')
           .eq('student_id', students.id)
           .order('created_at', { ascending: true });
 
+        if (error) {
+          console.error("Error fetching milestones:", error);
+          return [];
+        }
+
+        console.log("Milestones fetched:", data);
         return data || [];
       } catch (err) {
         console.error('Error fetching milestones:', err);
@@ -35,6 +52,10 @@ export const LearningJourneyVisual = () => {
     },
     retry: false
   });
+
+  console.log("Current milestones state:", milestones);
+  console.log("Loading state:", isLoading);
+  console.log("Error state:", error);
 
   if (isLoading) {
     return (
@@ -96,6 +117,8 @@ export const LearningJourneyVisual = () => {
       ]
     }
   ];
+
+  console.log("Rendering tracks:", tracks);
 
   return (
     <Card className="p-8 bg-gradient-to-br from-gray-50 to-white">
