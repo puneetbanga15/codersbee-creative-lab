@@ -1,35 +1,92 @@
 import { motion } from "framer-motion";
-import { GraduationCap, Code, Brain, ArrowRight } from "lucide-react";
+import { GraduationCap, Code, Brain, ArrowRight, Download } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const LearningJourney = () => {
+  const { data: certificates } = useQuery({
+    queryKey: ['certificates'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('certificates')
+        .select('*');
+      
+      if (error) {
+        toast.error("Failed to fetch certificates");
+        throw error;
+      }
+      return data || [];
+    },
+  });
+
+  const handleDownloadCertificate = async (milestoneType: string) => {
+    try {
+      const certificate = certificates?.find(c => c.milestone_type === milestoneType);
+      
+      if (!certificate) {
+        toast.error("Certificate not found");
+        return;
+      }
+
+      const { data, error } = await supabase.storage
+        .from('certificates')
+        .download(certificate.file_path);
+
+      if (error) {
+        toast.error("Failed to download certificate");
+        throw error;
+      }
+
+      // Create download link
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = certificate.filename || 'certificate.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success("Certificate downloaded successfully");
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error("Failed to download certificate");
+    }
+  };
+
   const journeySteps = [
     {
       title: "Scratch Fundamentals",
       description: "Visual programming basics and computational thinking",
       icon: GraduationCap,
       color: "from-amber-400 to-orange-500",
-      duration: "2-3 months"
+      duration: "2-3 months",
+      milestoneType: "scratch_fundamentals"
     },
     {
       title: "JavaScript Foundations",
       description: "Core programming concepts with JavaScript",
       icon: Code,
       color: "from-blue-400 to-blue-600",
-      duration: "3-4 months"
+      duration: "3-4 months",
+      milestoneType: "javascript_foundations"
     },
     {
       title: "Advanced Programming",
       description: "Complex projects and problem-solving",
       icon: Code,
       color: "from-indigo-400 to-indigo-600",
-      duration: "4-5 months"
+      duration: "4-5 months",
+      milestoneType: "advanced_programming"
     },
     {
       title: "AI & Machine Learning",
       description: "Introduction to AI concepts and applications",
       icon: Brain,
       color: "from-purple-400 to-purple-600",
-      duration: "4-5 months"
+      duration: "4-5 months",
+      milestoneType: "ai_ml_basics"
     }
   ];
 
@@ -71,9 +128,22 @@ export const LearningJourney = () => {
                     <h3 className="text-xl font-semibold text-gray-900">
                       {step.title}
                     </h3>
-                    <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                      {step.duration}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      {certificates?.some(c => c.milestone_type === step.milestoneType) && (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleDownloadCertificate(step.milestoneType)}
+                          className="text-codersbee-vivid hover:text-codersbee-vivid/80 transition-colors"
+                          title="Download Certificate"
+                        >
+                          <Download className="w-5 h-5" />
+                        </motion.button>
+                      )}
+                      <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                        {step.duration}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-gray-600">{step.description}</p>
 
