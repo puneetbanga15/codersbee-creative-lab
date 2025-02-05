@@ -1,24 +1,23 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, GraduationCap, Code, Brain, Award, Terminal } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Track } from "./learning-journey/Track";
 import type { Track as TrackType } from "./learning-journey/types";
+import { toast } from "sonner";
 
 export const LearningJourneyVisual = () => {
   const { data: milestones = [], isLoading, error } = useQuery({
     queryKey: ['student-milestones'],
     queryFn: async () => {
       try {
-        console.log("Fetching user data...");
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           console.log("No user found");
           return [];
         }
-        console.log("User found:", user.id);
 
-        console.log("Fetching student data...");
         const { data: students } = await supabase
           .from('students')
           .select('id')
@@ -29,28 +28,22 @@ export const LearningJourneyVisual = () => {
           console.log("No student found");
           return [];
         }
-        console.log("Student found:", students.id);
 
-        console.log("Fetching milestones...");
         const { data, error } = await supabase
           .from('student_journey_milestones')
           .select('*')
           .eq('student_id', students.id)
           .order('created_at', { ascending: true });
 
-        if (error) {
-          console.error("Error fetching milestones:", error);
-          return [];
-        }
+        if (error) throw error;
 
-        console.log("Milestones fetched:", data);
         return data || [];
       } catch (err) {
         console.error('Error fetching milestones:', err);
+        toast.error("Failed to load learning journey");
         return [];
       }
     },
-    retry: false
   });
 
   if (isLoading) {
@@ -73,7 +66,7 @@ export const LearningJourneyVisual = () => {
     {
       name: "Scratch",
       color: "from-amber-400 to-orange-500",
-      icon: <GraduationCap className="w-8 h-8 text-amber-600" />,
+      icon: <GraduationCap className="w-10 h-10 text-white" />,
       milestones: [
         {
           title: "Scratch Fundamentals",
@@ -94,7 +87,7 @@ export const LearningJourneyVisual = () => {
     {
       name: "Programming",
       color: "from-blue-400 to-blue-600",
-      icon: <Terminal className="w-8 h-8 text-blue-600" />,
+      icon: <Terminal className="w-10 h-10 text-white" />,
       milestones: [
         {
           title: "JavaScript Basics",
@@ -115,7 +108,7 @@ export const LearningJourneyVisual = () => {
     {
       name: "AI Journey",
       color: "from-violet-400 to-purple-500",
-      icon: <Brain className="w-8 h-8 text-violet-600" />,
+      icon: <Brain className="w-10 h-10 text-white" />,
       milestones: [
         {
           title: "AI Fundamentals",
@@ -136,17 +129,27 @@ export const LearningJourneyVisual = () => {
   ];
 
   return (
-    <Card className="p-12 bg-gradient-to-br from-gray-50 to-white">
-      <h2 className="text-3xl font-bold mb-16 text-center">Learning Journey</h2>
-      <div className="space-y-24">
-        {tracks.map((track, index) => (
-          <Track 
-            key={track.name} 
-            track={track} 
-            trackIndex={index}
-            isLastTrack={index === tracks.length - 1}
-          />
-        ))}
+    <Card className="p-12 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-gray-100/50 bg-[size:20px_20px]" />
+      <div className="relative z-10">
+        <motion.h2 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold mb-16 text-center"
+        >
+          Learning Journey
+        </motion.h2>
+        <div className="space-y-24">
+          {tracks.map((track, index) => (
+            <Track 
+              key={track.name} 
+              track={track} 
+              trackIndex={index}
+              isLastTrack={index === tracks.length - 1}
+            />
+          ))}
+        </div>
       </div>
     </Card>
   );
