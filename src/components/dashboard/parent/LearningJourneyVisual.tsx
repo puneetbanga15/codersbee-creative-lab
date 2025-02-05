@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Track } from "./learning-journey/Track";
 import type { Track as TrackType } from "./learning-journey/types";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export const LearningJourneyVisual = () => {
   const { data: milestones = [], isLoading, error } = useQuery({
@@ -90,18 +91,18 @@ export const LearningJourneyVisual = () => {
       icon: <Terminal className="w-10 h-10 text-white" />,
       milestones: [
         {
-          title: "JavaScript Basics",
-          description: "Core programming concepts with JavaScript",
-          completed: milestones.some(m => m.milestone_type === 'javascript_basics' && m.completion_status === 'completed'),
+          title: "Web Fundamentals",
+          description: "Core programming concepts with Web Development",
+          completed: milestones.some(m => m.milestone_type === 'web_fundamentals' && m.completion_status === 'completed'),
           icon: <Code className="w-8 h-8" />,
-          type: 'javascript_basics'
+          type: 'web_fundamentals'
         },
         {
-          title: "Advanced Programming",
-          description: "Complex projects and problem-solving",
-          completed: milestones.some(m => m.milestone_type === 'advanced_programming' && m.completion_status === 'completed'),
+          title: "Web Advanced",
+          description: "Complex web projects and problem-solving",
+          completed: milestones.some(m => m.milestone_type === 'web_advanced' && m.completion_status === 'completed'),
           icon: <Terminal className="w-8 h-8" />,
-          type: 'advanced_programming'
+          type: 'web_advanced'
         }
       ]
     },

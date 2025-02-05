@@ -4,6 +4,7 @@ import { Check, Download, Award } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Milestone as MilestoneType } from "./types";
+import type { Database } from "@/integrations/supabase/types";
 
 interface MilestoneProps {
   milestone: MilestoneType;
