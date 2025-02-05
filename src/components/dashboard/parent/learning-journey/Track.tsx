@@ -11,12 +11,20 @@ interface TrackProps {
 }
 
 export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
+  const lineVariants = {
+    hidden: { pathLength: 0 },
+    visible: { 
+      pathLength: 1,
+      transition: { duration: 1, ease: "easeInOut" }
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
-      className="relative mb-24 last:mb-0"
+      className="relative"
     >
       <div className="flex items-center gap-4 mb-12 group">
         <motion.div 
@@ -45,6 +53,25 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
       </div>
 
       <div className="relative pl-8">
+        <svg className="absolute left-0 top-0 w-full h-full" style={{ pointerEvents: 'none' }}>
+          {track.milestones.map((_, index) => {
+            if (index === track.milestones.length - 1) return null;
+            return (
+              <motion.path
+                key={index}
+                d={`M ${100 + (index * 200)},30 C ${150 + (index * 200)},30 ${50 + ((index + 1) * 200)},30 ${100 + ((index + 1) * 200)},30`}
+                stroke="currentColor"
+                strokeWidth="2"
+                fill="none"
+                className="text-gray-300"
+                initial="hidden"
+                animate="visible"
+                variants={lineVariants}
+              />
+            );
+          })}
+        </svg>
+
         <div className="flex justify-start gap-48">
           {track.milestones.map((milestone, index) => (
             <Milestone

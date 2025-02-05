@@ -1,18 +1,21 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, GraduationCap, Code, Brain, Award, Terminal } from "lucide-react";
+import { Loader2, GraduationCap, Code, Brain, Award, Terminal, Download, CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Track } from "./learning-journey/Track";
 import type { Track as TrackType } from "./learning-journey/types";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 
 export const LearningJourneyVisual = () => {
   const { data: milestones = [], isLoading, error } = useQuery({
     queryKey: ['student-milestones'],
     queryFn: async () => {
       try {
+        console.log("Fetching student milestones...");
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
           console.log("No user found");
@@ -36,8 +39,12 @@ export const LearningJourneyVisual = () => {
           .eq('student_id', students.id)
           .order('created_at', { ascending: true });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching milestones:", error);
+          throw error;
+        }
 
+        console.log("Fetched milestones:", data);
         return data || [];
       } catch (err) {
         console.error('Error fetching milestones:', err);
@@ -46,6 +53,64 @@ export const LearningJourneyVisual = () => {
       }
     },
   });
+
+  const { data: certificates } = useQuery({
+    queryKey: ['certificates'],
+    queryFn: async () => {
+      try {
+        console.log("Fetching certificates...");
+        const { data, error } = await supabase
+          .from('certificates')
+          .select('*');
+        
+        if (error) throw error;
+        console.log("Fetched certificates:", data);
+        return data || [];
+      } catch (err) {
+        console.error('Error fetching certificates:', err);
+        toast.error("Failed to load certificates");
+        return [];
+      }
+    }
+  });
+
+  const handleDownloadCertificate = async (milestoneType: string) => {
+    try {
+      console.log("Attempting to download certificate for:", milestoneType);
+      const certificate = certificates?.find(c => c.milestone_type === milestoneType);
+      
+      if (!certificate) {
+        console.log("No certificate found for:", milestoneType);
+        toast.error("Certificate not found");
+        return;
+      }
+
+      const { data, error } = await supabase.storage
+        .from('certificates')
+        .download(certificate.file_path);
+
+      if (error) {
+        console.error("Download error:", error);
+        toast.error("Failed to download certificate");
+        throw error;
+      }
+
+      console.log("Certificate downloaded successfully");
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = certificate.filename || 'certificate.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success("Certificate downloaded successfully!");
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      toast.error("Failed to download certificate");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -62,6 +127,13 @@ export const LearningJourneyVisual = () => {
       </Card>
     );
   }
+
+  const calculateTrackProgress = (trackMilestones: any[]) => {
+    const completed = trackMilestones.filter(m => 
+      milestones.some(ms => ms.milestone_type === m.type && ms.completion_status === 'completed')
+    ).length;
+    return (completed / trackMilestones.length) * 100;
+  };
 
   const tracks: TrackType[] = [
     {
@@ -143,12 +215,53 @@ export const LearningJourneyVisual = () => {
         </motion.h2>
         <div className="space-y-24">
           {tracks.map((track, index) => (
-            <Track 
-              key={track.name} 
-              track={track} 
-              trackIndex={index}
-              isLastTrack={index === tracks.length - 1}
-            />
+            <div key={track.name} className="relative">
+              <AnimatePresence>
+                {track.milestones.some(m => m.completed) && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-8 right-0 flex items-center gap-2"
+                  >
+                    <Progress value={calculateTrackProgress(track.milestones)} className="w-32" />
+                    <span className="text-sm font-medium">
+                      {Math.round(calculateTrackProgress(track.milestones))}%
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              
+              <Track 
+                key={track.name} 
+                track={track} 
+                trackIndex={index}
+                isLastTrack={index === tracks.length - 1}
+              />
+
+              <div className="mt-4 flex justify-end space-x-4">
+                {track.milestones.map((milestone) => (
+                  milestone.completed && certificates?.some(c => c.milestone_type === milestone.type) && (
+                    <motion.div
+                      key={milestone.type}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadCertificate(milestone.type)}
+                        className="gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Certificate for {milestone.title}</span>
+                      </Button>
+                    </motion.div>
+                  )
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
