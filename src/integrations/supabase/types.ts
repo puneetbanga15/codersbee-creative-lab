@@ -15,7 +15,7 @@ export type Database = {
           file_path: string
           filename: string
           id: string
-          milestone_type: Database["public"]["Enums"]["milestone_type"] | null
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
           student_id: string | null
           uploaded_at: string | null
           uploaded_by: string | null
@@ -25,7 +25,7 @@ export type Database = {
           file_path: string
           filename: string
           id?: string
-          milestone_type?: Database["public"]["Enums"]["milestone_type"] | null
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
           student_id?: string | null
           uploaded_at?: string | null
           uploaded_by?: string | null
@@ -35,7 +35,7 @@ export type Database = {
           file_path?: string
           filename?: string
           id?: string
-          milestone_type?: Database["public"]["Enums"]["milestone_type"] | null
+          milestone_type?: Database["public"]["Enums"]["milestone_type"]
           student_id?: string | null
           uploaded_at?: string | null
           uploaded_by?: string | null
@@ -821,11 +821,7 @@ export type Database = {
         | "scratch_advanced"
         | "web_fundamentals"
         | "web_advanced"
-        | "python_basics"
-        | "python_advanced"
         | "ai_fundamentals"
-        | "generative_ai_creativity"
-        | "advanced_generative_ai"
         | "ai_master"
       quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
       user_role: "admin" | "teacher" | "parent"
