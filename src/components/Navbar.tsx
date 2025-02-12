@@ -35,10 +35,9 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[100] shadow-sm">
+    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm">
       <div className="max-w-[1400px] mx-auto px-6 py-3">
-        <div className="flex items-center">
-          {/* Logo and Brand Section */}
+        <div className="flex items-center justify-between relative z-[9999]">
           <Link to="/" className="flex items-center gap-x-2">
             <img 
               src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" 
@@ -48,7 +47,6 @@ export const Navbar = () => {
             <span className="text-xl font-semibold text-[#9b87f5]">CodersBee</span>
           </Link>
 
-          {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-x-6 ml-8">
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
@@ -99,7 +97,6 @@ export const Navbar = () => {
             </Link>
           </div>
 
-          {/* Action Buttons */}
           <div className="hidden md:flex items-center gap-x-4 ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -139,10 +136,9 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden ml-auto text-[#9b87f5] p-2"
+            className="md:hidden text-[#9b87f5] p-2"
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -152,10 +148,9 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[72px] bg-white z-[90] overflow-y-auto">
-            <div className="px-6 py-4 space-y-4">
+          <div className="md:hidden fixed left-0 right-0 top-[72px] bottom-0 bg-white z-[9998] overflow-y-auto">
+            <div className="px-6 py-4 space-y-4 min-h-screen">
               <a 
                 href="/#courses" 
                 onClick={(e) => { 
