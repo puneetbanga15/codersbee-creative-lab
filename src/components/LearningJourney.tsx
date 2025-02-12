@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { GraduationCap, Code, Brain, ArrowRight, Download } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -60,7 +61,7 @@ export const LearningJourney = () => {
       title: "Scratch Fundamentals",
       description: "Visual programming basics and computational thinking",
       icon: GraduationCap,
-      color: "from-amber-400 to-orange-500",
+      color: "bg-amber-400",
       duration: "2-3 months",
       milestoneType: "scratch_fundamentals"
     },
@@ -68,7 +69,7 @@ export const LearningJourney = () => {
       title: "JavaScript Foundations",
       description: "Core programming concepts with JavaScript",
       icon: Code,
-      color: "from-blue-400 to-blue-600",
+      color: "bg-blue-500",
       duration: "3-4 months",
       milestoneType: "javascript_foundations"
     },
@@ -76,7 +77,7 @@ export const LearningJourney = () => {
       title: "Advanced Programming",
       description: "Complex projects and problem-solving",
       icon: Code,
-      color: "from-indigo-400 to-indigo-600",
+      color: "bg-indigo-500",
       duration: "4-5 months",
       milestoneType: "advanced_programming"
     },
@@ -84,7 +85,7 @@ export const LearningJourney = () => {
       title: "AI & Machine Learning",
       description: "Introduction to AI concepts and applications",
       icon: Brain,
-      color: "from-purple-400 to-purple-600",
+      color: "bg-purple-500",
       duration: "4-5 months",
       milestoneType: "ai_ml_basics"
     }
@@ -112,7 +113,7 @@ export const LearningJourney = () => {
               <div className="flex items-start gap-6">
                 <div className="relative">
                   <motion.div
-                    className={`w-16 h-16 rounded-full bg-gradient-to-br ${step.color} shadow-lg flex items-center justify-center`}
+                    className={`w-16 h-16 rounded-full ${step.color} shadow-lg flex items-center justify-center`}
                     whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >

@@ -1,7 +1,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import type { Milestone as MilestoneType } from "./types";
-import { CheckCircle2, Trophy } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface MilestoneProps {
   milestone: MilestoneType;
@@ -17,55 +17,38 @@ export const Milestone = ({ milestone, index, isLast }: MilestoneProps) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: index * 0.2 }}
         className={`
-          relative w-24 h-24 rounded-full border-2 
+          relative w-12 h-12 rounded-full
           ${milestone.completed 
-            ? 'border-green-500 bg-green-50' 
-            : 'border-gray-200 bg-white'
+            ? 'bg-green-500 text-white' 
+            : 'bg-gray-100 text-gray-400'
           }
           flex items-center justify-center
+          transition-colors duration-300
         `}
       >
-        <div className={`${milestone.completed ? 'text-green-500' : 'text-gray-400'}`}>
+        <div className="w-6 h-6">
           {milestone.icon}
         </div>
 
         <AnimatePresence>
           {milestone.completed && (
-            <>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -top-2 -right-2"
-              >
-                <CheckCircle2 className="w-6 h-6 text-green-500" />
-              </motion.div>
-
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 10, -10, 0]
-                }}
-                transition={{
-                  duration: 0.5,
-                  repeat: Infinity,
-                  repeatDelay: 2
-                }}
-                className="absolute -top-4 left-1/2 transform -translate-x-1/2"
-              >
-                <Trophy className="w-6 h-6 text-yellow-500" />
-              </motion.div>
-            </>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="absolute -top-1 -right-1"
+            >
+              <CheckCircle2 className="w-4 h-4 text-green-500 bg-white rounded-full" />
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
 
-      <div className="mt-4 text-center">
-        <h4 className={`font-semibold ${milestone.completed ? 'text-green-500' : 'text-gray-600'}`}>
+      <div className="mt-3">
+        <h4 className={`text-sm font-medium ${milestone.completed ? 'text-gray-900' : 'text-gray-500'}`}>
           {milestone.title}
         </h4>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-xs text-gray-500 mt-0.5 max-w-[120px]">
           {milestone.description}
         </p>
       </div>

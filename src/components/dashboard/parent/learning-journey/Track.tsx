@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import type { Track as TrackType } from "./types";
 import { Milestone } from "./Milestone";
-import { ArrowDownRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface TrackProps {
   track: TrackType;
@@ -26,30 +26,17 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
       transition={{ duration: 0.5, delay: trackIndex * 0.2 }}
       className="relative"
     >
-      <div className="flex items-center gap-4 mb-12 group">
+      <div className="flex items-center gap-4 mb-8">
         <motion.div 
-          className={`p-6 rounded-full bg-gradient-to-r ${track.color} shadow-lg relative overflow-hidden`}
+          className={`p-4 rounded-full ${track.color} relative`}
           whileHover={{ scale: 1.05 }}
-          animate={{ y: [0, -5, 0] }}
-          transition={{ 
-            y: { duration: 2, repeat: Infinity },
-            scale: { duration: 0.2 }
-          }}
+          transition={{ duration: 0.2 }}
         >
-          <div className="absolute inset-0 bg-white/10 animate-pulse" />
-          <div className="relative z-10">
+          <div className="relative z-10 text-white">
             {track.icon}
           </div>
         </motion.div>
-        <div>
-          <h3 className="text-2xl font-semibold">{track.name}</h3>
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 1, delay: trackIndex * 0.3 }}
-            className="h-1 mt-2 rounded bg-gradient-to-r from-gray-200 to-transparent"
-          />
-        </div>
+        <h3 className="text-xl font-medium text-gray-700">{track.name}</h3>
       </div>
 
       <div className="relative pl-8">
@@ -59,11 +46,11 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
             return (
               <motion.path
                 key={index}
-                d={`M ${100 + (index * 200)},30 C ${150 + (index * 200)},30 ${50 + ((index + 1) * 200)},30 ${100 + ((index + 1) * 200)},30`}
+                d={`M ${80 + (index * 160)},24 L ${(index + 1) * 160},24`}
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1"
                 fill="none"
-                className="text-gray-300"
+                className="text-gray-200"
                 initial="hidden"
                 animate="visible"
                 variants={lineVariants}
@@ -72,7 +59,7 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
           })}
         </svg>
 
-        <div className="flex justify-start gap-48">
+        <div className="flex justify-start gap-32">
           {track.milestones.map((milestone, index) => (
             <Milestone
               key={milestone.type}
@@ -86,23 +73,15 @@ export const Track = ({ track, trackIndex, isLastTrack }: TrackProps) => {
 
       {!isLastTrack && (
         <motion.div 
-          className="absolute -bottom-16 left-12"
-          animate={{ 
-            y: [0, 5, 0],
-            scale: [1, 1.1, 1]
-          }}
+          className="absolute -bottom-8 left-12"
+          animate={{ x: [0, 5, 0] }}
           transition={{ 
             duration: 2, 
             repeat: Infinity,
             ease: "easeInOut"
           }}
         >
-          <div className="relative">
-            <ArrowDownRight className="w-10 h-10 text-gray-400" />
-            <div className="absolute inset-0 animate-ping opacity-50">
-              <ArrowDownRight className="w-10 h-10 text-gray-400" />
-            </div>
-          </div>
+          <ArrowRight className="w-5 h-5 text-gray-300" />
         </motion.div>
       )}
     </motion.div>
