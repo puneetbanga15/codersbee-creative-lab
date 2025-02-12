@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { GraduationCap, Code, Brain, Award, Terminal, Download, ArrowRight } from "lucide-react";
+import { GraduationCap, Code, Brain, Award, Terminal, Download, Python } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -99,7 +99,9 @@ export const LearningJourneyVisual = () => {
   const learningTracks = [
     {
       track: "Scratch",
-      icon: <GraduationCap className="w-5 h-5" />,
+      icon: <GraduationCap className="w-5 h-5 text-amber-500" />,
+      color: "bg-amber-50 border-amber-200",
+      textColor: "text-amber-700",
       milestones: [
         {
           name: "Scratch Fundamentals",
@@ -115,7 +117,9 @@ export const LearningJourneyVisual = () => {
     },
     {
       track: "Programming",
-      icon: <Code className="w-5 h-5" />,
+      icon: <Code className="w-5 h-5 text-blue-500" />,
+      color: "bg-blue-50 border-blue-200",
+      textColor: "text-blue-700",
       milestones: [
         {
           name: "Web Fundamentals",
@@ -126,17 +130,34 @@ export const LearningJourneyVisual = () => {
           name: "Web Advanced",
           type: "web_advanced",
           description: "Complex web projects and problem-solving"
+        },
+        {
+          name: "Python Fundamentals",
+          type: "python_fundamentals",
+          description: "Basic Python programming concepts"
+        },
+        {
+          name: "Python Advanced",
+          type: "python_advanced",
+          description: "Advanced Python programming and applications"
         }
       ]
     },
     {
       track: "AI Journey",
-      icon: <Brain className="w-5 h-5" />,
+      icon: <Brain className="w-5 h-5 text-purple-500" />,
+      color: "bg-purple-50 border-purple-200",
+      textColor: "text-purple-700",
       milestones: [
         {
           name: "AI Fundamentals",
           type: "ai_fundamentals",
           description: "Basic AI and ML concepts"
+        },
+        {
+          name: "Generative AI",
+          type: "generative_ai",
+          description: "Advanced generative AI applications"
         },
         {
           name: "AI Master",
@@ -156,7 +177,7 @@ export const LearningJourneyVisual = () => {
       >
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-gray-50">
               <TableHead className="w-[200px]">Learning Track</TableHead>
               <TableHead>Milestone</TableHead>
               <TableHead>Description</TableHead>
@@ -167,16 +188,23 @@ export const LearningJourneyVisual = () => {
           <TableBody>
             {learningTracks.map((track) => (
               track.milestones.map((milestone, mIndex) => (
-                <TableRow key={milestone.type}>
+                <TableRow key={milestone.type} className="hover:bg-gray-50/50">
                   {mIndex === 0 && (
-                    <TableCell className="font-medium" rowSpan={track.milestones.length}>
+                    <TableCell 
+                      className={`font-medium ${track.color} border-l-4 border-l-${track.textColor.split('-')[1]}-500`}
+                      rowSpan={track.milestones.length}
+                    >
                       <div className="flex items-center gap-2">
                         {track.icon}
-                        <span>{track.track}</span>
+                        <span className={track.textColor}>{track.track}</span>
                       </div>
                     </TableCell>
                   )}
-                  <TableCell className="font-medium">{milestone.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      {milestone.name}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-gray-500">{milestone.description}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -200,7 +228,7 @@ export const LearningJourneyVisual = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDownloadCertificate(milestone.type)}
-                        className="gap-2"
+                        className="gap-2 hover:bg-gray-100"
                       >
                         <Download className="w-4 h-4" />
                         <span>Download</span>
