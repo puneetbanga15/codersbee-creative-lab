@@ -1,7 +1,6 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { GraduationCap, Code, Brain, Award, Terminal, Download, Python } from "lucide-react";
+import { GraduationCap, Code, Brain, Award, Terminal, Download } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
