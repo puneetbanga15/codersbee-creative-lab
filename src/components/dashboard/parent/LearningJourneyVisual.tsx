@@ -1,10 +1,10 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { GraduationCap, Code, Brain, Award, Terminal, Download } from "lucide-react";
+import { GraduationCap, Code, Brain, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,9 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const LearningJourneyVisual = () => {
-  const { data: milestones = [], isLoading, error } = useQuery({
+  const isMobile = useIsMobile();
+  
+  const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['student-milestones'],
     queryFn: async () => {
       try {
@@ -45,55 +48,6 @@ export const LearningJourneyVisual = () => {
       }
     },
   });
-
-  const { data: certificates } = useQuery({
-    queryKey: ['certificates'],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase
-          .from('certificates')
-          .select('*');
-        
-        if (error) throw error;
-        return data || [];
-      } catch (err) {
-        console.error('Error fetching certificates:', err);
-        toast.error("Failed to load certificates");
-        return [];
-      }
-    }
-  });
-
-  const handleDownloadCertificate = async (milestoneType: string) => {
-    try {
-      const certificate = certificates?.find(c => c.milestone_type === milestoneType);
-      
-      if (!certificate) {
-        toast.error("Certificate not found");
-        return;
-      }
-
-      const { data, error } = await supabase.storage
-        .from('certificates')
-        .download(certificate.file_path);
-
-      if (error) throw error;
-
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = certificate.filename || 'certificate.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      toast.success("Certificate downloaded successfully!");
-    } catch (error) {
-      console.error('Error downloading certificate:', error);
-      toast.error("Failed to download certificate");
-    }
-  };
 
   const learningTracks = [
     {
@@ -168,7 +122,7 @@ export const LearningJourneyVisual = () => {
   ];
 
   return (
-    <Card className="p-6">
+    <Card className="p-4 md:p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -176,12 +130,21 @@ export const LearningJourneyVisual = () => {
       >
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead className="w-[200px]">Learning Track</TableHead>
-              <TableHead>Milestone</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Certificate</TableHead>
+            <TableRow className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/90">
+              <TableHead className="w-[200px] text-white font-semibold">
+                Learning Track
+              </TableHead>
+              <TableHead className="text-white font-semibold">
+                Milestone
+              </TableHead>
+              {!isMobile && (
+                <TableHead className="text-white font-semibold">
+                  Description
+                </TableHead>
+              )}
+              <TableHead className="text-white font-semibold">
+                Status
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -200,11 +163,13 @@ export const LearningJourneyVisual = () => {
                     </TableCell>
                   )}
                   <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      {milestone.name}
-                    </div>
+                    {milestone.name}
                   </TableCell>
-                  <TableCell className="text-gray-500">{milestone.description}</TableCell>
+                  {!isMobile && (
+                    <TableCell className="text-gray-500">
+                      {milestone.description}
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {milestones.some(m => 
@@ -220,19 +185,6 @@ export const LearningJourneyVisual = () => {
                         </span>
                       )}
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {certificates?.some(c => c.milestone_type === milestone.type) && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDownloadCertificate(milestone.type)}
-                        className="gap-2 hover:bg-gray-100"
-                      >
-                        <Download className="w-4 h-4" />
-                        <span>Download</span>
-                      </Button>
-                    )}
                   </TableCell>
                 </TableRow>
               ))
