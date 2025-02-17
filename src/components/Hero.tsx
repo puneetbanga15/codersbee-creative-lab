@@ -1,23 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
 export const Hero = () => {
-  return (
-    <div className="relative min-h-[90vh] overflow-hidden">
+  return <div className="relative min-h-[90vh] overflow-hidden">
       {/* Background Video Layer */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF]/80 via-white/60 to-white/80 md:backdrop-blur-[2px] z-10" />
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
-          className="w-full h-full object-cover opacity-80 md:opacity-100 md:aspect-auto aspect-[9/16] md:object-center object-[20%_50%]"
-        >
-          <source 
-            src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" 
-            type="video/mp4" 
-          />
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-80 md:opacity-100 md:aspect-auto aspect-[9/16] md:object-center object-[20%_50%]">
+          <source src="https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/media/replicate-prediction-2f3wjhj71srmc0cmmteaqgzjhc.mp4?t=2025-01-27T09%3A20%3A36.002Z" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
@@ -45,29 +34,16 @@ export const Hero = () => {
               {/* Video Dialog */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button 
-                    className="w-full md:w-auto bg-[#1A1F2C] hover:bg-[#2A2F3C] text-white px-6 md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
-                  >
+                  <Button className="w-full md:w-auto bg-[#1A1F2C] hover:bg-[#2A2F3C] text-white md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 px-[30px]">
                     <span>▶️</span> Watch Shuvam (12) Build an AI App →
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl">
-                  <iframe
-                    width="100%"
-                    height="500"
-                    src="https://www.youtube.com/embed/vmgCTuT7slg"
-                    title="Student AI Project Demo"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="rounded-lg"
-                  />
+                  <iframe width="100%" height="500" src="https://www.youtube.com/embed/vmgCTuT7slg" title="Student AI Project Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="rounded-lg" />
                 </DialogContent>
               </Dialog>
 
-              <Button 
-                className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-6 md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-              >
+              <Button className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-6 md:px-8 py-4 md:py-6 text-base md:text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300" onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}>
                 Free Trial → Join 100+ Coders
               </Button>
             </div>
@@ -91,6 +67,5 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
