@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { QuestionCounter } from "./QuestionCounter";
@@ -84,16 +83,16 @@ export const BuzzyChat = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-4 flex items-center justify-center gap-2">
+      <div className="text-center mb-8 mt-16">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-6 flex items-center justify-center gap-4">
           <img 
             src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
             alt="Buzzy Bee"
-            className="w-8 h-8 object-contain"
+            className="w-16 h-16 object-contain"
           />
           Meet Buzzy - Your AI Coding Tutor
         </h1>
-        <p className="text-gray-600 md:text-lg mb-6">
+        <p className="text-gray-600 md:text-lg mb-8">
           Ask me anything about coding, AI, and CodersBee's programs!
         </p>
 
@@ -105,7 +104,7 @@ export const BuzzyChat = () => {
             <ChatInput
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Type your message here..."
+              placeholder="Tell me how CodersBee can help my kid learn Coding and AI"
               className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
             />
             <div className="flex items-center p-3 pt-0">
@@ -130,7 +129,7 @@ export const BuzzyChat = () => {
               <img 
                 src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
                 alt="Buzzy"
-                className="w-8 h-8 object-contain"
+                className="w-12 h-12 object-contain"
               />
               Chat with Buzzy
             </h2>
