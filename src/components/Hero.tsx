@@ -23,7 +23,7 @@ export const Hero = () => {
               <br /><span className="text-[#9b87f5]">From Day 1</span>
             </h1>
             <p className="text-sm md:text-2xl mb-8 md:mb-12 text-[#403E43] max-w-3xl mx-auto px-4 md:px-0 hero-body">
-              As AI reshapes careers, equip your child with creative problem-solving, coding, and AI fluency.
+              As AI reshapes careers, equip your child with creative problem-solving, coding, and AI fluency with help from our expert teachers.
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 max-w-2xl mx-auto px-4 md:px-0">
