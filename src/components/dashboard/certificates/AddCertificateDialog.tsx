@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +14,15 @@ import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
   studentId: z.string().min(1, "Please select a student"),
-  file: z.instanceof(File, { message: "Please upload a file" })
+  file: z.instanceof(File, { message: "Please upload a file" }),
+  milestoneType: z.enum([
+    'scratch_fundamentals',
+    'scratch_advanced',
+    'web_fundamentals',
+    'web_advanced',
+    'ai_fundamentals',
+    'ai_master'
+  ], { required_error: "Please select a milestone type" })
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,6 +45,15 @@ export const AddCertificateDialog = ({
     resolver: zodResolver(formSchema),
   });
 
+  const milestoneTypes = [
+    { value: 'scratch_fundamentals', label: 'Scratch Fundamentals' },
+    { value: 'scratch_advanced', label: 'Scratch Advanced' },
+    { value: 'web_fundamentals', label: 'Web Development Fundamentals' },
+    { value: 'web_advanced', label: 'Web Development Advanced' },
+    { value: 'ai_fundamentals', label: 'AI Fundamentals' },
+    { value: 'ai_master', label: 'AI Master' }
+  ];
+
   const onSubmit = async (values: FormValues) => {
     try {
       setUploadProgress(0);
@@ -57,6 +75,7 @@ export const AddCertificateDialog = ({
           file_path: filePath,
           content_type: file.type,
           uploaded_by: (await supabase.auth.getUser()).data.user?.id,
+          milestone_type: values.milestoneType
         });
 
       if (dbError) throw dbError;
@@ -105,6 +124,32 @@ export const AddCertificateDialog = ({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="milestoneType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Milestone Type</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select milestone type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {milestoneTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="file"

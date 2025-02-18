@@ -1,3 +1,4 @@
+
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
@@ -10,6 +11,7 @@ import { SuccessStories } from "@/components/SuccessStories";
 import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
 import { VisualEquation } from "@/components/VisualEquation";
+import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
 
 const Index = () => {
   const courses = [
@@ -37,10 +39,10 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-[110px]">
       <Navbar />
+      <AnnouncementBar />
       <Hero />
-      <VisualEquation />
       <ProblemAgitation />
       <InnovationHighlight />
       <SuccessStories />
@@ -91,6 +93,7 @@ const Index = () => {
       </section>
 
       <FAQ />
+      <VisualEquation />
       <Footer />
     </div>
   );

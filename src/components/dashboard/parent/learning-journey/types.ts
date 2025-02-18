@@ -1,11 +1,14 @@
-import { LucideIcon } from "lucide-react";
+
+import type { Database } from "@/integrations/supabase/types";
+
+type MilestoneType = Database['public']['Enums']['milestone_type'];
 
 export interface Milestone {
   title: string;
   description: string;
   completed: boolean;
   icon: JSX.Element;
-  type: string;
+  type: MilestoneType;
 }
 
 export interface Track {

@@ -27,14 +27,17 @@ const ParentDashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      console.log("Starting auth check...");
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
+        console.log("No session found, redirecting to login");
         navigate("/parents/login");
         return;
       }
 
       try {
+        console.log("Fetching student data...");
         const { data: studentsData, error: studentsError } = await supabase
           .from('students')
           .select(`
@@ -51,11 +54,13 @@ const ParentDashboard = () => {
           .eq('parent_id', session.user.id);
 
         if (studentsError) throw studentsError;
+        console.log("Students data fetched:", studentsData);
         setStudents(studentsData || []);
 
         // Fetch upcoming classes for all students
         const studentIds = studentsData?.map(s => s.id) || [];
         if (studentIds.length > 0) {
+          console.log("Fetching schedules for students:", studentIds);
           const { data: schedulesData, error: schedulesError } = await supabase
             .from('class_schedules')
             .select(`
@@ -70,6 +75,7 @@ const ParentDashboard = () => {
             .limit(10);
 
           if (schedulesError) throw schedulesError;
+          console.log("Schedules data fetched:", schedulesData);
           setSchedules(schedulesData as ClassSchedule[] || []);
 
           // Fetch recent payments
@@ -81,15 +87,18 @@ const ParentDashboard = () => {
             .limit(5);
 
           if (paymentsError) throw paymentsError;
+          console.log("Payments data fetched:", paymentsData);
           setPayments(paymentsData || []);
         }
       } catch (error: any) {
+        console.error("Error in data fetching:", error);
         toast({
           variant: "destructive",
           title: "Error",
           description: error.message
         });
       } finally {
+        console.log("Setting loading to false");
         setLoading(false);
       }
     };
@@ -127,10 +136,8 @@ const ParentDashboard = () => {
                 <p>No students found. Please contact support to add your children.</p>
               </Card>
             ) : (
-              <>
-                <div className="mb-6">
-                  <LearningJourneyVisual />
-                </div>
+              <div className="space-y-8">
+                <LearningJourneyVisual />
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   <UpcomingClasses 
                     schedules={schedules.map(schedule => ({
@@ -141,14 +148,14 @@ const ParentDashboard = () => {
                   <RecentPayments payments={payments} />
                   <StudentInformation students={students} />
                 </div>
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <FeedbackSection />
                   <PaymentTrackingSection />
                 </div>
-                <div className="mt-6">
+                <div>
                   <CertificatesSection />
                 </div>
-              </>
+              </div>
             )}
           </div>
         </main>
