@@ -2,7 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const perplexityApiKey = Deno.env.get('PERPLEXITY_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -38,7 +38,7 @@ Use these FAQs to help answer questions:
 - Range from games and animations to AI applications
 - Student work showcased on Facebook page
 
-Be friendly, concise, and encouraging. If asked about topics outside these FAQs, politely redirect to WhatsApp for detailed answers.`;
+Be friendly, concise, and encouraging. If asked about topics outside these FAQs, politely redirect to WhatsApp for detailed answers. Always maintain a friendly and engaging tone, suitable for kids.`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -48,28 +48,40 @@ serve(async (req) => {
   try {
     const { message } = await req.json();
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${perplexityApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.1-sonar-small-128k-online',
         messages: [
-          { 
-            role: 'system', 
-            content: FAQ_CONTEXT 
+          {
+            role: 'system',
+            content: FAQ_CONTEXT
           },
-          { 
-            role: 'user', 
-            content: message 
+          {
+            role: 'user',
+            content: message
           }
         ],
-        temperature: 0.7,
-        max_tokens: 500,
+        temperature: 0.2,
+        top_p: 0.9,
+        max_tokens: 1000,
+        return_images: false,
+        return_related_questions: false,
+        search_domain_filter: ['perplexity.ai'],
+        search_recency_filter: 'month',
+        frequency_penalty: 1,
+        presence_penalty: 0
       }),
     });
+
+    if (!response.ok) {
+      console.error('Perplexity API error:', await response.text());
+      throw new Error('Failed to get response from Perplexity API');
+    }
 
     const data = await response.json();
     const answer = data.choices[0].message.content;
