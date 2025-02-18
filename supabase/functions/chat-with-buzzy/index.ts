@@ -49,6 +49,11 @@ serve(async (req) => {
   }
 
   try {
+    if (!perplexityApiKey) {
+      console.error('Missing PERPLEXITY_API_KEY environment variable');
+      throw new Error('API key not configured');
+    }
+
     const { message } = await req.json();
     console.log('Received message:', message);
 
@@ -70,7 +75,7 @@ serve(async (req) => {
             content: message
           }
         ],
-        temperature: 0.7, // Increased for more creative responses
+        temperature: 0.7,
         top_p: 0.9,
         max_tokens: 1000,
         frequency_penalty: 0.5,
