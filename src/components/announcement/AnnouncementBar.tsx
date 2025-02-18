@@ -1,5 +1,7 @@
+
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+
 export const AnnouncementBar = () => {
   return <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-[#9b87f5] to-[#b3a4f7] py-2.5 w-full z-[10000]">
       <div className="container mx-auto px-4">
@@ -9,7 +11,11 @@ export const AnnouncementBar = () => {
             <span className="font-medium">NEW!</span>
           </div>
           <Link to="/buzzy-ai" className="group flex items-center gap-2 hover:opacity-90 transition-opacity">
-            <span>🐝</span>
+            <img 
+              src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+              alt="Buzzy Bee"
+              className="w-5 h-5 object-contain"
+            />
             <span className="text-sm md:text-base">Meet Buzzy Bee AI - Ask me Anything</span>
             <span className="hidden md:inline-block bg-white/20 px-2 py-1 rounded text-sm group-hover:bg-white/30 transition-colors">
               Try it now →

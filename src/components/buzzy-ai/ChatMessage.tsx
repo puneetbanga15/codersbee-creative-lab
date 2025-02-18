@@ -26,7 +26,11 @@ export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
       >
         {role === "assistant" && (
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm">🐝</span>
+            <img 
+              src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+              alt="Buzzy Bee"
+              className="w-5 h-5 object-contain"
+            />
             <span className="font-medium text-sm">Buzzy Bee</span>
           </div>
         )}

@@ -4,6 +4,7 @@ import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { QuestionCounter } from "./QuestionCounter";
 import { Button } from "@/components/ui/button";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -29,6 +30,7 @@ export const BuzzyChat = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [questionsAsked, setQuestionsAsked] = useState(0);
+  const supabase = useSupabaseClient();
 
   const handleSendMessage = async (message: string) => {
     if (questionsAsked >= MAX_QUESTIONS) return;
@@ -37,18 +39,34 @@ export const BuzzyChat = () => {
     setIsLoading(true);
     setQuestionsAsked((prev) => prev + 1);
 
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('chat-with-buzzy', {
+        body: { message }
+      });
+
+      if (error) throw error;
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content: questionsAsked >= MAX_QUESTIONS - 1
             ? RESPONSE_TEMPLATES.questionLimit
-            : RESPONSE_TEMPLATES.fallback,
+            : data.answer || RESPONSE_TEMPLATES.fallback,
         },
       ]);
+    } catch (error) {
+      console.error('Error chatting with Buzzy:', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: RESPONSE_TEMPLATES.fallback,
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const reachedLimit = questionsAsked >= MAX_QUESTIONS;

@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { User, GraduationCap, Calendar, CreditCard, Scroll, MessageSquare, Settings, CheckCircle2, Trophy, BookOpen, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -61,6 +60,11 @@ export const Navbar = () => {
             to="/buzzy-ai" 
             className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
           >
+            <img 
+              src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+              alt="Buzzy Bee"
+              className="w-5 h-5 object-contain"
+            />
             Buzzy AI Tutor
           </Link>
           
@@ -185,7 +189,12 @@ export const Navbar = () => {
             </a>
             
             <Link to="/buzzy-ai" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
-              <span>🐝</span> Buzzy AI Tutor
+              <img 
+                src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+                alt="Buzzy Bee"
+                className="w-5 h-5 object-contain"
+              />
+              Buzzy AI Tutor
             </Link>
 
             <DropdownMenu>
