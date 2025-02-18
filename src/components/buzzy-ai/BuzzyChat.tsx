@@ -5,6 +5,7 @@ import { ChatInput } from "./ChatInput";
 import { QuestionCounter } from "./QuestionCounter";
 import { Button } from "@/components/ui/button";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
 
 interface Message {
   role: "user" | "assistant";
@@ -16,9 +17,7 @@ const MAX_QUESTIONS = 5;
 const RESPONSE_TEMPLATES = {
   welcome: "Hi! I'm Buzzy, your AI tutor for coding and AI learning. How can I help you today?",
   thinking: "Let me think about that...",
-  outOfScope: "I specialize in coding and AI topics for kids. For detailed information about this topic, please click the WhatsApp button above to connect directly with our experienced teaching team! They'll be happy to help you.",
-  questionLimit: "You've asked some great questions! To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!",
-  fallback: "That's an interesting question! While I'm still learning, our experienced teachers would love to provide you with detailed insights. Click the WhatsApp button above to start a conversation with them right away!"
+  error: "I apologize, but I'm having trouble connecting right now. Please try again in a moment or reach out to our team via WhatsApp for immediate assistance.",
 };
 
 export const BuzzyChat = () => {
@@ -35,16 +34,27 @@ export const BuzzyChat = () => {
   const handleSendMessage = async (message: string) => {
     if (questionsAsked >= MAX_QUESTIONS) return;
     
-    setMessages((prev) => [...prev, { role: "user", content: message }]);
-    setIsLoading(true);
-    setQuestionsAsked((prev) => prev + 1);
-
     try {
-      const { data, error } = await supabase.functions.invoke('chat-with-buzzy', {
+      setMessages((prev) => [...prev, { role: "user", content: message }]);
+      setIsLoading(true);
+      setQuestionsAsked((prev) => prev + 1);
+
+      const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
         body: { message }
       });
 
-      if (error) throw error;
+      console.log('Edge function response:', response);
+      console.log('Edge function error:', error);
+
+      if (error) {
+        console.error('Error calling edge function:', error);
+        toast.error("Sorry, I'm having trouble connecting. Please try again.");
+        throw error;
+      }
+
+      if (!response?.answer) {
+        throw new Error('No answer received from AI');
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -52,7 +62,7 @@ export const BuzzyChat = () => {
           role: "assistant",
           content: questionsAsked >= MAX_QUESTIONS - 1
             ? RESPONSE_TEMPLATES.questionLimit
-            : data.answer || RESPONSE_TEMPLATES.fallback,
+            : response.answer,
         },
       ]);
     } catch (error) {
@@ -61,7 +71,7 @@ export const BuzzyChat = () => {
         ...prev,
         {
           role: "assistant",
-          content: RESPONSE_TEMPLATES.fallback,
+          content: RESPONSE_TEMPLATES.error,
         },
       ]);
     } finally {
@@ -77,10 +87,10 @@ export const BuzzyChat = () => {
         <h2 className="text-white text-lg font-medium flex items-center gap-2">
           <img 
             src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
-            alt="Buzzy Bee"
+            alt="Buzzy"
             className="w-8 h-8 object-contain"
           />
-          Chat with Buzzy Bee
+          Chat with Buzzy
         </h2>
       </div>
 
