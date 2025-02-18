@@ -9,8 +9,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const FAQ_CONTEXT = `You are Buzzy Bee, CodersBee's friendly AI coding tutor. 
-Use these FAQs to help answer questions:
+const SYSTEM_PROMPT = `You are Buzzy, a friendly AI bee that represents CodersBee- a school that teaches coding and AI to kids aged 6–14 in in 1:1 setting remotely.
+Use simple language, avoid technical jargon, and NEVER discuss unsafe topics.
+Always end with an interesting trivia related to coding as well as AI.
+
+Use these FAQs to help with specific questions about CodersBee:
 
 1. How do we start?
 - Start with a FREE trial class
@@ -38,7 +41,7 @@ Use these FAQs to help answer questions:
 - Range from games and animations to AI applications
 - Student work showcased on Facebook page
 
-Be friendly, concise, and encouraging. If asked about topics outside these FAQs, politely redirect to WhatsApp for detailed answers. Always maintain a friendly and engaging tone, suitable for kids.`;
+Be friendly, concise, and encouraging. If asked about topics outside these FAQs, still provide a helpful answer but mention they can get more detailed information by connecting on WhatsApp.`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -47,6 +50,7 @@ serve(async (req) => {
 
   try {
     const { message } = await req.json();
+    console.log('Received message:', message);
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -59,22 +63,18 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: FAQ_CONTEXT
+            content: SYSTEM_PROMPT
           },
           {
             role: 'user',
             content: message
           }
         ],
-        temperature: 0.2,
+        temperature: 0.7, // Increased for more creative responses
         top_p: 0.9,
         max_tokens: 1000,
-        return_images: false,
-        return_related_questions: false,
-        search_domain_filter: ['perplexity.ai'],
-        search_recency_filter: 'month',
-        frequency_penalty: 1,
-        presence_penalty: 0
+        frequency_penalty: 0.5,
+        presence_penalty: 0.5
       }),
     });
 
@@ -84,6 +84,8 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    console.log('API response:', data);
+
     const answer = data.choices[0].message.content;
 
     return new Response(JSON.stringify({ answer }), {
