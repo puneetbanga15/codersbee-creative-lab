@@ -184,6 +184,17 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64 bg-white">
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
+                  <Link to="/buzzy-ai" className="w-full">
+                    <div className="flex items-start gap-3">
+                      <span className="text-[#9b87f5]">🐝</span>
+                      <div>
+                        <div className="font-medium text-[#1A1F2C]">Buzzy AI Tutor</div>
+                        <div className="text-sm text-gray-500">Chat with our AI coding tutor</div>
+                      </div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
