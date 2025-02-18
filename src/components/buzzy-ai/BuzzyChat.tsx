@@ -12,11 +12,19 @@ interface Message {
 
 const MAX_QUESTIONS = 5;
 
+const RESPONSE_TEMPLATES = {
+  welcome: "Hi! I'm Buzzy Bee, your AI tutor for coding and AI learning. How can I help you today? 🐝",
+  thinking: "Buzzing through my knowledge base... 🐝",
+  outOfScope: "I specialize in coding and AI topics for kids. For detailed information about this topic, please click the WhatsApp button above to connect directly with our experienced teaching team! They'll be happy to help you.",
+  questionLimit: "You've asked some great questions! 🌟 To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!",
+  fallback: "That's an interesting question! While I'm still learning, our experienced teachers would love to provide you with detailed insights. Click the WhatsApp button above to start a conversation with them right away!"
+};
+
 export const BuzzyChat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm Buzzy Bee, your AI tutor for coding and AI learning. How can I help you today? 🐝",
+      content: RESPONSE_TEMPLATES.welcome,
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,8 +44,8 @@ export const BuzzyChat = () => {
         {
           role: "assistant",
           content: questionsAsked >= MAX_QUESTIONS - 1
-            ? "You've reached the limit of 5 questions. To learn more, please connect with our team on WhatsApp at +91 999-646-5023."
-            : "Thank you for your question! I'm still learning, but I'll be fully functional soon. For now, please connect with our team on WhatsApp for detailed answers.",
+            ? RESPONSE_TEMPLATES.questionLimit
+            : RESPONSE_TEMPLATES.fallback,
         },
       ]);
       setIsLoading(false);
@@ -61,7 +69,7 @@ export const BuzzyChat = () => {
         {isLoading && (
           <ChatMessage
             role="assistant"
-            content="Buzzing away... 🐝"
+            content={RESPONSE_TEMPLATES.thinking}
             isLoading={true}
           />
         )}
