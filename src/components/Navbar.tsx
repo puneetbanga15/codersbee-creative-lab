@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { User, GraduationCap, BookOpen, Trophy, CheckCircle2, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -161,7 +162,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm">
+    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm top-[42px]">
       <div className="max-w-[1400px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-x-2">
