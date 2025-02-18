@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -19,6 +20,7 @@ import PythonIntro from "./pages/tutorials/python/PythonIntro";
 import WebIntro from "./pages/tutorials/web/WebIntro";
 import AIIntro from "./pages/tutorials/ai/AIIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
+import BuzzyAI from "./pages/BuzzyAI";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,7 @@ const App = () => {
               <Route path="/tutorials/web/intro" element={<WebIntro />} />
               <Route path="/tutorials/ai/intro" element={<AIIntro />} />
               <Route path="/certificate" element={<VerifyCertificate />} />
+              <Route path="/buzzy-ai" element={<BuzzyAI />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

@@ -11,6 +11,7 @@ import { SuccessStories } from "@/components/SuccessStories";
 import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
 import { VisualEquation } from "@/components/VisualEquation";
+import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
 
 const Index = () => {
   const courses = [
@@ -40,6 +41,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <AnnouncementBar />
       <Hero />
       <ProblemAgitation />
       <InnovationHighlight />
