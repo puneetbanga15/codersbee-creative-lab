@@ -18,6 +18,7 @@ const RESPONSE_TEMPLATES = {
   welcome: "Hi! I'm Buzzy, your AI tutor for coding and AI learning. How can I help you today?",
   thinking: "Let me think about that...",
   error: "I apologize, but I'm having trouble connecting right now. Please try again in a moment or reach out to our team via WhatsApp for immediate assistance.",
+  questionLimit: "You've asked some great questions! To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!"
 };
 
 export const BuzzyChat = () => {
