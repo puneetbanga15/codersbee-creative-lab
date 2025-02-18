@@ -83,7 +83,7 @@ export const BuzzyChat = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8 mt-16">
+      <div className="text-center mb-4 mt-20">
         <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-6 flex items-center justify-center gap-4">
           <img 
             src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
@@ -92,9 +92,6 @@ export const BuzzyChat = () => {
           />
           Meet Buzzy - Your AI Coding Tutor
         </h1>
-        <p className="text-gray-600 md:text-lg mb-8">
-          Ask me anything about coding, AI, and CodersBee's programs!
-        </p>
 
         {messages.length === 0 && (
           <form 
@@ -104,7 +101,7 @@ export const BuzzyChat = () => {
             <ChatInput
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Tell me how CodersBee can help my kid learn Coding and AI"
+              placeholder="Ask me anything about coding, AI, and CodersBee's programs!"
               className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
             />
             <div className="flex items-center p-3 pt-0">
