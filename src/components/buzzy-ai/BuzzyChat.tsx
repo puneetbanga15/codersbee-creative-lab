@@ -14,10 +14,10 @@ interface Message {
 const MAX_QUESTIONS = 5;
 
 const RESPONSE_TEMPLATES = {
-  welcome: "Hi! I'm Buzzy Bee, your AI tutor for coding and AI learning. How can I help you today? 🐝",
-  thinking: "Buzzing through my knowledge base... 🐝",
+  welcome: "Hi! I'm Buzzy, your AI tutor for coding and AI learning. How can I help you today?",
+  thinking: "Let me think about that...",
   outOfScope: "I specialize in coding and AI topics for kids. For detailed information about this topic, please click the WhatsApp button above to connect directly with our experienced teaching team! They'll be happy to help you.",
-  questionLimit: "You've asked some great questions! 🌟 To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!",
+  questionLimit: "You've asked some great questions! To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!",
   fallback: "That's an interesting question! While I'm still learning, our experienced teachers would love to provide you with detailed insights. Click the WhatsApp button above to start a conversation with them right away!"
 };
 
