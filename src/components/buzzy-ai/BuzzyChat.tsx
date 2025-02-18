@@ -37,7 +37,6 @@ export const BuzzyChat = () => {
     setIsLoading(true);
     setQuestionsAsked((prev) => prev + 1);
 
-    // Temporary response until we implement the actual AI
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -58,7 +57,12 @@ export const BuzzyChat = () => {
     <div className="flex flex-col h-[600px] max-h-[80vh] bg-white rounded-lg shadow-lg">
       <div className="bg-[#9b87f5] p-4 rounded-t-lg">
         <h2 className="text-white text-lg font-medium flex items-center gap-2">
-          <span>🐝</span> Chat with Buzzy Bee
+          <img 
+            src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+            alt="Buzzy Bee"
+            className="w-8 h-8 object-contain"
+          />
+          Chat with Buzzy Bee
         </h2>
       </div>
 

@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, BookOpen, Trophy, CheckCircle2, Menu, X } from "lucide-react";
+import { User, GraduationCap, Calendar, CreditCard, Scroll, MessageSquare, Settings, CheckCircle2, Trophy, BookOpen, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -16,7 +16,6 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -41,7 +40,6 @@ export const Navbar = () => {
     }
   };
 
-  // Mobile menu portal component
   const MobileMenu = () => {
     if (!isMobileMenuOpen) return null;
 
@@ -58,6 +56,13 @@ export const Navbar = () => {
           >
             Courses
           </a>
+
+          <Link 
+            to="/buzzy-ai" 
+            className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
+          >
+            Buzzy AI Tutor
+          </Link>
           
           <div className="py-2 space-y-2">
             <span className="block text-[#9b87f5] font-medium">Student's Corner</span>
@@ -178,23 +183,17 @@ export const Navbar = () => {
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
+            
+            <Link to="/buzzy-ai" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
+              <span>🐝</span> Buzzy AI Tutor
+            </Link>
+
             <DropdownMenu>
               <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
                 <GraduationCap className="h-4 w-4" />
                 Student's Corner
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64 bg-white">
-                <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
-                  <Link to="/buzzy-ai" className="w-full">
-                    <div className="flex items-start gap-3">
-                      <span className="text-[#9b87f5]">🐝</span>
-                      <div>
-                        <div className="font-medium text-[#1A1F2C]">Buzzy AI Tutor</div>
-                        <div className="text-sm text-gray-500">Chat with our AI coding tutor</div>
-                      </div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
