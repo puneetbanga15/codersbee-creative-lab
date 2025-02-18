@@ -1,5 +1,7 @@
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
 export const Hero = () => {
   return <div className="relative min-h-[90vh] overflow-hidden">
       {/* Background Video Layer */}
@@ -12,22 +14,16 @@ export const Hero = () => {
       </div>
 
       {/* Content Layer */}
-      <div className="relative z-20 pt-24 pb-16">
+      <div className="relative z-20 pt-12 pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-6">
-              <span className="bg-red-100 text-red-600 px-4 py-1.5 rounded-full text-sm font-medium inline-block">
-                Empower Your Child to Lead the AI Revolution
-              </span>
-            </div>
             <h1 className="text-3xl md:text-7xl font-bold text-[#1A1F2C] mb-6 md:mb-8 leading-tight hero-heading">
               1:1 Live Classes Where Kids Build
               <br />Coding and AI Projects
               <br /><span className="text-[#9b87f5]">From Day 1</span>
             </h1>
             <p className="text-sm md:text-2xl mb-8 md:mb-12 text-[#403E43] max-w-3xl mx-auto px-4 md:px-0 hero-body">
-              As AI reshapes careers, equip your child with future-proof skills: creative problem-solving, coding, and AI fluency. 
-              Our certified trainers guide them step-by-step in live sessions.
+              As AI reshapes careers, equip your child with creative problem-solving, coding, and AI fluency.
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 max-w-2xl mx-auto px-4 md:px-0">
