@@ -78,13 +78,13 @@ serve(async (req) => {
         temperature: 0.7,
         top_p: 0.9,
         max_tokens: 1000,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.5
+        frequency_penalty: 0.5 // Removed presence_penalty, keeping only frequency_penalty
       }),
     });
 
     if (!response.ok) {
-      console.error('Perplexity API error:', await response.text());
+      const errorText = await response.text();
+      console.error('Perplexity API error:', errorText);
       throw new Error('Failed to get response from Perplexity API');
     }
 
