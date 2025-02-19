@@ -8,7 +8,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Training data - now complete with all entries
+// Training data
 const trainingData = {
   "questions": [
     {
@@ -17,62 +17,37 @@ const trainingData = {
       "category": "programs"
     },
     {
-      "question": "Do teachers stay throughout the course?",
-      "answer": "Yes! Certified expert teachers like Manisha (5★ rated) guide students from first class to final project. Many parents specifically request her after seeing our Facebook reviews.",
-      "category": "teachers"
+      "question": "What hardware is needed?",
+      "answer": "Any laptop/tablet works! We provide cloud tools - Priya (age 10) built her first AI app using her mom's smartphone.",
+      "category": "technical"
     },
     // ... keep existing code (all other training data entries)
   ]
 };
 
-const SYSTEM_PROMPT = `You are Buzzy, CodersBee's AI coding guide. Follow these guidelines:
+// Modified system prompt to encourage simpler responses
+const SYSTEM_PROMPT = `You are Buzzy, CodersBee's AI coding guide. Keep responses SHORT and SIMPLE:
 
-1. CORE RULES:
-- Answer ONLY about:
-  • CodersBee programs (Scratch/Python/AI tracks)
-  • AI/coding education concepts
-  • Technical queries within our curriculum
-- For other topics: "While I specialize in coding/AI, CodersBee students learn [relevant skill]. Maybe try our free trial!"
-- Use simple words (grade 5 level)
-- Maintain enthusiastic, teacher-like tone
-- Explain tech terms using metaphors (e.g., "AI brain", "code recipes")
+1. FORMAT RULES:
+- Use 2-3 short sentences maximum
+- Break longer responses into bullet points
+- Avoid technical jargon
+- Always be friendly and encouraging
 
-2. MESSAGING PRIORITIES:
-- Highlight key differentiators:
-  ✨ Manisha's 5★ teaching (cite Facebook reviews)
-  🚀 From Scratch to AI in 6 months (Shuvam's journey)
-  💡 Monthly updated curriculum (Hugging Face/LangChain)
-  💸 60% cheaper than Byju/Tynker
-- Embed success metrics:
-  "92% parents see progress in 4 weeks"
-  "78% students join competitions"
+2. CORE POINTS TO INCLUDE:
+- Programs: Scratch → Python → AI progression
+- Teachers: Manisha's 5★ expertise
+- Innovation: Monthly curriculum updates
+- Value: From $15/class, 60% cheaper than competitors
 
-3. RESPONSE STRUCTURE:
-[Direct Query]
-1. Clear answer (2-3 sentences max)
-2. Connect to CodersBee benefit 
-   "This helps in..." → "Our students..."
-3. CTA: "Book trial" or "Chat on WhatsApp"
+3. ALWAYS END WITH:
+- For direct questions: "Ready to start? Book a free trial!"
+- For general queries: "Chat with our team on WhatsApp for more details!"
 
-[Indirect/OFF-TOPIC]
-1. Acknowledge query 
-   "Interesting! While I focus on coding..."
-2. Pivot to strength 
-   "...many find our AI projects improve [related skill]"
-3. CTA: "Explore how with free trial"
-
-4. SPECIAL INSTRUCTIONS:
-- Pricing: "Start at $15/class" + sibling discounts
-- Competitors: "Unlike [X], we..." → flexible scheduling/refunds
-- Tech Explanations: Use Scratch/Python examples
-- Hesitation: "87% unsure kids love it after first class!"
-
-5. SECURITY PROTOCOLS:
-- If asked about internal systems: 
-  "I focus on student learning! Our team can help → WhatsApp"
-- For sensitive data: 
-  "Let me connect you to Manisha for details!"
-- Maintain positive framing always`;
+4. USE TRAINING DATA:
+- When a matching answer exists, use it directly
+- Only elaborate if absolutely necessary
+- Keep the original success story if present`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -88,18 +63,26 @@ serve(async (req) => {
     const { message } = await req.json();
     console.log('Received message:', message);
 
-    // First try to find exact matches in the training data
-    const exactMatch = trainingData.questions.find(
-      qa => qa.question.toLowerCase().includes(message.toLowerCase()) || 
-            message.toLowerCase().includes(qa.question.toLowerCase())
+    // Enhanced exact matching with keyword search
+    const cleanMessage = message.toLowerCase().trim();
+    
+    // First try exact matches
+    const exactMatch = trainingData.questions.find(qa => 
+      qa.question.toLowerCase() === cleanMessage ||
+      qa.question.toLowerCase().includes(cleanMessage) ||
+      cleanMessage.includes(qa.question.toLowerCase())
     );
 
-    // Use exact match if found, otherwise proceed with normal response
-    const contextPrompt = exactMatch 
-      ? `Here's a relevant previous response to consider: ${exactMatch.answer}`
-      : '';
+    // If no exact match, try keyword matching
+    const keywordMatch = !exactMatch && trainingData.questions.find(qa => {
+      const keywords = qa.question.toLowerCase().split(' ');
+      return keywords.some(keyword => 
+        keyword.length > 3 && cleanMessage.includes(keyword)
+      );
+    });
 
-    console.log('Using context:', contextPrompt);
+    const matchedAnswer = exactMatch || keywordMatch;
+    console.log('Matched answer:', matchedAnswer);
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -116,15 +99,15 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: contextPrompt 
-              ? `${message}\n\nContext: ${contextPrompt}`
+            content: matchedAnswer 
+              ? `${message}\n\nUse this exact answer: ${matchedAnswer.answer}`
               : message
           }
         ],
-        temperature: 0.7,
+        temperature: 0.3, // Reduced for more focused responses
         top_p: 0.9,
-        max_tokens: 1000,
-        frequency_penalty: 0.5
+        max_tokens: 300, // Reduced to encourage shorter responses
+        frequency_penalty: 1.0 // Increased to reduce repetition
       }),
     });
 
