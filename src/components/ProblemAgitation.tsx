@@ -49,6 +49,20 @@ export const ProblemAgitation = () => {
   return (
     <section className="py-12 bg-gradient-to-b from-white via-codersbee-purple/5 to-codersbee-purple/10">
       <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-codersbee-dark mb-4">
+            Dear Parents,
+          </h2>
+          <p className="text-xl md:text-2xl text-codersbee-vivid font-medium max-w-3xl mx-auto">
+            We Have a Few Important Questions About Your Child's Future
+          </p>
+        </motion.div>
+
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {contentItems.map((item, index) => (
