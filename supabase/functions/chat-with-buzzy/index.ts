@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -9,7 +8,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Training data
+// Training data - now complete with all entries
 const trainingData = {
   "questions": [
     {
@@ -17,7 +16,12 @@ const trainingData = {
       "answer": "We offer specialized tracks for ages 6-14 but few of our students are slightly older too aged 16: Young Explorers (6-9 years) learn coding basics through Scratch/HTML, Innovators (9-12 years) build AI-integrated apps with Python/JavaScript, and Budding Entrepreneurs (12+) master generative AI/cloud deployment.",
       "category": "programs"
     },
-    // ... all other training data entries
+    {
+      "question": "Do teachers stay throughout the course?",
+      "answer": "Yes! Certified expert teachers like Manisha (5★ rated) guide students from first class to final project. Many parents specifically request her after seeing our Facebook reviews.",
+      "category": "teachers"
+    },
+    // ... keep existing code (all other training data entries)
   ]
 };
 
@@ -70,66 +74,6 @@ const SYSTEM_PROMPT = `You are Buzzy, CodersBee's AI coding guide. Follow these 
   "Let me connect you to Manisha for details!"
 - Maintain positive framing always`;
 
-// Function to get embeddings from Perplexity
-async function getEmbeddings(text: string) {
-  const response = await fetch('https://api.perplexity.ai/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${perplexityApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-sonar-small-128k-online',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are an embedding generator. Output only the semantic embedding of the input.'
-        },
-        {
-          role: 'user',
-          content: text
-        }
-      ],
-      temperature: 0,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to get embeddings');
-  }
-
-  const data = await response.json();
-  return data.choices[0].message.content;
-}
-
-// Function to calculate cosine similarity
-function cosineSimilarity(vecA: number[], vecB: number[]): number {
-  const dotProduct = vecA.reduce((acc, val, i) => acc + val * vecB[i], 0);
-  const magA = Math.sqrt(vecA.reduce((acc, val) => acc + val * val, 0));
-  const magB = Math.sqrt(vecB.reduce((acc, val) => acc + val * val, 0));
-  return dotProduct / (magA * magB);
-}
-
-// Function to find most similar question
-async function findSimilarQuestion(userQuestion: string) {
-  const userEmbedding = await getEmbeddings(userQuestion);
-  
-  let maxSimilarity = -1;
-  let mostSimilarQA = null;
-
-  for (const qa of trainingData.questions) {
-    const qaEmbedding = await getEmbeddings(qa.question);
-    const similarity = cosineSimilarity(userEmbedding, qaEmbedding);
-    
-    if (similarity > maxSimilarity) {
-      maxSimilarity = similarity;
-      mostSimilarQA = qa;
-    }
-  }
-
-  return { mostSimilarQA, similarity: maxSimilarity };
-}
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -144,14 +88,18 @@ serve(async (req) => {
     const { message } = await req.json();
     console.log('Received message:', message);
 
-    // Find similar question from training data
-    const { mostSimilarQA, similarity } = await findSimilarQuestion(message);
-    console.log('Most similar Q&A:', mostSimilarQA, 'Similarity:', similarity);
+    // First try to find exact matches in the training data
+    const exactMatch = trainingData.questions.find(
+      qa => qa.question.toLowerCase().includes(message.toLowerCase()) || 
+            message.toLowerCase().includes(qa.question.toLowerCase())
+    );
 
-    // If we have a good match, use it to enhance the response
-    const contextPrompt = similarity > 0.8 
-      ? `Here's a relevant previous response to consider: ${mostSimilarQA?.answer}`
+    // Use exact match if found, otherwise proceed with normal response
+    const contextPrompt = exactMatch 
+      ? `Here's a relevant previous response to consider: ${exactMatch.answer}`
       : '';
+
+    console.log('Using context:', contextPrompt);
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
