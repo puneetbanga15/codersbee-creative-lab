@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Menu, X } from "lucide-react";
+import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -77,7 +77,7 @@ export const Navbar = () => {
               className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4"
             >
               <div className="flex items-start gap-3 py-2">
-                <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-[#9b87f5] mt-0.5" />
                 <div>
                   <div>Quizzes</div>
                   <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
@@ -207,7 +207,7 @@ export const Navbar = () => {
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-[#9b87f5] mt-0.5" />
                       <div>
                         <div className="font-medium text-[#1A1F2C]">Quizzes</div>
                         <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
