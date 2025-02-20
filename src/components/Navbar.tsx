@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Calendar, CreditCard, Scroll, MessageSquare, Settings, CheckCircle2, Trophy, BookOpen, Menu, X } from "lucide-react";
+import { User, GraduationCap, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -171,7 +172,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm top-[42px]">
+    <nav className={`fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm ${isHomePage ? 'top-[42px]' : 'top-0'}`}>
       <div className="max-w-[1400px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-x-2">

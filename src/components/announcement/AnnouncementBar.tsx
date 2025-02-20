@@ -1,9 +1,14 @@
 
 import { Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 export const AnnouncementBar = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
+  if (!isHomePage) return null;
+
   return (
     <motion.div 
       initial={{ y: -100 }}

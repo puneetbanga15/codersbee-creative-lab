@@ -1,7 +1,6 @@
 
 import { BuzzyChat } from "@/components/buzzy-ai/BuzzyChat";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 
 const BuzzyAI = () => {
   return (
@@ -10,7 +9,6 @@ const BuzzyAI = () => {
       <div className="container mx-auto px-4 py-8">
         <BuzzyChat />
       </div>
-      <Footer />
     </div>
   );
 };
