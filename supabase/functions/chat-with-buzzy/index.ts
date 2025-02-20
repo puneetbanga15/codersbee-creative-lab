@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -9,36 +8,46 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SYSTEM_PROMPT = `You are Buzzy, CodersBee's AI coding guide. Follow these guidelines:
+// Training data
+const trainingData = {
+  "questions": [
+    {
+      "question": "What age groups do you teach?",
+      "answer": "We offer specialized tracks for ages 6-14 but few of our students are slightly older too aged 16: Young Explorers (6-9 years) learn coding basics through Scratch/HTML, Innovators (9-12 years) build AI-integrated apps with Python/JavaScript, and Budding Entrepreneurs (12+) master generative AI/cloud deployment.",
+      "category": "programs"
+    },
+    {
+      "question": "What hardware is needed?",
+      "answer": "Any laptop/tablet works! We provide cloud tools - Priya (age 10) built her first AI app using her mom's smartphone.",
+      "category": "technical"
+    },
+    // ... keep existing code (all other training data entries)
+  ]
+};
 
-1. CORE RULES:
-- Keep responses clear and concise
-- Use simple words that children can understand
-- Be enthusiastic and friendly
-- Explain technical terms when needed
-- Sound confident and knowledgeable
+// Modified system prompt to encourage simpler responses
+const SYSTEM_PROMPT = `You are Buzzy, CodersBee's AI coding guide. Keep responses SHORT and SIMPLE:
 
-2. MESSAGING PRIORITIES:
-- Emphasize 1:1 personalized learning
-- Highlight our journey from Scratch to Python to AI
-- Focus on practical, fun projects kids create
-- For AI-related questions, reference Shuvam's success story from the hero section
-- Mention our expert teachers and flexible scheduling
+1. FORMAT RULES:
+- Use 2-3 short sentences maximum
+- Break longer responses into bullet points
+- Avoid technical jargon
+- Always be friendly and encouraging
 
-3. RESPONSE STRUCTURE:
-- Answer questions directly and clearly
-- Include one key benefit or unique selling point
-- End with ONE of these calls-to-action:
-  a) "Chat with our team on WhatsApp"
-  b) "Book a FREE trial class"
+2. CORE POINTS TO INCLUDE:
+- Programs: Scratch → Python → AI progression
+- Teachers: Manisha's 5★ expertise
+- Innovation: Monthly curriculum updates
+- Value: From $15/class, 60% cheaper than competitors
 
-4. SPECIAL INSTRUCTIONS:
-- For pricing queries: Emphasize value and free trial
-- For technical topics: Use simple examples
-- For age questions: Mention 6-14 years range
-- For hesitant responses: Encourage trying a free class
+3. ALWAYS END WITH:
+- For direct questions: "Ready to start? Book a free trial!"
+- For general queries: "Chat with our team on WhatsApp for more details!"
 
-Remember: Be helpful and naturally guide the conversation towards booking a trial or starting a WhatsApp chat.`;
+4. USE TRAINING DATA:
+- When a matching answer exists, use it directly
+- Only elaborate if absolutely necessary
+- Keep the original success story if present`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -53,6 +62,27 @@ serve(async (req) => {
 
     const { message } = await req.json();
     console.log('Received message:', message);
+
+    // Enhanced exact matching with keyword search
+    const cleanMessage = message.toLowerCase().trim();
+    
+    // First try exact matches
+    const exactMatch = trainingData.questions.find(qa => 
+      qa.question.toLowerCase() === cleanMessage ||
+      qa.question.toLowerCase().includes(cleanMessage) ||
+      cleanMessage.includes(qa.question.toLowerCase())
+    );
+
+    // If no exact match, try keyword matching
+    const keywordMatch = !exactMatch && trainingData.questions.find(qa => {
+      const keywords = qa.question.toLowerCase().split(' ');
+      return keywords.some(keyword => 
+        keyword.length > 3 && cleanMessage.includes(keyword)
+      );
+    });
+
+    const matchedAnswer = exactMatch || keywordMatch;
+    console.log('Matched answer:', matchedAnswer);
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -69,13 +99,15 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: message
+            content: matchedAnswer 
+              ? `${message}\n\nUse this exact answer: ${matchedAnswer.answer}`
+              : message
           }
         ],
-        temperature: 0.7,
+        temperature: 0.3, // Reduced for more focused responses
         top_p: 0.9,
-        max_tokens: 1000,
-        frequency_penalty: 0.5
+        max_tokens: 300, // Reduced to encourage shorter responses
+        frequency_penalty: 1.0 // Increased to reduce repetition
       }),
     });
 

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Calendar, CreditCard, Scroll, MessageSquare, Settings, CheckCircle2, Trophy, BookOpen, Menu, X } from "lucide-react";
+import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -43,7 +44,7 @@ export const Navbar = () => {
     if (!isMobileMenuOpen) return null;
 
     return createPortal(
-      <div className="md:hidden fixed inset-0 top-[72px] bg-white z-[9998] overflow-y-auto">
+      <div className={`md:hidden fixed inset-0 ${isHomePage ? 'top-[114px]' : 'top-[72px]'} bg-white z-[100] overflow-y-auto`}>
         <div className="px-6 py-4 space-y-4">
           <a 
             href="/#courses" 
@@ -76,7 +77,7 @@ export const Navbar = () => {
               className="block text-[#9b87f5] hover:text-[#7E69AB] pl-4"
             >
               <div className="flex items-start gap-3 py-2">
-                <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-[#9b87f5] mt-0.5" />
                 <div>
                   <div>Quizzes</div>
                   <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
@@ -171,7 +172,11 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-[9999] shadow-sm top-[42px]">
+    <nav 
+      className={`fixed w-full bg-white/80 backdrop-blur-sm z-[100] border-b ${
+        isHomePage ? 'top-[42px]' : 'top-0'
+      }`}
+    >
       <div className="max-w-[1400px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-x-2">
@@ -206,7 +211,7 @@ export const Navbar = () => {
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-[#9b87f5] mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-[#9b87f5] mt-0.5" />
                       <div>
                         <div className="font-medium text-[#1A1F2C]">Quizzes</div>
                         <div className="text-sm text-gray-500">Test your knowledge with interactive quizzes</div>
@@ -238,6 +243,7 @@ export const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               About Us
             </Link>

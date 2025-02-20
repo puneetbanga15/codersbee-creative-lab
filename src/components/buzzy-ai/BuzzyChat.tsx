@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, KeyboardEvent } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { QuestionCounter } from "./QuestionCounter";
 import { Button } from "@/components/ui/button";
@@ -79,19 +80,28 @@ export const BuzzyChat = () => {
     }
   };
 
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const reachedLimit = questionsAsked >= MAX_QUESTIONS;
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-4 mt-20">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-6 flex items-center justify-center gap-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-6">
+          Meet Buzzy
+        </h1>
+        <div className="flex justify-center mb-8">
           <img 
             src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
             alt="Buzzy Bee"
-            className="w-16 h-16 object-contain"
+            className="w-32 h-32 md:w-40 md:h-40 object-contain animate-bounce hover:scale-110 transition-transform duration-300"
           />
-          Meet Buzzy - Your AI Coding Tutor
-        </h1>
+        </div>
 
         {messages.length === 0 && (
           <form 
@@ -101,6 +111,7 @@ export const BuzzyChat = () => {
             <ChatInput
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyPress}
               placeholder="Ask me anything about coding, AI, and CodersBee's programs!"
               className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
             />
@@ -126,7 +137,7 @@ export const BuzzyChat = () => {
               <img 
                 src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
                 alt="Buzzy"
-                className="w-12 h-12 object-contain"
+                className="w-12 h-12 object-contain animate-bounce"
               />
               Chat with Buzzy
             </h2>
@@ -162,6 +173,7 @@ export const BuzzyChat = () => {
                 <ChatInput
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyPress}
                   placeholder="Type your message here..."
                   className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
                 />
