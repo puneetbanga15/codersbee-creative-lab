@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -239,6 +240,7 @@ export const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               About Us
             </Link>
