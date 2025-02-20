@@ -44,9 +44,6 @@ export const BuzzyChat = () => {
         body: { message }
       });
 
-      console.log('Edge function response:', response);
-      console.log('Edge function error:', error);
-
       if (error) {
         console.error('Error calling edge function:', error);
         toast.error("Sorry, I'm having trouble connecting. Please try again.");
@@ -92,14 +89,17 @@ export const BuzzyChat = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-4 mt-20">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-2">
           Meet Buzzy
         </h1>
+        <p className="text-lg md:text-xl mb-6 bg-gradient-to-r from-[#8B5CF6] via-[#D946EF] to-[#F97316] bg-clip-text text-transparent font-medium" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          Secure AI chat for parents and kids
+        </p>
         <div className="flex justify-center mb-8">
           <img 
             src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
             alt="Buzzy Bee"
-            className="w-32 h-32 md:w-40 md:h-40 object-contain animate-bounce hover:scale-110 transition-transform duration-300"
+            className="w-32 h-32 md:w-40 md:h-40 object-contain hover:scale-105 transition-transform duration-300"
           />
         </div>
 
@@ -113,7 +113,7 @@ export const BuzzyChat = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Ask me anything about coding, AI, and CodersBee's programs!"
-              className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
+              className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0 text-base md:text-lg"
             />
             <div className="flex items-center p-3 pt-0">
               <Button
@@ -137,13 +137,13 @@ export const BuzzyChat = () => {
               <img 
                 src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
                 alt="Buzzy"
-                className="w-12 h-12 object-contain animate-bounce"
+                className="w-12 h-12 object-contain"
               />
               Chat with Buzzy
             </h2>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-base md:text-lg">
             {messages.map((message, index) => (
               <ChatMessage key={index} {...message} />
             ))}
@@ -175,7 +175,7 @@ export const BuzzyChat = () => {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyPress}
                   placeholder="Type your message here..."
-                  className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
+                  className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0 text-base md:text-lg"
                 />
                 <div className="flex items-center p-3 pt-0">
                   <Button
