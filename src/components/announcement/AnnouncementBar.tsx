@@ -14,7 +14,7 @@ export const AnnouncementBar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="fixed top-0 left-0 right-0 bg-gradient-to-r from-[#9b87f5] to-[#b3a4f7] py-3 w-full z-[10000]"
+      className="fixed top-0 left-0 right-0 bg-gradient-to-r from-[#9b87f5] to-[#b3a4f7] py-3 w-full z-[99]"
     >
       <div className="container mx-auto px-4">
         <motion.div 
