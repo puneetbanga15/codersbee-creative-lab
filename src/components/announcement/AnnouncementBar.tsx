@@ -2,6 +2,7 @@
 import { Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { RainbowButton } from "@/components/ui/rainbow-button";
 
 export const AnnouncementBar = () => {
   const location = useLocation();
@@ -14,11 +15,11 @@ export const AnnouncementBar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="fixed top-0 left-0 right-0 bg-gradient-to-r from-[#9b87f5] to-[#b3a4f7] py-3 w-full z-[99]"
+      className="fixed top-0 left-0 right-0 bg-gradient-to-r from-[#9b87f5] to-[#b3a4f7] py-4 w-full z-[99]"
     >
       <div className="container mx-auto px-4">
         <motion.div 
-          className="flex items-center justify-center gap-2 text-white"
+          className="flex items-center justify-center gap-4 text-white"
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
         >
@@ -33,18 +34,16 @@ export const AnnouncementBar = () => {
             <img 
               src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
               alt="Buzzy Bee"
-              className="w-6 h-6 object-contain animate-bounce"
+              className="w-6 h-6 object-contain"
             />
             <span className="text-base md:text-lg font-medium">
               Meet Buzzy Bee AI - Your Friendly Coding Guide
             </span>
-            <motion.span 
-              className="hidden md:inline-block bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium group-hover:bg-white/30 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <RainbowButton 
+              className="hidden md:inline-flex text-sm py-1 h-9 px-4"
             >
               Try it now →
-            </motion.span>
+            </RainbowButton>
           </Link>
         </motion.div>
       </div>
