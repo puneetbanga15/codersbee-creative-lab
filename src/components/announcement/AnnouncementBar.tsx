@@ -27,9 +27,7 @@ export const AnnouncementBar = () => {
           </div>
           <Link to="/buzzy-ai" className="group flex items-center gap-2 hover:opacity-90 transition-opacity">
             <img src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" alt="Buzzy Bee" className="w-6 h-6 object-contain" />
-            <span className="text-base md:text-lg font-medium">
-              Meet Buzzy Bee AI - Your Friendly Coding Guide
-            </span>
+            <span className="text-base md:text-lg font-medium">Buzzy Bee AI - Ask Anything</span>
             <RainbowButton className="hidden md:inline-flex text-sm py-1 h-9 px-4">
               Try it now →
             </RainbowButton>
