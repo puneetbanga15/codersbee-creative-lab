@@ -1,7 +1,5 @@
-
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
 export const Hero = () => {
   return <div className="relative min-h-[90vh] overflow-hidden">
       {/* Background Video Layer */}
@@ -17,7 +15,7 @@ export const Hero = () => {
       <div className="relative z-20 pt-12 pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl md:text-7xl font-bold text-[#1A1F2C] mb-6 md:mb-8 leading-tight hero-heading">
+            <h1 className="text-3xl font-bold text-[#1A1F2C] mb-6 md:mb-8 leading-tight hero-heading md:text-7xl">
               1:1 Live Classes Where Kids Build
               <br />Coding and AI Projects
               <br /><span className="text-[#9b87f5]">From Day 1</span>
