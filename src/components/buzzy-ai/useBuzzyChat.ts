@@ -75,9 +75,8 @@ export function useBuzzyChat() {
 
       if (error) {
         console.error('Error calling edge function:', error);
-        toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.", {
-          icon: AlertTriangle
-        });
+        // Use a simple string instead of the component for the icon in a .ts file
+        toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.");
         setConnectionFailed(true);
         throw error;
       }
