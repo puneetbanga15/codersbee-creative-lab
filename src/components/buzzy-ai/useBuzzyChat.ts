@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-import { AlertTriangle } from "lucide-react";
 import { Message, MAX_QUESTIONS, RESPONSE_TEMPLATES, FALLBACK_RESPONSES } from "./constants";
 
 export function useBuzzyChat() {
@@ -65,53 +64,53 @@ export function useBuzzyChat() {
         return;
       }
 
-      // Try to get response from the Edge Function
-      const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
-        body: { 
-          message,
-          previousMessages: conversationHistory
+      try {
+        // Try to get response from the Edge Function
+        const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
+          body: { 
+            message,
+            previousMessages: conversationHistory
+          }
+        });
+
+        if (error) {
+          console.error('Error calling edge function:', error);
+          // Use a simple string instead of the component for the icon in a .ts file
+          toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.");
+          setConnectionFailed(true);
+          throw error;
         }
-      });
 
-      if (error) {
-        console.error('Error calling edge function:', error);
-        // Use a simple string instead of the component for the icon in a .ts file
-        toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.");
-        setConnectionFailed(true);
-        throw error;
-      }
+        if (!response?.answer) {
+          console.error('No answer in response:', response);
+          throw new Error('No answer received from AI');
+        }
 
-      if (!response?.answer) {
-        throw new Error('No answer received from AI');
-      }
+        // Reset connection failed state if we get a successful response
+        if (connectionFailed) {
+          setConnectionFailed(false);
+        }
 
-      // Reset connection failed state if we get a successful response
-      if (connectionFailed) {
-        setConnectionFailed(false);
-      }
+        const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
+          ? RESPONSE_TEMPLATES.questionLimit
+          : response.answer;
 
-      const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
-        ? RESPONSE_TEMPLATES.questionLimit
-        : response.answer;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: newResponse,
-        },
-      ]);
-      
-      // After first reaching the question limit, allow for follow-ups but in a continuation mode
-      if (questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat) {
-        setContinuingChat(true);
-      }
-      
-    } catch (error) {
-      console.error('Error chatting with Buzzy:', error);
-      
-      // Use fallback responses if connection fails
-      if (connectionFailed) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: newResponse,
+          },
+        ]);
+        
+        // After first reaching the question limit, allow for follow-ups but in a continuation mode
+        if (questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat) {
+          setContinuingChat(true);
+        }
+      } catch (innerError) {
+        console.error('Error processing AI response:', innerError);
+        
+        // Use fallback responses
         const fallbackResponse = getFallbackResponse();
         setMessages((prev) => [
           ...prev,
@@ -120,15 +119,23 @@ export function useBuzzyChat() {
             content: fallbackResponse,
           },
         ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: RESPONSE_TEMPLATES.connectionError,
-          },
-        ]);
+        
+        if (!connectionFailed) {
+          setConnectionFailed(true);
+        }
       }
+      
+    } catch (error) {
+      console.error('Error in overall chat flow:', error);
+      
+      // Default fallback response
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: RESPONSE_TEMPLATES.connectionError,
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
