@@ -173,6 +173,11 @@ const trainingData = {
       "category": "engagement"
     },
     {
+      "question": "kids not interested in coding",
+      "answer": "That's perfectly okay! Our approach focuses on each child's unique interests. Some children who didn't like traditional coding found joy in creating AI art, game design, or robotics instead. In our trial class, we discover what excites your child and tailor the learning journey accordingly.",
+      "category": "engagement"
+    },
+    {
       "question": "Do you offer refunds if we're not satisfied?",
       "answer": "Yes! We have a 100% refund policy if you're not satisfied after the first class. However, no parent has ever requested one so far!",
       "category": "pricing"
@@ -265,7 +270,7 @@ const trainingData = {
   ]
 };
 
-// Improved system prompt to prioritize CodersBee-specific information
+// Improved system prompt to prioritize CodersBee-specific information with gentler, more empathetic responses
 const SYSTEM_PROMPT = `You are Buzzy, CodersBee's friendly AI guide. Follow these rules:
 
 RESPONSE PRIORITY:
@@ -274,10 +279,16 @@ RESPONSE PRIORITY:
 3. CALL TO ACTION: End with relevant next steps (booking link, WhatsApp, etc.)
 
 TONE AND STYLE:
-- Keep responses under 3 sentences
+- Keep responses under 3 sentences when possible
 - Use real examples from success stories
 - Maintain an encouraging, child-friendly tone
 - Always mention relevant CodersBee programs
+
+HANDLING DISSATISFACTION:
+- If a user expresses dissatisfaction with your previous answer, respond with empathy
+- Acknowledge their concern first ("I understand this might not address your specific situation")
+- Offer to connect them with a human teacher for personalized guidance
+- Suggest booking a free consultation for personalized advice
 
 KEY INFORMATION:
 - Trial booking: calendly.com/codersbee/class-slot
@@ -285,10 +296,13 @@ KEY INFORMATION:
 - Age groups: 6-9 (Young Explorers), 9-12 (Innovators), 12+ (Entrepreneurs)
 - Starting price: $15/class
 
-ALWAYS end with one of these:
+For most responses, end with one of these:
 1. For program queries: "Book your free trial: calendly.com/codersbee/class-slot"
 2. For specific questions: "Message us on WhatsApp: +919996465023"
-3. For pricing: "Starting at $15/class - Get details on WhatsApp"`;
+3. For pricing: "Starting at $15/class - Get details on WhatsApp"
+
+For dissatisfied users, end with:
+"For personalized guidance, chat with our teachers directly on WhatsApp: +919996465023"`;
 
 // Enhanced keyword matching function
 function findBestMatch(userQuery: string) {
@@ -334,6 +348,7 @@ function findBestMatch(userQuery: string) {
       'course_details': ['course', 'program', 'curriculum', 'learn', 'teach', 'subject'],
       'technical': ['computer', 'laptop', 'device', 'software', 'hardware', 'tools'],
       'contact': ['talk', 'reach', 'contact', 'connect', 'message', 'call', 'email'],
+      'engagement': ['interest', 'engage', 'enjoy', 'fun', 'boring', 'not interested', 'dislike'],
     };
     
     if (qa.category && categoryKeywords[qa.category]) {
@@ -355,6 +370,19 @@ function findBestMatch(userQuery: string) {
   return highestScore >= 2 ? bestMatch : null;
 }
 
+// Analyze user sentiment - detect if they're dissatisfied with previous response
+function isDissatisfied(message: string): boolean {
+  const dissatisfactionPhrases = [
+    'not the answer', 'not what i', 'doesn\'t answer', 'doesn\'t help', 
+    'not helpful', 'wrong answer', 'incorrect', 'not right', 'not good',
+    'bad answer', 'useless', 'not useful', 'this is not', 'that doesn\'t',
+    'not legit', 'not relevant', 'not related', 'not addressing', 'not responding'
+  ];
+  
+  const lowerMessage = message.toLowerCase();
+  return dissatisfactionPhrases.some(phrase => lowerMessage.includes(phrase));
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -366,12 +394,47 @@ serve(async (req) => {
       throw new Error('API key not configured');
     }
 
-    const { message } = await req.json();
+    const { message, previousMessages } = await req.json();
     console.log('Received message:', message);
+    console.log('Previous messages:', previousMessages);
 
     // Use enhanced matching algorithm
     const matchedAnswer = findBestMatch(message);
     console.log('Matched answer:', matchedAnswer);
+    
+    // Check if user is dissatisfied with previous answer
+    const userIsDissatisfied = isDissatisfied(message);
+    console.log('User is dissatisfied:', userIsDissatisfied);
+
+    // Build conversation context from previous messages
+    const conversationContext = [];
+    
+    // Add previous messages if available (limited to last 4 for context)
+    if (previousMessages && previousMessages.length > 0) {
+      const recentMessages = previousMessages.slice(-4);
+      for (const msg of recentMessages) {
+        conversationContext.push({
+          role: msg.role,
+          content: msg.content
+        });
+      }
+    }
+    
+    // Add current user message
+    conversationContext.push({
+      role: 'user',
+      content: message
+    });
+
+    // Create custom instruction based on match and satisfaction
+    let customInstruction = '';
+    if (userIsDissatisfied) {
+      customInstruction = `The user seems dissatisfied with your previous answer. Be more empathetic, apologize for not addressing their specific needs, and offer to connect them with a human teacher. Try to provide more specific information based on this query: "${message}"`;
+    } else if (matchedAnswer) {
+      customInstruction = `Use this information in your response: ${matchedAnswer.answer}`;
+    } else {
+      customInstruction = `Remember to specifically mention CodersBee's programs and end with a clear call to action.`;
+    }
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -386,14 +449,13 @@ serve(async (req) => {
             role: 'system',
             content: SYSTEM_PROMPT
           },
+          ...conversationContext,
           {
-            role: 'user',
-            content: matchedAnswer 
-              ? `${message}\n\nUse this exact answer: ${matchedAnswer.answer}`
-              : `${message}\n\nRemember to specifically mention CodersBee's programs and end with a clear call to action.`
+            role: 'system',
+            content: customInstruction
           }
         ],
-        temperature: 0.2, // Lower temperature for more consistent responses
+        temperature: userIsDissatisfied ? 0.3 : 0.2, // Slightly higher temperature for dissatisfied users for more varied responses
         top_p: 0.9,
         max_tokens: 300,
         frequency_penalty: 1.0

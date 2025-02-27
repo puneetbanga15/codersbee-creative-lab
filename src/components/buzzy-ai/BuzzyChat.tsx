@@ -1,11 +1,11 @@
 
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { QuestionCounter } from "./QuestionCounter";
 import { Button } from "@/components/ui/button";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-import { Send } from "lucide-react";
+import { Send, Frown, MessageSquare } from "lucide-react";
 import { ChatInput } from "@/components/ui/chat-input";
 
 interface Message {
@@ -26,22 +26,42 @@ export const BuzzyChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [questionsAsked, setQuestionsAsked] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [continuingChat, setContinuingChat] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const supabase = useSupabaseClient();
+
+  // Auto-scroll to the bottom when messages update
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!inputValue.trim() || isLoading || questionsAsked >= MAX_QUESTIONS) return;
+    if (!inputValue.trim() || isLoading || (questionsAsked >= MAX_QUESTIONS && !continuingChat)) return;
     
     const message = inputValue.trim();
     setInputValue("");
     
     try {
+      // Add user message to chat
       setMessages((prev) => [...prev, { role: "user", content: message }]);
       setIsLoading(true);
-      setQuestionsAsked((prev) => prev + 1);
+      
+      // Only increment question count if it's a new question, not a follow-up
+      if (!continuingChat) {
+        setQuestionsAsked((prev) => prev + 1);
+      }
+
+      // Get last 3 message pairs to maintain context
+      const conversationHistory = messages.slice(-6);
 
       const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
-        body: { message }
+        body: { 
+          message,
+          previousMessages: conversationHistory
+        }
       });
 
       if (error) {
@@ -54,15 +74,23 @@ export const BuzzyChat = () => {
         throw new Error('No answer received from AI');
       }
 
+      const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
+        ? RESPONSE_TEMPLATES.questionLimit
+        : response.answer;
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: questionsAsked >= MAX_QUESTIONS - 1
-            ? RESPONSE_TEMPLATES.questionLimit
-            : response.answer,
+          content: newResponse,
         },
       ]);
+      
+      // After first reaching the question limit, allow for follow-ups but in a continuation mode
+      if (questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat) {
+        setContinuingChat(true);
+      }
+      
     } catch (error) {
       console.error('Error chatting with Buzzy:', error);
       setMessages((prev) => [
@@ -84,7 +112,7 @@ export const BuzzyChat = () => {
     }
   };
 
-  const reachedLimit = questionsAsked >= MAX_QUESTIONS;
+  const reachedLimit = questionsAsked >= MAX_QUESTIONS && !continuingChat;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -143,7 +171,7 @@ export const BuzzyChat = () => {
             </h2>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-base md:text-lg">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 text-base md:text-lg">
             {messages.map((message, index) => (
               <ChatMessage key={index} {...message} />
             ))}
@@ -154,17 +182,39 @@ export const BuzzyChat = () => {
                 isLoading={true}
               />
             )}
+            
+            {messages.length > 0 && !isLoading && messages[messages.length - 1].role === "assistant" && (
+              <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
+                <p className="flex items-center gap-1 text-xs">
+                  <MessageSquare className="w-4 h-4" />
+                  Not the answer you needed? 
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-xs text-[#9b87f5]"
+                    onClick={() => setInputValue("This is not the answer I was looking for. Can you help with ")}
+                  >
+                    Ask a follow-up question
+                  </Button>
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="p-4 border-t">
             <QuestionCounter remaining={MAX_QUESTIONS - questionsAsked} total={MAX_QUESTIONS} />
             {reachedLimit ? (
-              <Button
-                className="w-full bg-green-500 hover:bg-green-600"
-                onClick={() => window.open("https://wa.me/919996465023", "_blank")}
-              >
-                Continue on WhatsApp →
-              </Button>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
+                  <Frown className="w-4 h-4 text-amber-500" />
+                  You've reached the free question limit
+                </p>
+                <Button
+                  className="w-full bg-green-500 hover:bg-green-600"
+                  onClick={() => window.open("https://wa.me/919996465023", "_blank")}
+                >
+                  Continue on WhatsApp →
+                </Button>
+              </div>
             ) : (
               <form 
                 onSubmit={handleSendMessage}
