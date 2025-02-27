@@ -5,7 +5,7 @@ import { QuestionCounter } from "./QuestionCounter";
 import { Button } from "@/components/ui/button";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-import { Send, Frown, MessageSquare } from "lucide-react";
+import { Send, Frown, MessageSquare, AlertTriangle } from "lucide-react";
 import { ChatInput } from "@/components/ui/chat-input";
 
 interface Message {
@@ -18,8 +18,18 @@ const MAX_QUESTIONS = 5;
 const RESPONSE_TEMPLATES = {
   thinking: "Let me think about that...",
   error: "I apologize, but I'm having trouble connecting right now. Please try again in a moment or reach out to our team via WhatsApp for immediate assistance.",
-  questionLimit: "You've asked some great questions! To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!"
+  questionLimit: "You've asked some great questions! To continue this exciting discussion, please click the WhatsApp button above to connect with our teaching team. They're ready to provide personalized guidance for your coding journey!",
+  connectionError: "I'm sorry, I'm having trouble connecting to my knowledge base right now. Please try again later or contact our team directly on WhatsApp at +919996465023 for immediate assistance."
 };
+
+// Fallback responses when the Edge Function is unavailable
+const FALLBACK_RESPONSES = [
+  "At CodersBee, we offer specialized coding programs for kids aged 6-16. Our Young Explorers program (ages 6-9) teaches Scratch, while our Innovators program (ages 9-12) focuses on Python and AI fundamentals. For more details, please message us on WhatsApp: +919996465023",
+  "Our pricing starts at $15 per class with flexible payment options and sibling discounts. For a personalized quote, please reach out to us on WhatsApp: +919996465023",
+  "You can book a free trial class through our Calendly link: calendly.com/codersbee/class-slot or message us on WhatsApp: +919996465023",
+  "CodersBee offers personalized 1:1 coding classes taught by expert teachers. Each student gets a customized learning plan based on their interests and skill level. Book your free trial class today: calendly.com/codersbee/class-slot",
+  "Many of our students have created impressive projects like AI chatbots and games. For example, Shuvam (age 12) built an award-winning AI project after just 3 months! Interested in what your child could build? Book a free trial: calendly.com/codersbee/class-slot"
+];
 
 export const BuzzyChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,6 +37,8 @@ export const BuzzyChat = () => {
   const [questionsAsked, setQuestionsAsked] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [continuingChat, setContinuingChat] = useState(false);
+  const [connectionFailed, setConnectionFailed] = useState(false);
+  const [fallbackAttempts, setFallbackAttempts] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const supabase = useSupabaseClient();
 
@@ -36,6 +48,12 @@ export const BuzzyChat = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const getFallbackResponse = () => {
+    const index = fallbackAttempts % FALLBACK_RESPONSES.length;
+    setFallbackAttempts(prev => prev + 1);
+    return FALLBACK_RESPONSES[index];
+  };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -57,6 +75,23 @@ export const BuzzyChat = () => {
       // Get last 3 message pairs to maintain context
       const conversationHistory = messages.slice(-6);
 
+      // If we've already had connection failures, use fallback responses immediately
+      if (connectionFailed && fallbackAttempts > 0) {
+        setTimeout(() => {
+          const fallbackResponse = getFallbackResponse();
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: fallbackResponse,
+            },
+          ]);
+          setIsLoading(false);
+        }, 1500);
+        return;
+      }
+
+      // Try to get response from the Edge Function
       const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
         body: { 
           message,
@@ -66,12 +101,20 @@ export const BuzzyChat = () => {
 
       if (error) {
         console.error('Error calling edge function:', error);
-        toast.error("Sorry, I'm having trouble connecting. Please try again.");
+        toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.", {
+          icon: <AlertTriangle className="h-5 w-5 text-amber-500" />
+        });
+        setConnectionFailed(true);
         throw error;
       }
 
       if (!response?.answer) {
         throw new Error('No answer received from AI');
+      }
+
+      // Reset connection failed state if we get a successful response
+      if (connectionFailed) {
+        setConnectionFailed(false);
       }
 
       const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
@@ -93,13 +136,26 @@ export const BuzzyChat = () => {
       
     } catch (error) {
       console.error('Error chatting with Buzzy:', error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: RESPONSE_TEMPLATES.error,
-        },
-      ]);
+      
+      // Use fallback responses if connection fails
+      if (connectionFailed) {
+        const fallbackResponse = getFallbackResponse();
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: fallbackResponse,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: RESPONSE_TEMPLATES.connectionError,
+          },
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -130,6 +186,29 @@ export const BuzzyChat = () => {
             className="w-32 h-32 md:w-40 md:h-40 object-contain hover:scale-105 transition-transform duration-300"
           />
         </div>
+
+        {connectionFailed && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-medium text-amber-800">Connection Issue</h3>
+                <p className="text-sm text-amber-700 mt-1">
+                  Buzzy is experiencing connection issues but can still provide basic information. For detailed answers, please reach out via WhatsApp.
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="mt-2 bg-green-500 hover:bg-green-600 text-white border-0"
+                  onClick={() => window.open("https://wa.me/919996465023", "_blank")}
+                >
+                  <MessageSquareText className="h-4 w-4 mr-1" />
+                  Contact on WhatsApp
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {messages.length === 0 && (
           <form 
