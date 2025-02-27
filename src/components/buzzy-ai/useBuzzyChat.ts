@@ -76,7 +76,7 @@ export function useBuzzyChat() {
       if (error) {
         console.error('Error calling edge function:', error);
         toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.", {
-          icon: <AlertTriangle className="h-5 w-5 text-amber-500" />
+          icon: AlertTriangle
         });
         setConnectionFailed(true);
         throw error;
