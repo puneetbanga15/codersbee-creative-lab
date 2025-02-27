@@ -2,7 +2,7 @@
 import { BuzzyChat } from "@/components/buzzy-ai/BuzzyChat";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, MessageSquareText } from "lucide-react";
+import { ArrowLeft, Calendar, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const BuzzyAI = () => {
@@ -25,7 +25,7 @@ const BuzzyAI = () => {
               className="flex items-center gap-1"
               onClick={() => window.open("https://wa.me/919996465023", "_blank")}
             >
-              <MessageSquareText className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" />
               WhatsApp
             </Button>
             <Button 

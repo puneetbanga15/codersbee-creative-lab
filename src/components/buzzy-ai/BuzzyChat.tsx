@@ -202,7 +202,7 @@ export const BuzzyChat = () => {
                   className="mt-2 bg-green-500 hover:bg-green-600 text-white border-0"
                   onClick={() => window.open("https://wa.me/919996465023", "_blank")}
                 >
-                  <MessageSquareText className="h-4 w-4 mr-1" />
+                  <MessageSquare className="h-4 w-4 mr-1" />
                   Contact on WhatsApp
                 </Button>
               </div>
