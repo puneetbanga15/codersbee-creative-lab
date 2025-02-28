@@ -15,7 +15,9 @@ export const ChatHeader = ({ connectionFailed }: ChatHeaderProps) => {
         className="text-lg md:text-xl mb-6 bg-gradient-to-r from-[#8B5CF6] via-[#D946EF] to-[#F97316] bg-clip-text text-transparent font-medium" 
         style={{ fontFamily: 'Comic Sans MS, cursive' }}
       >
-        Secure AI chat for parents and kids
+        {connectionFailed 
+          ? "Basic mode - limited responses available" 
+          : "Secure AI chat for parents and kids"}
       </p>
       <div className="flex justify-center mb-8">
         <img 

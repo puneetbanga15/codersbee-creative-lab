@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
@@ -55,9 +54,39 @@ export function useBuzzyChat() {
         setQuestionsAsked((prev) => prev + 1);
       }
 
-      // Get last 3 message pairs to maintain context
-      const conversationHistory = messages.slice(-6);
-
+      // Get conversation history, making sure it starts with a user message if we have any history
+      // and has alternating user/assistant messages
+      let conversationHistory: Message[] = [];
+      
+      if (messages.length > 0) {
+        // Get up to last 6 messages, but ensure we have complete user-assistant pairs
+        // Starting with the most recent and working backward
+        const historyMessages = [...messages]; // Create a copy to avoid modifying the original
+        
+        // If the last message is from assistant, we need to include it and its corresponding user message
+        // If the last message is from user, we'll add the new user message separately, so skip it here
+        let startIdx = historyMessages.length - 1;
+        if (historyMessages[startIdx].role === "assistant") {
+          // Include this assistant message and go back one more to get the user message that prompted it
+          conversationHistory.unshift(historyMessages[startIdx]);
+          startIdx--;
+        }
+        
+        // Now work backward in pairs (user then assistant)
+        // We need to ensure the sequence is user-assistant, user-assistant, etc.
+        for (let i = startIdx; i >= 0 && conversationHistory.length < 6; i--) {
+          const currentMsg = historyMessages[i];
+          
+          // If we have an odd number of messages so far and next one is user, add it
+          // Or if we have an even number and next one is assistant, add it
+          if ((conversationHistory.length % 2 === 1 && currentMsg.role === "user") ||
+              (conversationHistory.length % 2 === 0 && currentMsg.role === "assistant")) {
+            conversationHistory.unshift(currentMsg);
+          }
+          // Otherwise, we need to skip this message to maintain proper alternating order
+        }
+      }
+      
       // If we've already had connection failures, use fallback responses immediately
       // But we'll try again with the real AI periodically
       if (connectionFailed && fallbackAttempts > 0 && retryCount < 3) {
@@ -79,6 +108,7 @@ export function useBuzzyChat() {
       try {
         // Try to get response from the Edge Function
         console.log("Attempting to call edge function with message:", message);
+        console.log("Sending conversation history:", conversationHistory);
         
         const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
           body: { 
