@@ -12,6 +12,7 @@ export function useBuzzyChat() {
   const [continuingChat, setContinuingChat] = useState(false);
   const [connectionFailed, setConnectionFailed] = useState(false);
   const [fallbackAttempts, setFallbackAttempts] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const supabase = useSupabaseClient();
 
@@ -21,6 +22,15 @@ export function useBuzzyChat() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Reset connection every 3 messages to try again with the real AI
+  useEffect(() => {
+    if (connectionFailed && retryCount >= 3) {
+      console.log("Attempting to reset connection and try AI again");
+      setConnectionFailed(false);
+      setRetryCount(0);
+    }
+  }, [retryCount, connectionFailed]);
 
   const getFallbackResponse = () => {
     const index = fallbackAttempts % FALLBACK_RESPONSES.length;
@@ -49,23 +59,27 @@ export function useBuzzyChat() {
       const conversationHistory = messages.slice(-6);
 
       // If we've already had connection failures, use fallback responses immediately
-      if (connectionFailed && fallbackAttempts > 0) {
+      // But we'll try again with the real AI periodically
+      if (connectionFailed && fallbackAttempts > 0 && retryCount < 3) {
         setTimeout(() => {
           const fallbackResponse = getFallbackResponse();
           setMessages((prev) => [
             ...prev,
             {
               role: "assistant",
-              content: fallbackResponse,
+              content: fallbackResponse + " (Note: Using backup responses due to connection issues)",
             },
           ]);
+          setRetryCount(prev => prev + 1);
           setIsLoading(false);
-        }, 1500);
+        }, 1000);
         return;
       }
 
       try {
         // Try to get response from the Edge Function
+        console.log("Attempting to call edge function with message:", message);
+        
         const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
           body: { 
             message,
@@ -75,11 +89,14 @@ export function useBuzzyChat() {
 
         if (error) {
           console.error('Error calling edge function:', error);
-          // Use a simple string instead of the component for the icon in a .ts file
-          toast.error("Sorry, I'm having trouble connecting. Using backup responses instead.");
+          toast.error("Sorry, I'm having trouble connecting to my AI brain. Using backup responses for now.", {
+            duration: 4000,
+          });
           setConnectionFailed(true);
           throw error;
         }
+
+        console.log("Got response from edge function:", response);
 
         if (!response?.answer) {
           console.error('No answer in response:', response);
@@ -88,7 +105,10 @@ export function useBuzzyChat() {
 
         // Reset connection failed state if we get a successful response
         if (connectionFailed) {
+          console.log("Connection restored! Using AI responses again.");
           setConnectionFailed(false);
+          setRetryCount(0);
+          toast.success("Connection restored! I'm back to my full capabilities now.");
         }
 
         const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
@@ -116,13 +136,15 @@ export function useBuzzyChat() {
           ...prev,
           {
             role: "assistant",
-            content: fallbackResponse,
+            content: fallbackResponse + " (Note: Using backup responses due to connection issues)",
           },
         ]);
         
         if (!connectionFailed) {
           setConnectionFailed(true);
         }
+        
+        setRetryCount(prev => prev + 1);
       }
       
     } catch (error) {
