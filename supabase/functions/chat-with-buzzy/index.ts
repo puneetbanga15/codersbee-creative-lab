@@ -383,6 +383,57 @@ function isDissatisfied(message: string): boolean {
   return dissatisfactionPhrases.some(phrase => lowerMessage.includes(phrase));
 }
 
+// Validates that the message sequence follows Perplexity's requirements
+function validateMessageSequence(messages: any[]): boolean {
+  let systemMessagesSeen = false;
+  let lastRole = "";
+  
+  for (let i = 0; i < messages.length; i++) {
+    const role = messages[i].role;
+    
+    // Check if system messages come first
+    if (role === "system") {
+      if (lastRole !== "" && lastRole !== "system") {
+        console.error("System messages must come first in the sequence");
+        return false;
+      }
+    } 
+    // After system messages, roles must alternate between user and assistant
+    else {
+      if (systemMessagesSeen && role === lastRole) {
+        console.error(`Found consecutive ${role} messages which breaks alternation`);
+        return false;
+      }
+      
+      if (role !== "user" && role !== "assistant") {
+        console.error(`Invalid role: ${role}. Expected 'user' or 'assistant'`);
+        return false;
+      }
+    }
+    
+    if (role === "system") {
+      systemMessagesSeen = true;
+    }
+    
+    lastRole = role;
+  }
+  
+  // The sequence must start with system or user
+  if (messages.length > 0 && !["system", "user"].includes(messages[0].role)) {
+    console.error(`First message must be system or user, not ${messages[0].role}`);
+    return false;
+  }
+  
+  // If the sequence has user/assistant messages, it must end with user
+  const nonSystemMessages = messages.filter(m => m.role !== "system");
+  if (nonSystemMessages.length > 0 && nonSystemMessages[nonSystemMessages.length - 1].role !== "user") {
+    console.error("The last non-system message must be from the user");
+    return false;
+  }
+  
+  return true;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -406,27 +457,7 @@ serve(async (req) => {
     const userIsDissatisfied = isDissatisfied(message);
     console.log('User is dissatisfied:', userIsDissatisfied);
 
-    // Build conversation context from previous messages
-    const conversationContext = [];
-    
-    // Add previous messages if available (limited to last 4 for context)
-    if (previousMessages && previousMessages.length > 0) {
-      const recentMessages = previousMessages.slice(-4);
-      for (const msg of recentMessages) {
-        conversationContext.push({
-          role: msg.role,
-          content: msg.content
-        });
-      }
-    }
-    
-    // Add current user message
-    conversationContext.push({
-      role: 'user',
-      content: message
-    });
-
-    // Create custom instruction based on match and satisfaction
+    // Prepare custom instruction based on match and satisfaction
     let customInstruction = '';
     if (userIsDissatisfied) {
       customInstruction = `The user seems dissatisfied with your previous answer. Be more empathetic, apologize for not addressing their specific needs, and offer to connect them with a human teacher. Try to provide more specific information based on this query: "${message}"`;
@@ -436,6 +467,29 @@ serve(async (req) => {
       customInstruction = `Remember to specifically mention CodersBee's programs and end with a clear call to action.`;
     }
 
+    // FIXED: Combine all system messages at the beginning
+    const combinedSystemPrompt = `${SYSTEM_PROMPT}\n\n${customInstruction}`;
+    
+    // Create the messages array - START with system message, then END with user
+    // This ensures Perplexity API requirements are met
+    const apiMessages = [
+      {
+        role: 'system',
+        content: combinedSystemPrompt
+      },
+      {
+        role: 'user',
+        content: message
+      }
+    ];
+    
+    // Validate message sequence before sending
+    if (!validateMessageSequence(apiMessages)) {
+      throw new Error('Invalid message sequence for Perplexity API');
+    }
+    
+    console.log('Sending messages to Perplexity API:', JSON.stringify(apiMessages, null, 2));
+
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
@@ -444,17 +498,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'llama-3.1-sonar-small-128k-online',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT
-          },
-          ...conversationContext,
-          {
-            role: 'system',
-            content: customInstruction
-          }
-        ],
+        messages: apiMessages,
         temperature: userIsDissatisfied ? 0.3 : 0.2, // Slightly higher temperature for dissatisfied users for more varied responses
         top_p: 0.9,
         max_tokens: 300,
