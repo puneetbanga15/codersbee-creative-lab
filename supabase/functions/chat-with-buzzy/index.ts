@@ -278,6 +278,15 @@ RESPONSE PRIORITY:
 2. CODERSBEE CONTEXT: Always relate answers to CodersBee's programs and methodology
 3. CALL TO ACTION: End with relevant next steps (booking link, WhatsApp, etc.)
 
+IMPORTANT REDIRECTION RULE:
+- When users ask questions that start with "you" (e.g., "How are you?", "Tell me about yourself", "What are you?"), 
+  ALWAYS interpret these as questions about CodersBee, not about the AI.
+- For example:
+  - "Tell me about yourself" → Answer as if they asked "Tell me about CodersBee"
+  - "How are you different?" → Answer as if they asked "How is CodersBee different from other coding schools?"
+  - "What makes you special?" → Answer as if they asked "What makes CodersBee special?"
+- This applies to ALL personal questions directed at "you" - respond with CodersBee information.
+
 TONE AND STYLE:
 - Keep responses under 3 sentences when possible
 - Use real examples from success stories
@@ -370,6 +379,24 @@ function findBestMatch(userQuery: string) {
   return highestScore >= 2 ? bestMatch : null;
 }
 
+// Check if a question is self-referential (starts with "you" or similar)
+function isSelfReferentialQuestion(message: string): boolean {
+  const lowerMessage = message.toLowerCase().trim();
+  // Check if message starts with "you" or has phrases like "tell me about yourself"
+  return lowerMessage.startsWith("you") || 
+         lowerMessage.startsWith("tell me about you") ||
+         lowerMessage.startsWith("what are you") ||
+         lowerMessage.startsWith("how are you") ||
+         lowerMessage.includes("about yourself") ||
+         (lowerMessage.includes("yourself") && lowerMessage.includes("tell")) ||
+         (lowerMessage.includes("you") && (
+           lowerMessage.includes("different") || 
+           lowerMessage.includes("special") || 
+           lowerMessage.includes("unique") ||
+           lowerMessage.includes("better")
+         ));
+}
+
 // Analyze user sentiment - detect if they're dissatisfied with previous response
 function isDissatisfied(message: string): boolean {
   const dissatisfactionPhrases = [
@@ -449,6 +476,10 @@ serve(async (req) => {
     console.log('Received message:', message);
     console.log('Previous messages:', previousMessages);
 
+    // Check if the question is self-referential (starts with "you" or similar)
+    const isAboutYourself = isSelfReferentialQuestion(message);
+    console.log('Is self-referential question:', isAboutYourself);
+
     // Use enhanced matching algorithm
     const matchedAnswer = findBestMatch(message);
     console.log('Matched answer:', matchedAnswer);
@@ -461,6 +492,8 @@ serve(async (req) => {
     let customInstruction = '';
     if (userIsDissatisfied) {
       customInstruction = `The user seems dissatisfied with your previous answer. Be more empathetic, apologize for not addressing their specific needs, and offer to connect them with a human teacher. Try to provide more specific information based on this query: "${message}"`;
+    } else if (isAboutYourself) {
+      customInstruction = `The user asked a question that begins with "you" or is about "yourself". Remember to interpret this as a question about CodersBee, not about you as an AI. Provide relevant information about CodersBee's programs, methodology, or unique features.`;
     } else if (matchedAnswer) {
       customInstruction = `Use this information in your response: ${matchedAnswer.answer}`;
     } else {
