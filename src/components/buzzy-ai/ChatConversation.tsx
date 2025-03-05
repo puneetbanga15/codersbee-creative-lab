@@ -2,10 +2,11 @@
 import { RefObject } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Frown, Send } from "lucide-react";
+import { MessageSquare, Frown, Send, Lightbulb } from "lucide-react";
 import { ChatInput } from "@/components/ui/chat-input";
 import { QuestionCounter } from "./QuestionCounter";
 import { Message, MAX_QUESTIONS, RESPONSE_TEMPLATES } from "./constants";
+import { motion } from "framer-motion";
 
 interface ChatConversationProps {
   visible: boolean;
@@ -19,6 +20,8 @@ interface ChatConversationProps {
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onStartJourney?: () => void;
+  shouldTriggerJourney?: boolean;
 }
 
 export const ChatConversation = ({
@@ -32,7 +35,9 @@ export const ChatConversation = ({
   onSetInputValue,
   onInputChange,
   onKeyDown,
-  onSubmit
+  onSubmit,
+  onStartJourney,
+  shouldTriggerJourney
 }: ChatConversationProps) => {
   if (!visible) return null;
 
@@ -59,6 +64,33 @@ export const ChatConversation = ({
             content={RESPONSE_TEMPLATES.thinking}
             isLoading={true}
           />
+        )}
+        
+        {shouldTriggerJourney && !isLoading && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex justify-center my-4"
+          >
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 max-w-md">
+              <div className="flex items-start gap-3">
+                <Lightbulb className="w-5 h-5 text-amber-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-amber-800 mb-3">
+                    I can help you find the perfect learning path for your child! Would you like to use our interactive journey planner?
+                  </p>
+                  <Button 
+                    onClick={onStartJourney}
+                    size="sm"
+                    className="bg-[#9b87f5] hover:bg-[#8a78e0] text-white"
+                  >
+                    Start Learning Journey Planner
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
         
         {messages.length > 0 && !isLoading && messages[messages.length - 1].role === "assistant" && (

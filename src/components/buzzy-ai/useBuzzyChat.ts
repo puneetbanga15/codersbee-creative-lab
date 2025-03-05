@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
@@ -52,6 +53,17 @@ export function useBuzzyChat() {
       // Only increment question count if it's a new question, not a follow-up
       if (!continuingChat) {
         setQuestionsAsked((prev) => prev + 1);
+      }
+
+      // Check for special triggers for course recommendations
+      if (message.toLowerCase().includes('recommend') || 
+          message.toLowerCase().includes('suggest course') || 
+          message.toLowerCase().includes('which program')) {
+        // We'll handle this in the UI component
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        return;
       }
 
       // Prepare a simplified conversation history
