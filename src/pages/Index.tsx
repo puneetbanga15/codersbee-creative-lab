@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
@@ -12,6 +11,7 @@ import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
 import { VisualEquation } from "@/components/VisualEquation";
 import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
+import { FloatingBuzzyChat } from "@/components/buzzy-ai/FloatingBuzzyChat";
 
 const Index = () => {
   const courses = [
@@ -95,6 +95,7 @@ const Index = () => {
       <FAQ />
       <VisualEquation />
       <Footer />
+      <FloatingBuzzyChat />
     </div>
   );
 };

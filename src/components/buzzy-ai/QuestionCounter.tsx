@@ -1,21 +1,23 @@
-
 import { cn } from "@/lib/utils";
 
 interface QuestionCounterProps {
-  remaining: number;
-  total: number;
+  current: number;
+  max: number;
+  isCompact?: boolean;
 }
 
-export const QuestionCounter = ({ remaining, total }: QuestionCounterProps) => {
+export const QuestionCounter = ({ current, max, isCompact = false }: QuestionCounterProps) => {
+  const remaining = max - current;
+  
   return (
-    <div className="flex items-center justify-center gap-2 text-sm text-gray-600 mb-4">
+    <div className={`flex items-center justify-center gap-2 text-${isCompact ? 'xs' : 'sm'} text-gray-600 mb-${isCompact ? '2' : '4'}`}>
       <span>{remaining} questions remaining</span>
       <div className="flex gap-1">
-        {Array.from({ length: total }).map((_, i) => (
+        {Array.from({ length: max }).map((_, i) => (
           <div
             key={i}
             className={cn(
-              "w-2 h-2 rounded-full",
+              `w-${isCompact ? '1.5' : '2'} h-${isCompact ? '1.5' : '2'} rounded-full`,
               i < remaining ? "bg-[#9b87f5]" : "bg-gray-200"
             )}
           />

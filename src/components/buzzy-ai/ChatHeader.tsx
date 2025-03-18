@@ -1,11 +1,15 @@
-
 import { MAX_QUESTIONS } from "./constants";
 
 interface ChatHeaderProps {
   connectionFailed: boolean;
+  isCompact?: boolean;
 }
 
-export const ChatHeader = ({ connectionFailed }: ChatHeaderProps) => {
+export const ChatHeader = ({ connectionFailed, isCompact = false }: ChatHeaderProps) => {
+  if (isCompact) {
+    return null; // We don't need the header in compact mode as we have a custom header in FloatingBuzzyChat
+  }
+  
   return (
     <div className="text-center mb-4 mt-20">
       <h1 className="text-3xl md:text-4xl font-bold text-[#1A1F2C] mb-2">
