@@ -1,15 +1,15 @@
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Message } from "./constants";
 
 interface ChatMessageProps {
-  role: "user" | "assistant";
-  content: string;
-  isLoading?: boolean;
+  message: Message;
+  isCompact?: boolean;
 }
 
-export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
+export const ChatMessage = ({ message, isCompact = false }: ChatMessageProps) => {
+  const { role, content } = message;
   const [formattedContent, setFormattedContent] = useState<React.ReactNode[]>([]);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
           <div key={`wa-${idx}`} className="mt-2">
             <Button
               className="bg-green-500 hover:bg-green-600 text-white"
+              size={isCompact ? "sm" : "default"}
               onClick={() => window.open("https://wa.me/919996465023", "_blank")}
             >
               Chat with our team on WhatsApp →
@@ -45,6 +46,7 @@ export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
           <div key={`cal-${idx}`} className="mt-2">
             <Button
               className="bg-[#9b87f5] hover:bg-[#8A78E0] text-white"
+              size={isCompact ? "sm" : "default"}
               onClick={() => window.open("https://calendly.com/codersbee/class-slot", "_blank")}
             >
               Book a FREE trial class →
@@ -70,11 +72,10 @@ export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
     >
       <div
         className={cn(
-          "max-w-[80%] md:max-w-[70%] rounded-2xl px-4 py-2",
+          `max-w-[80%] md:max-w-[70%] rounded-2xl px-${isCompact ? '3' : '4'} py-${isCompact ? '1.5' : '2'}`,
           role === "user"
             ? "bg-[#9b87f5] text-white rounded-tr-none"
-            : "bg-gray-100 text-gray-800 rounded-tl-none",
-          isLoading && "animate-pulse"
+            : "bg-gray-100 text-gray-800 rounded-tl-none"
         )}
       >
         {role === "assistant" && (
@@ -82,12 +83,12 @@ export const ChatMessage = ({ role, content, isLoading }: ChatMessageProps) => {
             <img 
               src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
               alt="Buzzy Bee"
-              className="w-5 h-5 object-contain"
+              className={`w-${isCompact ? '4' : '5'} h-${isCompact ? '4' : '5'} object-contain`}
             />
-            <span className="font-medium text-sm">Buzzy Bee</span>
+            <span className={`font-medium text-${isCompact ? 'xs' : 'sm'}`}>Buzzy Bee</span>
           </div>
         )}
-        <div className="text-sm md:text-base whitespace-pre-wrap flex flex-col">
+        <div className={`text-${isCompact ? 'xs' : 'sm'} md:text-${isCompact ? 'sm' : 'base'} whitespace-pre-wrap flex flex-col`}>
           {formattedContent}
         </div>
       </div>

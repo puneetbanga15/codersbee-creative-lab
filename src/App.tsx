@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SupabaseProvider } from "@/providers/SupabaseProvider";
 import Index from "./pages/Index";
 import AboutUs from "./pages/AboutUs";
 import ParentsLogin from "./pages/ParentsLogin";
@@ -22,15 +22,13 @@ import AIIntro from "./pages/tutorials/ai/AIIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import BuzzyAI from "./pages/BuzzyAI";
 
-const queryClient = new QueryClient();
+function App() {
+  const queryClient = new QueryClient();
 
-const App = () => {
   return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SupabaseProvider>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -50,11 +48,13 @@ const App = () => {
               <Route path="/certificate" element={<VerifyCertificate />} />
               <Route path="/buzzy-ai" element={<BuzzyAI />} />
             </Routes>
+            <Toaster />
+            <Sonner />
           </BrowserRouter>
         </TooltipProvider>
-      </QueryClientProvider>
-    </React.StrictMode>
+      </SupabaseProvider>
+    </QueryClientProvider>
   );
-};
+}
 
 export default App;

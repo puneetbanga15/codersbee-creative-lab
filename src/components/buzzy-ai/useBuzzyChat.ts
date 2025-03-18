@@ -1,8 +1,36 @@
-
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-import { Message, MAX_QUESTIONS, RESPONSE_TEMPLATES, FALLBACK_RESPONSES } from "./constants";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
+// Constants
+const MAX_QUESTIONS = 3;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
+// Fallback responses when the Edge Function is unavailable
+const FALLBACK_RESPONSES = [
+  "At CodersBee, we offer specialized coding programs for kids aged 6-16. Our Young Explorers program (ages 6-9) teaches Scratch, while our Innovators program (ages 9-12) focuses on Python and AI fundamentals.",
+  "Our pricing starts at $15 per class with flexible payment options and sibling discounts. For a personalized quote, please reach out to us on WhatsApp: +919996465023",
+  "You can book a free trial class through our Calendly link: calendly.com/codersbee/class-slot or message us on WhatsApp: +919996465023",
+  "CodersBee offers personalized 1:1 coding classes taught by expert teachers. Each student gets a customized learning plan based on their interests and skill level."
+];
+
+const KEYWORDS = {
+  pricing: ['price', 'cost', 'fee', 'pricing', 'expensive', 'cheap'],
+  booking: ['book', 'trial', 'demo', 'start', 'begin', 'join'],
+  programs: ['program', 'course', 'class', 'teach', 'learn', 'curriculum'],
+  projects: ['project', 'make', 'create', 'build', 'develop', 'code']
+};
+
+const RESPONSE_TEMPLATES = {
+  questionLimit: "You've reached the question limit for this chat. Please contact us on WhatsApp for further assistance: +919996465023",
+  connectionError: "I apologize, but I'm having trouble processing your request. Please try again or contact us on WhatsApp for immediate assistance: +919996465023"
+};
 
 export function useBuzzyChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -11,31 +39,72 @@ export function useBuzzyChat() {
   const [inputValue, setInputValue] = useState("");
   const [continuingChat, setContinuingChat] = useState(false);
   const [connectionFailed, setConnectionFailed] = useState(false);
-  const [fallbackAttempts, setFallbackAttempts] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const supabase = useSupabaseClient();
 
-  // Auto-scroll to the bottom when messages update
+  // Auto-scroll to bottom when messages update
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Reset connection every 3 messages to try again with the real AI
-  useEffect(() => {
-    if (connectionFailed && retryCount >= 3) {
-      console.log("Attempting to reset connection and try AI again");
-      setConnectionFailed(false);
-      setRetryCount(0);
-    }
-  }, [retryCount, connectionFailed]);
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const getFallbackResponse = () => {
-    const index = fallbackAttempts % FALLBACK_RESPONSES.length;
-    setFallbackAttempts(prev => prev + 1);
-    return FALLBACK_RESPONSES[index];
+  const callEdgeFunction = async (message: string, attempt = 1): Promise<string> => {
+    try {
+      const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
+        body: { message }
+      });
+
+      if (error) {
+        console.error('Edge function error:', {
+          message: error.message,
+          status: error.status,
+          details: error.details,
+          hint: error.hint,
+          attempt
+        });
+        throw error;
+      }
+
+      if (!response?.answer) {
+        console.error('Invalid response format:', response);
+        throw new Error('Invalid response format');
+      }
+
+      // Reset connection status on successful response
+      if (connectionFailed) {
+        setConnectionFailed(false);
+        setRetryCount(0);
+      }
+
+      return response.answer;
+    } catch (error) {
+      if (attempt < MAX_RETRIES) {
+        await delay(RETRY_DELAY * attempt); // Exponential backoff
+        return callEdgeFunction(message, attempt + 1);
+      }
+      throw error;
+    }
+  };
+
+  const getFallbackResponse = (message: string): string => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Check for keyword matches
+    if (KEYWORDS.pricing.some(word => lowerMessage.includes(word))) {
+      return FALLBACK_RESPONSES[1];
+    }
+    if (KEYWORDS.booking.some(word => lowerMessage.includes(word))) {
+      return FALLBACK_RESPONSES[2];
+    }
+    if (KEYWORDS.programs.some(word => lowerMessage.includes(word))) {
+      return FALLBACK_RESPONSES[0];
+    }
+    
+    return FALLBACK_RESPONSES[3];
   };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -46,131 +115,56 @@ export function useBuzzyChat() {
     setInputValue("");
     
     try {
-      // Add user message to chat
-      setMessages((prev) => [...prev, { role: "user", content: message }]);
+      setMessages(prev => [...prev, { role: "user", content: message }]);
       setIsLoading(true);
       
-      // Only increment question count if it's a new question, not a follow-up
       if (!continuingChat) {
-        setQuestionsAsked((prev) => prev + 1);
-      }
-
-      // Check for special triggers for course recommendations
-      if (message.toLowerCase().includes('recommend') || 
-          message.toLowerCase().includes('suggest course') || 
-          message.toLowerCase().includes('which program')) {
-        // We'll handle this in the UI component
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-        return;
-      }
-
-      // Prepare a simplified conversation history
-      // We'll just send the current user message without any history for now
-      // This avoids any potential issues with message ordering
-      const previousMessages: Message[] = [];
-      
-      // If we've already had connection failures, use fallback responses immediately
-      // But we'll try again with the real AI periodically
-      if (connectionFailed && fallbackAttempts > 0 && retryCount < 3) {
-        setTimeout(() => {
-          const fallbackResponse = getFallbackResponse();
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content: fallbackResponse + " (Note: Using backup responses due to connection issues)",
-            },
-          ]);
-          setRetryCount(prev => prev + 1);
-          setIsLoading(false);
-        }, 1000);
-        return;
+        setQuestionsAsked(prev => prev + 1);
       }
 
       try {
-        // Try to get response from the Edge Function
-        console.log("Attempting to call edge function with message:", message);
-        console.log("Sending previousMessages:", previousMessages);
+        const answer = await callEdgeFunction(message);
         
-        const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
-          body: { 
-            message,
-            previousMessages
-          }
-        });
-
-        if (error) {
-          console.error('Error calling edge function:', error);
-          toast.error("Sorry, I'm having trouble connecting to my AI brain. Using backup responses for now.", {
-            duration: 4000,
-          });
-          setConnectionFailed(true);
-          throw error;
-        }
-
-        console.log("Got response from edge function:", response);
-
-        if (!response?.answer) {
-          console.error('No answer in response:', response);
-          throw new Error('No answer received from AI');
-        }
-
-        // Reset connection failed state if we get a successful response
-        if (connectionFailed) {
-          console.log("Connection restored! Using AI responses again.");
-          setConnectionFailed(false);
-          setRetryCount(0);
-          toast.success("Connection restored! I'm back to my full capabilities now.");
-        }
-
-        const newResponse = questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat
-          ? RESPONSE_TEMPLATES.questionLimit
-          : response.answer;
-
-        setMessages((prev) => [
+        setMessages(prev => [
           ...prev,
-          {
-            role: "assistant",
-            content: newResponse,
-          },
+          { role: "assistant", content: answer }
         ]);
-        
-        // After first reaching the question limit, allow for follow-ups but in a continuation mode
+
         if (questionsAsked >= MAX_QUESTIONS - 1 && !continuingChat) {
           setContinuingChat(true);
         }
-      } catch (innerError) {
-        console.error('Error processing AI response:', innerError);
+
+      } catch (error) {
+        console.error('Failed to get AI response:', error);
+        setConnectionFailed(true);
+        setRetryCount(prev => prev + 1);
         
-        // Use fallback responses
-        const fallbackResponse = getFallbackResponse();
-        setMessages((prev) => [
+        // Use fallback response
+        const fallbackResponse = getFallbackResponse(message);
+        setMessages(prev => [
           ...prev,
           {
             role: "assistant",
-            content: fallbackResponse + " (Note: Using backup responses due to connection issues)",
-          },
+            content: fallbackResponse + "\n\n(Note: I'm currently using pre-defined responses. For detailed answers, please contact us on WhatsApp.)"
+          }
         ]);
         
         if (!connectionFailed) {
-          setConnectionFailed(true);
+          toast.error(
+            "I'm having trouble connecting to my AI brain, but I can still help with basic information!",
+            { duration: 4000 }
+          );
         }
-        
-        setRetryCount(prev => prev + 1);
       }
       
     } catch (error) {
-      console.error('Error in overall chat flow:', error);
-      
-      // Default fallback response
-      setMessages((prev) => [
+      console.error('Error in chat flow:', error);
+      setMessages(prev => [
         ...prev,
         {
           role: "assistant",
-          content: RESPONSE_TEMPLATES.connectionError,
-        },
+          content: RESPONSE_TEMPLATES.connectionError
+        }
       ]);
     } finally {
       setIsLoading(false);
@@ -184,8 +178,6 @@ export function useBuzzyChat() {
     }
   };
 
-  const reachedLimit = questionsAsked >= MAX_QUESTIONS && !continuingChat;
-
   return {
     messages,
     isLoading,
@@ -196,6 +188,6 @@ export function useBuzzyChat() {
     chatContainerRef,
     handleSendMessage,
     handleKeyPress,
-    reachedLimit
+    reachedLimit: questionsAsked >= MAX_QUESTIONS && !continuingChat
   };
 }

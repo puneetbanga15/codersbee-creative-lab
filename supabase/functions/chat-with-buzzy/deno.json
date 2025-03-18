@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env index.ts"
+  },
+  "compilerOptions": {
+    "allowJs": false,
+    "lib": ["deno.window", "deno.unstable"],
+    "strict": true
+  }
+}

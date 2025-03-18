@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChatHeader } from "./ChatHeader";
 import { ConnectionError } from "./ConnectionError";
 import { InitialChatForm } from "./InitialChatForm";
@@ -7,7 +6,7 @@ import { ChatConversation } from "./ChatConversation";
 import { useBuzzyChat } from "./useBuzzyChat";
 import { LearningJourneyVisualizer } from "./journey/LearningJourneyVisualizer";
 
-export const BuzzyChat = () => {
+export const BuzzyChat = ({ isCompact = false }: { isCompact?: boolean }) => {
   const {
     messages,
     isLoading,
@@ -22,6 +21,7 @@ export const BuzzyChat = () => {
   } = useBuzzyChat();
 
   const [showJourneyVisualizer, setShowJourneyVisualizer] = useState(false);
+  const [showConnectionError, setShowConnectionError] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -55,11 +55,35 @@ Would you like to book a free consultation to learn more about this program?`;
     return false;
   };
 
+  // Show connection error with a delay to avoid flickering
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (connectionFailed) {
+      timer = setTimeout(() => {
+        setShowConnectionError(true);
+      }, 1000);
+    } else {
+      setShowConnectionError(false);
+    }
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [connectionFailed]);
+
+  const handleRetryConnection = () => {
+    setShowConnectionError(false);
+    // Force a new connection test in the useBuzzyChat hook
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
   // Show journey visualizer when triggered
   if (showJourneyVisualizer) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <ChatHeader connectionFailed={connectionFailed} />
+      <div className={`${isCompact ? "max-w-full" : "max-w-4xl"} mx-auto`}>
+        <ChatHeader connectionFailed={connectionFailed} isCompact={isCompact} />
         <div className="mt-6">
           <LearningJourneyVisualizer 
             onComplete={handleJourneyComplete}
@@ -71,10 +95,13 @@ Would you like to book a free consultation to learn more about this program?`;
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <ChatHeader connectionFailed={connectionFailed} />
+    <div className={`${isCompact ? "max-w-full" : "max-w-4xl"} mx-auto`}>
+      <ChatHeader connectionFailed={connectionFailed} isCompact={isCompact} />
       
-      <ConnectionError visible={connectionFailed} />
+      <ConnectionError 
+        visible={showConnectionError} 
+        onRetry={handleRetryConnection}
+      />
       
       <InitialChatForm 
         visible={messages.length === 0}
@@ -83,6 +110,7 @@ Would you like to book a free consultation to learn more about this program?`;
         onInputChange={handleInputChange}
         onKeyDown={handleKeyPress}
         onSubmit={handleSendMessage}
+        isCompact={isCompact}
       />
       
       <ChatConversation 
@@ -99,6 +127,7 @@ Would you like to book a free consultation to learn more about this program?`;
         onSubmit={handleSendMessage}
         onStartJourney={() => setShowJourneyVisualizer(true)}
         shouldTriggerJourney={shouldTriggerJourney()}
+        isCompact={isCompact}
       />
     </div>
   );
