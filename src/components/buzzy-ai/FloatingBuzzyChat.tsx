@@ -5,12 +5,14 @@ import { X } from "lucide-react";
 import { BuzzyChat } from "./BuzzyChat";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const FloatingBuzzyChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Show the button after 2 seconds (reduced from 5)
@@ -25,6 +27,11 @@ export const FloatingBuzzyChat = () => {
   const buttonPosition = isHomePage 
     ? "fixed bottom-20 right-6 z-50" 
     : "fixed bottom-6 right-6 z-50";
+    
+  // Calculate chat window position and size based on mobile or desktop view
+  const chatWindowClass = isMobile
+    ? "fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-lg shadow-xl w-full max-h-[90vh] overflow-hidden border border-gray-200"
+    : "fixed bottom-6 right-6 z-50 bg-white rounded-lg shadow-xl w-[380px] max-h-[500px] overflow-hidden border border-gray-200";
 
   return (
     <>
@@ -62,11 +69,11 @@ export const FloatingBuzzyChat = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-6 right-6 z-50 bg-white rounded-lg shadow-xl w-[380px] max-h-[500px] overflow-hidden border border-gray-200"
+            className={chatWindowClass}
             style={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
           >
             <div className="flex justify-between items-center p-3 border-b bg-gradient-to-r from-codersbee-purple/10 to-codersbee-yellow/10">
@@ -87,7 +94,7 @@ export const FloatingBuzzyChat = () => {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="h-[calc(100%-48px)] overflow-hidden">
+            <div className={`${isMobile ? "h-[70vh]" : "h-[calc(100%-48px)]"} overflow-hidden`}>
               <BuzzyChat isCompact={true} />
             </div>
           </motion.div>

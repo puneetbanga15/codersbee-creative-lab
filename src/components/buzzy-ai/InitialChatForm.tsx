@@ -1,7 +1,9 @@
+
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat-input";
 import { KeyboardEvent } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InitialChatFormProps {
   visible: boolean;
@@ -22,6 +24,8 @@ export const InitialChatForm = ({
   onSubmit,
   isCompact = false
 }: InitialChatFormProps) => {
+  const isMobile = useIsMobile();
+  
   if (!visible) return null;
   
   return (
@@ -33,7 +37,7 @@ export const InitialChatForm = ({
         value={inputValue}
         onChange={onInputChange}
         onKeyDown={onKeyDown}
-        placeholder="Ask me anything about coding, AI, and CodersBee's programs!"
+        placeholder={isMobile ? "Ask me anything..." : "Ask me anything about coding, AI, and CodersBee's programs!"}
         className={`min-h-${isCompact ? '10' : '12'} resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0 text-${isCompact ? 'sm' : 'base'} md:text-${isCompact ? 'base' : 'lg'}`}
       />
       <div className="flex items-center p-3 pt-0">
@@ -43,7 +47,7 @@ export const InitialChatForm = ({
           className={`ml-auto gap-1.5 ${isCompact ? 'h-8 px-2' : ''}`}
           disabled={!inputValue.trim() || isLoading}
         >
-          {isCompact ? <Send className="w-3 h-3" /> : (
+          {isCompact || isMobile ? <Send className="w-3 h-3" /> : (
             <>
               Send Message
               <Send className="w-3.5 h-3.5" />
