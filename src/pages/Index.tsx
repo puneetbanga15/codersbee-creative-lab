@@ -10,7 +10,6 @@ import { SuccessStories } from "@/components/SuccessStories";
 import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
 import { VisualEquation } from "@/components/VisualEquation";
-import { AnnouncementBar } from "@/components/announcement/AnnouncementBar";
 import { FloatingBuzzyChat } from "@/components/buzzy-ai/FloatingBuzzyChat";
 
 const Index = () => {
@@ -39,9 +38,8 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-[110px]">
+    <div className="min-h-screen">
       <Navbar />
-      <AnnouncementBar />
       <Hero />
       <ProblemAgitation />
       <InnovationHighlight />

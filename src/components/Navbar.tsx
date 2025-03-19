@@ -44,7 +44,7 @@ export const Navbar = () => {
     if (!isMobileMenuOpen) return null;
 
     return createPortal(
-      <div className={`md:hidden fixed inset-0 ${isHomePage ? 'top-[114px]' : 'top-[72px]'} bg-white z-[100] overflow-y-auto`}>
+      <div className={`md:hidden fixed inset-0 top-[72px] bg-white z-[100] overflow-y-auto`}>
         <div className="px-6 py-4 space-y-4">
           <a 
             href="/#courses" 
@@ -173,9 +173,7 @@ export const Navbar = () => {
 
   return (
     <nav 
-      className={`fixed w-full bg-white/80 backdrop-blur-sm z-[100] border-b ${
-        isHomePage ? 'top-[42px]' : 'top-0'
-      }`}
+      className="fixed w-full bg-white/80 backdrop-blur-sm z-[100] border-b top-0"
     >
       <div className="max-w-[1400px] mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
