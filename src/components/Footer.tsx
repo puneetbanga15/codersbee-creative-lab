@@ -1,41 +1,31 @@
 import { Facebook, Youtube, Instagram, Linkedin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
 export const Footer = () => {
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/919996465023', '_blank');
   };
-
   const handleTrialClick = () => {
     window.open('https://calendly.com/codersbee/class-slot', '_blank');
   };
-
-  const socialLinks = [
-    {
-      icon: Facebook,
-      href: "https://facebook.com/codersbee",
-      label: "Facebook"
-    },
-    {
-      icon: Youtube,
-      href: "https://www.youtube.com/@codersbee",
-      label: "YouTube"
-    },
-    {
-      icon: Instagram,
-      href: "https://www.instagram.com/codersbee/",
-      label: "Instagram"
-    },
-    {
-      icon: Linkedin,
-      href: "https://www.linkedin.com/in/manisha-kapoor-codersbee/",
-      label: "LinkedIn"
-    }
-  ];
-
-  return (
-    <footer className="bg-gradient-to-r from-codersbee-purple to-codersbee-vivid/20 mt-auto">
+  const socialLinks = [{
+    icon: Facebook,
+    href: "https://facebook.com/codersbee",
+    label: "Facebook"
+  }, {
+    icon: Youtube,
+    href: "https://www.youtube.com/@codersbee",
+    label: "YouTube"
+  }, {
+    icon: Instagram,
+    href: "https://www.instagram.com/codersbee/",
+    label: "Instagram"
+  }, {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/manisha-kapoor-codersbee/",
+    label: "LinkedIn"
+  }];
+  return <footer className="bg-gradient-to-r from-codersbee-purple to-codersbee-vivid/20 mt-auto">
       <div className="max-w-[1400px] mx-auto">
         <div className="border-b border-white/10">
           <div className="px-6 py-12 text-center">
@@ -46,17 +36,11 @@ export const Footer = () => {
               Join thousands of parents who have empowered their children with future-ready skills through CodersBee's innovative learning programs.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button 
-                className="bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2"
-                onClick={handleWhatsAppClick}
-              >
+              <Button className="bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2" onClick={handleWhatsAppClick}>
                 Connect on WhatsApp
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button 
-                className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white flex items-center justify-center gap-2"
-                onClick={handleTrialClick}
-              >
+              <Button className="bg-codersbee-vivid hover:bg-codersbee-vivid/90 text-white flex items-center justify-center gap-2" onClick={handleTrialClick}>
                 Book Your FREE Trial Class
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -68,11 +52,7 @@ export const Footer = () => {
         <div className="px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="space-y-4">
-            <img 
-              src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" 
-              alt="CodersBee Logo" 
-              className="h-12" 
-            />
+            <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="CodersBee Logo" className="h-12" />
             <p className="text-gray-600">
               Empowering young minds with coding and AI skills for the future.
             </p>
@@ -93,7 +73,8 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Reach Us On</h3>
             <ul className="space-y-2">
-              <li className="text-gray-600">Email: admin@codersbee.com</li>
+              <li className="text-gray-600">
+            </li>
               <li className="text-gray-600">Phone: +91-7087884023</li>
               <li className="text-gray-600">WhatsApp: +91-9996465023</li>
             </ul>
@@ -107,20 +88,11 @@ export const Footer = () => {
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={index}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-codersbee-vivid transition-colors"
-                    aria-label={link.label}
-                  >
+              const Icon = link.icon;
+              return <a key={index} href={link.href} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-codersbee-vivid transition-colors" aria-label={link.label}>
                     <Icon className="h-6 w-6" />
-                  </a>
-                );
-              })}
+                  </a>;
+            })}
             </div>
           </div>
         </div>
@@ -131,6 +103,5 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
