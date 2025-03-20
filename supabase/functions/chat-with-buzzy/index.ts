@@ -24,6 +24,13 @@ Key Information:
 - Free trial available through calendly.com/codersbee/class-slot
 - WhatsApp contact: +919996465023
 
+VERY IMPORTANT - Enrollment Process:
+When anyone asks about how to enroll, register, sign up, or join our programs, ALWAYS respond with this exact process:
+1. Start with a FREE demo class to experience our teaching style
+2. Contact us on WhatsApp at +919996465023 to schedule the demo or use our Calendly link
+3. After the demo, our team will recommend the right program and provide enrollment details
+4. DO NOT provide any other enrollment methods - WhatsApp contact is the REQUIRED first step
+
 Conversation Guidelines:
 1. Always start with a warm, friendly greeting
 2. Match the user's conversational tone while staying professional
@@ -31,6 +38,7 @@ Conversation Guidelines:
 4. Keep responses concise but engaging
 5. For detailed queries, suggest booking a free trial or contacting via WhatsApp
 6. Use emojis occasionally to add warmth (but don't overuse them)
+7. ALWAYS direct enrollment questions to WhatsApp or our free demo class
 
 Example greetings:
 "Hi there! 👋 I'm Buzzy, your friendly coding companion!"
@@ -59,6 +67,10 @@ const FALLBACK_RESPONSES = {
     "Ready to start the coding journey? You can book a free trial class through our Calendly link: calendly.com/codersbee/class-slot or message us on WhatsApp: +919996465023. No pressure, just fun coding exploration! 🗓️",
     "Curious to see what our classes are like? Book a free trial session at calendly.com/codersbee/class-slot! You can also reach us directly via WhatsApp: +919996465023. We'd love to meet you! ✨"
   ],
+  enrollment: [
+    "The best way to enroll is to start with a FREE demo class! This lets you experience our teaching style firsthand. Just message us on WhatsApp at +919996465023 to schedule your demo, or use our Calendly link: calendly.com/codersbee/class-slot. After the demo, our team will recommend the perfect program and help with enrollment! 🐝",
+    "Enrolling is easy! First, book a FREE trial class through WhatsApp (+919996465023) or Calendly (calendly.com/codersbee/class-slot). This helps us understand your child's learning style and interests. After the trial, our friendly team will guide you through the enrollment process and recommend the best program! 🚀"
+  ],
   projects: [
     "Our students create amazing projects! From animated stories in Scratch to AI chatbots in Python, the possibilities are endless. Would you like to hear about some cool projects our students have built? 🛠️",
     "In our classes, kids build real projects like games, animations, and even AI tools! It's amazing what they can create with the right guidance. Want to see what your child could build? Book a free trial: calendly.com/codersbee/class-slot 🏗️"
@@ -75,6 +87,7 @@ const KEYWORDS = {
   pricing: ['price', 'cost', 'fee', 'pricing', 'expensive', 'cheap', 'afford', 'discount', 'how much'],
   booking: ['book', 'trial', 'demo', 'start', 'begin', 'join', 'sign up', 'register', 'enroll', 'when'],
   programs: ['program', 'course', 'class', 'teach', 'learn', 'curriculum', 'offer', 'provide', 'what do you teach', 'subjects'],
+  enrollment: ['enroll', 'register', 'sign up', 'join', 'how to start', 'how do i begin', 'how do i sign up', 'how do i register', 'how to register', 'how to join', 'how to enroll'],
   projects: ['project', 'make', 'create', 'build', 'develop', 'code', 'portfolio', 'showcase', 'example']
 };
 
@@ -82,7 +95,12 @@ const KEYWORDS = {
 function getFallbackResponse(message: string): string {
   const lowerMessage = message.toLowerCase();
   
-  // Check for greeting patterns first
+  // Check for enrollment-related queries first (highest priority)
+  if (KEYWORDS.enrollment.some(word => lowerMessage.includes(word))) {
+    return getRandomResponse(FALLBACK_RESPONSES.enrollment);
+  }
+  
+  // Check for greeting patterns
   if (KEYWORDS.greeting.some(word => lowerMessage.includes(word) || lowerMessage === word)) {
     return getRandomResponse(FALLBACK_RESPONSES.greeting);
   }
@@ -147,6 +165,24 @@ serve(async (req) => {
     }
 
     try {
+      // Check if this is an enrollment-related query (higher priority handling)
+      const lowerMessage = message.toLowerCase();
+      const isEnrollmentQuery = KEYWORDS.enrollment.some(word => 
+        lowerMessage.includes(word) || 
+        lowerMessage.includes('how do i') || 
+        lowerMessage.includes('how to') ||
+        lowerMessage.includes('how can i')
+      );
+      
+      if (isEnrollmentQuery) {
+        return new Response(
+          JSON.stringify({ 
+            answer: getRandomResponse(FALLBACK_RESPONSES.enrollment)
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       // Prepare messages array with conversation history
       const messages = [
         { role: 'system', content: SYSTEM_PROMPT }
