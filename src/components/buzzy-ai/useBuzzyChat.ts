@@ -1,14 +1,11 @@
+
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
+import { Message } from "./constants";
 
 // Constants
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 5;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // 1 second
 
@@ -52,10 +49,10 @@ export function useBuzzyChat() {
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const callEdgeFunction = async (message: string, attempt = 1): Promise<string> => {
+  const callEdgeFunction = async (message: string, conversationHistory: { role: string; content: string }[] = [], attempt = 1): Promise<string> => {
     try {
       const { data: response, error } = await supabase.functions.invoke('chat-with-buzzy', {
-        body: { message }
+        body: { message, conversationHistory }
       });
 
       if (error) {
@@ -84,7 +81,7 @@ export function useBuzzyChat() {
     } catch (error) {
       if (attempt < MAX_RETRIES) {
         await delay(RETRY_DELAY * attempt); // Exponential backoff
-        return callEdgeFunction(message, attempt + 1);
+        return callEdgeFunction(message, conversationHistory, attempt + 1);
       }
       throw error;
     }
@@ -123,7 +120,13 @@ export function useBuzzyChat() {
       }
 
       try {
-        const answer = await callEdgeFunction(message);
+        // Convert messages to the format expected by the edge function
+        const conversationHistory = messages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }));
+        
+        const answer = await callEdgeFunction(message, conversationHistory);
         
         setMessages(prev => [
           ...prev,
