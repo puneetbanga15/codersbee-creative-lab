@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { AILabHeader } from "@/components/ai-lab/ui/LabHeader";
 import { LessonGrid } from "@/components/ai-lab/lessons/LessonGrid";
 import { LessonView } from "@/components/ai-lab/lessons/LessonView";
+import { ProjectsGrid } from "@/components/ai-lab/projects/ProjectsGrid";
 
 const AILab = () => {
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
@@ -22,7 +23,10 @@ const AILab = () => {
             onBack={() => setSelectedLesson(null)}
           />
         ) : (
-          <LessonGrid onSelectLesson={setSelectedLesson} />
+          <>
+            <LessonGrid onSelectLesson={setSelectedLesson} />
+            <ProjectsGrid />
+          </>
         )}
       </main>
       
