@@ -57,18 +57,6 @@ export const Navbar = () => {
           >
             Courses
           </a>
-
-          <Link 
-            to="/buzzy-ai" 
-            className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
-          >
-            <img 
-              src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
-              alt="Buzzy Bee"
-              className="w-5 h-5 object-contain"
-            />
-            Buzzy AI Tutor
-          </Link>
           
           <Link 
             to="/ai-lab" 
@@ -201,15 +189,6 @@ export const Navbar = () => {
             <a href="/#courses" onClick={handleCoursesClick} className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               Courses
             </a>
-            
-            <Link to="/buzzy-ai" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
-              <img 
-                src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
-                alt="Buzzy Bee"
-                className="w-5 h-5 object-contain"
-              />
-              Buzzy AI Tutor
-            </Link>
             
             <Link to="/ai-lab" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
               <Brain className="h-4 w-4" />
