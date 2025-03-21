@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
-import { Robot, Zap, Trophy, BookOpen } from 'lucide-react';
+import { Bot, Zap, Trophy, BookOpen } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const AILabHeader = () => {
@@ -40,7 +40,7 @@ export const AILabHeader = () => {
             <span>Lessons</span>
           </TabsTrigger>
           <TabsTrigger value="playground" className="flex items-center gap-2">
-            <Robot className="h-4 w-4" />
+            <Bot className="h-4 w-4" />
             <span>Playground</span>
           </TabsTrigger>
           <TabsTrigger value="gallery" className="flex items-center gap-2">

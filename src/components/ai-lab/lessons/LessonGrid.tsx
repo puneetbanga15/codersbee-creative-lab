@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Shapes, Image, MessageSquare, Microphone, Dog, BookOpen, Music, Star, Languages, Smile, Database, Network, Gamepad2, Palette, ShieldAlert, Layers, RotateCw, Bot } from 'lucide-react';
+import { Brain, Sparkles, Shapes, Image, MessageSquare, Mic, Dog, BookOpen, Music, Star, Languages, Smile, Database, Network, Gamepad2, Palette, ShieldAlert, Layers, RotateCw, Bot } from 'lucide-react';
 import { curriculumData } from './curriculumData';
 
 type LessonGridProps = {
@@ -24,7 +24,7 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
       shapes: <Shapes {...iconProps} />,
       image: <Image {...iconProps} />,
       messageSquare: <MessageSquare {...iconProps} />,
-      microphone: <Microphone {...iconProps} />,
+      microphone: <Mic {...iconProps} />,
       dog: <Dog {...iconProps} />,
       bookOpen: <BookOpen {...iconProps} />,
       music: <Music {...iconProps} />,
@@ -37,7 +37,7 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
       palette: <Palette {...iconProps} />,
       shield: <ShieldAlert {...iconProps} />,
       layers: <Layers {...iconProps} />,
-      robot: <RotateCw {...iconProps} />,
+      robot: <Bot {...iconProps} />,
       bot: <Bot {...iconProps} />
     };
     
