@@ -45,10 +45,10 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
     return icons[iconName] || <Sparkles {...iconProps} />;
   };
   
-  // Modified lessons data to lock all except first lesson
+  // Modified lessons data - first lesson open (not completed), others locked
   const modifiedLessons = filteredLessons.map((lesson, index) => {
     if (lesson.id === 'meet-ai-friend') {
-      return { ...lesson, locked: false, completed: true };
+      return { ...lesson, locked: false, completed: false };
     } else {
       return { ...lesson, locked: true, completed: false };
     }
@@ -65,6 +65,7 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
           <AlertDescription className="text-gray-700">
             <h3 className="text-lg font-semibold mb-1 text-[#9b87f5]">Earn Badges & Collectibles!</h3>
             <p>Complete AI Lab lessons to unlock special badges, digital collectibles, and track your progress. Each lesson completed earns you points toward your AI mastery level!</p>
+            <p className="mt-1 text-sm font-medium text-amber-600">Note: Only the first lesson is open to everyone. Enroll as a student to unlock all lessons!</p>
           </AlertDescription>
         </div>
       </Alert>
@@ -132,11 +133,20 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
                           <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        Locked
+                        Students Only
+                      </Badge>
+                    )}
+                    {!lesson.locked && !lesson.completed && (
+                      <Badge variant="default" className="bg-green-500 text-xs flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                          <path d="m9 12 2 2 4-4" />
+                        </svg>
+                        Open Access
                       </Badge>
                     )}
                     {lesson.completed && (
-                      <Badge variant="default" className="bg-green-500 text-xs flex items-center gap-1">
+                      <Badge variant="default" className="bg-blue-500 text-xs flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M20 6 9 17l-5-5" />
                         </svg>
@@ -151,7 +161,7 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
                     <div className="mt-2 flex">
                       <Badge className="bg-amber-500 text-white text-xs mt-1 flex items-center gap-1">
                         <Trophy className="h-3 w-3" />
-                        Earns First AI Explorer Badge
+                        Try it now - First AI Explorer Badge
                       </Badge>
                     </div>
                   )}
