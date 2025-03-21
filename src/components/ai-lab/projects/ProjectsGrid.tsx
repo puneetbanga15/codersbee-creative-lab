@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   Brain, Sparkles, MessageSquare, Image, Globe, 
   Utensils, MessageCircle, BookOpen, Bot, Trophy, 
-  Lightbulb, Palette, MusicNote, Gamepad2, Users, 
+  Lightbulb, Palette, Music, Gamepad2, Users, 
   CalendarDays, FileText, FlaskConical, Rocket
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,7 +34,7 @@ export const ProjectsGrid = () => {
       bot: <Bot {...iconProps} />,
       lightbulb: <Lightbulb {...iconProps} />,
       palette: <Palette {...iconProps} />,
-      music: <MusicNote {...iconProps} />,
+      music: <Music {...iconProps} />,
       gamepad: <Gamepad2 {...iconProps} />,
       users: <Users {...iconProps} />,
       calendar: <CalendarDays {...iconProps} />,
