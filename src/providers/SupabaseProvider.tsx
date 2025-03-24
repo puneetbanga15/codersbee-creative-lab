@@ -1,6 +1,6 @@
+
 import { createClient } from '@supabase/supabase-js'
-import { createContext, useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { ReactNode } from 'react'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import type { Database } from '@/types/supabase'
 
@@ -19,7 +19,7 @@ const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 })
 
 interface SupabaseProviderProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function SupabaseProvider({ children }: SupabaseProviderProps) {
