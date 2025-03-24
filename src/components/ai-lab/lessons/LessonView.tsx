@@ -40,7 +40,6 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     );
   }
   
-  // Render the appropriate content based on the lesson ID
   const renderLessonContent = (tab: string) => {
     if (lessonId === 'meet-ai-friend') {
       switch (tab) {
@@ -71,7 +70,6 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       }
     }
     else {
-      // For other lessons, show placeholder content
       switch (tab) {
         case 'introduction':
           return (
@@ -173,7 +171,6 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
     }
   };
   
-  // Find the next lesson for the "Next Lesson" button
   const findNextLesson = () => {
     const currentIndex = curriculumData.findIndex(l => l.id === lessonId);
     if (currentIndex === -1 || currentIndex === curriculumData.length - 1) {
@@ -183,6 +180,18 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
   };
   
   const nextLesson = findNextLesson();
+  
+  const handleGoToNextLesson = () => {
+    if (nextLesson) {
+      onBack();
+      setTimeout(() => {
+        const nextLessonElement = document.querySelector(`[data-lesson-id="${nextLesson.id}"]`);
+        if (nextLessonElement) {
+          nextLessonElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }
+      }, 100);
+    }
+  };
   
   return (
     <div>
@@ -270,12 +279,10 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
                 </Button>
                 
                 {nextLesson ? (
-                  <Button className="bg-purple-500 hover:bg-purple-600" onClick={() => {
-                    // This would navigate to the next lesson
-                    // You'd need to update the parent component state
-                    // For now, just go back to lessons
-                    onBack();
-                  }}>
+                  <Button 
+                    className="bg-purple-500 hover:bg-purple-600" 
+                    onClick={handleGoToNextLesson}
+                  >
                     <ArrowRight className="mr-2 h-4 w-4" />
                     Next Lesson: {nextLesson.title}
                   </Button>
@@ -353,7 +360,6 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
   );
 };
 
-// Helper functions
 function getStageLabel(stage: string): string {
   switch (stage) {
     case 'foundation':

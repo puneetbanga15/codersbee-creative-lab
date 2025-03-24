@@ -51,14 +51,14 @@ export const SummaryPhase: React.FC<SummaryPhaseProps> = ({
           </div>
 
           <Collapsible open={isLLMTheoryOpen} onOpenChange={setIsLLMTheoryOpen} className="mb-6">
-            <CollapsibleTrigger className="flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-lg text-purple-800 hover:bg-purple-200 transition-colors w-full">
+            <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-purple-100 rounded-lg text-purple-800 hover:bg-purple-200 transition-colors">
               <div className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
                 <span className="font-medium">How Real LLMs Are Trained</span>
               </div>
-              {isLLMTheoryOpen ? <ChevronUp className="h-4 w-4 ml-auto" /> : <Plus className="h-4 w-4 ml-auto" />}
+              {isLLMTheoryOpen ? <ChevronUp className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
             </CollapsibleTrigger>
-            <CollapsibleContent className="bg-purple-50 p-4 rounded-lg mt-2 text-sm border border-purple-200">
+            <CollapsibleContent className="p-4 bg-purple-50 rounded-lg mt-2 text-sm border border-purple-200">
               <p className="mb-2">
                 <strong>Scale:</strong> Real AI models like GPT-4 and others are trained on billions or even trillions of 
                 words from books, articles, websites, and other text sources.

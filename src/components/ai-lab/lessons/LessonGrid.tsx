@@ -1,183 +1,79 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Sparkles, Shapes, Image, MessageSquare, Mic, Dog, BookOpen, Music, Star, Languages, Smile, Database, Network, Gamepad2, Palette, ShieldAlert, Layers, RotateCw, Bot, Trophy, Gem } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Lock, Unlock, ArrowRight } from 'lucide-react';
 import { curriculumData } from './curriculumData';
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import type { LucideIcon } from 'lucide-react';
 
 type LessonGridProps = {
   onSelectLesson: (lessonId: string) => void;
 };
 
-export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
-  const [selectedStage, setSelectedStage] = useState('all');
-  
-  const filteredLessons = selectedStage === 'all' 
-    ? curriculumData 
-    : curriculumData.filter(lesson => lesson.stage === selectedStage);
-    
-  const getLessonIcon = (iconName: string): LucideIcon => {
-    switch (iconName) {
-      case 'brain': return Brain;
-      case 'sparkles': return Sparkles;
-      case 'shapes': return Shapes;
-      case 'image': return Image;
-      case 'messageSquare': return MessageSquare;
-      case 'microphone': return Mic;
-      case 'dog': return Dog;
-      case 'bookOpen': return BookOpen;
-      case 'music': return Music;
-      case 'star': return Star;
-      case 'languages': return Languages;
-      case 'smile': return Smile;
-      case 'database': return Database;
-      case 'network': return Network;
-      case 'gamepad': return Gamepad2;
-      case 'palette': return Palette;
-      case 'shield': return ShieldAlert;
-      case 'layers': return Layers;
-      case 'robot': return Bot;
-      case 'bot': return Bot;
-      default: return Sparkles;
-    }
-  };
-  
-  // Modified lessons data - first lesson open (not completed), others locked
-  const modifiedLessons = filteredLessons.map((lesson, index) => {
-    if (lesson.id === 'meet-ai-friend') {
-      return { ...lesson, locked: false, completed: false };
-    } else {
-      return { ...lesson, locked: true, completed: false };
-    }
-  });
-  
+export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
   return (
-    <div>
-      <Alert className="mb-6 bg-gradient-to-r from-purple-50 to-amber-50 border border-[#9b87f5]/20">
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col items-center justify-center bg-[#f0e7ff] p-3 rounded-lg">
-            <Trophy className="h-8 w-8 text-amber-500 mb-1" />
-            <Gem className="h-6 w-6 text-[#9b87f5]" />
-          </div>
-          <AlertDescription className="text-gray-700">
-            <h3 className="text-lg font-semibold mb-1 text-[#9b87f5]">Earn Badges & Collectibles!</h3>
-            <p>Complete AI Lab lessons to unlock special badges, digital collectibles, and track your progress. Each lesson completed earns you points toward your AI mastery level!</p>
-            <p className="mt-1 text-sm font-medium text-amber-600">Note: Only the first lesson is open to everyone. Enroll as a student to unlock all lessons!</p>
-          </AlertDescription>
-        </div>
-      </Alert>
-      
-      <div className="flex flex-wrap gap-2 mb-6">
-        <Badge 
-          variant={selectedStage === 'all' ? "default" : "outline"} 
-          className="cursor-pointer text-sm py-1 px-3"
-          onClick={() => setSelectedStage('all')}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {curriculumData.map((lesson) => (
+        <Card 
+          key={lesson.id}
+          className="overflow-hidden"
         >
-          All Lessons
-        </Badge>
-        <Badge 
-          variant={selectedStage === 'foundation' ? "default" : "outline"} 
-          className="cursor-pointer text-sm py-1 px-3 bg-blue-500 hover:bg-blue-600"
-          onClick={() => setSelectedStage('foundation')}
-        >
-          Foundation (1-5)
-        </Badge>
-        <Badge 
-          variant={selectedStage === 'application' ? "default" : "outline"} 
-          className="cursor-pointer text-sm py-1 px-3 bg-green-500 hover:bg-green-600"
-          onClick={() => setSelectedStage('application')}
-        >
-          Application (6-12)
-        </Badge>
-        <Badge 
-          variant={selectedStage === 'understanding' ? "default" : "outline"} 
-          className="cursor-pointer text-sm py-1 px-3 bg-purple-500 hover:bg-purple-600"
-          onClick={() => setSelectedStage('understanding')}
-        >
-          Understanding (13-17)
-        </Badge>
-        <Badge 
-          variant={selectedStage === 'advanced' ? "default" : "outline"} 
-          className="cursor-pointer text-sm py-1 px-3 bg-orange-500 hover:bg-orange-600"
-          onClick={() => setSelectedStage('advanced')}
-        >
-          Advanced (18-20)
-        </Badge>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {modifiedLessons.map((lesson) => {
-          const IconComponent = getLessonIcon(lesson.icon);
-          
-          return (
-            <Card 
-              key={lesson.id}
-              className={`overflow-hidden hover:shadow-md transition-all cursor-pointer ${
-                lesson.locked ? 'opacity-70' : 'hover:-translate-y-1'
-              }`}
-              onClick={() => !lesson.locked && onSelectLesson(lesson.id)}
-            >
-              <div className={`h-1 w-full ${getStageBgColor(lesson.stage)}`}></div>
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-[#f0e7ff]">
-                    <IconComponent className="h-10 w-10 text-[#9b87f5]" />
-                  </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-500">Lesson {lesson.number}</span>
-                      {lesson.locked && (
-                        <Badge variant="outline" className="text-xs flex items-center gap-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                          </svg>
-                          Students Only
-                        </Badge>
-                      )}
-                      {!lesson.locked && !lesson.completed && (
-                        <Badge variant="default" className="bg-green-500 text-xs flex items-center gap-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                            <path d="m9 12 2 2 4-4" />
-                          </svg>
-                          Open Access
-                        </Badge>
-                      )}
-                      {lesson.completed && (
-                        <Badge variant="default" className="bg-blue-500 text-xs flex items-center gap-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 6 9 17l-5-5" />
-                          </svg>
-                          Completed
-                        </Badge>
-                      )}
-                    </div>
-                    <h3 className="font-semibold text-lg text-gray-800 mb-1">{lesson.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{lesson.description}</p>
-                    
-                    {!lesson.locked && lesson.id === 'meet-ai-friend' && (
-                      <div className="mt-2 flex">
-                        <Badge className="bg-amber-500 text-white text-xs mt-1 flex items-center gap-1">
-                          <Trophy className="h-3 w-3" />
-                          Try it now - First AI Explorer Badge
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+          <div 
+            className={`h-3 ${getColorByStage(lesson.stage)}`}
+          ></div>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-3">
+              <Badge variant="outline" className="mb-2">
+                Lesson {lesson.number}
+              </Badge>
+              
+              {/* Make all lessons available and unlocked */}
+              <Badge className="bg-green-500">
+                <Unlock className="h-3 w-3 mr-1" />
+                <span>Available</span>
+              </Badge>
+            </div>
+            
+            <h3 className="text-lg font-semibold mb-2">{lesson.title}</h3>
+            <p className="text-gray-600 text-sm mb-3">{lesson.description}</p>
+            
+            <div className="flex flex-wrap gap-1 mb-4">
+              {lesson.concepts.slice(0, 2).map((concept, idx) => (
+                <Badge key={idx} variant="secondary" className="text-xs">
+                  {concept}
+                </Badge>
+              ))}
+              {lesson.concepts.length > 2 && (
+                <Badge variant="secondary" className="text-xs">
+                  +{lesson.concepts.length - 2} more
+                </Badge>
+              )}
+            </div>
+            
+            <div className="flex justify-between items-center mt-2">
+              <div className="text-sm text-gray-500">
+                {lesson.duration} min
+              </div>
+              
+              <Button 
+                size="sm" 
+                className="flex items-center gap-1"
+                onClick={() => onSelectLesson(lesson.id)}
+                data-lesson-id={lesson.id}
+              >
+                Start Lesson
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
 
-function getStageBgColor(stage: string): string {
+// Helper function to get color based on stage
+function getColorByStage(stage: string): string {
   switch (stage) {
     case 'foundation':
       return 'bg-blue-500';

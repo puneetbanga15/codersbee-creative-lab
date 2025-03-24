@@ -1,10 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 
 export const LLMBasicsIntro: React.FC = () => {
+  const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  
+  const toggleItem = (id: string) => {
+    setOpenItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+  
   return (
     <div className="space-y-6">
       <div className="rounded-lg overflow-hidden bg-gradient-to-r from-purple-50 to-blue-50 p-6 border border-purple-100">
@@ -54,15 +63,14 @@ export const LLMBasicsIntro: React.FC = () => {
       </div>
       
       <div className="space-y-4">
-        <Collapsible>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="flex w-full justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50">
-              <span className="flex items-center text-lg font-medium">
-                <Plus className="h-5 w-5 mr-2" /> What are Large Language Models (LLMs)?
-              </span>
-            </Button>
+        <Collapsible open={openItems['item1']} onOpenChange={() => toggleItem('item1')}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="flex items-center text-lg font-medium">
+              <Plus className="h-5 w-5 mr-2" /> What are Large Language Models (LLMs)?
+            </span>
+            {openItems['item1'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
           </CollapsibleTrigger>
-          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100">
+          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100 mt-1">
             <p className="mb-3">
               Large Language Models (LLMs) are advanced AI systems that can understand and generate 
               human language. Unlike the simple AI friend you created in the previous lesson that had 
@@ -78,15 +86,14 @@ export const LLMBasicsIntro: React.FC = () => {
           </CollapsibleContent>
         </Collapsible>
         
-        <Collapsible>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="flex w-full justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50">
-              <span className="flex items-center text-lg font-medium">
-                <Plus className="h-5 w-5 mr-2" /> How are LLMs Different from Your AI Friend?
-              </span>
-            </Button>
+        <Collapsible open={openItems['item2']} onOpenChange={() => toggleItem('item2')}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="flex items-center text-lg font-medium">
+              <Plus className="h-5 w-5 mr-2" /> How are LLMs Different from Your AI Friend?
+            </span>
+            {openItems['item2'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
           </CollapsibleTrigger>
-          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100">
+          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100 mt-1">
             <div className="space-y-3">
               <p>
                 In Lesson 1, you created an AI friend by training it with specific responses to 
@@ -112,15 +119,14 @@ export const LLMBasicsIntro: React.FC = () => {
           </CollapsibleContent>
         </Collapsible>
         
-        <Collapsible>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="flex w-full justify-between items-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50">
-              <span className="flex items-center text-lg font-medium">
-                <Plus className="h-5 w-5 mr-2" /> What is Prompt Engineering?
-              </span>
-            </Button>
+        <Collapsible open={openItems['item3']} onOpenChange={() => toggleItem('item3')}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="flex items-center text-lg font-medium">
+              <Plus className="h-5 w-5 mr-2" /> What is Prompt Engineering?
+            </span>
+            {openItems['item3'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
           </CollapsibleTrigger>
-          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100">
+          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100 mt-1">
             <div className="space-y-3">
               <p>
                 Prompt engineering is the art and science of creating effective instructions or questions 
@@ -134,6 +140,43 @@ export const LLMBasicsIntro: React.FC = () => {
                 In this lesson, you'll learn how to create effective prompts that help LLMs understand 
                 exactly what you want, which will help you get better, more accurate, and more creative 
                 responses!
+              </p>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+        
+        <Collapsible open={openItems['item4']} onOpenChange={() => toggleItem('item4')}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="flex items-center text-lg font-medium">
+              <Plus className="h-5 w-5 mr-2" /> Popular AI Tools for Kids
+            </span>
+            {openItems['item4'] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+          </CollapsibleTrigger>
+          <CollapsibleContent className="p-4 bg-white rounded-b-lg border-t border-gray-100 mt-1">
+            <div className="space-y-3">
+              <p>
+                There are several kid-friendly AI tools that use Large Language Models:
+              </p>
+              <ul className="space-y-4 mt-4">
+                <li className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <h4 className="font-medium text-blue-700">ChatGPT</h4>
+                  <p className="text-sm">A popular AI assistant that can answer questions, help with homework, 
+                  tell stories, and explain complex topics in simple terms.</p>
+                </li>
+                <li className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <h4 className="font-medium text-purple-700">Claude</h4>
+                  <p className="text-sm">Another AI assistant that's particularly good at explaining things clearly 
+                  and can be more careful about providing accurate information.</p>
+                </li>
+                <li className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <h4 className="font-medium text-green-700">Perplexity</h4>
+                  <p className="text-sm">An AI that helps with research and can search the internet to find the 
+                  latest information on topics you're interested in.</p>
+                </li>
+              </ul>
+              <p className="mt-4 text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
+                <strong>Safety Tip:</strong> Remember to always use these tools with parent or 
+                teacher supervision, and never share personal information with AI assistants.
               </p>
             </div>
           </CollapsibleContent>
