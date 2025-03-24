@@ -12,6 +12,12 @@ import { MeetAIFriendTutorial } from './tutorials/MeetAIFriendTutorial';
 import { MeetAIFriendActivityWrapper } from './activities/MeetAIFriendActivityWrapper';
 import { MeetAIFriendCode } from './code-samples/MeetAIFriendCode';
 
+// Import LLM Basics lesson components
+import { LLMBasicsIntro } from './introductions/LLMBasicsIntro';
+import { LLMBasicsTutorial } from './tutorials/LLMBasicsTutorial';
+import { LLMBasicsActivityWrapper } from './activities/LLMBasicsActivityWrapper';
+import { LLMBasicsCode } from './code-samples/LLMBasicsCode';
+
 type LessonViewProps = {
   lessonId: string;
   onBack: () => void;
@@ -49,7 +55,22 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
         default:
           return <div>Content not available</div>;
       }
-    } else {
+    } 
+    else if (lessonId === 'llm-basics') {
+      switch (tab) {
+        case 'introduction':
+          return <LLMBasicsIntro />;
+        case 'tutorial':
+          return <LLMBasicsTutorial />;
+        case 'activity':
+          return <LLMBasicsActivityWrapper />;
+        case 'code':
+          return <LLMBasicsCode />;
+        default:
+          return <div>Content not available</div>;
+      }
+    }
+    else {
       // For other lessons, show placeholder content
       switch (tab) {
         case 'introduction':
@@ -152,6 +173,17 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
     }
   };
   
+  // Find the next lesson for the "Next Lesson" button
+  const findNextLesson = () => {
+    const currentIndex = curriculumData.findIndex(l => l.id === lessonId);
+    if (currentIndex === -1 || currentIndex === curriculumData.length - 1) {
+      return null; // No next lesson
+    }
+    return curriculumData[currentIndex + 1];
+  };
+  
+  const nextLesson = findNextLesson();
+  
   return (
     <div>
       <div className="flex items-center mb-6">
@@ -236,10 +268,23 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Activity
                 </Button>
-                <Button className="bg-green-500 hover:bg-green-600">
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  Complete Lesson
-                </Button>
+                
+                {nextLesson ? (
+                  <Button className="bg-purple-500 hover:bg-purple-600" onClick={() => {
+                    // This would navigate to the next lesson
+                    // You'd need to update the parent component state
+                    // For now, just go back to lessons
+                    onBack();
+                  }}>
+                    <ArrowRight className="mr-2 h-4 w-4" />
+                    Next Lesson: {nextLesson.title}
+                  </Button>
+                ) : (
+                  <Button className="bg-green-500 hover:bg-green-600">
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Complete Lesson
+                  </Button>
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -286,6 +331,19 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
                     <li>• Ask your teacher if you need help understanding</li>
                   </ul>
                 </div>
+                
+                {nextLesson && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <h4 className="font-medium mb-2">Up Next:</h4>
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <Badge className={`${getStageBgClass(nextLesson.stage)} mb-2`}>
+                        Lesson {nextLesson.number}
+                      </Badge>
+                      <p className="font-medium">{nextLesson.title}</p>
+                      <p className="text-sm text-gray-600 mt-1">{nextLesson.description}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
