@@ -31,7 +31,7 @@ export const FloatingBuzzyChat = () => {
   // Calculate chat window position and size based on mobile or desktop view
   const chatWindowClass = isMobile
     ? "fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-lg shadow-xl w-full max-h-[90vh] overflow-hidden border border-gray-200"
-    : "fixed bottom-6 right-6 z-50 bg-white rounded-lg shadow-xl w-[380px] max-h-[500px] overflow-hidden border border-gray-200";
+    : "fixed bottom-6 right-6 z-50 bg-white rounded-lg shadow-xl w-[450px] max-h-[600px] overflow-hidden border border-gray-200";
 
   return (
     <>

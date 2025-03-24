@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export const Hero = () => {
-  return <div className="relative min-h-[90vh] overflow-hidden mt-[-42px]">
+  return <div className="relative min-h-[90vh] overflow-hidden pt-16 md:pt-24">
       {/* Background Video Layer */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF]/80 via-white/60 to-white/80 md:backdrop-blur-[2px] z-10" />

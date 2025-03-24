@@ -37,7 +37,7 @@ export const InitialChatForm = ({
         value={inputValue}
         onChange={onInputChange}
         onKeyDown={onKeyDown}
-        placeholder={isMobile ? "Ask me anything..." : "Ask me anything about coding, AI, and CodersBee's programs!"}
+        placeholder={isMobile ? "Ask about our programs..." : "Ask about our programs, enrollment, AI or coding"}
         className={`min-h-${isCompact ? '10' : '12'} resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0 text-${isCompact ? 'sm' : 'base'} md:text-${isCompact ? 'base' : 'lg'}`}
       />
       <div className="flex items-center p-3 pt-0">
