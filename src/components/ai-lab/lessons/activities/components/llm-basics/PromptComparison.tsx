@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Radio, RadioGroup, RadioItem } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Check } from 'lucide-react';
 
@@ -100,7 +100,7 @@ export const PromptComparison: React.FC<PromptComparisonProps> = ({ onComplete }
           >
             <div className="space-y-4">
               <div className="flex items-start gap-2">
-                <RadioItem value="A" id={`${comparison.id}-A`} className="mt-1" />
+                <RadioGroupItem value="A" id={`${comparison.id}-A`} className="mt-1" />
                 <Label htmlFor={`${comparison.id}-A`} className="text-sm font-normal cursor-pointer bg-gray-50 p-3 rounded-md border border-gray-200 flex-1">
                   <span className="font-semibold">Option A:</span><br />
                   {comparison.optionA}
@@ -108,7 +108,7 @@ export const PromptComparison: React.FC<PromptComparisonProps> = ({ onComplete }
               </div>
               
               <div className="flex items-start gap-2">
-                <RadioItem value="B" id={`${comparison.id}-B`} className="mt-1" />
+                <RadioGroupItem value="B" id={`${comparison.id}-B`} className="mt-1" />
                 <Label htmlFor={`${comparison.id}-B`} className="text-sm font-normal cursor-pointer bg-gray-50 p-3 rounded-md border border-gray-200 flex-1">
                   <span className="font-semibold">Option B:</span><br />
                   {comparison.optionB}
