@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -10,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export const FloatingBuzzyChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isMobile = useIsMobile();
@@ -20,8 +20,26 @@ export const FloatingBuzzyChat = () => {
       setShowButton(true);
     }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    // Show welcome message after 3 seconds on homepage
+    let welcomeTimer: NodeJS.Timeout;
+    if (isHomePage) {
+      welcomeTimer = setTimeout(() => {
+        setShowWelcomeMessage(true);
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+      if (welcomeTimer) clearTimeout(welcomeTimer);
+    };
+  }, [isHomePage]);
+
+  // Hide welcome message when chat is opened
+  useEffect(() => {
+    if (isOpen) {
+      setShowWelcomeMessage(false);
+    }
+  }, [isOpen]);
 
   // Position the button differently on the home page
   const buttonPosition = isHomePage 
@@ -44,6 +62,37 @@ export const FloatingBuzzyChat = () => {
             transition={{ duration: 0.3 }}
             className={buttonPosition}
           >
+            {/* Welcome Speech Bubble */}
+            <AnimatePresence>
+              {showWelcomeMessage && isHomePage && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute bottom-16 right-0 bg-white rounded-lg shadow-md p-3 mb-2 w-48 text-sm"
+                  style={{ 
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                    zIndex: 51
+                  }}
+                >
+                  <div className="relative">
+                    <p className="text-gray-800">Hi, I'm Buzzy! Ask me anything about AI and coding!</p>
+                    <button 
+                      className="absolute -top-1 -right-1 text-gray-400 hover:text-gray-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowWelcomeMessage(false);
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                    <div className="absolute -bottom-6 right-5 w-4 h-4 bg-white transform rotate-45"></div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

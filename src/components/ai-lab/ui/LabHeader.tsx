@@ -1,10 +1,20 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Bot, Zap, Trophy, BookOpen, Sparkles, Star, Diamond } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-export const AILabHeader = () => {
+type AILabHeaderProps = {
+  activeTab?: string;
+  onTabChange?: (value: string) => void;
+};
+
+export const AILabHeader = ({ activeTab = "lessons", onTabChange }: AILabHeaderProps) => {
+  const handleValueChange = (value: string) => {
+    if (onTabChange) {
+      onTabChange(value);
+    }
+  };
+
   return (
     <div className="mb-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -48,7 +58,7 @@ export const AILabHeader = () => {
         </div>
       </div>
       
-      <Tabs defaultValue="lessons" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleValueChange} className="w-full">
         <TabsList className="w-full max-w-md grid grid-cols-3 mb-2">
           <TabsTrigger value="lessons" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +10,8 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const IconComponent = getProjectIcon(project.icon);
+  
   return (
     <Card 
       key={project.id}
@@ -19,7 +20,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <CardContent className="pt-6">
         <div className="flex items-start gap-4">
           <div className="p-2 rounded-lg bg-[#f0e7ff]">
-            {getProjectIcon(project.icon)}
+            <IconComponent className="h-10 w-10 text-[#9b87f5]" />
           </div>
           
           <div className="flex-1">

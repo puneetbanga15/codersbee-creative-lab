@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Sparkles, Shapes, Image, MessageSquare, Mic, Dog, BookOpen, Music, Star, Languages, Smile, Database, Network, Gamepad2, Palette, ShieldAlert, Layers, RotateCw, Bot, Trophy, Gem } from 'lucide-react';
 import { curriculumData } from './curriculumData';
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import type { LucideIcon } from 'lucide-react';
 
 type LessonGridProps = {
   onSelectLesson: (lessonId: string) => void;
@@ -17,32 +17,30 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
     ? curriculumData 
     : curriculumData.filter(lesson => lesson.stage === selectedStage);
     
-  const getLessonIcon = (iconName: string) => {
-    const iconProps = { className: "h-10 w-10 text-[#9b87f5]" };
-    const icons: Record<string, React.ReactNode> = {
-      brain: <Brain {...iconProps} />,
-      sparkles: <Sparkles {...iconProps} />,
-      shapes: <Shapes {...iconProps} />,
-      image: <Image {...iconProps} />,
-      messageSquare: <MessageSquare {...iconProps} />,
-      microphone: <Mic {...iconProps} />,
-      dog: <Dog {...iconProps} />,
-      bookOpen: <BookOpen {...iconProps} />,
-      music: <Music {...iconProps} />,
-      star: <Star {...iconProps} />,
-      languages: <Languages {...iconProps} />,
-      smile: <Smile {...iconProps} />,
-      database: <Database {...iconProps} />,
-      network: <Network {...iconProps} />,
-      gamepad: <Gamepad2 {...iconProps} />,
-      palette: <Palette {...iconProps} />,
-      shield: <ShieldAlert {...iconProps} />,
-      layers: <Layers {...iconProps} />,
-      robot: <Bot {...iconProps} />,
-      bot: <Bot {...iconProps} />
-    };
-    
-    return icons[iconName] || <Sparkles {...iconProps} />;
+  const getLessonIcon = (iconName: string): LucideIcon => {
+    switch (iconName) {
+      case 'brain': return Brain;
+      case 'sparkles': return Sparkles;
+      case 'shapes': return Shapes;
+      case 'image': return Image;
+      case 'messageSquare': return MessageSquare;
+      case 'microphone': return Mic;
+      case 'dog': return Dog;
+      case 'bookOpen': return BookOpen;
+      case 'music': return Music;
+      case 'star': return Star;
+      case 'languages': return Languages;
+      case 'smile': return Smile;
+      case 'database': return Database;
+      case 'network': return Network;
+      case 'gamepad': return Gamepad2;
+      case 'palette': return Palette;
+      case 'shield': return ShieldAlert;
+      case 'layers': return Layers;
+      case 'robot': return Bot;
+      case 'bot': return Bot;
+      default: return Sparkles;
+    }
   };
   
   // Modified lessons data - first lesson open (not completed), others locked
@@ -109,67 +107,71 @@ export const LessonGrid = ({ onSelectLesson }: LessonGridProps) => {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {modifiedLessons.map((lesson) => (
-          <Card 
-            key={lesson.id}
-            className={`overflow-hidden hover:shadow-md transition-all cursor-pointer ${
-              lesson.locked ? 'opacity-70' : 'hover:-translate-y-1'
-            }`}
-            onClick={() => !lesson.locked && onSelectLesson(lesson.id)}
-          >
-            <div className={`h-1 w-full ${getStageBgColor(lesson.stage)}`}></div>
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-4">
-                <div className="p-2 rounded-lg bg-[#f0e7ff]">
-                  {getLessonIcon(lesson.icon)}
-                </div>
-                
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-500">Lesson {lesson.number}</span>
-                    {lesson.locked && (
-                      <Badge variant="outline" className="text-xs flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                        Students Only
-                      </Badge>
-                    )}
-                    {!lesson.locked && !lesson.completed && (
-                      <Badge variant="default" className="bg-green-500 text-xs flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                          <path d="m9 12 2 2 4-4" />
-                        </svg>
-                        Open Access
-                      </Badge>
-                    )}
-                    {lesson.completed && (
-                      <Badge variant="default" className="bg-blue-500 text-xs flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 6 9 17l-5-5" />
-                        </svg>
-                        Completed
-                      </Badge>
+        {modifiedLessons.map((lesson) => {
+          const IconComponent = getLessonIcon(lesson.icon);
+          
+          return (
+            <Card 
+              key={lesson.id}
+              className={`overflow-hidden hover:shadow-md transition-all cursor-pointer ${
+                lesson.locked ? 'opacity-70' : 'hover:-translate-y-1'
+              }`}
+              onClick={() => !lesson.locked && onSelectLesson(lesson.id)}
+            >
+              <div className={`h-1 w-full ${getStageBgColor(lesson.stage)}`}></div>
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 rounded-lg bg-[#f0e7ff]">
+                    <IconComponent className="h-10 w-10 text-[#9b87f5]" />
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-500">Lesson {lesson.number}</span>
+                      {lesson.locked && (
+                        <Badge variant="outline" className="text-xs flex items-center gap-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          </svg>
+                          Students Only
+                        </Badge>
+                      )}
+                      {!lesson.locked && !lesson.completed && (
+                        <Badge variant="default" className="bg-green-500 text-xs flex items-center gap-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                          Open Access
+                        </Badge>
+                      )}
+                      {lesson.completed && (
+                        <Badge variant="default" className="bg-blue-500 text-xs flex items-center gap-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 6 9 17l-5-5" />
+                          </svg>
+                          Completed
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-lg text-gray-800 mb-1">{lesson.title}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">{lesson.description}</p>
+                    
+                    {!lesson.locked && lesson.id === 'meet-ai-friend' && (
+                      <div className="mt-2 flex">
+                        <Badge className="bg-amber-500 text-white text-xs mt-1 flex items-center gap-1">
+                          <Trophy className="h-3 w-3" />
+                          Try it now - First AI Explorer Badge
+                        </Badge>
+                      </div>
                     )}
                   </div>
-                  <h3 className="font-semibold text-lg text-gray-800 mb-1">{lesson.title}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">{lesson.description}</p>
-                  
-                  {!lesson.locked && lesson.id === 'meet-ai-friend' && (
-                    <div className="mt-2 flex">
-                      <Badge className="bg-amber-500 text-white text-xs mt-1 flex items-center gap-1">
-                        <Trophy className="h-3 w-3" />
-                        Try it now - First AI Explorer Badge
-                      </Badge>
-                    </div>
-                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
