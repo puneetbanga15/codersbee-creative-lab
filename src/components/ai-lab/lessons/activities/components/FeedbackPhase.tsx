@@ -1,0 +1,178 @@
+
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Character } from '../types';
+import { Lightbulb } from 'lucide-react';
+
+// Helper function for character-specific feedback suggestions
+const getCharacterSpecificFeedbackSuggestions = (characterName: string): string[] => {
+  switch(characterName) {
+    case "Harry Potter":
+      return [
+        "Teach Harry how to talk about his feelings regarding his parents and his connection to Voldemort in a way that shows his emotional depth.",
+        "Help Harry discuss his friendships with Ron and Hermione, emphasizing loyalty, trust, and how they complement each other's strengths.",
+        "Train Harry to describe his Quidditch experiences and love of flying, as this represents freedom and joy in his often difficult life."
+      ];
+    case "Albert Einstein":
+      return [
+        "Develop Einstein's ability to explain complex scientific concepts using simple metaphors and thought experiments accessible to children.",
+        "Train Einstein to share personal anecdotes about his discoveries that emphasize curiosity, imagination, and perseverance.",
+        "Teach Einstein to express his philosophical views on peace, education, and humanity that showcase his compassionate worldview."
+      ];
+    default:
+      return [
+        `Teach ${characterName} about their favorite hobbies and interests to create a more well-rounded personality.`,
+        `Help ${characterName} express emotions and reactions in a way that feels authentic to their character.`,
+        `Train ${characterName} to respond to complex questions while maintaining their unique worldview and values.`
+      ];
+  }
+};
+
+interface FeedbackPhaseProps {
+  character: Character;
+  onComplete: () => void;
+}
+
+export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
+  character,
+  onComplete
+}) => {
+  const [feedback, setFeedback] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  
+  useEffect(() => {
+    fetchBuzzySuggestions();
+  }, []);
+  
+  const fetchBuzzySuggestions = async () => {
+    setIsLoading(true);
+    try {
+      // Create a more detailed prompt for better suggestions
+      const prompt = `I'm training an AI character based on ${character.name}. I've completed the basic training phase.
+      
+      What are 3 specific things I should teach the ${character.name} AI character next to make it more realistic and authentic? 
+      
+      Format each suggestion as a separate numbered item (1., 2., 3.) with 1-2 sentences explaining why it would enhance the character.`;
+      
+      const response = await fetch('https://lovable-bee.functions.supabase.co/chat-with-buzzy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: prompt,
+          conversationHistory: [
+            { role: 'system', content: 'You are Buzzy, a helpful AI assistant for kids learning about AI training.' },
+            { role: 'user', content: prompt }
+          ]
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to get suggestions: ${response.status} ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      const suggestionText = data.answer || '';
+      
+      if (!suggestionText) {
+        throw new Error("Empty response from API");
+      }
+      
+      // Try to match numbered list format (1., 2., 3.)
+      const numberedMatches = suggestionText.match(/(?:\d+[\.\)]\s*)(.*?)(?=\d+[\.\)]|$)/gs);
+      
+      let suggestionList: string[] = [];
+      
+      if (numberedMatches && numberedMatches.length > 0) {
+        suggestionList = numberedMatches
+          .map(match => match.replace(/^\d+[\.\)]\s*/, '').trim())
+          .filter(s => s.length > 0);
+      } else {
+        // Fallback: split by paragraphs
+        suggestionList = suggestionText
+          .split(/\n\n/)
+          .filter(s => s.trim().length > 0)
+          .map(s => s.trim());
+      }
+      
+      // If we still couldn't parse any suggestions, provide character-specific fallbacks
+      if (suggestionList.length < 2) {
+        suggestionList = getCharacterSpecificFeedbackSuggestions(character.name);
+      }
+      
+      setSuggestions(suggestionList);
+    } catch (err) {
+      console.error('Error getting Buzzy suggestions:', err);
+      
+      // Provide character-specific fallback suggestions
+      const fallbackSuggestions = getCharacterSpecificFeedbackSuggestions(character.name);
+      setSuggestions(fallbackSuggestions);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleSuggestionClick = (suggestion: string) => {
+    setFeedback(suggestion);
+  };
+  
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+          <Lightbulb className="h-5 w-5 text-amber-500" />
+          How can we improve {character.name}?
+        </h2>
+        
+        <p className="mb-4 text-gray-600">
+          Great job with the basic training! What else should {character.name} learn to become more realistic?
+        </p>
+        
+        <Textarea
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+          placeholder="What would you like to teach next?"
+          className="mb-4"
+        />
+        
+        <div className="mb-4">
+          <p className="text-sm font-medium mb-2">Buzzy's suggestions:</p>
+          <div className="grid grid-cols-1 gap-2">
+            {isLoading ? (
+              <div className="flex justify-center p-4">
+                <div className="animate-spin h-6 w-6 border-2 border-purple-500 rounded-full border-t-transparent"></div>
+              </div>
+            ) : (
+              suggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="bg-purple-50 p-3 rounded-lg border border-purple-100 cursor-pointer hover:bg-purple-100 transition-colors"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  <p className="text-sm">{suggestion}</p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={onComplete}>
+            Skip
+          </Button>
+          <Button 
+            onClick={onComplete}
+            disabled={!feedback.trim()}
+          >
+            Continue to Advanced Training
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
