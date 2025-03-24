@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,11 +38,7 @@ const TrainingItem = ({ question, characterName, onResponseChange, response, cha
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: prompt,
-          conversationHistory: [
-            { role: 'system', content: `You are a helpful AI assistant that helps users train an AI character to respond like ${characterName}.` },
-            { role: 'user', content: prompt }
-          ]
+          message: prompt
         }),
       });
       
@@ -329,6 +324,13 @@ const PreTrainingChat = ({ character, messages, onMessage }: {
     }
   };
   
+  // Add suggested questions for pre-training phase
+  const suggestedQuestions = [
+    "What's your favorite hobby?",
+    "How would you handle a difficult situation?",
+    "What's your philosophy on life?"
+  ];
+  
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
       <div className="bg-purple-50 p-3 border-b border-gray-200">
@@ -358,6 +360,21 @@ const PreTrainingChat = ({ character, messages, onMessage }: {
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className="p-2 border-t border-gray-200 bg-gray-50">
+        <p className="text-xs text-gray-500 mb-2">Try asking:</p>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {suggestedQuestions.map((question, index) => (
+            <button
+              key={index}
+              onClick={() => onMessage(question)}
+              className="text-xs bg-white border border-gray-200 rounded-full px-3 py-1 hover:bg-purple-50 hover:border-purple-200 transition-colors"
+            >
+              {question}
+            </button>
+          ))}
+        </div>
       </div>
       
       <form onSubmit={handleSubmit} className="p-3 border-t border-gray-200 bg-white">

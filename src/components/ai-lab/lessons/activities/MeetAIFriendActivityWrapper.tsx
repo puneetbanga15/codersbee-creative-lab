@@ -61,6 +61,7 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
             messages={messages}
             onMessage={handleMessage}
             onComplete={moveToNextPhase}
+            progress={progress}
           />
         );
       case 'summary':
