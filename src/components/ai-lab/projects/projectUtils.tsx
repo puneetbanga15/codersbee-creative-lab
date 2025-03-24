@@ -1,5 +1,4 @@
-
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { 
   Brain, Sparkles, MessageSquare, Image, Globe, 
   Utensils, MessageCircle, BookOpen, Bot,
@@ -7,40 +6,61 @@ import {
   CalendarDays, FileText, FlaskConical, Rocket
 } from 'lucide-react';
 
-export const getProjectIcon = (iconName: string) => {
-  const iconProps = { className: "h-10 w-10 text-[#9b87f5]" };
-  const icons: Record<string, React.ReactNode> = {
-    brain: <Brain {...iconProps} />,
-    sparkles: <Sparkles {...iconProps} />,
-    messageSquare: <MessageSquare {...iconProps} />,
-    image: <Image {...iconProps} />,
-    globe: <Globe {...iconProps} />,
-    utensils: <Utensils {...iconProps} />,
-    messageCircle: <MessageCircle {...iconProps} />,
-    bookOpen: <BookOpen {...iconProps} />,
-    bot: <Bot {...iconProps} />,
-    lightbulb: <Lightbulb {...iconProps} />,
-    palette: <Palette {...iconProps} />,
-    music: <Music {...iconProps} />,
-    gamepad: <Gamepad2 {...iconProps} />,
-    users: <Users {...iconProps} />,
-    calendar: <CalendarDays {...iconProps} />,
-    fileText: <FileText {...iconProps} />,
-    flask: <FlaskConical {...iconProps} />
-  };
-  
-  return icons[iconName] || <Rocket {...iconProps} />;
+// Return the icon component constructor rather than JSX
+export const getProjectIcon = (iconName: string): LucideIcon => {
+  switch (iconName) {
+    case 'brain':
+      return Brain;
+    case 'sparkles':
+      return Sparkles;
+    case 'messageSquare':
+      return MessageSquare;
+    case 'image':
+      return Image;
+    case 'globe':
+      return Globe;
+    case 'utensils':
+      return Utensils;
+    case 'messageCircle':
+      return MessageCircle;
+    case 'bookOpen':
+      return BookOpen;
+    case 'bot':
+      return Bot;
+    case 'lightbulb':
+      return Lightbulb;
+    case 'palette':
+      return Palette;
+    case 'music':
+      return Music;
+    case 'gamepad':
+      return Gamepad2;
+    case 'users':
+      return Users;
+    case 'calendar':
+      return CalendarDays;
+    case 'fileText':
+      return FileText;
+    case 'flask':
+      return FlaskConical;
+    case 'rocket':
+      return Rocket;
+    default:
+      return Sparkles;
+  }
 };
 
-export const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case 'easy':
-      return 'bg-green-500';
-    case 'medium':
-      return 'bg-yellow-500';
+export const getDifficultyColor = (difficulty: string): string => {
+  switch (difficulty.toLowerCase()) {
+    case 'beginner':
+      return 'bg-green-100 text-green-800 border-green-200';
+    case 'intermediate':
+      return 'bg-blue-100 text-blue-800 border-blue-200';
     case 'advanced':
-      return 'bg-red-500';
+      return 'bg-purple-100 text-purple-800 border-purple-200';
+    case 'expert':
+      return 'bg-orange-100 text-orange-800 border-orange-200';
     default:
-      return 'bg-gray-500';
+      return 'bg-gray-100 text-gray-800 border-gray-200';
   }
 };

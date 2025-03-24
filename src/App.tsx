@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -23,6 +22,7 @@ import AIIntro from "./pages/tutorials/ai/AIIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import BuzzyAI from "./pages/BuzzyAI";
 import AILab from "./pages/AILab";
+import TestPage from "./pages/TestPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -50,6 +50,7 @@ function App() {
               <Route path="/certificate" element={<VerifyCertificate />} />
               <Route path="/buzzy-ai" element={<BuzzyAI />} />
               <Route path="/ai-lab" element={<AILab />} />
+              <Route path="/test" element={<TestPage />} />
             </Routes>
             <Toaster />
             <Sonner />

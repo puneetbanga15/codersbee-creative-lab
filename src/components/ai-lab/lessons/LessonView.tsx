@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,6 +5,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Rocket, Info, Code, Play, CheckCircle, ArrowRight, Book } from 'lucide-react';
 import { curriculumData } from './curriculumData';
+
+// Import lesson-specific components
+import { MeetAIFriendIntro } from './introductions/MeetAIFriendIntro';
+import { MeetAIFriendTutorial } from './tutorials/MeetAIFriendTutorial';
+import { MeetAIFriendActivityWrapper } from './activities/MeetAIFriendActivityWrapper';
+import { MeetAIFriendCode } from './code-samples/MeetAIFriendCode';
 
 type LessonViewProps = {
   lessonId: string;
@@ -28,6 +33,124 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       </div>
     );
   }
+  
+  // Render the appropriate content based on the lesson ID
+  const renderLessonContent = (tab: string) => {
+    if (lessonId === 'meet-ai-friend') {
+      switch (tab) {
+        case 'introduction':
+          return <MeetAIFriendIntro />;
+        case 'tutorial':
+          return <MeetAIFriendTutorial />;
+        case 'activity':
+          return <MeetAIFriendActivityWrapper />;
+        case 'code':
+          return <MeetAIFriendCode />;
+        default:
+          return <div>Content not available</div>;
+      }
+    } else {
+      // For other lessons, show placeholder content
+      switch (tab) {
+        case 'introduction':
+          return (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Welcome to {lesson.title}!</h2>
+              <p className="mb-4">
+                In this lesson, you'll learn about {lesson.concepts.join(', ')}. 
+                This activity will take approximately {lesson.duration} minutes to complete.
+              </p>
+              
+              <h3 className="text-lg font-medium mt-6 mb-3">What You'll Learn</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                {lesson.concepts.map((concept, index) => (
+                  <li key={index} className="text-gray-700">{concept}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        case 'tutorial':
+          return (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Tutorial: {lesson.title}</h2>
+              <p className="text-gray-700 mb-6">
+                This tutorial will guide you through the key concepts and steps for this lesson.
+              </p>
+              
+              <div className="space-y-6">
+                <p>Tutorial content will be implemented based on the specific lesson.</p>
+                <p>For now, this is a placeholder that would contain:</p>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>Step-by-step instructions</li>
+                  <li>Visual explanations of concepts</li>
+                  <li>Interactive examples</li>
+                </ul>
+              </div>
+            </div>
+          );
+        case 'activity':
+          return (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Activity: {lesson.title}</h2>
+              <p className="text-gray-700 mb-6">
+                Now it's your turn to experiment and practice what you've learned!
+              </p>
+              
+              <div className="bg-gray-100 p-6 rounded-lg mb-6">
+                <p className="text-center text-gray-600 mb-4">Activity interface would appear here</p>
+                <p className="text-center text-sm text-gray-500">
+                  (This is a placeholder for the interactive activity that would be implemented 
+                  specifically for this lesson)
+                </p>
+              </div>
+            </div>
+          );
+        case 'code':
+          return (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Behind the Scenes: The Code</h2>
+              <p className="text-gray-700 mb-6">
+                Let's take a look at the code that makes this AI activity work!
+              </p>
+              
+              <div className="bg-gray-900 text-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
+                <pre>{`// This is sample code that would be specific to each lesson
+// For example, for the chatbot lesson:
+
+function createChatbot(responses) {
+  return {
+    respond: function(message) {
+      // Simple keyword matching
+      for (const [keyword, response] of Object.entries(responses)) {
+        if (message.toLowerCase().includes(keyword)) {
+          return response;
+        }
+      }
+      return responses.default;
+    }
+  };
+}
+
+// Create a chatbot with some responses
+const myBot = createChatbot({
+  "hello": "Hi there! How can I help you today?",
+  "name": "I'm Buzzy, your AI assistant!",
+  "weather": "I'm not connected to weather data, but I hope it's nice outside!",
+  "default": "I'm not sure how to respond to that. Can you try asking something else?"
+});
+
+// Example usage
+console.log(myBot.respond("Hello there!")); // "Hi there! How can I help you today?"
+console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistant!"
+`}</pre>
+              </div>
+            </div>
+          );
+        default:
+          return <div>Content not available</div>;
+      }
+    }
+  };
   
   return (
     <div>
@@ -65,18 +188,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             </TabsList>
             
             <TabsContent value="introduction" className="p-4 bg-white rounded-md shadow-sm mt-4">
-              <h2 className="text-xl font-semibold mb-4">Welcome to {lesson.title}!</h2>
-              <p className="mb-4">
-                In this lesson, you'll learn about {lesson.concepts.join(', ')}. 
-                This activity will take approximately {lesson.duration} minutes to complete.
-              </p>
-              
-              <h3 className="text-lg font-medium mt-6 mb-3">What You'll Learn</h3>
-              <ul className="list-disc pl-5 space-y-2">
-                {lesson.concepts.map((concept, index) => (
-                  <li key={index} className="text-gray-700">{concept}</li>
-                ))}
-              </ul>
+              {renderLessonContent('introduction')}
               
               <div className="mt-8 flex justify-end">
                 <Button onClick={() => setActiveTab('tutorial')} className="flex items-center gap-2">
@@ -87,20 +199,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             </TabsContent>
             
             <TabsContent value="tutorial" className="p-4 bg-white rounded-md shadow-sm mt-4">
-              <h2 className="text-xl font-semibold mb-4">Tutorial: {lesson.title}</h2>
-              <p className="text-gray-700 mb-6">
-                This tutorial will guide you through the key concepts and steps for this lesson.
-              </p>
-              
-              <div className="space-y-6">
-                <p>Tutorial content will be implemented based on the specific lesson.</p>
-                <p>For now, this is a placeholder that would contain:</p>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>Step-by-step instructions</li>
-                  <li>Visual explanations of concepts</li>
-                  <li>Interactive examples</li>
-                </ul>
-              </div>
+              {renderLessonContent('tutorial')}
               
               <div className="mt-8 flex justify-between">
                 <Button variant="outline" onClick={() => setActiveTab('introduction')}>
@@ -115,18 +214,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             </TabsContent>
             
             <TabsContent value="activity" className="p-4 bg-white rounded-md shadow-sm mt-4">
-              <h2 className="text-xl font-semibold mb-4">Activity: {lesson.title}</h2>
-              <p className="text-gray-700 mb-6">
-                Now it's your turn to experiment and practice what you've learned!
-              </p>
-              
-              <div className="bg-gray-100 p-6 rounded-lg mb-6">
-                <p className="text-center text-gray-600 mb-4">Activity interface would appear here</p>
-                <p className="text-center text-sm text-gray-500">
-                  (This is a placeholder for the interactive activity that would be implemented 
-                  specifically for this lesson)
-                </p>
-              </div>
+              {renderLessonContent('activity')}
               
               <div className="mt-8 flex justify-between">
                 <Button variant="outline" onClick={() => setActiveTab('tutorial')}>
@@ -141,42 +229,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             </TabsContent>
             
             <TabsContent value="code" className="p-4 bg-white rounded-md shadow-sm mt-4">
-              <h2 className="text-xl font-semibold mb-4">Behind the Scenes: The Code</h2>
-              <p className="text-gray-700 mb-6">
-                Let's take a look at the code that makes this AI activity work!
-              </p>
-              
-              <div className="bg-gray-900 text-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                <pre>{`// This is sample code that would be specific to each lesson
-// For example, for the chatbot lesson:
-
-function createChatbot(responses) {
-  return {
-    respond: function(message) {
-      // Simple keyword matching
-      for (const [keyword, response] of Object.entries(responses)) {
-        if (message.toLowerCase().includes(keyword)) {
-          return response;
-        }
-      }
-      return responses.default;
-    }
-  };
-}
-
-// Create a chatbot with some responses
-const myBot = createChatbot({
-  "hello": "Hi there! How can I help you today?",
-  "name": "I'm Buzzy, your AI assistant!",
-  "weather": "I'm not connected to weather data, but I hope it's nice outside!",
-  "default": "I'm not sure how to respond to that. Can you try asking something else?"
-});
-
-// Example usage
-console.log(myBot.respond("Hello there!")); // "Hi there! How can I help you today?"
-console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistant!"
-`}</pre>
-              </div>
+              {renderLessonContent('code')}
               
               <div className="mt-8 flex justify-between">
                 <Button variant="outline" onClick={() => setActiveTab('activity')}>
@@ -199,40 +252,39 @@ console.log(myBot.respond("What's your name?")); // "I'm Buzzy, your AI assistan
               
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-gray-500">Duration</p>
-                  <p className="font-medium">{lesson.duration} minutes</p>
+                  <p className="text-sm font-medium text-gray-500 mb-1">Difficulty</p>
+                  <Badge className={`${getStageBgClass(lesson.stage)}`}>
+                    {getStageDifficulty(lesson.stage)}
+                  </Badge>
                 </div>
                 
                 <div>
-                  <p className="text-sm text-gray-500">Difficulty</p>
-                  <p className="font-medium">{getStageDifficulty(lesson.stage)}</p>
+                  <p className="text-sm font-medium text-gray-500 mb-1">Duration</p>
+                  <p className="text-gray-700">{lesson.duration} minutes</p>
                 </div>
                 
                 <div>
-                  <p className="text-sm text-gray-500">Key Concepts</p>
-                  <div className="flex flex-wrap gap-2 mt-1">
+                  <p className="text-sm font-medium text-gray-500 mb-1">Key Concepts</p>
+                  <div className="flex flex-wrap gap-1">
                     {lesson.concepts.map((concept, index) => (
-                      <Badge key={index} variant="outline">
+                      <Badge key={index} variant="outline" className="text-xs">
                         {concept}
                       </Badge>
                     ))}
                   </div>
                 </div>
                 
-                <div>
-                  <p className="text-sm text-gray-500">You'll Need</p>
-                  <ul className="list-disc pl-5 mt-1 text-sm">
-                    <li>Web browser (Chrome recommended)</li>
-                    <li>Webcam (for some activities)</li>
-                    <li>Headphones (optional)</li>
+                <div className="pt-4 border-t border-gray-200">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Rocket className="h-4 w-4 text-purple-500" />
+                    Tips for Success
+                  </h4>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li>• Take your time to understand each concept</li>
+                    <li>• Try the activity multiple times with different inputs</li>
+                    <li>• Don't be afraid to experiment and make mistakes</li>
+                    <li>• Ask your teacher if you need help understanding</li>
                   </ul>
-                </div>
-                
-                <div className="pt-4 border-t">
-                  <Button className="w-full" variant="outline">
-                    <Rocket className="mr-2 h-4 w-4" />
-                    Playground Mode
-                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -255,22 +307,22 @@ function getStageLabel(stage: string): string {
     case 'advanced':
       return 'Advanced';
     default:
-      return 'Unknown Stage';
+      return 'Unknown';
   }
 }
 
 function getStageBgClass(stage: string): string {
   switch (stage) {
     case 'foundation':
-      return 'bg-blue-500 text-white';
+      return 'bg-blue-500';
     case 'application':
-      return 'bg-green-500 text-white';
+      return 'bg-green-500';
     case 'understanding':
-      return 'bg-purple-500 text-white';
+      return 'bg-purple-500';
     case 'advanced':
-      return 'bg-orange-500 text-white';
+      return 'bg-orange-500';
     default:
-      return 'bg-gray-500 text-white';
+      return 'bg-gray-500';
   }
 }
 
