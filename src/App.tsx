@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -50,7 +49,7 @@ function App() {
               <Route path="/tutorials/ai/intro" element={<AIIntro />} />
               <Route path="/certificate" element={<VerifyCertificate />} />
               <Route path="/buzzy-ai" element={<BuzzyAI />} />
-              <Route path="/ai-lab" element={<AILab />} />
+              <Route path="/ai-lab/*" element={<AILab />} />
               <Route path="/test" element={<TestPage />} />
             </Routes>
             <Toaster />

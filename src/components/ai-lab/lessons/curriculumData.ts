@@ -22,7 +22,7 @@ export const curriculumData: LessonType[] = [
     icon: 'messageSquare',
     concepts: ['What is AI', 'Computer Communication', 'Chatbots'],
     duration: 30,
-    completed: true
+    completed: false
   },
   {
     id: 'llm-basics',
@@ -32,7 +32,8 @@ export const curriculumData: LessonType[] = [
     stage: 'foundation',
     icon: 'brain',
     concepts: ['Large Language Models', 'Prompt Engineering', 'AI Communication'],
-    duration: 45
+    duration: 45,
+    completed: false
   },
   {
     id: 'pattern-detective',
@@ -43,7 +44,7 @@ export const curriculumData: LessonType[] = [
     icon: 'shapes',
     concepts: ['Pattern Recognition', 'Basic Machine Learning', 'Training Data'],
     duration: 40,
-    completed: true
+    locked: true
   },
   {
     id: 'decision-trees',
@@ -53,7 +54,8 @@ export const curriculumData: LessonType[] = [
     stage: 'foundation',
     icon: 'sparkles',
     concepts: ['Decision Trees', 'Logical Reasoning', 'If-Then Structures'],
-    duration: 45
+    duration: 45,
+    locked: true
   },
   {
     id: 'image-recognition',
@@ -121,7 +123,7 @@ export const curriculumData: LessonType[] = [
     icon: 'music',
     concepts: ['Pattern Generation', 'Creative AI', 'Music Theory Basics'],
     duration: 40,
-    locked: true
+    locked: false
   },
   {
     id: 'recommendation-engine',
@@ -132,7 +134,7 @@ export const curriculumData: LessonType[] = [
     icon: 'star',
     concepts: ['Recommendation Systems', 'Personalization', 'Preference Matching'],
     duration: 50,
-    locked: true
+    locked: false
   },
   {
     id: 'translation-explorer',
@@ -143,7 +145,7 @@ export const curriculumData: LessonType[] = [
     icon: 'languages',
     concepts: ['Language Processing', 'Translation Models', 'Multilingual AI'],
     duration: 45,
-    locked: true
+    locked: false
   },
   {
     id: 'facial-expression',
@@ -154,7 +156,7 @@ export const curriculumData: LessonType[] = [
     icon: 'smile',
     concepts: ['Facial Recognition', 'Emotion Detection', 'Computer Vision'],
     duration: 60,
-    locked: true
+    locked: false
   },
   
   // Understanding Stage (13-17)
@@ -167,7 +169,7 @@ export const curriculumData: LessonType[] = [
     icon: 'database',
     concepts: ['Data Preparation', 'Data Cleaning', 'Structured vs. Unstructured Data'],
     duration: 45,
-    locked: true
+    locked: false
   },
   {
     id: 'neural-network',
@@ -178,7 +180,7 @@ export const curriculumData: LessonType[] = [
     icon: 'network',
     concepts: ['Neural Networks', 'Weights', 'Activation Functions', 'Layers'],
     duration: 60,
-    locked: true
+    locked: false
   },
   {
     id: 'reinforcement-learning',
@@ -189,7 +191,7 @@ export const curriculumData: LessonType[] = [
     icon: 'gamepad',
     concepts: ['Reinforcement Learning', 'Rewards', 'Exploration vs. Exploitation'],
     duration: 55,
-    locked: true
+    locked: false
   },
   {
     id: 'style-transfer',
@@ -200,7 +202,7 @@ export const curriculumData: LessonType[] = [
     icon: 'palette',
     concepts: ['GANs', 'Style Transfer', 'Creative AI'],
     duration: 50,
-    locked: true
+    locked: false
   },
   {
     id: 'ethical-ai',
@@ -211,7 +213,7 @@ export const curriculumData: LessonType[] = [
     icon: 'shield',
     concepts: ['AI Ethics', 'Fairness', 'Bias Detection'],
     duration: 45,
-    locked: true
+    locked: false
   },
   
   // Advanced Creation Stage (18-20)
@@ -224,7 +226,7 @@ export const curriculumData: LessonType[] = [
     icon: 'layers',
     concepts: ['System Integration', 'User Experience', 'Application Design'],
     duration: 90,
-    locked: true
+    locked: false
   },
   {
     id: 'robot-simulator',
@@ -235,7 +237,7 @@ export const curriculumData: LessonType[] = [
     icon: 'robot',
     concepts: ['Robotics', 'Spatial Awareness', 'Sensor Fusion'],
     duration: 75,
-    locked: true
+    locked: false
   },
   {
     id: 'ai-invention',
@@ -246,6 +248,6 @@ export const curriculumData: LessonType[] = [
     icon: 'bot',
     concepts: ['Project Planning', 'Problem Solving', 'Implementation'],
     duration: 120,
-    locked: true
+    locked: false
   }
 ];

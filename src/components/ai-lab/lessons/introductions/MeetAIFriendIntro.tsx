@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageSquare, Zap, Brain, Sparkles, Bot } from 'lucide-react';
+import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users } from 'lucide-react';
+import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
+import { motion } from 'framer-motion';
 
 export const MeetAIFriendIntro = () => {
   return (
@@ -17,103 +19,124 @@ export const MeetAIFriendIntro = () => {
         </div>
       </div>
 
-      <h3 className="text-lg font-medium mt-6 mb-3">What You'll Learn</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <MessageSquare className="h-5 w-5 text-blue-500 mt-0.5" />
-              <div>
-                <h4 className="font-medium mb-1">AI Communication</h4>
-                <p className="text-sm text-gray-600">Understand how AI chatbots communicate with humans through pattern recognition</p>
+      <CollapsibleSection 
+        title="What You'll Learn" 
+        icon={<BookOpen className="h-5 w-5" />}
+        defaultOpen={true}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <MessageSquare className="h-5 w-5 text-blue-500 mt-0.5" />
+                <div>
+                  <h4 className="font-medium mb-1">AI Communication</h4>
+                  <p className="text-sm text-gray-600">Understand how AI chatbots communicate with humans through pattern recognition</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Brain className="h-5 w-5 text-purple-500 mt-0.5" />
-              <div>
-                <h4 className="font-medium mb-1">AI Training</h4>
-                <p className="text-sm text-gray-600">Learn how AI systems are trained to respond in specific ways</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Brain className="h-5 w-5 text-purple-500 mt-0.5" />
+                <div>
+                  <h4 className="font-medium mb-1">AI Training</h4>
+                  <p className="text-sm text-gray-600">Learn how AI systems are trained to respond in specific ways</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-amber-500 mt-0.5" />
-              <div>
-                <h4 className="font-medium mb-1">Personality Design</h4>
-                <p className="text-sm text-gray-600">Design unique AI personalities by customizing response patterns</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Sparkles className="h-5 w-5 text-amber-500 mt-0.5" />
+                <div>
+                  <h4 className="font-medium mb-1">Personality Design</h4>
+                  <p className="text-sm text-gray-600">Design unique AI personalities by customizing response patterns</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Zap className="h-5 w-5 text-green-500 mt-0.5" />
-              <div>
-                <h4 className="font-medium mb-1">Creative Problem Solving</h4>
-                <p className="text-sm text-gray-600">Apply creative thinking to develop engaging AI interactions</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Zap className="h-5 w-5 text-green-500 mt-0.5" />
+                <div>
+                  <h4 className="font-medium mb-1">Creative Problem Solving</h4>
+                  <p className="text-sm text-gray-600">Apply creative thinking to develop engaging AI interactions</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      </CollapsibleSection>
 
-      <div className="mt-8">
-        <h3 className="text-lg font-medium mb-3">Meet Your Characters</h3>
+      <CollapsibleSection 
+        title="Meet Your Characters" 
+        icon={<Users className="h-5 w-5" />}
+        defaultOpen={true}
+      >
         <p className="mb-4">
-          In this lesson, you'll get to choose from four unique characters to train as your AI friend:
+          Choose from these amazing characters to be your AI friend! Each one has their own unique personality and way of thinking:
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-b from-red-50 to-amber-50 p-4 rounded-lg border border-red-100">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-b from-red-50 to-amber-50 p-4 rounded-lg border border-red-100 cursor-pointer transition-shadow hover:shadow-md"
+          >
             <div className="w-16 h-16 bg-red-100 rounded-full mx-auto mb-3 flex items-center justify-center">
               <span className="text-2xl font-bold text-red-500">HP</span>
             </div>
             <h4 className="text-center font-medium mb-1">Harry Potter</h4>
             <p className="text-center text-sm text-gray-600">The brave young wizard</p>
-          </div>
+          </motion.div>
           
-          <div className="bg-gradient-to-b from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-100">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-b from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-100 cursor-pointer transition-shadow hover:shadow-md"
+          >
             <div className="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-3 flex items-center justify-center">
               <span className="text-2xl font-bold text-blue-500">AE</span>
             </div>
             <h4 className="text-center font-medium mb-1">Albert Einstein</h4>
             <p className="text-center text-sm text-gray-600">The brilliant scientist</p>
-          </div>
+          </motion.div>
           
-          <div className="bg-gradient-to-b from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-100">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-b from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-100 cursor-pointer transition-shadow hover:shadow-md"
+          >
             <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-3 flex items-center justify-center">
               <span className="text-2xl font-bold text-indigo-500">K</span>
             </div>
             <h4 className="text-center font-medium mb-1">Krishna</h4>
             <p className="text-center text-sm text-gray-600">The divine guide</p>
-          </div>
+          </motion.div>
           
-          <div className="bg-gradient-to-b from-amber-50 to-yellow-50 p-4 rounded-lg border border-amber-100">
-            <div className="w-16 h-16 bg-amber-100 rounded-full mx-auto mb-3 flex items-center justify-center">
-              <span className="text-2xl font-bold text-amber-500">WS</span>
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-gradient-to-b from-yellow-50 to-orange-50 p-4 rounded-lg border border-yellow-100 cursor-pointer transition-shadow hover:shadow-md"
+          >
+            <div className="w-16 h-16 bg-yellow-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+              <span className="text-2xl font-bold text-yellow-600">WS</span>
             </div>
             <h4 className="text-center font-medium mb-1">Shakespeare</h4>
             <p className="text-center text-sm text-gray-600">The poetic playwright</p>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </CollapsibleSection>
 
-      <div className="mt-8 bg-blue-50 p-5 rounded-lg">
-        <h3 className="font-medium text-lg mb-3 text-blue-800">What You'll Create</h3>
-        <p className="text-blue-700 mb-3">
+      <div className="mt-8">
+        <h3 className="text-lg font-medium mb-3">What You'll Create</h3>
+        <p className="mb-4">
           By the end of this lesson, you'll have:
         </p>
+        
         <ul className="list-disc pl-5 space-y-2 text-blue-700">
           <li>Created your own AI friend with a unique personality</li>
           <li>Learned how to train an AI to respond in different ways</li>

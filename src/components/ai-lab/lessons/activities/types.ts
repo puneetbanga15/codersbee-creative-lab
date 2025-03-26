@@ -1,4 +1,3 @@
-
 export interface Character {
   id: string;
   name: string;
@@ -30,7 +29,7 @@ export interface Message {
 export interface TrainingProgress {
   basicComplete: boolean;
   advancedComplete: boolean;
-  currentPhase: 'selection' | 'pre-training' | 'basic' | 'feedback' | 'advanced' | 'practice' | 'summary' | 'quiz';
+  currentPhase: 'selection' | 'pre-training' | 'basic' | 'feedback' | 'advanced' | 'practice' | 'summary' | 'quiz' | 'complete';
   responses: {[key: string]: string};
 }
 
