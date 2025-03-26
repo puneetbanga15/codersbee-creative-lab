@@ -17,6 +17,9 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Log component render to help debug duplicates
+  console.log(`BuzzyAnimation rendering with state: ${state}, size: ${size}`);
+
   // Map size to dimensions
   const sizeMap = {
     sm: 'w-16 h-16',
