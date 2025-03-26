@@ -90,6 +90,10 @@ export const StudentJourneyEditor = () => {
                   {student.full_name}
                 </SelectItem>
               ))}
+              {/* Add a fallback option if no students are loaded */}
+              {(!students || students.length === 0) && (
+                <SelectItem value="no_students">No students available</SelectItem>
+              )}
             </SelectContent>
           </Select>
         </div>

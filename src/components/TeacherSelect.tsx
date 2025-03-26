@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -55,6 +56,10 @@ export const TeacherSelect = ({ form, index }: TeacherSelectProps) => {
                   {teacher.full_name}
                 </SelectItem>
               ))}
+              {/* Make sure we don't render empty items if data is still loading */}
+              {(!teachers || teachers.length === 0) && !isLoading && (
+                <SelectItem value="no_teachers">No teachers available</SelectItem>
+              )}
             </SelectContent>
           </Select>
           <FormMessage />

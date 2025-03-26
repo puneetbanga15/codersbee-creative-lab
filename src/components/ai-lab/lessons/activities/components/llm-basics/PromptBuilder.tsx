@@ -89,12 +89,11 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({ onComplete }) => {
               <SelectValue placeholder="Who should the AI act as?" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No specific role</SelectItem>
-              <SelectItem value="friendly teacher">Friendly Teacher</SelectItem>
-              <SelectItem value="science expert">Science Expert</SelectItem>
+              <SelectItem value="friendly_teacher">Friendly Teacher</SelectItem>
+              <SelectItem value="science_expert">Science Expert</SelectItem>
               <SelectItem value="storyteller">Storyteller</SelectItem>
               <SelectItem value="historian">Historian</SelectItem>
-              <SelectItem value="game designer">Game Designer</SelectItem>
+              <SelectItem value="game_designer">Game Designer</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -117,11 +116,10 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({ onComplete }) => {
               <SelectValue placeholder="Who is this explanation for?" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No specific audience</SelectItem>
-              <SelectItem value="a 7-year-old">a 7-year-old</SelectItem>
-              <SelectItem value="a 10-year-old">a 10-year-old</SelectItem>
-              <SelectItem value="a beginner">a beginner</SelectItem>
-              <SelectItem value="someone who knows nothing about the topic">someone who knows nothing about the topic</SelectItem>
+              <SelectItem value="seven_year_old">a 7-year-old</SelectItem>
+              <SelectItem value="ten_year_old">a 10-year-old</SelectItem>
+              <SelectItem value="beginner">a beginner</SelectItem>
+              <SelectItem value="complete_novice">someone who knows nothing about the topic</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -133,12 +131,11 @@ export const PromptBuilder: React.FC<PromptBuilderProps> = ({ onComplete }) => {
               <SelectValue placeholder="How should the information be structured?" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No specific format</SelectItem>
-              <SelectItem value="a simple 3-step guide">a simple 3-step guide</SelectItem>
-              <SelectItem value="5 interesting facts">5 interesting facts</SelectItem>
-              <SelectItem value="a short story">a short story</SelectItem>
-              <SelectItem value="a question and answer format">a question and answer format</SelectItem>
-              <SelectItem value="examples and analogies">examples and analogies</SelectItem>
+              <SelectItem value="three_step_guide">a simple 3-step guide</SelectItem>
+              <SelectItem value="five_facts">5 interesting facts</SelectItem>
+              <SelectItem value="short_story">a short story</SelectItem>
+              <SelectItem value="q_and_a">a question and answer format</SelectItem>
+              <SelectItem value="examples_analogies">examples and analogies</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,8 @@ export const AddPaymentTrackingDialog = ({
               <SelectContent>
                 <SelectItem value="paypal">PayPal</SelectItem>
                 <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+                <SelectItem value="card">Credit/Debit Card</SelectItem>
+                <SelectItem value="cash">Cash</SelectItem>
               </SelectContent>
             </Select>
           </div>
