@@ -182,23 +182,16 @@ export const MeetAIFriendTutorial = () => {
       title: "What is an AI Friend?",
       content: (
         <div className="space-y-4">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center">
-              <Bot className="h-16 w-16 text-purple-500" />
-            </div>
-          </div>
           <p className="text-center text-lg">
             An AI Friend is like a digital buddy that can talk with you!
           </p>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="bg-amber-50 p-3 rounded-lg border border-amber-100 flex flex-col items-center">
-              <Zap className="h-8 w-8 text-amber-500 mb-2" />
               <p className="text-center text-sm">
                 It learns from examples you give it
               </p>
             </div>
             <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 flex flex-col items-center">
-              <MessageSquare className="h-8 w-8 text-blue-500 mb-2" />
               <p className="text-center text-sm">
                 It responds like it's having a conversation
               </p>
@@ -242,44 +235,51 @@ export const MeetAIFriendTutorial = () => {
     {
       title: "Training Your AI Friend",
       content: (
-        <div className="space-y-4">
-          <p className="text-gray-800">
-            Training an AI Friend is like teaching a pet tricks! You show examples of what to do, and they learn to copy it.
-          </p>
-          
-          <div className="bg-green-50 p-4 rounded-lg border border-green-100 mb-4">
-            <h3 className="font-semibold text-green-800 mb-2">How Training Works:</h3>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <span className="text-green-800 text-sm font-bold">1</span>
-                </div>
-                <div>
-                  <p className="text-green-800 font-medium">Give Examples</p>
-                  <p className="text-sm text-green-700">Show your AI Friend how to respond to different questions</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <span className="text-green-800 text-sm font-bold">2</span>
-                </div>
-                <div>
-                  <p className="text-green-800 font-medium">Pattern Recognition</p>
-                  <p className="text-sm text-green-700">Your AI Friend learns patterns from your examples</p>
+        <div className="space-y-4 mt-2">
+          <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg border border-green-100">
+            <h3 className="font-semibold text-green-800 mb-3 text-center">How AI Training Works</h3>
+            
+            <div className="space-y-4">
+              <div className="bg-white p-3 rounded-lg border border-green-100 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="bg-green-100 rounded-full w-7 h-7 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <span className="text-green-800 text-sm font-bold">1</span>
+                  </div>
+                  <div>
+                    <p className="text-green-800 font-medium">Give Examples</p>
+                    <p className="text-sm text-gray-600">Show your AI Friend how to respond to different questions</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex items-start gap-3">
-                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <span className="text-green-800 text-sm font-bold">3</span>
+              <div className="bg-white p-3 rounded-lg border border-green-100 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="bg-green-100 rounded-full w-7 h-7 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <span className="text-green-800 text-sm font-bold">2</span>
+                  </div>
+                  <div>
+                    <p className="text-green-800 font-medium">Pattern Recognition</p>
+                    <p className="text-sm text-gray-600">Your AI Friend learns patterns from your examples</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-green-800 font-medium">Test It Out</p>
-                  <p className="text-sm text-green-700">Try talking to your AI Friend to see what it learned</p>
+              </div>
+              
+              <div className="bg-white p-3 rounded-lg border border-green-100 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="bg-green-100 rounded-full w-7 h-7 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <span className="text-green-800 text-sm font-bold">3</span>
+                  </div>
+                  <div>
+                    <p className="text-green-800 font-medium">Test It Out</p>
+                    <p className="text-sm text-gray-600">Try talking to your AI Friend to see what it learned</p>
+                  </div>
                 </div>
               </div>
             </div>
+            
+            <p className="text-center text-sm text-gray-600 mt-4">
+              Just like teaching a pet tricks, your AI Friend learns by example!
+            </p>
           </div>
         </div>
       ),
@@ -290,23 +290,6 @@ export const MeetAIFriendTutorial = () => {
       title: "Different AI Personalities",
       content: (
         <div className="space-y-4">
-          <div className="flex justify-center mb-4">
-            <div className="grid grid-cols-2 gap-2">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                <span className="font-bold text-red-500">HP</span>
-              </div>
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="font-bold text-blue-500">AE</span>
-              </div>
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="font-bold text-green-500">K</span>
-              </div>
-              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
-                <span className="font-bold text-amber-500">WS</span>
-              </div>
-            </div>
-          </div>
-          
           <p className="text-center">
             AI Friends can have different personalities!
           </p>
@@ -338,9 +321,6 @@ export const MeetAIFriendTutorial = () => {
       title: "Let's Get Started!",
       content: (
         <div className="flex flex-col items-center justify-center h-full space-y-6">
-          <div className="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center">
-            <Sparkles className="h-16 w-16 text-purple-500" />
-          </div>
           <h3 className="text-xl font-bold text-center text-purple-700">
             Ready to create your AI Friend?
           </h3>
