@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Loader2 } from 'lucide-react';
@@ -38,7 +37,7 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
         const { data, error } = await supabase
           .storage
           .from('documents')
-          .createSignedUrl(`/buzzy-animations/${fileName}`, 60 * 60); // 1 hour expiry
+          .createSignedUrl(`buzzy-animations/${fileName}`, 60 * 60); // 1 hour expiry
 
         if (error) {
           console.error('Error fetching Buzzy animation:', error);
@@ -48,7 +47,7 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
           const { data: imageData } = await supabase
             .storage
             .from('documents')
-            .createSignedUrl('/buzzy-fallback.png', 60 * 60);
+            .createSignedUrl('buzzy-fallback.png', 60 * 60);
             
           if (imageData?.signedUrl) {
             setVideoUrl(null);
