@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,6 +9,7 @@ import { ProjectsGrid } from "@/components/ai-lab/projects/ProjectsGrid";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BuzzyCornerHelper } from '@/components/ai-lab/ui/BuzzyCornerHelper';
 
 const AILab = () => {
   const navigate = useNavigate();
@@ -97,6 +99,7 @@ const AILab = () => {
         </Routes>
       </main>
       
+      <BuzzyCornerHelper />
       <Footer />
     </>
   );

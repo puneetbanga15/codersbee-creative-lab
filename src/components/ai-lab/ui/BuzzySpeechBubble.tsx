@@ -2,6 +2,7 @@
 import React from 'react';
 import { BuzzyAnimation } from './BuzzyAnimation';
 import { motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 interface BuzzySpeechBubbleProps {
   message: string;
@@ -49,8 +50,9 @@ export const BuzzySpeechBubble: React.FC<BuzzySpeechBubbleProps> = ({
           <button 
             onClick={onClose}
             className="absolute top-1 right-1 text-gray-400 hover:text-gray-600 rounded-full w-5 h-5 flex items-center justify-center"
+            aria-label="Close"
           >
-            ×
+            <X className="h-3 w-3" />
           </button>
         )}
         

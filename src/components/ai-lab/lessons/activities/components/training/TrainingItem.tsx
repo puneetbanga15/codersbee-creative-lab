@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Lightbulb, MessageSquare } from 'lucide-react';
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TrainingItemProps {
@@ -29,12 +31,14 @@ export const TrainingItem = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showBuzzyTip, setShowBuzzyTip] = useState(false);
+  const [buzzyState, setBuzzyState] = useState<'default' | 'thinking' | 'excited' | 'teaching' | 'encouraging'>('default');
   const supabase = useSupabaseClient();
 
   const fetchSuggestions = async () => {
     setIsLoadingSuggestions(true);
     setError('');
     setShowBuzzyTip(true);
+    setBuzzyState('thinking');
     
     try {
       // Create a prompt for better suggestions
@@ -61,6 +65,7 @@ export const TrainingItem = ({
           const suggestionText = data.answer;
           parseAndSetSuggestions(suggestionText);
           setShowingBuzzySuggestions(true);
+          setBuzzyState('teaching');
           return;
         }
       } catch (supabaseError) {
@@ -94,6 +99,7 @@ export const TrainingItem = ({
       
       parseAndSetSuggestions(suggestionText);
       setShowingBuzzySuggestions(true);
+      setBuzzyState('teaching');
       
     } catch (err) {
       console.error('Error fetching suggestions:', err);
@@ -109,6 +115,7 @@ export const TrainingItem = ({
         ];
         setSuggestions(specialFallback);
         setShowingBuzzySuggestions(true);
+        setBuzzyState('excited');
         return;
       }
       
@@ -116,6 +123,7 @@ export const TrainingItem = ({
       const fallbackSuggestions = getCharacterSpecificSuggestions(characterName, question);
       setSuggestions(fallbackSuggestions);
       setShowingBuzzySuggestions(true);
+      setBuzzyState('encouraging');
     } finally {
       setIsLoadingSuggestions(false);
       // Keep Buzzy tip visible for a few seconds
@@ -164,6 +172,8 @@ export const TrainingItem = ({
   const handleSuggestionClick = (suggestion: string) => {
     onResponseChange(suggestion);
     setShowingBuzzySuggestions(false);
+    setBuzzyState('excited');
+    setTimeout(() => setBuzzyState('default'), 2000);
     toast.success("Response added to your training!", { duration: 2000 });
   };
 
@@ -204,7 +214,7 @@ export const TrainingItem = ({
           ) : (
             <div className="bg-purple-50 p-3 rounded-lg border border-purple-100">
               <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="h-4 w-4 text-purple-600" />
+                <BuzzyAnimation state={buzzyState} size="sm" />
                 <h4 className="font-medium text-sm text-purple-700">Buzzy's Suggestions:</h4>
               </div>
               

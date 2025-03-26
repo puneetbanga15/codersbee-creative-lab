@@ -43,6 +43,19 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
         if (error) {
           console.error('Error fetching Buzzy animation:', error);
           setError('Could not load animation');
+          
+          // Try with a fallback image if video fails
+          const { data: imageData } = await supabase
+            .storage
+            .from('documents')
+            .createSignedUrl('/buzzy-fallback.png', 60 * 60);
+            
+          if (imageData?.signedUrl) {
+            setVideoUrl(null);
+            setError(null);
+          } else {
+            setError('Failed to load animation');
+          }
           setIsLoading(false);
           return;
         }
@@ -71,11 +84,11 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
   if (error || !videoUrl) {
     // Fallback to static image
     return (
-      <div className={`${sizeMap[size]} ${className}`}>
+      <div className={`${sizeMap[size]} ${className} bg-purple-100 rounded-full flex items-center justify-center`}>
         <img 
-          src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
+          src="/lovable-uploads/9c4efcb6-761f-4ff5-ac63-613a99070c8b.png" 
           alt={`Buzzy the bee - ${state}`}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain p-2"
         />
       </div>
     );
