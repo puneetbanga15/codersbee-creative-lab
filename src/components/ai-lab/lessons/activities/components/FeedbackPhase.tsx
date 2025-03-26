@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Character } from '../types';
 import { Lightbulb } from 'lucide-react';
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
 
 // Helper function for character-specific feedback suggestions
 const getCharacterSpecificFeedbackSuggestions = (characterName: string): string[] => {
@@ -42,6 +44,7 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
   const [feedback, setFeedback] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const supabase = useSupabaseClient();
   
   useEffect(() => {
     fetchBuzzySuggestions();
@@ -56,19 +59,42 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
       What are 3 specific things I should teach the ${character.name} AI character next to make it more realistic and authentic? 
       
       Format each suggestion as a separate numbered item (1., 2., 3.) with 1-2 sentences explaining why it would enhance the character.`;
+
+      // First try using the Supabase client
+      try {
+        const { data, error } = await supabase.functions.invoke('chat-with-buzzy', {
+          body: {
+            message: prompt,
+            conversationHistory: [
+              { role: 'system', content: 'You are Buzzy, a helpful AI assistant for kids learning about AI training.' },
+              { role: 'user', content: prompt }
+            ]
+          }
+        });
+        
+        if (error) throw new Error(`Supabase edge function error: ${error.message}`);
+        
+        if (data?.answer) {
+          const suggestionText = data.answer;
+          parseAndSetSuggestions(suggestionText);
+          return;
+        }
+      } catch (supabaseError) {
+        console.warn('Supabase edge function failed, trying direct fetch:', supabaseError);
+        // Continue to fallback approach
+      }
       
+      // Fallback: Try direct fetch as a backup
       const response = await fetch('https://lovable-bee.functions.supabase.co/chat-with-buzzy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: prompt,
-          conversationHistory: [
-            { role: 'system', content: 'You are Buzzy, a helpful AI assistant for kids learning about AI training.' },
-            { role: 'user', content: prompt }
-          ]
+          message: prompt
         }),
+        // Shorter timeout to fail faster
+        signal: AbortSignal.timeout(5000)
       });
       
       if (!response.ok) {
@@ -76,49 +102,66 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
       }
       
       const data = await response.json();
-      
       const suggestionText = data.answer || '';
       
       if (!suggestionText) {
         throw new Error("Empty response from API");
       }
       
-      // Try to match numbered list format (1., 2., 3.)
-      const numberedMatches = suggestionText.match(/(?:\d+[\.\)]\s*)(.*?)(?=\d+[\.\)]|$)/gs);
+      parseAndSetSuggestions(suggestionText);
       
-      let suggestionList: string[] = [];
-      
-      if (numberedMatches && numberedMatches.length > 0) {
-        suggestionList = numberedMatches
-          .map(match => match.replace(/^\d+[\.\)]\s*/, '').trim())
-          .filter(s => s.length > 0);
-      } else {
-        // Fallback: split by paragraphs
-        suggestionList = suggestionText
-          .split(/\n\n/)
-          .filter(s => s.trim().length > 0)
-          .map(s => s.trim());
-      }
-      
-      // If we still couldn't parse any suggestions, provide character-specific fallbacks
-      if (suggestionList.length < 2) {
-        suggestionList = getCharacterSpecificFeedbackSuggestions(character.name);
-      }
-      
-      setSuggestions(suggestionList);
     } catch (err) {
       console.error('Error getting Buzzy suggestions:', err);
       
       // Provide character-specific fallback suggestions
       const fallbackSuggestions = getCharacterSpecificFeedbackSuggestions(character.name);
       setSuggestions(fallbackSuggestions);
+      toast.error("Couldn't connect to Buzzy. Using default suggestions instead.", { 
+        duration: 3000,
+        id: "buzzy-fallback-notification"
+      });
     } finally {
       setIsLoading(false);
     }
   };
   
+  const parseAndSetSuggestions = (suggestionText: string) => {
+    // Try to match numbered list format (1., 2., 3.)
+    const numberedMatches = suggestionText.match(/(?:\d+[\.\)]\s*)(.*?)(?=\d+[\.\)]|$)/gs);
+    
+    let suggestionList: string[] = [];
+    
+    if (numberedMatches && numberedMatches.length > 0) {
+      suggestionList = numberedMatches
+        .map(match => match.replace(/^\d+[\.\)]\s*/, '').trim())
+        .filter(s => s.length > 0);
+    } else {
+      // Fallback: split by paragraphs
+      suggestionList = suggestionText
+        .split(/\n\n/)
+        .filter(s => s.trim().length > 0)
+        .map(s => s.trim());
+    }
+    
+    // If still couldn't parse suggestions, try splitting by new lines
+    if (suggestionList.length < 2) {
+      suggestionList = suggestionText
+        .split(/\n/)
+        .filter(s => s.trim().length > 0 && !s.trim().match(/^\d+[\.\)]$/))
+        .map(s => s.trim());
+    }
+    
+    // If we still couldn't parse any suggestions, provide character-specific fallbacks
+    if (suggestionList.length < 2) {
+      suggestionList = getCharacterSpecificFeedbackSuggestions(character.name);
+    }
+    
+    setSuggestions(suggestionList.slice(0, 3)); // Limit to max 3 suggestions
+  };
+  
   const handleSuggestionClick = (suggestion: string) => {
     setFeedback(suggestion);
+    toast.success("Suggestion selected!", { duration: 2000 });
   };
   
   return (

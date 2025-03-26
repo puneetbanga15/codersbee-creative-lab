@@ -35,11 +35,21 @@ export async function processMessage(
   }
 
   // *** IMPORTANT: Always provide a fallback response for AI training cases ***
-  if (message.includes("I'm training an AI") || message.includes("training phase")) {
+  if (message.includes("I'm training an AI") || message.includes("training phase") || message.includes("training question")) {
+    // Detect Harry Potter and specific questions
+    if (message.includes("Harry Potter") && message.includes("favorite subject at Hogwarts")) {
+      const trainingResponse = "Here are some suggestions for Harry Potter answering about his favorite subject:\n\n" +
+        "1. \"Defense Against the Dark Arts! It's challenging but so practical. I've learned spells there that have helped me face Voldemort more than once.\"\n\n" +
+        "2. \"Probably flying lessons, honestly. When I'm on a broomstick, I feel completely free - it's the one place where I forget about being 'The Boy Who Lived'.\"\n\n" +
+        "3. \"I'd have to say Defense Against the Dark Arts, though Hagrid's Care of Magical Creatures is brilliant too. I just wish we had different professors for Defense every year!\"";
+      return { answer: trainingResponse };
+    }
+    
+    // General AI training fallback
     const trainingResponse = "Here are some suggestions for your AI character:\n\n" +
-      "1. \"Defense Against the Dark Arts! It's challenging but so practical. I've learned spells there that have helped me face Voldemort more than once.\"\n\n" +
-      "2. \"Probably flying lessons, honestly. When I'm on a broomstick, I feel completely free - it's the one place where I forget about being 'The Boy Who Lived'.\"\n\n" +
-      "3. \"I'd have to say Defense Against the Dark Arts, though Hagrid's Care of Magical Creatures is brilliant too. I just wish we had different professors for Defense every year!\"";
+      "1. \"I find that question really interesting because it touches on my core values. Based on my experiences, I would say...\"\n\n" +
+      "2. \"That's something I've thought about a lot throughout my journey. From my perspective...\"\n\n" +
+      "3. \"If I were to answer honestly, I'd have to consider both what I've been through and what I believe in. I think...\"";
     return { answer: trainingResponse };
   }
 
