@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { PromptPractice } from './components/llm-basics/PromptPractice';
 import { PromptComparison } from './components/llm-basics/PromptComparison';
 import { PromptBuilder } from './components/llm-basics/PromptBuilder';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
+import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const LLMBasicsActivityWrapper: React.FC = () => {
@@ -17,7 +19,21 @@ export const LLMBasicsActivityWrapper: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [chatHistory, setChatHistory] = useState<Array<{type: 'user' | 'ai', message: string}>>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [showBuzzyTip, setShowBuzzyTip] = useState(true);
   
+  // Buzzy animation states and messages for different tabs
+  const buzzyStates = {
+    "prompt-practice": "teaching",
+    "prompt-comparison": "thinking",
+    "prompt-builder": "excited"
+  };
+  
+  const buzzyMessages = {
+    "prompt-practice": "Welcome to Prompt Practice! Try different prompts to see how the AI responds. Remember, being specific helps the AI understand what you want.",
+    "prompt-comparison": "In this section, you can compare different prompts side by side. Notice how small changes in wording can lead to very different results!",
+    "prompt-builder": "Build your own prompts using the template blocks. This is a great way to learn structured prompt engineering!"
+  };
+
   const markComplete = (section: string) => {
     if (!completedSections.includes(section)) {
       setCompletedSections([...completedSections, section]);
@@ -49,17 +65,31 @@ export const LLMBasicsActivityWrapper: React.FC = () => {
         <h1 className="text-2xl font-bold text-purple-900 mb-3">
           Prompt Engineering Practice
         </h1>
-        <p className="text-purple-700 mb-4">
-          Now it's time to practice what you've learned about large language models and 
-          prompt engineering. Let's try creating and improving prompts!
+        <p className="text-purple-800">
+          Learn how to communicate effectively with AI by practicing different prompting techniques.
         </p>
         
-        <Alert className="bg-blue-50 border-blue-200 mb-4">
-          <AlertDescription className="text-blue-800">
-            The activities below will help you learn how to create effective prompts 
-            for AI systems like ChatGPT, Claude, and other large language models.
-          </AlertDescription>
-        </Alert>
+        <AnimatePresence>
+          {showBuzzyTip && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-4 flex items-start gap-4"
+            >
+              <BuzzyAnimation 
+                state={buzzyStates[activeTab] as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
+              <BuzzySpeechBubble 
+                message={buzzyMessages[activeTab]}
+                state={buzzyStates[activeTab] as any}
+                onClose={() => setShowBuzzyTip(false)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <CollapsibleSection

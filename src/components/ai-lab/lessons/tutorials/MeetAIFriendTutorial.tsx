@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Zap, Brain, Bot, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageSquare, Zap, Brain, Bot, Sparkles, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
+import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
 // AI Brain Canvas Component
 const AIBrainCanvas = () => {
@@ -173,6 +175,7 @@ const AIBrainCanvas = () => {
 
 export const MeetAIFriendTutorial = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showBuzzy, setShowBuzzy] = useState(true);
   
   const slides = [
     {
@@ -203,7 +206,9 @@ export const MeetAIFriendTutorial = () => {
             </div>
           </div>
         </div>
-      )
+      ),
+      buzzyMessage: "Hi there! I'm Buzzy, and I'm excited to teach you about AI Friends! AI Friends are like digital buddies that can talk with you.",
+      buzzyState: "teaching"
     },
     {
       title: "How AI Friends Work",
@@ -232,7 +237,9 @@ export const MeetAIFriendTutorial = () => {
             <p className="text-sm">They don't really understand like humans, but they seem real!</p>
           </div>
         </div>
-      )
+      ),
+      buzzyMessage: "When you talk to an AI Friend like me, I process your words, understand what you're asking, and create a response. It's like a conversation, but with a computer!",
+      buzzyState: "default"
     },
     {
       title: "Training Your AI Friend",
@@ -294,7 +301,9 @@ export const MeetAIFriendTutorial = () => {
             </div>
           </div>
         </div>
-      )
+      ),
+      buzzyMessage: "Training an AI Friend is like teaching a pet tricks! You show examples of what to do, and they learn to copy it.",
+      buzzyState: "teaching"
     },
     {
       title: "Different AI Personalities",
@@ -341,7 +350,9 @@ export const MeetAIFriendTutorial = () => {
             </div>
           </div>
         </div>
-      )
+      ),
+      buzzyMessage: "AI Friends can have different personalities! They can be magical, brave, and loyal, or smart, curious, and thoughtful.",
+      buzzyState: "default"
     },
     {
       title: "Let's Get Started!",
@@ -358,68 +369,74 @@ export const MeetAIFriendTutorial = () => {
             Click "Start Activity" to begin your AI adventure!
           </p>
         </div>
-      )
+      ),
+      buzzyMessage: "Ready to create your AI Friend? Click 'Start Activity' to begin your AI adventure!",
+      buzzyState: "teaching"
     }
   ];
-  
-  const nextSlide = () => {
-    setCurrentSlide(prev => (prev === slides.length - 1 ? prev : prev + 1));
+
+  const handleNext = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1);
+      setShowBuzzy(true);
+    }
   };
-  
-  const prevSlide = () => {
-    setCurrentSlide(prev => (prev === 0 ? prev : prev - 1));
+
+  const handlePrev = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+      setShowBuzzy(true);
+    }
   };
-  
+
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            {slides[currentSlide].icon}
-            {slides[currentSlide].title}
-          </h2>
-          <div className="text-sm text-gray-500">
-            {currentSlide + 1} / {slides.length}
-          </div>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4">
+          <h2 className="text-xl font-bold text-purple-900">Meet Your AI Friend</h2>
+          <p className="text-sm text-purple-700">Tutorial {currentSlide + 1} of {slides.length}</p>
         </div>
         
-        <div className="min-h-[300px] flex items-center justify-center">
-          {slides[currentSlide].content}
-        </div>
-        
-        <div className="flex justify-between items-center mt-8">
-          <Button 
-            variant="outline" 
-            onClick={prevSlide}
-            disabled={currentSlide === 0}
-            className="flex items-center gap-1"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Back
-          </Button>
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold mb-4">{slides[currentSlide].title}</h3>
           
-          <div className="flex gap-1">
-            {slides.map((_, index) => (
-              <div 
-                key={index} 
-                className={`w-2 h-2 rounded-full ${
-                  index === currentSlide ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-                onClick={() => setCurrentSlide(index)}
+          {showBuzzy && (
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={slides[currentSlide].buzzyState as any} 
+                size="md" 
+                className="flex-shrink-0" 
               />
-            ))}
-          </div>
+              <BuzzySpeechBubble 
+                message={slides[currentSlide].buzzyMessage}
+                state={slides[currentSlide].buzzyState as any}
+                onClose={() => setShowBuzzy(false)}
+              />
+            </div>
+          )}
           
-          <Button 
-            onClick={nextSlide}
-            disabled={currentSlide === slides.length - 1}
-            className="flex items-center gap-1"
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+          {slides[currentSlide].content}
+          
+          <div className="flex justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={handlePrev}
+              disabled={currentSlide === 0}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="h-4 w-4" /> Previous
+            </Button>
+            
+            <Button
+              onClick={handleNext}
+              disabled={currentSlide === slides.length - 1}
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+            >
+              Next <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

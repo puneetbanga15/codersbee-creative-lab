@@ -1,16 +1,43 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight, Brain, MessageSquare, Lightbulb, Shield } from 'lucide-react';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
+import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
 export const LLMBasicsTutorial: React.FC = () => {
   const [activeTab, setActiveTab] = useState("how-llms-work");
+  const [showBuzzy, setShowBuzzy] = useState(true);
+  
+  // Buzzy messages and states for each tab
+  const buzzyContent = {
+    "how-llms-work": {
+      message: "Let me explain how Large Language Models work! These are special AI systems that understand and generate human language.",
+      state: "teaching"
+    },
+    "prompt-engineering": {
+      message: "Prompt engineering is all about how to talk to AI effectively. It's like knowing the right questions to ask!",
+      state: "default"
+    },
+    "example-prompts": {
+      message: "Here are some examples of good prompts. Notice how they're specific and clear about what they want the AI to do!",
+      state: "excited"
+    },
+    "ai-tools": {
+      message: "AI tools are powerful, but we need to use them responsibly. Let me show you how to use AI safely!",
+      state: "thinking"
+    }
+  };
+  
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setShowBuzzy(true);
+  };
   
   return (
     <div className="space-y-6">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="how-llms-work" className="flex items-center gap-2">
             <Brain className="h-4 w-4" />
@@ -31,18 +58,74 @@ export const LLMBasicsTutorial: React.FC = () => {
         </TabsList>
         
         <TabsContent value="how-llms-work" className="mt-4">
+          {showBuzzy && (
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={buzzyContent[activeTab].state as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
+              <BuzzySpeechBubble 
+                message={buzzyContent[activeTab].message}
+                state={buzzyContent[activeTab].state as any}
+                onClose={() => setShowBuzzy(false)}
+              />
+            </div>
+          )}
           <HowLLMsWorkSlides />
         </TabsContent>
         
         <TabsContent value="prompt-engineering" className="mt-4">
+          {showBuzzy && (
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={buzzyContent[activeTab].state as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
+              <BuzzySpeechBubble 
+                message={buzzyContent[activeTab].message}
+                state={buzzyContent[activeTab].state as any}
+                onClose={() => setShowBuzzy(false)}
+              />
+            </div>
+          )}
           <PromptEngineeringSlides />
         </TabsContent>
         
         <TabsContent value="example-prompts" className="mt-4">
+          {showBuzzy && (
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={buzzyContent[activeTab].state as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
+              <BuzzySpeechBubble 
+                message={buzzyContent[activeTab].message}
+                state={buzzyContent[activeTab].state as any}
+                onClose={() => setShowBuzzy(false)}
+              />
+            </div>
+          )}
           <ExamplePromptsSlides />
         </TabsContent>
         
         <TabsContent value="ai-tools" className="mt-4">
+          {showBuzzy && (
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={buzzyContent[activeTab].state as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
+              <BuzzySpeechBubble 
+                message={buzzyContent[activeTab].message}
+                state={buzzyContent[activeTab].state as any}
+                onClose={() => setShowBuzzy(false)}
+              />
+            </div>
+          )}
           <AIToolsSlides />
         </TabsContent>
       </Tabs>

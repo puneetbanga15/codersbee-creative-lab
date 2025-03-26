@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { useAIFriendActivity } from './useAIFriendActivity';
@@ -11,6 +10,7 @@ import { SummaryPhase } from './components/SummaryPhase';
 import { HeroSection } from './components/HeroSection';
 import { ProgressBar } from './components/ProgressBar';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const MeetAIFriendActivityWrapper: React.FC = () => {
@@ -29,6 +29,18 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
 
   const [showBuzzyTip, setShowBuzzyTip] = useState(true);
   
+  // Buzzy animation states for different phases
+  const buzzyAnimationStates = {
+    selection: 'default',
+    'pre-training': 'teaching',
+    basic: 'encouraging',
+    advanced: 'thinking',
+    feedback: 'excited',
+    practice: 'default',
+    summary: 'teaching',
+    quiz: 'encouraging'
+  };
+
   // Messages for Buzzy to show based on current phase
   const buzzyMessages = {
     selection: "Welcome to the AI Friend activity! Choose a character you want to train. Each character has their own personality and knowledge.",
@@ -99,55 +111,46 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
     }
   };
 
-  // Determine Buzzy's state based on current phase
-  const getBuzzyState = () => {
-    switch (progress.currentPhase) {
-      case 'basic':
-      case 'advanced':
-        return 'teaching';
-      case 'feedback':
-        return 'thinking';
-      case 'practice':
-        return 'excited';
-      case 'summary':
-      case 'quiz':
-        return 'encouraging';
-      default:
-        return 'default';
-    }
-  };
-
   return (
     <div className="space-y-6">
       <HeroSection />
       
-      <ProgressBar 
-        currentPhase={progress.currentPhase}
-        basicComplete={progress.basicComplete}
-        advancedComplete={progress.advancedComplete}
-      />
-      
-      <AnimatePresence>
-        {showBuzzyTip && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="mb-4"
-          >
-            <BuzzySpeechBubble
-              message={buzzyMessages[progress.currentPhase]}
-              state={getBuzzyState()}
-              size="md"
-              onClose={() => setShowBuzzyTip(false)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      <Card className="p-6">
-        {renderCurrentPhase()}
-      </Card>
+      <div className="flex flex-col items-center justify-center space-y-6 p-6">
+        <ProgressBar 
+          currentPhase={progress.currentPhase}
+          basicComplete={progress.basicComplete}
+          advancedComplete={progress.advancedComplete}
+        />
+        
+        <AnimatePresence>
+          {showBuzzyTip && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="w-full max-w-xl mb-4"
+            >
+              <div className="flex items-start gap-4">
+                <BuzzyAnimation 
+                  state={buzzyAnimationStates[progress.currentPhase] as any} 
+                  size="md" 
+                  className="flex-shrink-0" 
+                />
+                <BuzzySpeechBubble 
+                  message={buzzyMessages[progress.currentPhase]}
+                  state={buzzyAnimationStates[progress.currentPhase] as any}
+                  onClose={() => setShowBuzzyTip(false)}
+                >
+                </BuzzySpeechBubble>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <Card className="p-6">
+          {renderCurrentPhase()}
+        </Card>
+      </div>
     </div>
   );
 };
