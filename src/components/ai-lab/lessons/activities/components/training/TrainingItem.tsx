@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Lightbulb, MessageSquare } from 'lucide-react';
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TrainingItemProps {
   question: string;
@@ -27,18 +28,20 @@ export const TrainingItem = ({
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [showBuzzyTip, setShowBuzzyTip] = useState(false);
   const supabase = useSupabaseClient();
 
   const fetchSuggestions = async () => {
     setIsLoadingSuggestions(true);
     setError('');
+    setShowBuzzyTip(true);
     
     try {
       // Create a prompt for better suggestions
       const prompt = `I'm training an AI to respond like ${characterName}. The character is ${characterName} who is ${characterPersonality.join(', ')}. 
       The current question is: "${question}" 
       
-      Give me 3 different ways ${characterName} might answer this question. Make the answers authentic to the character, about 1-3 sentences each.`;
+      Give me 3 different ways ${characterName} might answer this question. Make the answers authentic to the character, about 1-3 sentences each. Use simple, kid-friendly language.`;
       
       // First try the Supabase edge function
       try {
@@ -115,6 +118,10 @@ export const TrainingItem = ({
       setShowingBuzzySuggestions(true);
     } finally {
       setIsLoadingSuggestions(false);
+      // Keep Buzzy tip visible for a few seconds
+      setTimeout(() => {
+        setShowBuzzyTip(false);
+      }, 5000);
     }
   };
 
@@ -207,13 +214,16 @@ export const TrainingItem = ({
               
               <div className="space-y-2">
                 {suggestions.map((suggestion, index) => (
-                  <div 
+                  <motion.div 
                     key={index}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     onClick={() => handleSuggestionClick(suggestion)}
                     className="bg-white p-2 rounded border border-purple-100 text-sm cursor-pointer hover:bg-purple-100 transition-colors"
                   >
                     {suggestion}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
               
@@ -228,6 +238,24 @@ export const TrainingItem = ({
             </div>
           )}
         </div>
+        
+        <AnimatePresence>
+          {showBuzzyTip && isLoadingSuggestions && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-3"
+            >
+              <BuzzySpeechBubble
+                message="I'm thinking about how this character would respond! Remember that good AI training means capturing their unique personality and way of talking."
+                state="thinking"
+                size="sm"
+                onClose={() => setShowBuzzyTip(false)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

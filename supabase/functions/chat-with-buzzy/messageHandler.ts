@@ -38,18 +38,18 @@ export async function processMessage(
   if (message.includes("I'm training an AI") || message.includes("training phase") || message.includes("training question")) {
     // Detect Harry Potter and specific questions
     if (message.includes("Harry Potter") && message.includes("favorite subject at Hogwarts")) {
-      const trainingResponse = "Here are some suggestions for Harry Potter answering about his favorite subject:\n\n" +
-        "1. \"Defense Against the Dark Arts! It's challenging but so practical. I've learned spells there that have helped me face Voldemort more than once.\"\n\n" +
-        "2. \"Probably flying lessons, honestly. When I'm on a broomstick, I feel completely free - it's the one place where I forget about being 'The Boy Who Lived'.\"\n\n" +
-        "3. \"I'd have to say Defense Against the Dark Arts, though Hagrid's Care of Magical Creatures is brilliant too. I just wish we had different professors for Defense every year!\"";
+      const trainingResponse = "Here are some kid-friendly suggestions for Harry Potter answering about his favorite subject:\n\n" +
+        "1. \"Defense Against the Dark Arts is my favorite! Professor Lupin taught me how to make a Patronus, which helped me fight Dementors. It's like learning real magic tricks to protect yourself!\"\n\n" +
+        "2. \"I love flying lessons the most! When I'm zooming around on my Nimbus 2000, I feel so free and happy. It's like the best playground game ever, but in the air!\"\n\n" +
+        "3. \"Even though Professor Snape can be mean sometimes, I've learned a lot in Potions class. It's like cooking, but the recipes make magical things happen!\"";
       return { answer: trainingResponse };
     }
     
-    // General AI training fallback
-    const trainingResponse = "Here are some suggestions for your AI character:\n\n" +
-      "1. \"I find that question really interesting because it touches on my core values. Based on my experiences, I would say...\"\n\n" +
-      "2. \"That's something I've thought about a lot throughout my journey. From my perspective...\"\n\n" +
-      "3. \"If I were to answer honestly, I'd have to consider both what I've been through and what I believe in. I think...\"";
+    // General AI training fallback with kid-friendly language
+    const trainingResponse = "Here are some fun suggestions for your AI character that kids will understand:\n\n" +
+      "1. \"That's a great question! I think about this a lot. Here's what I believe...\"\n\n" +
+      "2. \"Let me share a story about that! One time, I experienced something similar when...\"\n\n" +
+      "3. \"I've learned that the most important thing about this is... because it helped me when...\"";
     return { answer: trainingResponse };
   }
 
@@ -83,14 +83,16 @@ export async function processMessage(
     if (isChildQuestion) {
       messages.push({ 
         role: 'user', 
-        content: message + "\n\n[Note: This appears to be a child asking. Please respond accordingly with simpler language and enthusiasm.]" 
+        content: message + "\n\n[Note: This appears to be a child asking. Please use simple words, short sentences, fun examples, and an enthusiastic tone. Add emojis occasionally. Explain concepts like you're talking to an 8-year-old.]" 
       });
     } else {
       messages.push({ role: 'user', content: message });
     }
 
-    // Determine temperature based on message type
-    const temperature = determineTemperature(message);
+    // Determine temperature based on message type - make it slightly higher for kids for more creative responses
+    const temperature = isChildQuestion ? 
+      Math.min(determineTemperature(message) + 0.1, 0.9) : // Slightly more creative for kids
+      determineTemperature(message);
     
     // Call Perplexity API with retry mechanism
     try {

@@ -7,6 +7,8 @@ import { Character } from '../types';
 import { Lightbulb } from 'lucide-react';
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Helper function for character-specific feedback suggestions
 const getCharacterSpecificFeedbackSuggestions = (characterName: string): string[] => {
@@ -44,21 +46,38 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
   const [feedback, setFeedback] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showTip, setShowTip] = useState<boolean>(true);
+  const [tipIndex, setTipIndex] = useState<number>(0);
   const supabase = useSupabaseClient();
+  
+  // Teaching tips that Buzzy can provide
+  const buzzyTips = [
+    `Great job training ${character.name}! By analyzing what makes this character unique, you're learning how AI chatbots develop realistic personalities.`,
+    "When training AI, it's important to give specific examples rather than general rules. This helps the AI learn from patterns!",
+    "Did you know? The more diverse your training data, the better your AI will handle different types of questions.",
+    "AI training is like teaching a friend about a new subject - you need patience, clear examples, and consistent feedback!"
+  ];
   
   useEffect(() => {
     fetchBuzzySuggestions();
+    
+    // Rotate through tips every 12 seconds
+    const tipInterval = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % buzzyTips.length);
+    }, 12000);
+    
+    return () => clearInterval(tipInterval);
   }, []);
   
   const fetchBuzzySuggestions = async () => {
     setIsLoading(true);
     try {
       // Create a more detailed prompt for better suggestions
-      const prompt = `I'm training an AI character based on ${character.name}. I've completed the basic training phase.
+      const prompt = `I'm training an AI character based on ${character.name} and need suggestions for what to teach it next.
       
-      What are 3 specific things I should teach the ${character.name} AI character next to make it more realistic and authentic? 
+      The character is ${character.name} who has these traits: ${character.personality.join(', ')}.
       
-      Format each suggestion as a separate numbered item (1., 2., 3.) with 1-2 sentences explaining why it would enhance the character.`;
+      Give me 3 specific suggestions for what I should teach this AI character next to make it more realistic and authentic. Format each suggestion as a separate numbered item (1., 2., 3.) with 1-2 sentences using kid-friendly language explaining why it would enhance the character.`;
 
       // First try using the Supabase client
       try {
@@ -167,6 +186,26 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
   return (
     <Card>
       <CardContent className="p-6">
+        <div className="mb-6">
+          <AnimatePresence mode="wait">
+            {showTip && (
+              <motion.div
+                key={tipIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <BuzzySpeechBubble
+                  message={buzzyTips[tipIndex]}
+                  state="teaching"
+                  onClose={() => setShowTip(false)}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        
         <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-amber-500" />
           How can we improve {character.name}?
@@ -192,13 +231,16 @@ export const FeedbackPhase: React.FC<FeedbackPhaseProps> = ({
               </div>
             ) : (
               suggestions.map((suggestion, index) => (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                   className="bg-purple-50 p-3 rounded-lg border border-purple-100 cursor-pointer hover:bg-purple-100 transition-colors"
                   onClick={() => handleSuggestionClick(suggestion)}
                 >
                   <p className="text-sm">{suggestion}</p>
-                </div>
+                </motion.div>
               ))
             )}
           </div>
