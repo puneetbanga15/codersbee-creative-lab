@@ -115,9 +115,12 @@ export const AddCertificateDialog = ({
                     <SelectContent>
                       {students?.map((student) => (
                         <SelectItem key={student.id} value={student.id}>
-                          {student.full_name} ({student.parent.full_name})
+                          {student.full_name} {student.parent && `(${student.parent.full_name})`}
                         </SelectItem>
                       ))}
+                      {(!students || students.length === 0) && (
+                        <SelectItem value="no_students">No students available</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />

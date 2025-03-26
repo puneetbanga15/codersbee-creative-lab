@@ -1,10 +1,11 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,11 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const supabase = createClient(
-  "https://xyzcompanyidgoeshere.supabase.co",
-  "your-anon-key-goes-here"
-);
 
 const formSchema = z.object({
   parentName: z.string().min(2, "Name must be at least 2 characters"),
