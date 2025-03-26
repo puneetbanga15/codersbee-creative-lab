@@ -180,7 +180,6 @@ export const MeetAIFriendTutorial = () => {
   const slides = [
     {
       title: "What is an AI Friend?",
-      icon: <MessageSquare className="h-6 w-6 text-purple-600" />,
       content: (
         <div className="space-y-4">
           <div className="flex items-center justify-center mb-6">
@@ -212,7 +211,6 @@ export const MeetAIFriendTutorial = () => {
     },
     {
       title: "How AI Friends Work",
-      icon: <Brain className="h-6 w-6 text-purple-600" />,
       content: (
         <div className="space-y-4">
           <div className="flex justify-center mb-4">
@@ -243,71 +241,53 @@ export const MeetAIFriendTutorial = () => {
     },
     {
       title: "Training Your AI Friend",
-      icon: <Bot className="h-6 w-6 text-purple-600" />,
       content: (
         <div className="space-y-4">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
-                <Bot className="h-12 w-12 text-blue-500" />
-              </div>
-              <div className="absolute -right-4 top-0 w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
-                <Sparkles className="h-8 w-8 text-amber-500" />
-              </div>
-            </div>
-          </div>
+          <p className="text-gray-800">
+            Training an AI Friend is like teaching a pet tricks! You show examples of what to do, and they learn to copy it.
+          </p>
           
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-xs bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg mb-4">
-              <h3 className="font-medium text-center mb-2">Training is like teaching a pet tricks!</h3>
-              <p className="text-sm text-center">
-                You show examples of what to do, and they learn to copy it
-              </p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-green-50 p-3 rounded-lg border border-green-100 flex flex-col items-center">
-              <div className="bg-green-200 rounded-full w-8 h-8 flex items-center justify-center mb-2">
-                <span className="font-bold text-green-800">1</span>
+          <div className="bg-green-50 p-4 rounded-lg border border-green-100 mb-4">
+            <h3 className="font-semibold text-green-800 mb-2">How Training Works:</h3>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span className="text-green-800 text-sm font-bold">1</span>
+                </div>
+                <div>
+                  <p className="text-green-800 font-medium">Give Examples</p>
+                  <p className="text-sm text-green-700">Show your AI Friend how to respond to different questions</p>
+                </div>
               </div>
-              <p className="text-center text-xs">
-                Give examples
-              </p>
-            </div>
-            <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 flex flex-col items-center">
-              <div className="bg-blue-200 rounded-full w-8 h-8 flex items-center justify-center mb-2">
-                <span className="font-bold text-blue-800">2</span>
+              
+              <div className="flex items-start gap-3">
+                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span className="text-green-800 text-sm font-bold">2</span>
+                </div>
+                <div>
+                  <p className="text-green-800 font-medium">Pattern Recognition</p>
+                  <p className="text-sm text-green-700">Your AI Friend learns patterns from your examples</p>
+                </div>
               </div>
-              <p className="text-center text-xs">
-                Show patterns
-              </p>
-            </div>
-            <div className="bg-amber-50 p-3 rounded-lg border border-amber-100 flex flex-col items-center">
-              <div className="bg-amber-200 rounded-full w-8 h-8 flex items-center justify-center mb-2">
-                <span className="font-bold text-amber-800">3</span>
+              
+              <div className="flex items-start gap-3">
+                <div className="bg-green-200 rounded-full w-6 h-6 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span className="text-green-800 text-sm font-bold">3</span>
+                </div>
+                <div>
+                  <p className="text-green-800 font-medium">Test It Out</p>
+                  <p className="text-sm text-green-700">Try talking to your AI Friend to see what it learned</p>
+                </div>
               </div>
-              <p className="text-center text-xs">
-                Practice
-              </p>
-            </div>
-            <div className="bg-purple-50 p-3 rounded-lg border border-purple-100 flex flex-col items-center">
-              <div className="bg-purple-200 rounded-full w-8 h-8 flex items-center justify-center mb-2">
-                <span className="font-bold text-purple-800">4</span>
-              </div>
-              <p className="text-center text-xs">
-                Improve
-              </p>
             </div>
           </div>
         </div>
       ),
       buzzyMessage: "Training an AI Friend is like teaching a pet tricks! You show examples of what to do, and they learn to copy it.",
-      buzzyState: "teaching"
+      buzzyState: "excited"
     },
     {
       title: "Different AI Personalities",
-      icon: <Sparkles className="h-6 w-6 text-purple-600" />,
       content: (
         <div className="space-y-4">
           <div className="flex justify-center mb-4">
@@ -356,7 +336,6 @@ export const MeetAIFriendTutorial = () => {
     },
     {
       title: "Let's Get Started!",
-      icon: <Zap className="h-6 w-6 text-purple-600" />,
       content: (
         <div className="flex flex-col items-center justify-center h-full space-y-6">
           <div className="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center">

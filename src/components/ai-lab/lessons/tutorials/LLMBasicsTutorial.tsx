@@ -18,7 +18,7 @@ export const LLMBasicsTutorial: React.FC = () => {
     },
     "prompt-engineering": {
       message: "Prompt engineering is all about how to talk to AI effectively. It's like knowing the right questions to ask!",
-      state: "default"
+      state: "thinking"
     },
     "example-prompts": {
       message: "Here are some examples of good prompts. Notice how they're specific and clear about what they want the AI to do!",
@@ -26,7 +26,7 @@ export const LLMBasicsTutorial: React.FC = () => {
     },
     "ai-tools": {
       message: "AI tools are powerful, but we need to use them responsibly. Let me show you how to use AI safely!",
-      state: "thinking"
+      state: "encouraging"
     }
   };
   
