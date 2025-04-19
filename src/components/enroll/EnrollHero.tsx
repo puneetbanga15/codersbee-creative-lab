@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Star, Users, GraduationCap, Trophy } from "lucide-react";
 import { BookingForm } from './BookingForm';
+import { Link } from 'react-router-dom';
+
 export const EnrollHero = () => {
   return <section className="relative py-20 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -48,15 +50,17 @@ export const EnrollHero = () => {
                 </div>
               </motion.div>
 
-              <motion.div whileHover={{
-              scale: 1.05
-            }} className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg">
-                <Trophy className="w-5 h-5 text-codersbee-vivid mr-2" />
-                <div className="text-sm">
-                  <p className="font-semibold">Pionners in AI Learning</p>
-                  <p className="text-xs text-gray-600">Student Success</p>
-                </div>
-              </motion.div>
+              <Link to="/ai-lab">
+                <motion.div whileHover={{
+                scale: 1.05
+              }} className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg cursor-pointer">
+                  <Trophy className="w-5 h-5 text-codersbee-vivid mr-2" />
+                  <div className="text-sm">
+                    <p className="font-semibold">Pioneers in AI Learning</p>
+                    <p className="text-xs text-gray-600">Visit AI Lab</p>
+                  </div>
+                </motion.div>
+              </Link>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-codersbee-dark">

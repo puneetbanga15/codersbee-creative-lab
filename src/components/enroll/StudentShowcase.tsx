@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BuzzyAnimation } from '../ai-lab/ui/BuzzyAnimation';
 
 export const StudentShowcase = () => {
   return (
@@ -22,12 +23,12 @@ export const StudentShowcase = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="relative rounded-lg overflow-hidden shadow-xl aspect-video"
+            className="relative flex justify-center items-center"
           >
-            <img 
-              src="/lovable-uploads/90d70763-3e56-417d-8601-31c24b3d8f56.png"
-              alt="Buzzy AI Assistant"
-              className="w-full h-full object-cover"
+            <BuzzyAnimation 
+              state="excited" 
+              size="lg" 
+              className="w-48 h-48 md:w-64 md:h-64"
             />
           </motion.div>
 
