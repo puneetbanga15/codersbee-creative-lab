@@ -82,11 +82,11 @@ export const BuzzyAnimation: React.FC<BuzzyAnimationProps> = ({
   }
 
   if (error || !videoUrl) {
-    // Fallback to static image
+    // Use our static Buzzy image as fallback
     return (
       <div className={`${sizeMap[size]} ${className} bg-purple-100 rounded-full flex items-center justify-center`}>
         <img 
-          src="/lovable-uploads/9c4efcb6-761f-4ff5-ac63-613a99070c8b.png" 
+          src="/lovable-uploads/230855da-e71d-43ac-a6b6-1c45a8569cce.png" 
           alt={`Buzzy the bee - ${state}`}
           className="w-full h-full object-contain p-2"
         />

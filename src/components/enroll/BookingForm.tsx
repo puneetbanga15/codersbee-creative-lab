@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
 import { Laptop } from 'lucide-react';
+import { CountrySelect } from './CountrySelect';
 
 const formSchema = z.object({
+  country_code: z.string().min(2, "Please select country code"),
   phone_number: z.string().min(10, "Phone number must be at least 10 digits"),
   grade: z.string().min(1, "Please select your child's grade"),
   has_laptop: z.enum(["yes", "no"], {
@@ -22,6 +24,7 @@ export const BookingForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      country_code: "+91", // Default to India
       phone_number: "",
       grade: "",
       has_laptop: "no",
@@ -51,9 +54,25 @@ export const BookingForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your phone number" {...field} />
-                </FormControl>
+                <div className="flex gap-2">
+                  <FormField
+                    control={form.control}
+                    name="country_code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CountrySelect 
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormControl>
+                    <Input placeholder="Enter your phone number" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
