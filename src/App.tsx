@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SupabaseProvider } from "@/providers/SupabaseProvider";
 import Index from "./pages/Index";
 import AboutUs from "./pages/AboutUs";
+import Enroll from "./pages/Enroll";
 import ParentsLogin from "./pages/ParentsLogin";
 import ParentsRegister from "./pages/ParentsRegister";
 import ParentDashboard from "./pages/ParentDashboard";
@@ -35,6 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<AboutUs />} />
+              <Route path="/enroll" element={<Enroll />} />
               <Route path="/parents/login" element={<ParentsLogin />} />
               <Route path="/parents/register" element={<ParentsRegister />} />
               <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
