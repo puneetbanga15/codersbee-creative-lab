@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Star, Users, GraduationCap, Trophy } from "lucide-react";
 import { BookingForm } from './BookingForm';
 
 export const EnrollHero = () => {
@@ -16,9 +16,52 @@ export const EnrollHero = () => {
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <div className="inline-flex items-center bg-codersbee-vivid/10 px-4 py-2 rounded-full">
-              <Star className="w-5 h-5 text-yellow-500 mr-2" />
-              <span className="text-sm font-medium">5-Star Rated on Facebook</span>
+            {/* Social Proof Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg cursor-pointer"
+                onClick={() => window.open('https://www.facebook.com/CodersBee/reviews', '_blank')}
+              >
+                <Star className="w-5 h-5 text-yellow-500 mr-2" />
+                <div className="text-sm">
+                  <p className="font-semibold">5-Star Rated</p>
+                  <p className="text-xs text-gray-600">Read Reviews on Facebook</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg"
+              >
+                <Users className="w-5 h-5 text-codersbee-vivid mr-2" />
+                <div className="text-sm">
+                  <p className="font-semibold">100+ Students</p>
+                  <p className="text-xs text-gray-600">Active Learners</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg"
+              >
+                <GraduationCap className="w-5 h-5 text-codersbee-vivid mr-2" />
+                <div className="text-sm">
+                  <p className="font-semibold">20+ Years</p>
+                  <p className="text-xs text-gray-600">Teaching Experience</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg"
+              >
+                <Trophy className="w-5 h-5 text-codersbee-vivid mr-2" />
+                <div className="text-sm">
+                  <p className="font-semibold">Featured Projects</p>
+                  <p className="text-xs text-gray-600">Student Success</p>
+                </div>
+              </motion.div>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-codersbee-dark">
