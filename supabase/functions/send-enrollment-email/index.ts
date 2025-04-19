@@ -25,16 +25,16 @@ serve(async (req) => {
   try {
     const { phone, grade, hasLaptop, countryCode } = await req.json() as EnrollmentEmailRequest;
 
-    // Send email to team about new enrollment
+    // Send email to multiple team members about new enrollment
     const emailResponse = await resend.emails.send({
       from: 'CodersBee <onboarding@resend.dev>',
-      to: 'team@codersbee.com', // Replace with your team's email
+      to: ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'],
       subject: 'New Trial Class Booking',
       html: `
         <h1>New Trial Class Booking</h1>
         <p>A new student has booked a trial class. Details:</p>
         <ul>
-          <li>Phone: ${countryCode} ${phone}</li>
+          <li>WhatsApp Number: ${countryCode} ${phone}</li>
           <li>Grade: ${grade}</li>
           <li>Has Laptop: ${hasLaptop ? 'Yes' : 'No'}</li>
         </ul>

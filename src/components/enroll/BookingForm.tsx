@@ -88,7 +88,7 @@ export const BookingForm = () => {
             name="phone_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel>WhatsApp Number</FormLabel>
                 <div className="flex gap-2">
                   <FormField
                     control={form.control}
@@ -105,7 +105,7 @@ export const BookingForm = () => {
                     )}
                   />
                   <FormControl>
-                    <Input placeholder="Enter your phone number" {...field} />
+                    <Input placeholder="Enter your WhatsApp number" {...field} />
                   </FormControl>
                 </div>
                 <FormMessage />
