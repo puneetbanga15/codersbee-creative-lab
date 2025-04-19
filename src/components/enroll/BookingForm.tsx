@@ -35,23 +35,33 @@ export const BookingForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // First try to send the enrollment email
-      const { error: emailError } = await supabase.functions.invoke('send-enrollment-email', {
-        body: {
-          phone: values.phone_number,
-          grade: values.grade,
-          hasLaptop: values.has_laptop === "yes",
-          countryCode: values.country_code
-        }
+      console.log("Form submitted with values:", values);
+      
+      // Prepare data for email sending
+      const emailData = {
+        phone: values.phone_number,
+        grade: values.grade,
+        hasLaptop: values.has_laptop === "yes",
+        countryCode: values.country_code
+      };
+      
+      console.log("Sending email with data:", emailData);
+      
+      // Call the edge function to send email
+      const { data, error: emailError } = await supabase.functions.invoke('send-enrollment-email', {
+        body: emailData
       });
+
+      console.log("Edge function response:", { data, error: emailError });
 
       if (emailError) {
         console.error('Error sending enrollment email:', emailError);
         toast({
           title: "Booking Request Received",
-          description: "We'll contact you shortly to confirm your trial class.",
+          description: "We'll contact you shortly to confirm your trial class. (Email notification may have failed)",
         });
       } else {
+        console.log("Email sent successfully:", data);
         toast({
           title: "Booking Successful!",
           description: "We'll contact you shortly to confirm your trial class.",

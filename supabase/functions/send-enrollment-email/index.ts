@@ -23,7 +23,17 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Starting email send process');
+    console.log('API Key defined:', !!Deno.env.get('RESEND_API_KEY'));
+    
     const { phone, grade, hasLaptop, countryCode } = await req.json() as EnrollmentEmailRequest;
+    
+    console.log('Request data received:', { 
+      phone, 
+      grade, 
+      hasLaptop, 
+      countryCode 
+    });
 
     // Send email to multiple team members about new enrollment
     const emailResponse = await resend.emails.send({
@@ -41,17 +51,20 @@ serve(async (req) => {
       `
     });
 
-    console.log('Email sent successfully:', emailResponse);
+    console.log('Email send attempt completed');
+    console.log('Email response:', JSON.stringify(emailResponse));
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, response: emailResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
 
   } catch (error) {
     console.error('Error sending email:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message, details: error }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500 
