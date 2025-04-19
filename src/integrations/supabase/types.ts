@@ -803,6 +803,30 @@ export type Database = {
           },
         ]
       }
+      trial_bookings: {
+        Row: {
+          created_at: string
+          grade: number
+          has_laptop: boolean
+          id: string
+          phone_number: string
+        }
+        Insert: {
+          created_at?: string
+          grade: number
+          has_laptop: boolean
+          id?: string
+          phone_number: string
+        }
+        Update: {
+          created_at?: string
+          grade?: number
+          has_laptop?: boolean
+          id?: string
+          phone_number?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
