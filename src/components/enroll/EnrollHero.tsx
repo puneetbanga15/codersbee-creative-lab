@@ -53,7 +53,7 @@ export const EnrollHero = () => {
             }} className="flex items-center bg-codersbee-vivid/10 px-4 py-3 rounded-lg">
                 <Trophy className="w-5 h-5 text-codersbee-vivid mr-2" />
                 <div className="text-sm">
-                  <p className="font-semibold">Featured Projects</p>
+                  <p className="font-semibold">Pionners in AI Learning</p>
                   <p className="text-xs text-gray-600">Student Success</p>
                 </div>
               </motion.div>
