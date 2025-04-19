@@ -10,6 +10,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
 import { Laptop } from 'lucide-react';
 import { CountrySelect } from './CountrySelect';
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   country_code: z.string().min(2, "Please select country code"),
@@ -32,7 +34,40 @@ export const BookingForm = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    window.open('https://calendly.com/codersbee/class-slot', '_blank');
+    try {
+      // First try to send the enrollment email
+      const { error: emailError } = await supabase.functions.invoke('send-enrollment-email', {
+        body: {
+          phone: values.phone_number,
+          grade: values.grade,
+          hasLaptop: values.has_laptop === "yes",
+          countryCode: values.country_code
+        }
+      });
+
+      if (emailError) {
+        console.error('Error sending enrollment email:', emailError);
+        toast({
+          title: "Booking Request Received",
+          description: "We'll contact you shortly to confirm your trial class.",
+        });
+      } else {
+        toast({
+          title: "Booking Successful!",
+          description: "We'll contact you shortly to confirm your trial class.",
+        });
+      }
+
+      // Open Calendly in a new tab
+      window.open('https://calendly.com/codersbee/class-slot', '_blank');
+    } catch (error) {
+      console.error('Error in form submission:', error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again or contact us directly.",
+      });
+    }
   }
 
   return (
