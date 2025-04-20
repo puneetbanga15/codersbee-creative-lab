@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -42,17 +41,14 @@ export const BookingForm = () => {
     try {
       setIsSubmitting(true);
       setBookingError(null);
-      console.log("Form submitted with values:", values);
       
-      // Prepare data for email sending and database storage
+      // Prepare data for WhatsApp notification and database storage
       const bookingData = {
         phone: values.phone_number,
         grade: values.grade,
         hasLaptop: values.has_laptop === "yes",
         countryCode: values.country_code
       };
-      
-      console.log("Prepared booking data:", bookingData);
       
       // Open Calendly in a new tab
       window.open('https://calendly.com/codersbee/class-slot', '_blank');
@@ -107,34 +103,28 @@ export const BookingForm = () => {
         // Continue with the flow - don't block on DB issues
       }
       
-      // Send the enrollment email
-      console.log("Calling edge function send-enrollment-email");
+      // Send WhatsApp notification
+      console.log("Calling edge function send-whatsapp-notification");
       try {
-        const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
+        const { data, error } = await supabase.functions.invoke('send-whatsapp-notification', {
           body: bookingData
         });
         
-        console.log("Edge function response:", { data, error });
+        console.log("WhatsApp notification function response:", { data, error });
         
         if (error) {
-          console.error('Error calling enrollment email function:', error);
-          // Still consider the booking successful
-          setIsSuccess(true);
-          toast({
-            title: "Booking Confirmed!",
-            description: "We'll contact you on your WhatsApp number shortly.",
-          });
-        } else {
-          // Successfully called the function
-          setIsSuccess(true);
-          toast({
-            title: "Booking Confirmed!",
-            description: "We'll contact you on your WhatsApp number shortly.",
-          });
+          console.error('Error calling WhatsApp notification function:', error);
         }
-      } catch (emailCallError) {
-        console.error('Exception while calling email function:', emailCallError);
-        // Still consider the booking successful even if email notification fails
+        
+        // Consider booking successful regardless of notification status
+        setIsSuccess(true);
+        toast({
+          title: "Booking Confirmed!",
+          description: "We'll contact you on your WhatsApp number shortly.",
+        });
+      } catch (whatsappError) {
+        console.error('Exception while calling WhatsApp notification function:', whatsappError);
+        // Still consider the booking successful
         setIsSuccess(true);
         toast({
           title: "Booking Confirmed!",
