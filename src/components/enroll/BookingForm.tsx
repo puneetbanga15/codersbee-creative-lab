@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
-import { Laptop } from 'lucide-react';
+import { Laptop, Loader2 } from 'lucide-react';
 import { CountrySelect } from './CountrySelect';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
@@ -24,6 +24,9 @@ const formSchema = z.object({
 })
 
 export const BookingForm = () => {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [bookingError, setBookingError] = React.useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,17 +39,19 @@ export const BookingForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsSubmitting(true);
+      setBookingError(null);
       console.log("Form submitted with values:", values);
       
-      // Prepare data for email sending
-      const emailData = {
+      // Prepare data for email sending and database storage
+      const bookingData = {
         phone: values.phone_number,
         grade: values.grade,
         hasLaptop: values.has_laptop === "yes",
         countryCode: values.country_code
       };
       
-      console.log("Sending email with data:", emailData);
+      console.log("Prepared booking data:", bookingData);
       
       // Open Calendly in a new tab
       window.open('https://calendly.com/codersbee/class-slot', '_blank');
@@ -57,9 +62,10 @@ export const BookingForm = () => {
         description: "We'll contact you shortly to confirm your trial class.",
       });
       
-      // Try to store booking in Supabase
+      // Store booking in Supabase
       try {
-        const { error: dbError } = await supabase
+        console.log("Storing booking in database...");
+        const { data: dbData, error: dbError } = await supabase
           .from('trial_bookings')
           .insert({
             phone_number: values.phone_number,
@@ -71,8 +77,26 @@ export const BookingForm = () => {
         if (dbError) {
           console.error('Error storing booking in database:', dbError);
           console.error('Error details:', JSON.stringify(dbError, null, 2));
+          
+          // Try without country_code if it fails (for backward compatibility with old table schema)
+          if (dbError.message?.includes('country_code')) {
+            console.log("Trying database insert without country_code field...");
+            const { error: fallbackError } = await supabase
+              .from('trial_bookings')
+              .insert({
+                phone_number: values.phone_number,
+                grade: parseInt(values.grade),
+                has_laptop: values.has_laptop === "yes"
+              });
+              
+            if (fallbackError) {
+              console.error('Fallback database insert also failed:', fallbackError);
+            } else {
+              console.log("Successfully stored booking in database (fallback method)");
+            }
+          }
         } else {
-          console.log("Successfully stored booking in database");
+          console.log("Successfully stored booking in database:", dbData);
         }
       } catch (dbCatchError) {
         console.error('Exception while storing booking:', dbCatchError);
@@ -82,7 +106,7 @@ export const BookingForm = () => {
       console.log("Calling edge function send-enrollment-email");
       try {
         const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
-          body: emailData
+          body: bookingData
         });
         
         console.log("Edge function response:", { data, error });
@@ -90,6 +114,7 @@ export const BookingForm = () => {
         if (error) {
           console.error('Error sending enrollment email:', error);
           console.error('Error details:', JSON.stringify(error, null, 2));
+          setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
           toast({
             variant: "destructive",
             title: "Note: Email notification failed",
@@ -105,15 +130,19 @@ export const BookingForm = () => {
       } catch (emailCatchError) {
         console.error('Exception while sending email:', emailCatchError);
         console.error('Exception details:', JSON.stringify(emailCatchError, null, 2));
+        setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
       }
     } catch (error) {
       console.error('Error in form submission:', error);
       console.error('Error details:', JSON.stringify(error, null, 2));
+      setBookingError("Something went wrong with your booking. Please try again or contact us directly.");
       toast({
         variant: "destructive",
         title: "Something went wrong",
         description: "Please try again or contact us directly.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -127,6 +156,13 @@ export const BookingForm = () => {
       <h3 className="text-2xl font-bold text-codersbee-dark mb-6">
         Book Your Free Trial Class
       </h3>
+
+      {bookingError && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertTitle>An issue occurred</AlertTitle>
+          <AlertDescription>{bookingError}</AlertDescription>
+        </Alert>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -204,8 +240,16 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+            disabled={isSubmitting}
           >
-            Book Now
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+                Processing...
+              </>
+            ) : (
+              'Book Now'
+            )}
           </Button>
         </form>
       </Form>

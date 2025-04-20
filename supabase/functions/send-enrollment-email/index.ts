@@ -6,9 +6,15 @@ import { Resend } from "npm:resend@2.0.0"
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 console.log('Starting function execution');
 console.log('API Key exists:', !!RESEND_API_KEY);
+console.log('API Key length:', RESEND_API_KEY ? RESEND_API_KEY.length : 0);
 console.log('API Key first 4 chars:', RESEND_API_KEY ? RESEND_API_KEY.substring(0, 4) : 'none');
 
-const resend = new Resend(RESEND_API_KEY);
+if (!RESEND_API_KEY) {
+  console.error("RESEND_API_KEY environment variable is not set!");
+}
+
+// Create Resend instance only if API key exists
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -58,11 +64,11 @@ serve(async (req) => {
       );
     }
 
-    // Validate API key again just before sending
-    if (!RESEND_API_KEY) {
-      console.error('RESEND_API_KEY is still not configured at sending time');
+    // Validate API key and resend instance
+    if (!RESEND_API_KEY || !resend) {
+      console.error('RESEND_API_KEY is not configured');
       return new Response(
-        JSON.stringify({ error: 'Email service configuration issue' }),
+        JSON.stringify({ error: 'Email service configuration issue - API key not set' }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 500 
@@ -71,25 +77,40 @@ serve(async (req) => {
     }
 
     console.log('Attempting to send email with Resend...');
+    
+    // Build the email HTML
+    const emailHtml = `
+      <h1>New Trial Class Booking</h1>
+      <p>A new student has booked a trial class. Details:</p>
+      <ul>
+        <li>WhatsApp Number: ${countryCode} ${phone}</li>
+        <li>Grade: ${grade}</li>
+        <li>Has Laptop: ${hasLaptop ? 'Yes' : 'No'}</li>
+      </ul>
+    `;
+    
+    console.log('Email HTML prepared:', emailHtml);
+    console.log('Recipient emails:', ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com']);
 
     try {
+      console.log('Calling Resend API...');
       const emailResponse = await resend.emails.send({
         from: 'CodersBee <onboarding@resend.dev>',
         to: ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'],
         subject: 'New Trial Class Booking',
-        html: `
-          <h1>New Trial Class Booking</h1>
-          <p>A new student has booked a trial class. Details:</p>
-          <ul>
-            <li>WhatsApp Number: ${countryCode} ${phone}</li>
-            <li>Grade: ${grade}</li>
-            <li>Has Laptop: ${hasLaptop ? 'Yes' : 'No'}</li>
-          </ul>
-        `
+        html: emailHtml
       });
 
-      console.log('Email sending complete');
+      console.log('Email sending response received');
       console.log('Email response:', JSON.stringify(emailResponse));
+      
+      if (!emailResponse) {
+        throw new Error('Empty response from Resend API');
+      }
+      
+      if ('error' in emailResponse && emailResponse.error) {
+        throw new Error(`Resend API error: ${JSON.stringify(emailResponse.error)}`);
+      }
 
       return new Response(JSON.stringify({ success: true, response: emailResponse }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
