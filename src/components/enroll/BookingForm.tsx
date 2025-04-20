@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
-import { Laptop, Loader2 } from 'lucide-react';
+import { Laptop, Loader2, Check } from 'lucide-react';
 import { CountrySelect } from './CountrySelect';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
@@ -25,11 +25,9 @@ const formSchema = z.object({
 
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
-  const [emailStatus, setEmailStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
-  const [dbStatus, setDbStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
-  const [emailErrorDetails, setEmailErrorDetails] = React.useState<string | null>(null);
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,9 +42,6 @@ export const BookingForm = () => {
     try {
       setIsSubmitting(true);
       setBookingError(null);
-      setEmailErrorDetails(null);
-      setEmailStatus('pending');
-      setDbStatus('pending');
       console.log("Form submitted with values:", values);
       
       // Prepare data for email sending and database storage
@@ -64,7 +59,7 @@ export const BookingForm = () => {
       
       // Show toast for immediate feedback
       toast({
-        title: "Booking Started!",
+        title: "Booking Started",
         description: "Processing your trial class booking...",
       });
       
@@ -72,7 +67,8 @@ export const BookingForm = () => {
       try {
         console.log("Storing booking in database...");
         try {
-          const { data: dbData, error: dbError } = await supabase
+          // First try with country_code (for newer schema)
+          const { error: dbError } = await supabase
             .from('trial_bookings')
             .insert({
               phone_number: values.phone_number,
@@ -82,39 +78,33 @@ export const BookingForm = () => {
             });
 
           if (dbError) {
-            console.error('Error storing booking in database:', dbError);
-            console.error('Error details:', JSON.stringify(dbError, null, 2));
-            setDbStatus('error');
+            console.log('Error storing booking with country_code, trying without:', dbError);
             
-            // Try without country_code if it fails (for backward compatibility with old table schema)
-            if (dbError.message?.includes('country_code')) {
-              console.log("Trying database insert without country_code field...");
-              const { error: fallbackError } = await supabase
-                .from('trial_bookings')
-                .insert({
-                  phone_number: values.phone_number,
-                  grade: parseInt(values.grade),
-                  has_laptop: values.has_laptop === "yes"
-                });
-                
-              if (fallbackError) {
-                console.error('Fallback database insert also failed:', fallbackError);
-              } else {
-                console.log("Successfully stored booking in database (fallback method)");
-                setDbStatus('success');
-              }
+            // Try without country_code (for backward compatibility)
+            const { error: fallbackError } = await supabase
+              .from('trial_bookings')
+              .insert({
+                phone_number: values.phone_number,
+                grade: parseInt(values.grade),
+                has_laptop: values.has_laptop === "yes"
+              });
+              
+            if (fallbackError) {
+              console.error('Fallback database insert also failed:', fallbackError);
+              // Don't block the flow, continue with email sending
+            } else {
+              console.log("Successfully stored booking in database (fallback method)");
             }
           } else {
-            console.log("Successfully stored booking in database:", dbData);
-            setDbStatus('success');
+            console.log("Successfully stored booking in database with country_code");
           }
         } catch (dbCatchError) {
           console.error('Exception while storing booking:', dbCatchError);
-          setDbStatus('error');
+          // Continue with the flow - don't block on DB issues
         }
       } catch (dbError) {
         console.error('Exception in database operation:', dbError);
-        setDbStatus('error');
+        // Continue with the flow - don't block on DB issues
       }
       
       // Send the enrollment email
@@ -127,46 +117,33 @@ export const BookingForm = () => {
         console.log("Edge function response:", { data, error });
         
         if (error) {
-          console.error('Error sending enrollment email:', error);
-          console.error('Error details:', JSON.stringify(error, null, 2));
-          setEmailStatus('error');
-          setEmailErrorDetails(JSON.stringify(error));
-          setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
-          toast({
-            variant: "destructive",
-            title: "Note: Email notification failed",
-            description: "We received your booking, but there was an issue with our email system. We'll still contact you.",
-          });
-        } else if (data?.error) {
-          console.error('Email service returned an error:', data.error);
-          console.error('Error details:', data.details || 'No details provided');
-          setEmailStatus('error');
-          setEmailErrorDetails(data.details || data.error);
-          setBookingError(`Email notification issue: ${data.error}`);
-          toast({
-            variant: "destructive",
-            title: "Email Sending Issue",
-            description: data.error,
-          });
-        } else {
-          console.log("Email sent successfully:", data);
-          setEmailStatus('success');
+          console.error('Error calling enrollment email function:', error);
+          // Still consider the booking successful
+          setIsSuccess(true);
           toast({
             title: "Booking Confirmed!",
-            description: "Your booking notification has been sent to our team.",
+            description: "We'll contact you on your WhatsApp number shortly.",
+          });
+        } else {
+          // Successfully called the function
+          setIsSuccess(true);
+          toast({
+            title: "Booking Confirmed!",
+            description: "We'll contact you on your WhatsApp number shortly.",
           });
         }
-      } catch (emailCatchError) {
-        console.error('Exception while sending email:', emailCatchError);
-        console.error('Exception details:', JSON.stringify(emailCatchError, null, 2));
-        setEmailStatus('error');
-        setEmailErrorDetails(String(emailCatchError));
-        setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
+      } catch (emailCallError) {
+        console.error('Exception while calling email function:', emailCallError);
+        // Still consider the booking successful even if email notification fails
+        setIsSuccess(true);
+        toast({
+          title: "Booking Confirmed!",
+          description: "We'll contact you on your WhatsApp number shortly.",
+        });
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
-      setBookingError("Something went wrong with your booking. Please try again or contact us directly.");
+      setBookingError("We had an issue processing your booking. Please try again or contact us directly.");
       toast({
         variant: "destructive",
         title: "Something went wrong",
@@ -175,6 +152,30 @@ export const BookingForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full mx-auto"
+      >
+        <div className="text-center space-y-4">
+          <div className="mx-auto bg-green-100 w-16 h-16 rounded-full flex items-center justify-center">
+            <Check className="w-8 h-8 text-green-600" />
+          </div>
+          <h3 className="text-2xl font-bold text-codersbee-dark">Booking Confirmed!</h3>
+          <p className="text-gray-600">
+            Thank you for booking a trial class with CodersBee. We'll contact you on your WhatsApp number shortly to confirm your booking.
+          </p>
+          <p className="text-gray-500 text-sm">
+            Please check your Calendly scheduling page to select your preferred time slot.
+          </p>
+        </div>
+      </motion.div>
+    );
   }
 
   return (
@@ -291,19 +292,6 @@ export const BookingForm = () => {
           <span>Having a laptop is recommended but not mandatory</span>
         </div>
       </div>
-
-      {/* Status indicator for debugging */}
-      {(dbStatus || emailStatus) && (
-        <div className="mt-4 p-2 border border-gray-200 rounded text-xs text-gray-500">
-          <div>DB: {dbStatus || 'not started'}</div>
-          <div>Email: {emailStatus || 'not started'}</div>
-          {emailErrorDetails && (
-            <div className="mt-1 p-1 bg-gray-100 rounded overflow-auto max-h-20">
-              <pre className="text-xs break-words">{emailErrorDetails}</pre>
-            </div>
-          )}
-        </div>
-      )}
     </motion.div>
   );
 };
