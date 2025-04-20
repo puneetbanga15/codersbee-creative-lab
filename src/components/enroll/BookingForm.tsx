@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -55,6 +54,25 @@ export const BookingForm = () => {
         title: "Booking Submitted!",
         description: "We'll contact you shortly to confirm your trial class.",
       });
+      
+      // Try to store booking in Supabase
+      const { error: dbError } = await supabase
+        .from('trial_bookings')
+        .insert({
+          phone_number: values.phone_number,
+          grade: parseInt(values.grade),
+          has_laptop: values.has_laptop === "yes",
+          country_code: values.country_code
+        });
+
+      if (dbError) {
+        console.error('Error storing booking in database:', dbError);
+        toast({
+          variant: "destructive",
+          title: "Booking Storage Issue",
+          description: "We couldn't fully save your booking details. Please contact support.",
+        });
+      }
       
       // Send the enrollment email
       console.log("Calling edge function send-enrollment-email");
