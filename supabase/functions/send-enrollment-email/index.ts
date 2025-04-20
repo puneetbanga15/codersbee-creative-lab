@@ -98,6 +98,11 @@ serve(async (req) => {
       console.log('This is limited to 100 emails/day and only to verified recipients');
       console.log('For production use, verify your own domain in Resend');
       
+      // Debug information about the recipient verification status
+      console.log('IMPORTANT: Make sure these recipients are verified in Resend:');
+      console.log('- mailsmanisha20@gmail.com');
+      console.log('- puneetbanga15@gmail.com');
+      
       console.log('Calling Resend API...');
       const emailResponse = await resend.emails.send({
         from: 'CodersBee <onboarding@resend.dev>', // Using the default Resend sender
@@ -135,6 +140,10 @@ serve(async (req) => {
         userFriendlyError = 'The sender domain is not verified in Resend. Please verify your domain in Resend or use the default sender format.';
       } else if (errorMessage.includes('recipient')) {
         userFriendlyError = 'One or more recipients are not verified. With the free Resend account and default sender, you need to verify recipient emails.';
+      } else if (errorMessage.includes('rate limit')) {
+        userFriendlyError = 'You have exceeded the Resend rate limit. Please try again later.';
+      } else if (errorMessage.includes('verification')) {
+        userFriendlyError = 'Email verification issue. Please ensure all recipient emails are verified in your Resend account.';
       }
       
       return new Response(

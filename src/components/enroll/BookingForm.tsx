@@ -26,6 +26,8 @@ const formSchema = z.object({
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
+  const [emailStatus, setEmailStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
+  const [dbStatus, setDbStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,6 +43,8 @@ export const BookingForm = () => {
     try {
       setIsSubmitting(true);
       setBookingError(null);
+      setEmailStatus('pending');
+      setDbStatus('pending');
       console.log("Form submitted with values:", values);
       
       // Prepare data for email sending and database storage
@@ -58,48 +62,57 @@ export const BookingForm = () => {
       
       // Show toast for immediate feedback
       toast({
-        title: "Booking Submitted!",
-        description: "We'll contact you shortly to confirm your trial class.",
+        title: "Booking Started!",
+        description: "Processing your trial class booking...",
       });
       
       // Store booking in Supabase
       try {
         console.log("Storing booking in database...");
-        const { data: dbData, error: dbError } = await supabase
-          .from('trial_bookings')
-          .insert({
-            phone_number: values.phone_number,
-            grade: parseInt(values.grade),
-            has_laptop: values.has_laptop === "yes",
-            country_code: values.country_code
-          });
+        try {
+          const { data: dbData, error: dbError } = await supabase
+            .from('trial_bookings')
+            .insert({
+              phone_number: values.phone_number,
+              grade: parseInt(values.grade),
+              has_laptop: values.has_laptop === "yes",
+              country_code: values.country_code
+            });
 
-        if (dbError) {
-          console.error('Error storing booking in database:', dbError);
-          console.error('Error details:', JSON.stringify(dbError, null, 2));
-          
-          // Try without country_code if it fails (for backward compatibility with old table schema)
-          if (dbError.message?.includes('country_code')) {
-            console.log("Trying database insert without country_code field...");
-            const { error: fallbackError } = await supabase
-              .from('trial_bookings')
-              .insert({
-                phone_number: values.phone_number,
-                grade: parseInt(values.grade),
-                has_laptop: values.has_laptop === "yes"
-              });
-              
-            if (fallbackError) {
-              console.error('Fallback database insert also failed:', fallbackError);
-            } else {
-              console.log("Successfully stored booking in database (fallback method)");
+          if (dbError) {
+            console.error('Error storing booking in database:', dbError);
+            console.error('Error details:', JSON.stringify(dbError, null, 2));
+            setDbStatus('error');
+            
+            // Try without country_code if it fails (for backward compatibility with old table schema)
+            if (dbError.message?.includes('country_code')) {
+              console.log("Trying database insert without country_code field...");
+              const { error: fallbackError } = await supabase
+                .from('trial_bookings')
+                .insert({
+                  phone_number: values.phone_number,
+                  grade: parseInt(values.grade),
+                  has_laptop: values.has_laptop === "yes"
+                });
+                
+              if (fallbackError) {
+                console.error('Fallback database insert also failed:', fallbackError);
+              } else {
+                console.log("Successfully stored booking in database (fallback method)");
+                setDbStatus('success');
+              }
             }
+          } else {
+            console.log("Successfully stored booking in database:", dbData);
+            setDbStatus('success');
           }
-        } else {
-          console.log("Successfully stored booking in database:", dbData);
+        } catch (dbCatchError) {
+          console.error('Exception while storing booking:', dbCatchError);
+          setDbStatus('error');
         }
-      } catch (dbCatchError) {
-        console.error('Exception while storing booking:', dbCatchError);
+      } catch (dbError) {
+        console.error('Exception in database operation:', dbError);
+        setDbStatus('error');
       }
       
       // Send the enrollment email
@@ -114,6 +127,7 @@ export const BookingForm = () => {
         if (error) {
           console.error('Error sending enrollment email:', error);
           console.error('Error details:', JSON.stringify(error, null, 2));
+          setEmailStatus('error');
           setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
           toast({
             variant: "destructive",
@@ -122,6 +136,7 @@ export const BookingForm = () => {
           });
         } else {
           console.log("Email sent successfully:", data);
+          setEmailStatus('success');
           toast({
             title: "Booking Confirmed!",
             description: "Your booking notification has been sent to our team.",
@@ -130,6 +145,7 @@ export const BookingForm = () => {
       } catch (emailCatchError) {
         console.error('Exception while sending email:', emailCatchError);
         console.error('Exception details:', JSON.stringify(emailCatchError, null, 2));
+        setEmailStatus('error');
         setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
       }
     } catch (error) {
@@ -260,6 +276,14 @@ export const BookingForm = () => {
           <span>Having a laptop is recommended but not mandatory</span>
         </div>
       </div>
+
+      {/* Status indicator for debugging */}
+      {(dbStatus || emailStatus) && (
+        <div className="mt-4 p-2 border border-gray-200 rounded text-xs text-gray-500">
+          <div>DB: {dbStatus || 'not started'}</div>
+          <div>Email: {emailStatus || 'not started'}</div>
+        </div>
+      )}
     </motion.div>
   );
 };
