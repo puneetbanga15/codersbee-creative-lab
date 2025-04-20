@@ -90,39 +90,48 @@ serve(async (req) => {
     `;
     
     console.log('Email HTML prepared:', emailHtml);
-    console.log('Recipient emails:', ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com']);
-
+    
+    // Use individual sends instead of a single send with multiple recipients
     try {
-      // Note about using the default sender
-      console.log('NOTE: Using the default onboarding@resend.dev sender email');
-      console.log('This is limited to 100 emails/day and only to verified recipients');
-      console.log('For production use, verify your own domain in Resend');
-      
-      // Debug information about the recipient verification status
-      console.log('IMPORTANT: Make sure these recipients are verified in Resend:');
-      console.log('- mailsmanisha20@gmail.com');
-      console.log('- puneetbanga15@gmail.com');
-      
-      console.log('Calling Resend API...');
-      const emailResponse = await resend.emails.send({
-        from: 'CodersBee <onboarding@resend.dev>', // Using the default Resend sender
-        to: ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'],
+      console.log('Attempting to send email to recipient 1: mailsmanisha20@gmail.com');
+      const email1Response = await resend.emails.send({
+        from: 'CodersBee <onboarding@resend.dev>',
+        to: ['mailsmanisha20@gmail.com'],
         subject: 'New Trial Class Booking',
         html: emailHtml
       });
-
-      console.log('Email sending response received');
-      console.log('Email response:', JSON.stringify(emailResponse));
       
-      if (!emailResponse) {
-        throw new Error('Empty response from Resend API');
-      }
+      console.log('Email 1 sending response:', JSON.stringify(email1Response));
       
-      if ('error' in emailResponse && emailResponse.error) {
-        throw new Error(`Resend API error: ${JSON.stringify(emailResponse.error)}`);
+      // Small delay between sends to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      console.log('Attempting to send email to recipient 2: puneetbanga15@gmail.com');
+      const email2Response = await resend.emails.send({
+        from: 'CodersBee <onboarding@resend.dev>',
+        to: ['puneetbanga15@gmail.com'],
+        subject: 'New Trial Class Booking',
+        html: emailHtml
+      });
+      
+      console.log('Email 2 sending response:', JSON.stringify(email2Response));
+      
+      // Check both responses
+      const responses = {
+        email1: email1Response,
+        email2: email2Response
+      };
+
+      // Check if either response contains an error
+      if (('error' in email1Response && email1Response.error) || 
+          ('error' in email2Response && email2Response.error)) {
+        throw new Error(`Resend API errors: ${JSON.stringify(responses)}`);
       }
 
-      return new Response(JSON.stringify({ success: true, response: emailResponse }), {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        responses 
+      }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
       });
@@ -132,12 +141,12 @@ serve(async (req) => {
       console.error('Email error properties:', Object.keys(emailError));
       console.error('Email error details:', emailError instanceof Error ? emailError.message : String(emailError));
       
-      // Check for common Resend errors
+      // Detailed error information
       const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
       let userFriendlyError = 'Failed to send email';
       
       if (errorMessage.includes('domain is invalid')) {
-        userFriendlyError = 'The sender domain is not verified in Resend. Please verify your domain in Resend or use the default sender format.';
+        userFriendlyError = 'The sender domain is not verified in Resend. Please verify your domain in Resend or use the default sender format correctly.';
       } else if (errorMessage.includes('recipient')) {
         userFriendlyError = 'One or more recipients are not verified. With the free Resend account and default sender, you need to verify recipient emails.';
       } else if (errorMessage.includes('rate limit')) {
@@ -149,7 +158,8 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: userFriendlyError, 
-          details: errorMessage
+          details: errorMessage,
+          message: "See logs for more details"
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },

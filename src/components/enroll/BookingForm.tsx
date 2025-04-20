@@ -28,6 +28,7 @@ export const BookingForm = () => {
   const [bookingError, setBookingError] = React.useState<string | null>(null);
   const [emailStatus, setEmailStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
   const [dbStatus, setDbStatus] = React.useState<'pending' | 'success' | 'error' | null>(null);
+  const [emailErrorDetails, setEmailErrorDetails] = React.useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +44,7 @@ export const BookingForm = () => {
     try {
       setIsSubmitting(true);
       setBookingError(null);
+      setEmailErrorDetails(null);
       setEmailStatus('pending');
       setDbStatus('pending');
       console.log("Form submitted with values:", values);
@@ -128,11 +130,23 @@ export const BookingForm = () => {
           console.error('Error sending enrollment email:', error);
           console.error('Error details:', JSON.stringify(error, null, 2));
           setEmailStatus('error');
+          setEmailErrorDetails(JSON.stringify(error));
           setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
           toast({
             variant: "destructive",
             title: "Note: Email notification failed",
             description: "We received your booking, but there was an issue with our email system. We'll still contact you.",
+          });
+        } else if (data?.error) {
+          console.error('Email service returned an error:', data.error);
+          console.error('Error details:', data.details || 'No details provided');
+          setEmailStatus('error');
+          setEmailErrorDetails(data.details || data.error);
+          setBookingError(`Email notification issue: ${data.error}`);
+          toast({
+            variant: "destructive",
+            title: "Email Sending Issue",
+            description: data.error,
           });
         } else {
           console.log("Email sent successfully:", data);
@@ -146,6 +160,7 @@ export const BookingForm = () => {
         console.error('Exception while sending email:', emailCatchError);
         console.error('Exception details:', JSON.stringify(emailCatchError, null, 2));
         setEmailStatus('error');
+        setEmailErrorDetails(String(emailCatchError));
         setBookingError("Email notification failed. We'll still contact you via the phone number provided.");
       }
     } catch (error) {
@@ -282,6 +297,11 @@ export const BookingForm = () => {
         <div className="mt-4 p-2 border border-gray-200 rounded text-xs text-gray-500">
           <div>DB: {dbStatus || 'not started'}</div>
           <div>Email: {emailStatus || 'not started'}</div>
+          {emailErrorDetails && (
+            <div className="mt-1 p-1 bg-gray-100 rounded overflow-auto max-h-20">
+              <pre className="text-xs break-words">{emailErrorDetails}</pre>
+            </div>
+          )}
         </div>
       )}
     </motion.div>
