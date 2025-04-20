@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,6 +12,7 @@ import { Laptop } from 'lucide-react';
 import { CountrySelect } from './CountrySelect';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   country_code: z.string().min(2, "Please select country code"),
@@ -56,46 +58,53 @@ export const BookingForm = () => {
       });
       
       // Try to store booking in Supabase
-      const { error: dbError } = await supabase
-        .from('trial_bookings')
-        .insert({
-          phone_number: values.phone_number,
-          grade: parseInt(values.grade),
-          has_laptop: values.has_laptop === "yes",
-          country_code: values.country_code
-        });
+      try {
+        const { error: dbError } = await supabase
+          .from('trial_bookings')
+          .insert({
+            phone_number: values.phone_number,
+            grade: parseInt(values.grade),
+            has_laptop: values.has_laptop === "yes",
+            country_code: values.country_code
+          });
 
-      if (dbError) {
-        console.error('Error storing booking in database:', dbError);
-        toast({
-          variant: "destructive",
-          title: "Booking Storage Issue",
-          description: "We couldn't fully save your booking details. Please contact support.",
-        });
+        if (dbError) {
+          console.error('Error storing booking in database:', dbError);
+          console.error('Error details:', JSON.stringify(dbError, null, 2));
+        } else {
+          console.log("Successfully stored booking in database");
+        }
+      } catch (dbCatchError) {
+        console.error('Exception while storing booking:', dbCatchError);
       }
       
       // Send the enrollment email
       console.log("Calling edge function send-enrollment-email");
-      const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
-        body: emailData
-      });
-      
-      console.log("Edge function response:", { data, error });
-      
-      if (error) {
-        console.error('Error sending enrollment email:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        toast({
-          variant: "destructive",
-          title: "Note: Email notification failed",
-          description: "We received your booking, but there was an issue with our email system. We'll still contact you.",
+      try {
+        const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
+          body: emailData
         });
-      } else {
-        console.log("Email sent successfully:", data);
-        toast({
-          title: "Booking Confirmed!",
-          description: "Your booking notification has been sent to our team.",
-        });
+        
+        console.log("Edge function response:", { data, error });
+        
+        if (error) {
+          console.error('Error sending enrollment email:', error);
+          console.error('Error details:', JSON.stringify(error, null, 2));
+          toast({
+            variant: "destructive",
+            title: "Note: Email notification failed",
+            description: "We received your booking, but there was an issue with our email system. We'll still contact you.",
+          });
+        } else {
+          console.log("Email sent successfully:", data);
+          toast({
+            title: "Booking Confirmed!",
+            description: "Your booking notification has been sent to our team.",
+          });
+        }
+      } catch (emailCatchError) {
+        console.error('Exception while sending email:', emailCatchError);
+        console.error('Exception details:', JSON.stringify(emailCatchError, null, 2));
       }
     } catch (error) {
       console.error('Error in form submission:', error);
