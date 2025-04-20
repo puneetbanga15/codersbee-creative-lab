@@ -27,6 +27,7 @@ serve(async (req) => {
   try {
     console.log('Starting email send process');
     console.log('API Key exists:', !!RESEND_API_KEY);
+    console.log('API Key length:', RESEND_API_KEY?.length || 0);
     
     // Parse the request body
     const requestData = await req.json();

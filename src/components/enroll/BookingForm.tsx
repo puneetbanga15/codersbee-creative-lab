@@ -47,36 +47,41 @@ export const BookingForm = () => {
       
       console.log("Sending email with data:", emailData);
       
-      // Always open Calendly regardless of email success
+      // Open Calendly in a new tab
       window.open('https://calendly.com/codersbee/class-slot', '_blank');
       
-      // Show toast first to provide immediate feedback
+      // Show toast for immediate feedback
       toast({
-        title: "Booking Successful!",
+        title: "Booking Submitted!",
         description: "We'll contact you shortly to confirm your trial class.",
       });
       
-      // Then attempt to send the email
-      try {
-        const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
-          body: emailData
-        });
-        
-        console.log("Edge function response:", { data, error });
-        
-        if (error) {
-          console.error('Error sending enrollment email:', error);
-          // We already showed a success toast, so no need to show an error
-        } else {
-          console.log("Email sent successfully:", data);
-        }
-      } catch (emailErr) {
-        // Log email errors but don't affect user experience
-        console.error('Error in email sending:', emailErr);
-      }
+      // Send the enrollment email
+      console.log("Calling edge function send-enrollment-email");
+      const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
+        body: emailData
+      });
       
+      console.log("Edge function response:", { data, error });
+      
+      if (error) {
+        console.error('Error sending enrollment email:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        toast({
+          variant: "destructive",
+          title: "Note: Email notification failed",
+          description: "We received your booking, but there was an issue with our email system. We'll still contact you.",
+        });
+      } else {
+        console.log("Email sent successfully:", data);
+        toast({
+          title: "Booking Confirmed!",
+          description: "Your booking notification has been sent to our team.",
+        });
+      }
     } catch (error) {
       console.error('Error in form submission:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       toast({
         variant: "destructive",
         title: "Something went wrong",
