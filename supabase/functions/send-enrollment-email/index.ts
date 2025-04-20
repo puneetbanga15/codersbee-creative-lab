@@ -93,9 +93,14 @@ serve(async (req) => {
     console.log('Recipient emails:', ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com']);
 
     try {
+      // Note about using the default sender
+      console.log('NOTE: Using the default onboarding@resend.dev sender email');
+      console.log('This is limited to 100 emails/day and only to verified recipients');
+      console.log('For production use, verify your own domain in Resend');
+      
       console.log('Calling Resend API...');
       const emailResponse = await resend.emails.send({
-        from: 'CodersBee <onboarding@resend.dev>',
+        from: 'CodersBee <onboarding@resend.dev>', // Using the default Resend sender
         to: ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'],
         subject: 'New Trial Class Booking',
         html: emailHtml
@@ -122,10 +127,20 @@ serve(async (req) => {
       console.error('Email error properties:', Object.keys(emailError));
       console.error('Email error details:', emailError instanceof Error ? emailError.message : String(emailError));
       
+      // Check for common Resend errors
+      const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
+      let userFriendlyError = 'Failed to send email';
+      
+      if (errorMessage.includes('domain is invalid')) {
+        userFriendlyError = 'The sender domain is not verified in Resend. Please verify your domain in Resend or use the default sender format.';
+      } else if (errorMessage.includes('recipient')) {
+        userFriendlyError = 'One or more recipients are not verified. With the free Resend account and default sender, you need to verify recipient emails.';
+      }
+      
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to send email', 
-          details: emailError instanceof Error ? emailError.message : String(emailError) 
+          error: userFriendlyError, 
+          details: errorMessage
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
