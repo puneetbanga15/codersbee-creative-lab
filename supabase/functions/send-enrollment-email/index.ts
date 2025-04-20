@@ -2,7 +2,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+// Initialize Resend with the API key
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+const resend = new Resend(RESEND_API_KEY);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -24,16 +26,45 @@ serve(async (req) => {
 
   try {
     console.log('Starting email send process');
-    console.log('API Key defined:', !!Deno.env.get('RESEND_API_KEY'));
+    console.log('API Key exists:', !!RESEND_API_KEY);
     
-    const { phone, grade, hasLaptop, countryCode } = await req.json() as EnrollmentEmailRequest;
+    // Parse the request body
+    const requestData = await req.json();
+    console.log('Raw request data received:', JSON.stringify(requestData));
     
-    console.log('Request data received:', { 
+    const { phone, grade, hasLaptop, countryCode } = requestData as EnrollmentEmailRequest;
+    
+    console.log('Parsed request data:', { 
       phone, 
       grade, 
       hasLaptop, 
       countryCode 
     });
+
+    // Validate required fields
+    if (!phone || !grade) {
+      console.error('Missing required fields');
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400 
+        }
+      );
+    }
+
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not configured');
+      return new Response(
+        JSON.stringify({ error: 'Email service is not configured' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500 
+        }
+      );
+    }
+
+    console.log('Attempting to send email...');
 
     // Send email to multiple team members about new enrollment
     const emailResponse = await resend.emails.send({
