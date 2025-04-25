@@ -26,18 +26,19 @@ const formSchema = z.object({
   }),
 }).refine((data) => {
   if (data.contact_method === 'whatsapp') {
-    return data.country_code && data.phone_number?.length >= 10;
+    return !!data.country_code && !!data.phone_number && data.phone_number.length >= 10;
   }
-  return data.email;
+  return !!data.email;
 }, {
   message: "Please provide either a valid phone number or email address",
+  path: ["contact_method"]
 });
 
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
-  const { contactMethod, setContactMethod } = useContactMethod();
+  const { contactMethod, setContactMethod, email, setEmail } = useContactMethod();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,7 +50,7 @@ export const BookingForm = () => {
       grade: "",
       has_laptop: "no",
     },
-  })
+  });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -125,7 +126,7 @@ export const BookingForm = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   if (isSuccess) {
     return (
@@ -294,7 +295,7 @@ export const BookingForm = () => {
 
           <Button 
             type="submit" 
-            className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+            className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
