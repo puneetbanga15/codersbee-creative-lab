@@ -38,7 +38,16 @@ export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
-  const { contactMethod, setContactMethod, email, setEmail } = useContactMethod();
+  const { 
+    contactMethod, 
+    setContactMethod, 
+    email, 
+    setEmail,
+    phoneNumber,
+    setPhoneNumber,
+    countryCode,
+    setCountryCode 
+  } = useContactMethod();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,10 +61,34 @@ export const BookingForm = () => {
     },
   });
 
+  // Update form values when contactMethod changes
+  React.useEffect(() => {
+    form.setValue("contact_method", contactMethod);
+  }, [contactMethod, form]);
+
+  // Sync form values with our custom hook state
+  React.useEffect(() => {
+    const subscription = form.watch((value) => {
+      if (value.email !== undefined) {
+        setEmail(value.email as string);
+      }
+      if (value.phone_number !== undefined) {
+        setPhoneNumber(value.phone_number as string);
+      }
+      if (value.country_code !== undefined) {
+        setCountryCode(value.country_code as string);
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form, setEmail, setPhoneNumber, setCountryCode]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsSubmitting(true);
       setBookingError(null);
+      
+      console.log("Form values:", values);
       
       // Prepare data for database storage
       const bookingData = {
@@ -68,6 +101,8 @@ export const BookingForm = () => {
           email: values.email
         })
       };
+      
+      console.log("Booking data:", bookingData);
       
       // Open Calendly in a new tab
       window.open('https://calendly.com/codersbee/class-slot', '_blank');
@@ -127,6 +162,11 @@ export const BookingForm = () => {
       setIsSubmitting(false);
     }
   };
+
+  // For debugging
+  console.log("Form state:", form.formState);
+  console.log("Form errors:", form.formState.errors);
+  console.log("Is form valid:", form.formState.isValid);
 
   if (isSuccess) {
     return (
