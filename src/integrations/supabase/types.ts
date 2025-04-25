@@ -805,25 +805,31 @@ export type Database = {
       }
       trial_bookings: {
         Row: {
+          country_code: string | null
           created_at: string
+          email: string | null
           grade: number
           has_laptop: boolean
           id: string
-          phone_number: string
+          phone_number: string | null
         }
         Insert: {
+          country_code?: string | null
           created_at?: string
+          email?: string | null
           grade: number
           has_laptop: boolean
           id?: string
-          phone_number: string
+          phone_number?: string | null
         }
         Update: {
+          country_code?: string | null
           created_at?: string
+          email?: string | null
           grade?: number
           has_laptop?: boolean
           id?: string
-          phone_number?: string
+          phone_number?: string | null
         }
         Relationships: []
       }

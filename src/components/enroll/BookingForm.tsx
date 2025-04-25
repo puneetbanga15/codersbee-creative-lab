@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -7,31 +8,44 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
-import { Laptop, Loader2, Check } from 'lucide-react';
+import { Laptop, Loader2, Check, Phone, Mail } from 'lucide-react';
 import { CountrySelect } from './CountrySelect';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useContactMethod } from '@/hooks/useContactMethod';
 
 const formSchema = z.object({
-  country_code: z.string().min(2, "Please select country code"),
-  phone_number: z.string().min(10, "Phone number must be at least 10 digits"),
+  contact_method: z.enum(["whatsapp", "email"]),
+  country_code: z.string().optional(),
+  phone_number: z.string().optional(),
+  email: z.string().email().optional(),
   grade: z.string().min(1, "Please select your child's grade"),
   has_laptop: z.enum(["yes", "no"], {
     required_error: "Please indicate if you have a laptop",
   }),
-})
+}).refine((data) => {
+  if (data.contact_method === 'whatsapp') {
+    return data.country_code && data.phone_number?.length >= 10;
+  }
+  return data.email;
+}, {
+  message: "Please provide either a valid phone number or email address",
+});
 
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
+  const { contactMethod, setContactMethod } = useContactMethod();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country_code: "+91", // Default to India
+      contact_method: "whatsapp",
+      country_code: "+91",
       phone_number: "",
+      email: "",
       grade: "",
       has_laptop: "no",
     },
@@ -42,12 +56,16 @@ export const BookingForm = () => {
       setIsSubmitting(true);
       setBookingError(null);
       
-      // Prepare data for WhatsApp notification and database storage
+      // Prepare data for database storage
       const bookingData = {
-        phone: values.phone_number,
-        grade: values.grade,
-        hasLaptop: values.has_laptop === "yes",
-        countryCode: values.country_code
+        grade: parseInt(values.grade),
+        has_laptop: values.has_laptop === "yes",
+        ...(values.contact_method === 'whatsapp' ? {
+          phone_number: values.phone_number,
+          country_code: values.country_code
+        } : {
+          email: values.email
+        })
       };
       
       // Open Calendly in a new tab
@@ -60,77 +78,42 @@ export const BookingForm = () => {
       });
       
       // Store booking in Supabase
-      try {
-        console.log("Storing booking in database...");
-        try {
-          // First try with country_code (for newer schema)
-          const { error: dbError } = await supabase
-            .from('trial_bookings')
-            .insert({
-              phone_number: values.phone_number,
-              grade: parseInt(values.grade),
-              has_laptop: values.has_laptop === "yes",
-              country_code: values.country_code
-            });
+      const { error: dbError } = await supabase
+        .from('trial_bookings')
+        .insert(bookingData);
 
-          if (dbError) {
-            console.log('Error storing booking with country_code, trying without:', dbError);
-            
-            // Try without country_code (for backward compatibility)
-            const { error: fallbackError } = await supabase
-              .from('trial_bookings')
-              .insert({
-                phone_number: values.phone_number,
-                grade: parseInt(values.grade),
-                has_laptop: values.has_laptop === "yes"
-              });
-              
-            if (fallbackError) {
-              console.error('Fallback database insert also failed:', fallbackError);
-              // Don't block the flow, continue with email sending
-            } else {
-              console.log("Successfully stored booking in database (fallback method)");
-            }
-          } else {
-            console.log("Successfully stored booking in database with country_code");
-          }
-        } catch (dbCatchError) {
-          console.error('Exception while storing booking:', dbCatchError);
-          // Continue with the flow - don't block on DB issues
-        }
-      } catch (dbError) {
-        console.error('Exception in database operation:', dbError);
-        // Continue with the flow - don't block on DB issues
+      if (dbError) {
+        console.error('Error storing booking:', dbError);
+        throw new Error('Failed to store booking');
       }
       
-      // Send WhatsApp notification
-      console.log("Calling edge function send-whatsapp-notification");
-      try {
-        const { data, error } = await supabase.functions.invoke('send-whatsapp-notification', {
-          body: bookingData
-        });
-        
-        console.log("WhatsApp notification function response:", { data, error });
-        
-        if (error) {
-          console.error('Error calling WhatsApp notification function:', error);
+      // If it's a WhatsApp contact method, send WhatsApp notification
+      if (values.contact_method === 'whatsapp' && values.phone_number) {
+        try {
+          const { data, error } = await supabase.functions.invoke('send-whatsapp-notification', {
+            body: {
+              phone: values.phone_number,
+              grade: values.grade,
+              hasLaptop: values.has_laptop === "yes",
+              countryCode: values.country_code
+            }
+          });
+          
+          if (error) {
+            console.error('Error calling WhatsApp notification function:', error);
+          }
+        } catch (whatsappError) {
+          console.error('Exception while calling WhatsApp notification function:', whatsappError);
         }
-        
-        // Consider booking successful regardless of notification status
-        setIsSuccess(true);
-        toast({
-          title: "Booking Confirmed!",
-          description: "We'll contact you on your WhatsApp number shortly.",
-        });
-      } catch (whatsappError) {
-        console.error('Exception while calling WhatsApp notification function:', whatsappError);
-        // Still consider the booking successful
-        setIsSuccess(true);
-        toast({
-          title: "Booking Confirmed!",
-          description: "We'll contact you on your WhatsApp number shortly.",
-        });
       }
+      
+      setIsSuccess(true);
+      toast({
+        title: "Booking Confirmed!",
+        description: values.contact_method === 'whatsapp' 
+          ? "We'll contact you on your WhatsApp number shortly."
+          : "We'll contact you via email shortly.",
+      });
     } catch (error) {
       console.error('Error in form submission:', error);
       setBookingError("We had an issue processing your booking. Please try again or contact us directly.");
@@ -158,7 +141,7 @@ export const BookingForm = () => {
           </div>
           <h3 className="text-2xl font-bold text-codersbee-dark">Booking Confirmed!</h3>
           <p className="text-gray-600">
-            Thank you for booking a trial class with CodersBee. We'll contact you on your WhatsApp number shortly to confirm your booking.
+            Thank you for booking a trial class with CodersBee. We'll contact you shortly to confirm your booking.
           </p>
           <p className="text-gray-500 text-sm">
             Please check your Calendly scheduling page to select your preferred time slot.
@@ -190,33 +173,83 @@ export const BookingForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="phone_number"
+            name="contact_method"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>WhatsApp Number</FormLabel>
-                <div className="flex gap-2">
-                  <FormField
-                    control={form.control}
-                    name="country_code"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <CountrySelect 
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormControl>
-                    <Input placeholder="Enter your WhatsApp number" {...field} />
-                  </FormControl>
-                </div>
+                <FormLabel>How should we contact you?</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setContactMethod(value as 'whatsapp' | 'email');
+                    }}
+                    defaultValue={field.value}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="whatsapp" id="whatsapp" />
+                      <label htmlFor="whatsapp" className="flex items-center gap-1">
+                        <Phone className="w-4 h-4" /> WhatsApp
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="email" id="email" />
+                      <label htmlFor="email" className="flex items-center gap-1">
+                        <Mail className="w-4 h-4" /> Email
+                      </label>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {form.watch("contact_method") === "whatsapp" ? (
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>WhatsApp Number</FormLabel>
+                  <div className="flex gap-2">
+                    <FormField
+                      control={form.control}
+                      name="country_code"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <CountrySelect 
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormControl>
+                      <Input placeholder="Enter your WhatsApp number" {...field} />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="Enter your email address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <FormField
             control={form.control}
