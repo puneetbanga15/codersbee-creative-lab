@@ -4,10 +4,8 @@ import { Resend } from "npm:resend@2.0.0"
 
 // Initialize Resend with the API key
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-console.log('Starting function execution');
+console.log('Starting email function execution');
 console.log('API Key exists:', !!RESEND_API_KEY);
-console.log('API Key length:', RESEND_API_KEY ? RESEND_API_KEY.length : 0);
-console.log('API Key first 4 chars:', RESEND_API_KEY ? RESEND_API_KEY.substring(0, 4) : 'none');
 
 if (!RESEND_API_KEY) {
   console.error("RESEND_API_KEY environment variable is not set!");
@@ -22,10 +20,9 @@ const corsHeaders = {
 }
 
 interface EnrollmentEmailRequest {
-  phone: string
+  email: string
   grade: string
   hasLaptop: boolean
-  countryCode: string
 }
 
 serve(async (req) => {
@@ -36,24 +33,22 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Request received:', req.method);
-    console.log('Request headers:', JSON.stringify(Object.fromEntries(req.headers.entries())));
+    console.log('Email function request received:', req.method);
     
     // Parse the request body
     const requestData = await req.json();
     console.log('Raw request data received:', JSON.stringify(requestData));
     
-    const { phone, grade, hasLaptop, countryCode } = requestData as EnrollmentEmailRequest;
+    const { email, grade, hasLaptop } = requestData as EnrollmentEmailRequest;
     
     console.log('Parsed request data:', { 
-      phone, 
+      email, 
       grade, 
-      hasLaptop, 
-      countryCode 
+      hasLaptop
     });
 
     // Validate required fields
-    if (!phone || !grade) {
+    if (!email || !grade) {
       console.error('Missing required fields');
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
@@ -78,47 +73,66 @@ serve(async (req) => {
 
     console.log('Attempting to send email with Resend...');
     
-    // Build the email HTML
-    const emailHtml = `
+    // Build the email HTML for the confirmation to the user
+    const userEmailHtml = `
+      <h1>Thank You for Booking a Trial Class with CodersBee!</h1>
+      <p>Dear Parent,</p>
+      <p>We're excited to have your child join us for a free trial class. Here's what you've shared with us:</p>
+      <ul>
+        <li>Child's Grade: ${grade}</li>
+        <li>Has Laptop: ${hasLaptop ? 'Yes' : 'No'}</li>
+      </ul>
+      <p>The next step is to select a convenient time slot for your trial class. Please check your browser for the Calendly scheduling page that opened, or <a href="https://calendly.com/codersbee/class-slot">click here</a> to schedule your class.</p>
+      <p>If you have any questions, feel free to reach out to us.</p>
+      <p>Warm regards,<br>The CodersBee Team</p>
+    `;
+    
+    // Build the notification email HTML for the admin
+    const adminEmailHtml = `
       <h1>New Trial Class Booking</h1>
       <p>A new student has booked a trial class. Details:</p>
       <ul>
-        <li>WhatsApp Number: ${countryCode} ${phone}</li>
+        <li>Email: ${email}</li>
         <li>Grade: ${grade}</li>
         <li>Has Laptop: ${hasLaptop ? 'Yes' : 'No'}</li>
       </ul>
     `;
     
-    console.log('Email HTML prepared:', emailHtml);
+    console.log('Email HTML prepared');
     
     // Attempt to send emails, but don't fail the booking if emails fail
     let emailResults = { success: false, message: 'Email sending bypassed' };
     
     try {
-      // Try to send to mailsmanisha20@gmail.com
-      console.log('Attempting to send email to recipient 1: mailsmanisha20@gmail.com');
-      const email1Response = await resend.emails.send({
+      // Send confirmation email to the user
+      console.log('Attempting to send confirmation email to user:', email);
+      const userEmailResponse = await resend.emails.send({
         from: 'CodersBee <onboarding@resend.dev>',
-        to: ['mailsmanisha20@gmail.com'],
-        subject: 'New Trial Class Booking',
-        html: emailHtml
+        to: [email],
+        subject: 'Your CodersBee Trial Class Booking',
+        html: userEmailHtml
       });
       
-      console.log('Email 1 sending response:', JSON.stringify(email1Response));
+      console.log('User email response:', JSON.stringify(userEmailResponse));
       
       // Small delay between sends
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Try to send to puneetbanga15@gmail.com
-      console.log('Attempting to send email to recipient 2: puneetbanga15@gmail.com');
-      const email2Response = await resend.emails.send({
-        from: 'CodersBee <onboarding@resend.dev>',
-        to: ['puneetbanga15@gmail.com'],
-        subject: 'New Trial Class Booking',
-        html: emailHtml
-      });
+      // Try to send to notification emails
+      console.log('Attempting to send email to admins');
+      const adminEmails = ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'];
       
-      console.log('Email 2 sending response:', JSON.stringify(email2Response));
+      for (const adminEmail of adminEmails) {
+        const adminEmailResponse = await resend.emails.send({
+          from: 'CodersBee <onboarding@resend.dev>',
+          to: [adminEmail],
+          subject: 'New Trial Class Booking',
+          html: adminEmailHtml
+        });
+        
+        console.log(`Admin email to ${adminEmail} response:`, JSON.stringify(adminEmailResponse));
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
       
       emailResults = {
         success: true,
@@ -132,14 +146,13 @@ serve(async (req) => {
       emailResults = {
         success: false,
         message: 'Could not send notification emails, but booking was recorded',
-        // Don't include technical error details in the response
       };
     }
 
     // Always return success for the overall operation
     return new Response(JSON.stringify({ 
       success: true,
-      booking: { phone, grade, hasLaptop, countryCode },
+      email: email,
       notification: emailResults
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

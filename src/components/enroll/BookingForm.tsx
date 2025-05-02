@@ -15,6 +15,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useContactMethod } from '@/hooks/useContactMethod';
 
+// Modified form schema to better handle conditional validation
 const formSchema = z.object({
   contact_method: z.enum(["whatsapp", "email"]),
   country_code: z.string().optional(),
@@ -24,14 +25,25 @@ const formSchema = z.object({
   has_laptop: z.enum(["yes", "no"], {
     required_error: "Please indicate if you have a laptop",
   }),
-}).refine((data) => {
+}).superRefine((data, ctx) => {
+  // Custom validation to ensure proper contact method data
   if (data.contact_method === 'whatsapp') {
-    return !!data.country_code && !!data.phone_number && data.phone_number.length >= 10;
+    if (!data.phone_number || data.phone_number.length < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please provide a valid phone number (at least 10 digits)",
+        path: ["phone_number"]
+      });
+    }
+  } else if (data.contact_method === 'email') {
+    if (!data.email) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please provide a valid email address",
+        path: ["email"]
+      });
+    }
   }
-  return !!data.email;
-}, {
-  message: "Please provide either a valid phone number or email address",
-  path: ["contact_method"]
 });
 
 export const BookingForm = () => {
@@ -88,6 +100,7 @@ export const BookingForm = () => {
       setIsSubmitting(true);
       setBookingError(null);
       
+      console.log("Form submission starting");
       console.log("Form values:", values);
       
       // Prepare data for database storage
@@ -102,10 +115,7 @@ export const BookingForm = () => {
         })
       };
       
-      console.log("Booking data:", bookingData);
-      
-      // Open Calendly in a new tab
-      window.open('https://calendly.com/codersbee/class-slot', '_blank');
+      console.log("Booking data prepared:", bookingData);
       
       // Show toast for immediate feedback
       toast({
@@ -119,13 +129,16 @@ export const BookingForm = () => {
         .insert(bookingData);
 
       if (dbError) {
-        console.error('Error storing booking:', dbError);
-        throw new Error('Failed to store booking');
+        console.error('Error storing booking in Supabase:', dbError);
+        throw new Error('Failed to store booking information');
       }
       
-      // If it's a WhatsApp contact method, send WhatsApp notification
+      console.log("Booking stored in Supabase successfully");
+      
+      // Send notification based on contact method
       if (values.contact_method === 'whatsapp' && values.phone_number) {
         try {
+          console.log("Attempting to send WhatsApp notification");
           const { data, error } = await supabase.functions.invoke('send-whatsapp-notification', {
             body: {
               phone: values.phone_number,
@@ -136,13 +149,35 @@ export const BookingForm = () => {
           });
           
           if (error) {
-            console.error('Error calling WhatsApp notification function:', error);
+            console.error('WhatsApp notification error:', error);
+          } else {
+            console.log("WhatsApp notification sent successfully", data);
           }
         } catch (whatsappError) {
-          console.error('Exception while calling WhatsApp notification function:', whatsappError);
+          console.error('Exception while sending WhatsApp notification:', whatsappError);
+        }
+      } else if (values.contact_method === 'email' && values.email) {
+        try {
+          console.log("Attempting to send email notification");
+          const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
+            body: {
+              email: values.email,
+              grade: values.grade,
+              hasLaptop: values.has_laptop === "yes",
+            }
+          });
+          
+          if (error) {
+            console.error('Email notification error:', error);
+          } else {
+            console.log("Email notification sent successfully", data);
+          }
+        } catch (emailError) {
+          console.error('Exception while sending email notification:', emailError);
         }
       }
       
+      // Set success state and show confirmation toast
       setIsSuccess(true);
       toast({
         title: "Booking Confirmed!",
@@ -150,6 +185,10 @@ export const BookingForm = () => {
           ? "We'll contact you on your WhatsApp number shortly."
           : "We'll contact you via email shortly.",
       });
+      
+      // Open Calendly in a new tab for scheduling
+      window.open('https://calendly.com/codersbee/class-slot', '_blank');
+      
     } catch (error) {
       console.error('Error in form submission:', error);
       setBookingError("We had an issue processing your booking. Please try again or contact us directly.");
@@ -246,7 +285,7 @@ export const BookingForm = () => {
             )}
           />
 
-          {form.watch("contact_method") === "whatsapp" ? (
+          {contactMethod === "whatsapp" ? (
             <FormField
               control={form.control}
               name="phone_number"
