@@ -15,7 +15,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useContactMethod } from '@/hooks/useContactMethod';
 
-// Modified form schema to better handle conditional validation
+// Updated form schema with superRefine for proper conditional validation
 const formSchema = z.object({
   contact_method: z.enum(["whatsapp", "email"]),
   country_code: z.string().optional(),
@@ -26,7 +26,7 @@ const formSchema = z.object({
     required_error: "Please indicate if you have a laptop",
   }),
 }).superRefine((data, ctx) => {
-  // Custom validation to ensure proper contact method data
+  // Custom validation for contact method
   if (data.contact_method === 'whatsapp') {
     if (!data.phone_number || data.phone_number.length < 10) {
       ctx.addIssue({
@@ -61,8 +61,10 @@ export const BookingForm = () => {
     setCountryCode 
   } = useContactMethod();
   
+  // Create form with default values and resolver
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onChange", // Validate on change for better user feedback
     defaultValues: {
       contact_method: "whatsapp",
       country_code: "+91",
@@ -73,12 +75,23 @@ export const BookingForm = () => {
     },
   });
 
+  // For debugging the form state
+  const formState = form.formState;
+  const contactMethodValue = form.watch("contact_method");
+  
+  console.log("Form is valid:", form.formState.isValid);
+  console.log("Form errors:", form.formState.errors);
+  console.log("Contact method:", contactMethodValue);
+
   // Update form values when contactMethod changes
   React.useEffect(() => {
     form.setValue("contact_method", contactMethod);
+    
+    // This triggers revalidation after changing the contact method
+    form.trigger("contact_method");
   }, [contactMethod, form]);
 
-  // Sync form values with our custom hook state
+  // Synchronize form values with contact hook state
   React.useEffect(() => {
     const subscription = form.watch((value) => {
       if (value.email !== undefined) {
@@ -96,12 +109,18 @@ export const BookingForm = () => {
   }, [form, setEmail, setPhoneNumber, setCountryCode]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("Submit clicked with values:", values);
+    console.log("Form valid?", form.formState.isValid);
+    
     try {
       setIsSubmitting(true);
       setBookingError(null);
       
-      console.log("Form submission starting");
-      console.log("Form values:", values);
+      // Immediate feedback toast
+      toast({
+        title: "Booking Started",
+        description: "Processing your trial class booking...",
+      });
       
       // Prepare data for database storage
       const bookingData = {
@@ -115,13 +134,7 @@ export const BookingForm = () => {
         })
       };
       
-      console.log("Booking data prepared:", bookingData);
-      
-      // Show toast for immediate feedback
-      toast({
-        title: "Booking Started",
-        description: "Processing your trial class booking...",
-      });
+      console.log("Sending booking data to Supabase:", bookingData);
       
       // Store booking in Supabase
       const { error: dbError } = await supabase
@@ -202,11 +215,7 @@ export const BookingForm = () => {
     }
   };
 
-  // For debugging
-  console.log("Form state:", form.formState);
-  console.log("Form errors:", form.formState.errors);
-  console.log("Is form valid:", form.formState.isValid);
-
+  // Success view
   if (isSuccess) {
     return (
       <motion.div
@@ -262,6 +271,12 @@ export const BookingForm = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       setContactMethod(value as 'whatsapp' | 'email');
+                      // Reset validation errors when switching
+                      if (value === 'email') {
+                        form.clearErrors('phone_number');
+                      } else {
+                        form.clearErrors('email');
+                      }
                     }}
                     defaultValue={field.value}
                     className="flex gap-4"
@@ -375,7 +390,7 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !form.formState.isValid}
           >
             {isSubmitting ? (
               <>

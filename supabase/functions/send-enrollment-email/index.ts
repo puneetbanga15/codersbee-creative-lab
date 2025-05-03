@@ -118,7 +118,7 @@ serve(async (req) => {
       // Small delay between sends
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Try to send to notification emails
+      // Try to send notification emails
       console.log('Attempting to send email to admins');
       const adminEmails = ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'];
       

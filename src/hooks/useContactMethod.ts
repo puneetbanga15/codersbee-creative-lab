@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 type ContactMethod = 'whatsapp' | 'email';
 
@@ -8,6 +8,16 @@ export const useContactMethod = () => {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+91');
+  
+  // Add validation helpers
+  const validateWhatsApp = useCallback(() => {
+    return phoneNumber.length >= 10;
+  }, [phoneNumber]);
+  
+  const validateEmail = useCallback(() => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }, [email]);
   
   return {
     contactMethod,
@@ -19,6 +29,8 @@ export const useContactMethod = () => {
     countryCode,
     setCountryCode,
     isWhatsApp: contactMethod === 'whatsapp',
-    isEmail: contactMethod === 'email'
+    isEmail: contactMethod === 'email',
+    validateWhatsApp,
+    validateEmail
   };
 };
