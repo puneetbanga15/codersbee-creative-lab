@@ -25,22 +25,35 @@ const formSchema = z.object({
   has_laptop: z.enum(["yes", "no"], {
     required_error: "Please indicate if you have a laptop",
   }),
-}).refine((data) => {
-  // For whatsapp, ensure phone number is valid
-  if (data.contact_method === 'whatsapp') {
-    return data.phone_number && data.phone_number.length >= 10;
+}).superRefine((data, ctx) => {
+  // Only validate email when email contact method is selected
+  if (data.contact_method === 'email') {
+    if (!data.email || !data.email.includes('@')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please provide a valid email address",
+        path: ['email']
+      });
+    }
   }
-  // For email, ensure email is valid
-  return data.email && data.email.length > 0;
-}, {
-  message: "Please provide valid contact information",
-  path: ['contact_method'], // This is a fallback path
+  
+  // Only validate phone number when whatsapp contact method is selected
+  if (data.contact_method === 'whatsapp') {
+    if (!data.phone_number || data.phone_number.length < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please provide a valid phone number (min 10 digits)",
+        path: ['phone_number']
+      });
+    }
+  }
 });
 
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
+  const [showValidationAlert, setShowValidationAlert] = React.useState(false);
   
   const { 
     contactMethod, 
@@ -52,13 +65,14 @@ export const BookingForm = () => {
     countryCode,
     setCountryCode,
     resetFields,
-    isCurrentContactMethodValid
+    initializeForm,
+    formInitialized
   } = useContactMethod();
   
   // Create form with resolver
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: "onChange", // Validate on change for better user feedback
+    mode: "onChange",
     defaultValues: {
       contact_method: "whatsapp",
       country_code: "+91",
@@ -66,41 +80,41 @@ export const BookingForm = () => {
       email: "",
       grade: "",
       has_laptop: "no",
-    },
+    }
   });
 
-  // Enhanced logging to debug form state
-  const formState = form.formState;
-  const contactMethodValue = form.watch("contact_method");
-  const isFormValid = form.formState.isValid;
-  
+  // Only show validation errors after user interaction
   React.useEffect(() => {
-    console.log("Form validation status:", {
-      isValid: isFormValid,
-      errors: Object.keys(formState.errors),
-      errorDetails: formState.errors,
-      isDirty: formState.isDirty,
-      contactMethod: contactMethodValue,
-      isCurrentMethodValid: isCurrentContactMethodValid()
-    });
-  }, [formState, isFormValid, contactMethodValue, isCurrentContactMethodValid]);
+    if (!formInitialized) {
+      setShowValidationAlert(false);
+    }
+  }, [formInitialized]);
 
   // Update form values when contactMethod changes
   React.useEffect(() => {
-    form.setValue("contact_method", contactMethod);
+    form.setValue("contact_method", contactMethod, {
+      shouldValidate: formInitialized // Only trigger validation if form is initialized
+    });
     
     // Reset other field values when switching
     resetFields();
     
     // This triggers revalidation after changing the contact method
-    form.trigger("contact_method");
+    if (formInitialized) {
+      form.trigger("contact_method");
+    }
     
     console.log(`Switched to contact method: ${contactMethod}`);
-  }, [contactMethod, form, resetFields]);
+  }, [contactMethod, form, resetFields, formInitialized]);
 
   // Synchronize form values with contact hook state
   React.useEffect(() => {
-    const subscription = form.watch((value) => {
+    const subscription = form.watch((value, { name }) => {
+      // Mark form as initialized on first interaction
+      if (name) {
+        initializeForm();
+      }
+      
       if (value.email !== undefined) {
         setEmail(value.email as string);
       }
@@ -113,7 +127,7 @@ export const BookingForm = () => {
     });
     
     return () => subscription.unsubscribe();
-  }, [form, setEmail, setPhoneNumber, setCountryCode]);
+  }, [form, setEmail, setPhoneNumber, setCountryCode, initializeForm]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("Form submission started with values:", values);
@@ -227,11 +241,6 @@ export const BookingForm = () => {
     }
   };
 
-  const handleFormSubmit = (event: React.FormEvent) => {
-    console.log("Form submit event triggered");
-    // The form.handleSubmit will handle validation and call onSubmit if valid
-  };
-
   // Success view
   if (isSuccess) {
     return (
@@ -275,8 +284,8 @@ export const BookingForm = () => {
         </Alert>
       )}
 
-      {/* Form validation status display for debugging */}
-      {Object.keys(form.formState.errors).length > 0 && (
+      {/* Show validation alert only after user has interacted with the form */}
+      {showValidationAlert && Object.keys(form.formState.errors).length > 0 && (
         <Alert className="mb-4 bg-amber-50 border-amber-200">
           <AlertTitle className="text-amber-800">Form has validation errors</AlertTitle>
           <AlertDescription className="text-amber-700">
@@ -288,6 +297,7 @@ export const BookingForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
           console.log("Form validation failed:", errors);
+          setShowValidationAlert(true);
           toast({
             variant: "destructive",
             title: "Please check your form",
@@ -311,6 +321,9 @@ export const BookingForm = () => {
                       } else {
                         form.clearErrors('email');
                       }
+                      
+                      // Mark form as interacted with
+                      initializeForm();
                     }}
                     defaultValue={field.value}
                     className="flex gap-4"
@@ -350,7 +363,10 @@ export const BookingForm = () => {
                           <FormControl>
                             <CountrySelect 
                               value={field.value}
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                initializeForm();
+                              }}
                             />
                           </FormControl>
                         </FormItem>
@@ -362,6 +378,7 @@ export const BookingForm = () => {
                         {...field} 
                         onChange={(e) => {
                           field.onChange(e);
+                          initializeForm();
                           console.log("Phone number changed:", e.target.value);
                         }}
                         className="flex-1"
@@ -386,6 +403,7 @@ export const BookingForm = () => {
                       {...field} 
                       onChange={(e) => {
                         field.onChange(e);
+                        initializeForm();
                         console.log("Email changed:", e.target.value);
                       }}
                     />
@@ -409,6 +427,10 @@ export const BookingForm = () => {
                     max="12" 
                     placeholder="Enter grade (1-12)" 
                     {...field} 
+                    onChange={(e) => {
+                      field.onChange(e);
+                      initializeForm();
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -424,7 +446,10 @@ export const BookingForm = () => {
                 <FormLabel>Do you have a laptop?</FormLabel>
                 <FormControl>
                   <RadioGroup
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      initializeForm();
+                    }}
                     defaultValue={field.value}
                     className="flex gap-4"
                   >
@@ -446,9 +471,16 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
-            disabled={isSubmitting}  // Temporarily allow submission regardless of validation
+            disabled={isSubmitting}  // Only disable during submission
             onClick={() => {
               console.log("Book Now button clicked");
+              
+              // Set validation alert to show if we have errors
+              if (Object.keys(form.formState.errors).length > 0) {
+                setShowValidationAlert(true);
+              }
+              
+              // Debug logs
               console.log("Current form state:", {
                 isValid: form.formState.isValid,
                 isDirty: form.formState.isDirty,
@@ -456,6 +488,8 @@ export const BookingForm = () => {
                 contactMethod: contactMethod,
                 email: form.getValues("email"),
                 phone: form.getValues("phone_number"),
+                grade: form.getValues("grade"),
+                hasLaptop: form.getValues("has_laptop"),
               });
             }}
           >
@@ -478,11 +512,12 @@ export const BookingForm = () => {
         </div>
       </div>
 
-      {/* Debug Panel - Remove in production */}
+      {/* Debug Panel */}
       <div className="mt-4 p-2 border border-gray-200 rounded-md text-xs text-gray-500 bg-gray-50">
         <p>Form Status: {form.formState.isValid ? 'Valid' : 'Invalid'}</p>
         <p>Selected Method: {contactMethod}</p>
         <p>Error Count: {Object.keys(form.formState.errors).length}</p>
+        <p>Form Initialized: {formInitialized ? 'Yes' : 'No'}</p>
       </div>
     </motion.div>
   );
