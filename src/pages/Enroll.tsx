@@ -2,13 +2,13 @@
 import React from 'react';
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { EnrollHero } from "@/components/enroll/EnrollHero";
 import { ValueProposition } from "@/components/enroll/ValueProposition";
 import { StudentShowcase } from "@/components/enroll/StudentShowcase";
 import { SuccessStories } from "@/components/SuccessStories";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { EnrollCTA } from "@/components/enroll/EnrollCTA";
+import { Toaster } from "@/components/ui/toaster"; // Add toast provider
 
 const Enroll = () => {
   return (
@@ -22,6 +22,7 @@ const Enroll = () => {
         <TestimonialCarousel />
         <EnrollCTA />
       </div>
+      <Toaster /> {/* Add this to show toast notifications */}
     </div>
   );
 };

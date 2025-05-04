@@ -10,11 +10,12 @@ export const useContactMethod = () => {
   const [countryCode, setCountryCode] = useState('+91');
   const [formInitialized, setFormInitialized] = useState(false);
   
-  // Enhanced validation helpers with better logging
+  // Enhanced validation helpers with better logging and simpler logic
   const validateWhatsApp = useCallback(() => {
     // Don't validate empty phone numbers until the form has been interacted with
     if (!formInitialized) return true;
     
+    // Consider validation successful if phone number meets minimum length
     const isValid = phoneNumber.length >= 10;
     console.log(`WhatsApp validation: ${isValid ? 'PASSED' : 'FAILED'} - Phone number length: ${phoneNumber.length}`);
     return isValid;
@@ -24,6 +25,7 @@ export const useContactMethod = () => {
     // Don't validate empty emails until the form has been interacted with
     if (!formInitialized) return true;
     
+    // Simple email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValid = emailRegex.test(email);
     console.log(`Email validation: ${isValid ? 'PASSED' : 'FAILED'} - Email: ${email}`);
@@ -42,25 +44,23 @@ export const useContactMethod = () => {
   // Mark form as initialized once user interacts with it
   const initializeForm = useCallback(() => {
     if (!formInitialized) {
+      console.log("Form initialized - validation will start applying");
       setFormInitialized(true);
     }
   }, [formInitialized]);
 
   // New function to check if the current form is valid based on selected contact method
   const isCurrentContactMethodValid = useCallback(() => {
+    // If form isn't initialized yet, don't apply validation
     if (!formInitialized) return true;
     
+    // Apply the appropriate validation based on contact method
     if (contactMethod === 'whatsapp') {
       return validateWhatsApp();
     } else {
       return validateEmail();
     }
   }, [contactMethod, validateWhatsApp, validateEmail, formInitialized]);
-
-  // Reset validation state when component mounts
-  useEffect(() => {
-    setFormInitialized(false);
-  }, []);
   
   return {
     contactMethod,

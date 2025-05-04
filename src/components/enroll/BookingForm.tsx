@@ -15,18 +15,18 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useContactMethod } from '@/hooks/useContactMethod';
 
-// Create a more flexible schema with proper conditional validation
+// Create a schema with conditional validation that only validates what's needed
 const formSchema = z.object({
   contact_method: z.enum(["whatsapp", "email"]),
   country_code: z.string().optional(),
   phone_number: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.string().optional(),
   grade: z.string().min(1, "Please select your child's grade"),
   has_laptop: z.enum(["yes", "no"], {
     required_error: "Please indicate if you have a laptop",
   }),
 }).superRefine((data, ctx) => {
-  // Only validate email when email contact method is selected
+  // Custom refinement for conditional validation
   if (data.contact_method === 'email') {
     if (!data.email || !data.email.includes('@')) {
       ctx.addIssue({
@@ -37,7 +37,6 @@ const formSchema = z.object({
     }
   }
   
-  // Only validate phone number when whatsapp contact method is selected
   if (data.contact_method === 'whatsapp') {
     if (!data.phone_number || data.phone_number.length < 10) {
       ctx.addIssue({
@@ -69,7 +68,7 @@ export const BookingForm = () => {
     formInitialized
   } = useContactMethod();
   
-  // Create form with resolver
+  // Create form with resolver and mode set to onChange
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -93,15 +92,15 @@ export const BookingForm = () => {
   // Update form values when contactMethod changes
   React.useEffect(() => {
     form.setValue("contact_method", contactMethod, {
-      shouldValidate: formInitialized // Only trigger validation if form is initialized
+      shouldValidate: formInitialized
     });
     
     // Reset other field values when switching
     resetFields();
     
-    // This triggers revalidation after changing the contact method
+    // Trigger revalidation after changing contact method
     if (formInitialized) {
-      form.trigger("contact_method");
+      form.trigger();
     }
     
     console.log(`Switched to contact method: ${contactMethod}`);
@@ -284,8 +283,8 @@ export const BookingForm = () => {
         </Alert>
       )}
 
-      {/* Show validation alert only after user has interacted with the form */}
-      {showValidationAlert && Object.keys(form.formState.errors).length > 0 && (
+      {/* Only show validation alert after user has interacted with form AND there are errors */}
+      {formInitialized && showValidationAlert && Object.keys(form.formState.errors).length > 0 && (
         <Alert className="mb-4 bg-amber-50 border-amber-200">
           <AlertTitle className="text-amber-800">Form has validation errors</AlertTitle>
           <AlertDescription className="text-amber-700">
@@ -471,16 +470,15 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
-            disabled={isSubmitting}  // Only disable during submission
+            disabled={isSubmitting} // Only disable during submission
             onClick={() => {
               console.log("Book Now button clicked");
               
-              // Set validation alert to show if we have errors
               if (Object.keys(form.formState.errors).length > 0) {
                 setShowValidationAlert(true);
               }
               
-              // Debug logs
+              // Extra debug logs
               console.log("Current form state:", {
                 isValid: form.formState.isValid,
                 isDirty: form.formState.isDirty,
@@ -512,13 +510,16 @@ export const BookingForm = () => {
         </div>
       </div>
 
-      {/* Debug Panel */}
-      <div className="mt-4 p-2 border border-gray-200 rounded-md text-xs text-gray-500 bg-gray-50">
-        <p>Form Status: {form.formState.isValid ? 'Valid' : 'Invalid'}</p>
-        <p>Selected Method: {contactMethod}</p>
-        <p>Error Count: {Object.keys(form.formState.errors).length}</p>
-        <p>Form Initialized: {formInitialized ? 'Yes' : 'No'}</p>
-      </div>
+      {/* Debug Panel - only visible in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mt-4 p-2 border border-gray-200 rounded-md text-xs text-gray-500 bg-gray-50">
+          <p>Form Status: {form.formState.isValid ? 'Valid' : 'Invalid'}</p>
+          <p>Selected Method: {contactMethod}</p>
+          <p>Error Count: {Object.keys(form.formState.errors).length}</p>
+          <p>Form Initialized: {formInitialized ? 'Yes' : 'No'}</p>
+          <p>Errors: {JSON.stringify(form.formState.errors)}</p>
+        </div>
+      )}
     </motion.div>
   );
 };
