@@ -478,16 +478,16 @@ export const BookingForm = () => {
                 setShowValidationAlert(true);
               }
               
-              // Extra debug logs
+              // Safe debug logging - avoid circular references
               console.log("Current form state:", {
                 isValid: form.formState.isValid,
                 isDirty: form.formState.isDirty,
-                errors: form.formState.errors,
+                errorCount: Object.keys(form.formState.errors).length,
                 contactMethod: contactMethod,
-                email: form.getValues("email"),
-                phone: form.getValues("phone_number"),
-                grade: form.getValues("grade"),
-                hasLaptop: form.getValues("has_laptop"),
+                emailValue: form.getValues("email"),
+                phoneValue: form.getValues("phone_number"),
+                gradeValue: form.getValues("grade"),
+                hasLaptopValue: form.getValues("has_laptop"),
               });
             }}
           >
@@ -517,7 +517,7 @@ export const BookingForm = () => {
           <p>Selected Method: {contactMethod}</p>
           <p>Error Count: {Object.keys(form.formState.errors).length}</p>
           <p>Form Initialized: {formInitialized ? 'Yes' : 'No'}</p>
-          <p>Errors: {JSON.stringify(form.formState.errors)}</p>
+          <p>Errors: {JSON.stringify(Object.keys(form.formState.errors))}</p>
         </div>
       )}
     </motion.div>
