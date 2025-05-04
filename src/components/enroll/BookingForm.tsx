@@ -15,7 +15,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useContactMethod } from '@/hooks/useContactMethod';
 
-// Updated form schema with superRefine for proper conditional validation
+// Create a more flexible schema with proper conditional validation
 const formSchema = z.object({
   contact_method: z.enum(["whatsapp", "email"]),
   country_code: z.string().optional(),
@@ -25,31 +25,23 @@ const formSchema = z.object({
   has_laptop: z.enum(["yes", "no"], {
     required_error: "Please indicate if you have a laptop",
   }),
-}).superRefine((data, ctx) => {
-  // Custom validation for contact method
+}).refine((data) => {
+  // For whatsapp, ensure phone number is valid
   if (data.contact_method === 'whatsapp') {
-    if (!data.phone_number || data.phone_number.length < 10) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Please provide a valid phone number (at least 10 digits)",
-        path: ["phone_number"]
-      });
-    }
-  } else if (data.contact_method === 'email') {
-    if (!data.email) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Please provide a valid email address",
-        path: ["email"]
-      });
-    }
+    return data.phone_number && data.phone_number.length >= 10;
   }
+  // For email, ensure email is valid
+  return data.email && data.email.length > 0;
+}, {
+  message: "Please provide valid contact information",
+  path: ['contact_method'], // This is a fallback path
 });
 
 export const BookingForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
+  
   const { 
     contactMethod, 
     setContactMethod, 
@@ -58,10 +50,12 @@ export const BookingForm = () => {
     phoneNumber,
     setPhoneNumber,
     countryCode,
-    setCountryCode 
+    setCountryCode,
+    resetFields,
+    isCurrentContactMethodValid
   } = useContactMethod();
   
-  // Create form with default values and resolver
+  // Create form with resolver
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onChange", // Validate on change for better user feedback
@@ -75,21 +69,34 @@ export const BookingForm = () => {
     },
   });
 
-  // For debugging the form state
+  // Enhanced logging to debug form state
   const formState = form.formState;
   const contactMethodValue = form.watch("contact_method");
+  const isFormValid = form.formState.isValid;
   
-  console.log("Form is valid:", form.formState.isValid);
-  console.log("Form errors:", form.formState.errors);
-  console.log("Contact method:", contactMethodValue);
+  React.useEffect(() => {
+    console.log("Form validation status:", {
+      isValid: isFormValid,
+      errors: Object.keys(formState.errors),
+      errorDetails: formState.errors,
+      isDirty: formState.isDirty,
+      contactMethod: contactMethodValue,
+      isCurrentMethodValid: isCurrentContactMethodValid()
+    });
+  }, [formState, isFormValid, contactMethodValue, isCurrentContactMethodValid]);
 
   // Update form values when contactMethod changes
   React.useEffect(() => {
     form.setValue("contact_method", contactMethod);
     
+    // Reset other field values when switching
+    resetFields();
+    
     // This triggers revalidation after changing the contact method
     form.trigger("contact_method");
-  }, [contactMethod, form]);
+    
+    console.log(`Switched to contact method: ${contactMethod}`);
+  }, [contactMethod, form, resetFields]);
 
   // Synchronize form values with contact hook state
   React.useEffect(() => {
@@ -109,18 +116,20 @@ export const BookingForm = () => {
   }, [form, setEmail, setPhoneNumber, setCountryCode]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Submit clicked with values:", values);
-    console.log("Form valid?", form.formState.isValid);
+    console.log("Form submission started with values:", values);
     
     try {
+      // Set submitting state and clear any previous errors
       setIsSubmitting(true);
       setBookingError(null);
       
-      // Immediate feedback toast
+      // Show immediate feedback
       toast({
         title: "Booking Started",
         description: "Processing your trial class booking...",
       });
+      
+      console.log("Preparing booking data for Supabase...");
       
       // Prepare data for database storage
       const bookingData = {
@@ -168,6 +177,7 @@ export const BookingForm = () => {
           }
         } catch (whatsappError) {
           console.error('Exception while sending WhatsApp notification:', whatsappError);
+          // Continue with the flow even if notification fails
         }
       } else if (values.contact_method === 'email' && values.email) {
         try {
@@ -187,6 +197,7 @@ export const BookingForm = () => {
           }
         } catch (emailError) {
           console.error('Exception while sending email notification:', emailError);
+          // Continue with the flow even if notification fails
         }
       }
       
@@ -200,6 +211,7 @@ export const BookingForm = () => {
       });
       
       // Open Calendly in a new tab for scheduling
+      console.log("Opening Calendly scheduling page");
       window.open('https://calendly.com/codersbee/class-slot', '_blank');
       
     } catch (error) {
@@ -213,6 +225,11 @@ export const BookingForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleFormSubmit = (event: React.FormEvent) => {
+    console.log("Form submit event triggered");
+    // The form.handleSubmit will handle validation and call onSubmit if valid
   };
 
   // Success view
@@ -258,8 +275,25 @@ export const BookingForm = () => {
         </Alert>
       )}
 
+      {/* Form validation status display for debugging */}
+      {Object.keys(form.formState.errors).length > 0 && (
+        <Alert className="mb-4 bg-amber-50 border-amber-200">
+          <AlertTitle className="text-amber-800">Form has validation errors</AlertTitle>
+          <AlertDescription className="text-amber-700">
+            Please check the highlighted fields below.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log("Form validation failed:", errors);
+          toast({
+            variant: "destructive",
+            title: "Please check your form",
+            description: "Some required fields need your attention.",
+          });
+        })} className="space-y-6">
           <FormField
             control={form.control}
             name="contact_method"
@@ -323,7 +357,15 @@ export const BookingForm = () => {
                       )}
                     />
                     <FormControl>
-                      <Input placeholder="Enter your WhatsApp number" {...field} />
+                      <Input 
+                        placeholder="Enter your WhatsApp number" 
+                        {...field} 
+                        onChange={(e) => {
+                          field.onChange(e);
+                          console.log("Phone number changed:", e.target.value);
+                        }}
+                        className="flex-1"
+                      />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -338,7 +380,15 @@ export const BookingForm = () => {
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter your email address" {...field} />
+                    <Input 
+                      type="email" 
+                      placeholder="Enter your email address" 
+                      {...field} 
+                      onChange={(e) => {
+                        field.onChange(e);
+                        console.log("Email changed:", e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -353,7 +403,13 @@ export const BookingForm = () => {
               <FormItem>
                 <FormLabel>Child's Grade</FormLabel>
                 <FormControl>
-                  <Input type="number" min="1" max="12" placeholder="Enter grade (1-12)" {...field} />
+                  <Input 
+                    type="number" 
+                    min="1" 
+                    max="12" 
+                    placeholder="Enter grade (1-12)" 
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -390,7 +446,18 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
-            disabled={isSubmitting || !form.formState.isValid}
+            disabled={isSubmitting}  // Temporarily allow submission regardless of validation
+            onClick={() => {
+              console.log("Book Now button clicked");
+              console.log("Current form state:", {
+                isValid: form.formState.isValid,
+                isDirty: form.formState.isDirty,
+                errors: form.formState.errors,
+                contactMethod: contactMethod,
+                email: form.getValues("email"),
+                phone: form.getValues("phone_number"),
+              });
+            }}
           >
             {isSubmitting ? (
               <>
@@ -409,6 +476,13 @@ export const BookingForm = () => {
           <Laptop className="w-4 h-4 text-codersbee-vivid" />
           <span>Having a laptop is recommended but not mandatory</span>
         </div>
+      </div>
+
+      {/* Debug Panel - Remove in production */}
+      <div className="mt-4 p-2 border border-gray-200 rounded-md text-xs text-gray-500 bg-gray-50">
+        <p>Form Status: {form.formState.isValid ? 'Valid' : 'Invalid'}</p>
+        <p>Selected Method: {contactMethod}</p>
+        <p>Error Count: {Object.keys(form.formState.errors).length}</p>
       </div>
     </motion.div>
   );

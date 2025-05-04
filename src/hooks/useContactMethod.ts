@@ -9,15 +9,37 @@ export const useContactMethod = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+91');
   
-  // Add validation helpers
+  // Enhanced validation helpers with better logging
   const validateWhatsApp = useCallback(() => {
-    return phoneNumber.length >= 10;
+    const isValid = phoneNumber.length >= 10;
+    console.log(`WhatsApp validation: ${isValid ? 'PASSED' : 'FAILED'} - Phone number length: ${phoneNumber.length}`);
+    return isValid;
   }, [phoneNumber]);
   
   const validateEmail = useCallback(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    const isValid = emailRegex.test(email);
+    console.log(`Email validation: ${isValid ? 'PASSED' : 'FAILED'} - Email: ${email}`);
+    return isValid;
   }, [email]);
+  
+  // Add a function to reset fields when switching contact methods
+  const resetFields = useCallback(() => {
+    if (contactMethod === 'whatsapp') {
+      setEmail('');
+    } else {
+      setPhoneNumber('');
+    }
+  }, [contactMethod]);
+
+  // New function to check if the current form is valid based on selected contact method
+  const isCurrentContactMethodValid = useCallback(() => {
+    if (contactMethod === 'whatsapp') {
+      return validateWhatsApp();
+    } else {
+      return validateEmail();
+    }
+  }, [contactMethod, validateWhatsApp, validateEmail]);
   
   return {
     contactMethod,
@@ -31,6 +53,8 @@ export const useContactMethod = () => {
     isWhatsApp: contactMethod === 'whatsapp',
     isEmail: contactMethod === 'email',
     validateWhatsApp,
-    validateEmail
+    validateEmail,
+    resetFields,
+    isCurrentContactMethodValid
   };
 };
