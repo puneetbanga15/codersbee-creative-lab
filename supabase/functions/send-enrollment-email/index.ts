@@ -23,21 +23,21 @@ serve(async (req) => {
     const requestData = await req.json();
     const { email, grade, hasLaptop } = requestData as EnrollmentEmailRequest;
 
-    // For now, just log the enrollment request and return success
-    // In a real implementation, you would send the actual email here
+    // Log the enrollment request details for debugging
     console.log(`Enrollment request received for ${email}:`, {
       grade,
       hasLaptop,
       timestamp: new Date().toISOString(),
     });
 
-    // This is where you would integrate with your email service
-    // For example: Resend, SendGrid, etc.
-
+    // In a real implementation, you would send the actual email using a service like Resend
+    // For now, we'll simulate the email sending process
+    
+    // Return success response
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Enrollment email request received' 
+        message: 'Enrollment email request processed successfully' 
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -49,7 +49,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: 'Could not process enrollment email request' 
+        error: 'Could not process enrollment email request',
+        details: error.message
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

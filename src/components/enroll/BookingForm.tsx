@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,7 +14,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useContactMethod } from '@/hooks/useContactMethod';
 
-// Create a schema with conditional validation that only validates what's needed
+// Create a schema with conditional validation
 const formSchema = z.object({
   contact_method: z.enum(["whatsapp", "email"]),
   country_code: z.string().optional(),
@@ -129,7 +128,14 @@ export const BookingForm = () => {
   }, [form, setEmail, setPhoneNumber, setCountryCode, initializeForm]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form submission started with values:", values);
+    console.log("Form submission started with values:", JSON.stringify({
+      contact_method: values.contact_method,
+      country_code: values.country_code,
+      phone_number: values.phone_number,
+      email: values.email,
+      grade: values.grade,
+      has_laptop: values.has_laptop
+    }));
     
     try {
       // Set submitting state and clear any previous errors
@@ -156,7 +162,7 @@ export const BookingForm = () => {
         })
       };
       
-      console.log("Sending booking data to Supabase:", bookingData);
+      console.log("Sending booking data to Supabase:", JSON.stringify(bookingData));
       
       // Store booking in Supabase
       const { error: dbError } = await supabase
@@ -165,7 +171,7 @@ export const BookingForm = () => {
 
       if (dbError) {
         console.error('Error storing booking in Supabase:', dbError);
-        throw new Error('Failed to store booking information');
+        throw new Error(`Failed to store booking information: ${dbError.message}`);
       }
       
       console.log("Booking stored in Supabase successfully");
@@ -225,7 +231,9 @@ export const BookingForm = () => {
       
       // Open Calendly in a new tab for scheduling
       console.log("Opening Calendly scheduling page");
-      window.open('https://calendly.com/codersbee/class-slot', '_blank');
+      setTimeout(() => {
+        window.open('https://calendly.com/codersbee/class-slot', '_blank');
+      }, 500);
       
     } catch (error) {
       console.error('Error in form submission:', error);
@@ -233,7 +241,7 @@ export const BookingForm = () => {
       toast({
         variant: "destructive",
         title: "Something went wrong",
-        description: "Please try again or contact us directly.",
+        description: error.message || "Please try again or contact us directly.",
       });
     } finally {
       setIsSubmitting(false);
@@ -260,6 +268,12 @@ export const BookingForm = () => {
           <p className="text-gray-500 text-sm">
             Please check your Calendly scheduling page to select your preferred time slot.
           </p>
+          <Button 
+            onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
+            className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer mt-4"
+          >
+            Schedule Your Class Now
+          </Button>
         </div>
       </motion.div>
     );
@@ -378,7 +392,6 @@ export const BookingForm = () => {
                         onChange={(e) => {
                           field.onChange(e);
                           initializeForm();
-                          console.log("Phone number changed:", e.target.value);
                         }}
                         className="flex-1"
                       />
@@ -403,7 +416,6 @@ export const BookingForm = () => {
                       onChange={(e) => {
                         field.onChange(e);
                         initializeForm();
-                        console.log("Email changed:", e.target.value);
                       }}
                     />
                   </FormControl>
@@ -470,26 +482,7 @@ export const BookingForm = () => {
           <Button 
             type="submit" 
             className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
-            disabled={isSubmitting} // Only disable during submission
-            onClick={() => {
-              console.log("Book Now button clicked");
-              
-              if (Object.keys(form.formState.errors).length > 0) {
-                setShowValidationAlert(true);
-              }
-              
-              // Safe debug logging - avoid circular references
-              console.log("Current form state:", {
-                isValid: form.formState.isValid,
-                isDirty: form.formState.isDirty,
-                errorCount: Object.keys(form.formState.errors).length,
-                contactMethod: contactMethod,
-                emailValue: form.getValues("email"),
-                phoneValue: form.getValues("phone_number"),
-                gradeValue: form.getValues("grade"),
-                hasLaptopValue: form.getValues("has_laptop"),
-              });
-            }}
+            disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
@@ -509,17 +502,6 @@ export const BookingForm = () => {
           <span>Having a laptop is recommended but not mandatory</span>
         </div>
       </div>
-
-      {/* Debug Panel - only visible in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mt-4 p-2 border border-gray-200 rounded-md text-xs text-gray-500 bg-gray-50">
-          <p>Form Status: {form.formState.isValid ? 'Valid' : 'Invalid'}</p>
-          <p>Selected Method: {contactMethod}</p>
-          <p>Error Count: {Object.keys(form.formState.errors).length}</p>
-          <p>Form Initialized: {formInitialized ? 'Yes' : 'No'}</p>
-          <p>Errors: {JSON.stringify(Object.keys(form.formState.errors))}</p>
-        </div>
-      )}
     </motion.div>
   );
 };
