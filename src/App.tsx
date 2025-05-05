@@ -23,6 +23,7 @@ import AIIntro from "./pages/tutorials/ai/AIIntro";
 import VerifyCertificate from "./pages/VerifyCertificate";
 import BuzzyAI from "./pages/BuzzyAI";
 import AILab from "./pages/AILab";
+import CodingLab from "./pages/CodingLab";
 import TestPage from "./pages/TestPage";
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
               <Route path="/certificate" element={<VerifyCertificate />} />
               <Route path="/buzzy-ai" element={<BuzzyAI />} />
               <Route path="/ai-lab/*" element={<AILab />} />
+              <Route path="/coding-lab/*" element={<CodingLab />} />
               <Route path="/test" element={<TestPage />} />
             </Routes>
             <Toaster />
