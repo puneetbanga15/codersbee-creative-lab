@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen, Brain, Code } from "lucide-react";
+import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LabsMenu, MobileLabsMenu } from "@/components/LabsMenu";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,25 +59,7 @@ export const Navbar = () => {
             Courses
           </a>
           
-          <Link 
-            to="/ai-lab" 
-            className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
-          >
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-[#9b87f5]" />
-              <span>AI Lab</span>
-            </div>
-          </Link>
-          
-          <Link 
-            to="/coding-lab" 
-            className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
-          >
-            <div className="flex items-center gap-2">
-              <Code className="h-5 w-5 text-[#23c55e]" />
-              <span>Coding Lab</span>
-            </div>
-          </Link>
+          <MobileLabsMenu />
           
           <div className="py-2 space-y-2">
             <span className="block text-[#9b87f5] font-medium">Student's Corner</span>
@@ -200,15 +183,7 @@ export const Navbar = () => {
               Courses
             </a>
             
-            <Link to="/ai-lab" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
-              <Brain className="h-4 w-4" />
-              AI Lab
-            </Link>
-            
-            <Link to="/coding-lab" className="text-[#23c55e] hover:text-green-700 transition-colors flex items-center gap-2">
-              <Code className="h-4 w-4" />
-              Coding Lab
-            </Link>
+            <LabsMenu />
 
             <DropdownMenu>
               <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">

@@ -11,6 +11,7 @@ import { FAQ } from "@/components/FAQ";
 import { ProblemAgitation } from "@/components/ProblemAgitation";
 import { VisualEquation } from "@/components/VisualEquation";
 import { FloatingBuzzyChat } from "@/components/buzzy-ai/FloatingBuzzyChat";
+import { StudentLabs } from "@/components/StudentLabs";
 
 const Index = () => {
   const courses = [
@@ -43,6 +44,7 @@ const Index = () => {
       <Hero />
       <ProblemAgitation />
       <InnovationHighlight />
+      <StudentLabs />
       <SuccessStories />
 
       <section className="py-8 bg-white">

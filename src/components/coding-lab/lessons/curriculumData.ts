@@ -21,7 +21,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'pattern-palace',
     number: 1,
-    title: "Pattern Palace: Aryabhatta's Celestial Calculator",
+    title: "Pattern Palace: Aryabhatta\'s Celestial Calculator",
     description: "Explore number patterns and sequences as you help Aryabhatta map astronomical objects and discover the magic of zero.",
     stage: 'foundation',
     icon: 'stars',
@@ -37,7 +37,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'algorithm-archipelago',
     number: 2,
-    title: "Algorithm Archipelago: Brahmagupta's Garden Pathways",
+    title: "Algorithm Archipelago: Brahmagupta\'s Garden Pathways",
     description: "Create step-by-step instructions to navigate through beautiful garden mazes while learning about the first rules of algebra.",
     stage: 'foundation',
     icon: 'map',
@@ -53,7 +53,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'loop-racers',
     number: 3,
-    title: "Loop Racers: Grace Hopper's Bug Hunt",
+    title: "Loop Racers: Grace Hopper\'s Bug Hunt",
     description: "Help Admiral Grace Hopper find computer 'bugs' by using loops to automate repetitive tasks in this fast-paced racing game.",
     stage: 'foundation',
     icon: 'bug',
@@ -69,7 +69,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'if-then-forest',
     number: 4,
-    title: "If-Then Forest: Ramanujan's Intuitive Pathways",
+    title: "If-Then Forest: Ramanujan\'s Intuitive Pathways",
     description: "Navigate a magical forest using conditional logic while discovering the beauty of mathematical intuition as practiced by Ramanujan.",
     stage: 'foundation',
     icon: 'git-branch',
@@ -87,8 +87,8 @@ export const curriculumData: LessonType[] = [
   {
     id: 'variable-voyage',
     number: 5,
-    title: "Variable Voyage: Katherine Johnson's Space Mission",
-    description: "Launch rockets by calculating trajectories using variables and mathematical formulas, inspired by NASA's human computer.",
+    title: "Variable Voyage: Katherine Johnson\'s Space Mission",
+    description: "Launch rockets by calculating trajectories using variables and mathematical formulas, inspired by NASA\'s human computer.",
     stage: 'intermediate',
     icon: 'rocket',
     concepts: ['Variables', 'Mathematical Formulas', 'Space Calculations'],
@@ -96,14 +96,14 @@ export const curriculumData: LessonType[] = [
     mathPioneer: {
       name: 'Katherine Johnson',
       origin: 'United States (1918-2020)',
-      contribution: 'Mathematician whose calculations were critical to the success of NASA's first manned spaceflights.'
+      contribution: 'Mathematician whose calculations were critical to the success of NASA\'s first manned spaceflights.'
     },
     locked: true
   },
   {
     id: 'function-factory',
     number: 6,
-    title: "Function Factory: Harish-Chandra's Symmetry Workshop",
+    title: "Function Factory: Harish-Chandra\'s Symmetry Workshop",
     description: "Build reusable functions that maintain mathematical symmetry to solve increasingly complex challenges.",
     stage: 'intermediate',
     icon: 'factory',
@@ -119,7 +119,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'debug-dungeon',
     number: 7,
-    title: "Debug Dungeon: Margaret Hamilton's Moonshot",
+    title: "Debug Dungeon: Margaret Hamilton\'s Moonshot",
     description: "Navigate a dungeon by finding and fixing code errors before the lunar landing module reaches its destination.",
     stage: 'intermediate',
     icon: 'bug',
@@ -128,14 +128,14 @@ export const curriculumData: LessonType[] = [
     mathPioneer: {
       name: 'Margaret Hamilton',
       origin: 'United States (1936-present)',
-      contribution: 'Computer scientist who led the team that wrote the onboard flight software for NASA's Apollo missions.'
+      contribution: 'Computer scientist who led the team that wrote the onboard flight software for NASA\'s Apollo missions.'
     },
     locked: true
   },
   {
     id: 'animation-studio',
     number: 8,
-    title: "Animation Studio: Satyendranath Bose's Quantum Playground",
+    title: "Animation Studio: Satyendranath Bose\'s Quantum Playground",
     description: "Create particle animations that follow quantum principles to understand how code can model physical phenomena.",
     stage: 'intermediate',
     icon: 'atom',
@@ -153,7 +153,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'sequence-solver',
     number: 9,
-    title: "Sequence Solver: Shakuntala Devi's Mental Math Challenge",
+    title: "Sequence Solver: Shakuntala Devi\'s Mental Math Challenge",
     description: "Race against the clock to solve increasingly complex calculation sequences using the mental math techniques of the 'Human Computer'.",
     stage: 'advanced',
     icon: 'calculator',
@@ -169,7 +169,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'data-explorer',
     number: 10,
-    title: "Data Explorer: Ada Lovelace's Analytical Engine",
+    title: "Data Explorer: Ada Lovelace\'s Analytical Engine",
     description: "Program a simulated Analytical Engine to process different data types, just as Ada Lovelace envisioned in the 1800s.",
     stage: 'advanced',
     icon: 'database',
@@ -178,14 +178,14 @@ export const curriculumData: LessonType[] = [
     mathPioneer: {
       name: 'Ada Lovelace',
       origin: 'United Kingdom (1815-1852)',
-      contribution: 'Mathematician who wrote the first algorithm intended to be processed by a machine, making her the world's first computer programmer.'
+      contribution: 'Mathematician who wrote the first algorithm intended to be processed by a machine, making her the world\'s first computer programmer.'
     },
     locked: true
   },
   {
     id: 'logic-labyrinth',
     number: 11,
-    title: "Logic Labyrinth: Alan Turing's Decoding Challenge",
+    title: "Logic Labyrinth: Alan Turing\'s Decoding Challenge",
     description: "Break secret codes and navigate a maze using logical deduction and pattern recognition, inspired by the father of computer science.",
     stage: 'advanced',
     icon: 'key',
@@ -201,8 +201,8 @@ export const curriculumData: LessonType[] = [
   {
     id: 'recursion-kingdom',
     number: 12,
-    title: "Recursion Kingdom: C.V. Raman's Light Quest",
-    description: "Use recursive functions to trace light paths through crystals, inspired by Raman's Nobel Prize-winning work on light scattering.",
+    title: "Recursion Kingdom: C.V. Raman\'s Light Quest",
+    description: "Use recursive functions to trace light paths through crystals, inspired by Raman\'s Nobel Prize-winning work on light scattering.",
     stage: 'advanced',
     icon: 'sun',
     concepts: ['Recursion', 'Self-Reference', 'Nested Functions', 'Light Physics'],
@@ -219,7 +219,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'game-creator',
     number: 13,
-    title: "Game Creator: Shigeru Miyamoto's Adventure Lab",
+    title: "Game Creator: Shigeru Miyamoto\'s Adventure Lab",
     description: "Design your own mini-game using all coding concepts learned, with guidance from the principles of the legendary game designer.",
     stage: 'expert',
     icon: 'gamepad2',
@@ -235,7 +235,7 @@ export const curriculumData: LessonType[] = [
   {
     id: 'array-architect',
     number: 14,
-    title: "Array Architect: P.C. Mahalanobis' Statistical City",
+    title: "Array Architect: P.C. Mahalanobis\' Statistical City",
     description: "Build a city simulation using arrays and data analysis, applying the statistical planning methods of the famous Indian statistician.",
     stage: 'expert',
     icon: 'building2',
@@ -251,8 +251,8 @@ export const curriculumData: LessonType[] = [
   {
     id: 'ultimate-challenge',
     number: 15,
-    title: "Ultimate Innovator's Challenge: Global Coding Quest",
-    description: "Combine all the coding concepts you've learned to create an original project, with guidance from all the featured pioneers.",
+    title: "Ultimate Innovator\'s Challenge: Global Coding Quest",
+    description: "Combine all the coding concepts you\'ve learned to create an original project, with guidance from all the featured pioneers.",
     stage: 'expert',
     icon: 'globe',
     concepts: ['Project Planning', 'Full Application Development', 'Creative Problem Solving', 'Integration'],
