@@ -101,8 +101,6 @@ export const BookingForm = () => {
     if (formInitialized) {
       form.trigger();
     }
-    
-    console.log(`Switched to contact method: ${contactMethod}`);
   }, [contactMethod, form, resetFields, formInitialized]);
 
   // Synchronize form values with contact hook state

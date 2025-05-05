@@ -1,10 +1,10 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
 // Initialize Resend with the API key
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 console.log('Starting email function execution');
-console.log('API Key exists:', !!RESEND_API_KEY);
 
 if (!RESEND_API_KEY) {
   console.error("RESEND_API_KEY environment variable is not set!");
@@ -99,9 +99,7 @@ serve(async (req) => {
     
     console.log('Email HTML prepared');
     
-    // Attempt to send emails, but don't fail the booking if emails fail
-    let emailResults = { success: false, message: 'Email sending bypassed' };
-    
+    // Attempt to send emails
     try {
       // Send confirmation email to the user
       console.log('Attempting to send confirmation email to user:', email);
@@ -117,7 +115,7 @@ serve(async (req) => {
       // Small delay between sends
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Try to send notification emails
+      // Send notification emails to admins
       console.log('Attempting to send email to admins');
       const adminEmails = ['mailsmanisha20@gmail.com', 'puneetbanga15@gmail.com'];
       
@@ -133,34 +131,37 @@ serve(async (req) => {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
       
-      emailResults = {
+      // Return success response
+      return new Response(JSON.stringify({ 
         success: true,
-        message: 'Notification emails sent successfully'
-      };
+        email: email,
+        notification: {
+          success: true,
+          message: 'Notification emails sent successfully'
+        }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      });
     } catch (emailError) {
-      console.error('Email sending error caught:', emailError);
-      console.error('Email error type:', typeof emailError);
-      console.error('Email error message:', emailError instanceof Error ? emailError.message : String(emailError));
+      console.error('Email sending error:', emailError);
       
-      emailResults = {
-        success: false,
-        message: 'Could not send notification emails, but booking was recorded',
-      };
+      // Return partial success (booking recorded but email failed)
+      return new Response(JSON.stringify({ 
+        success: true,
+        email: email,
+        notification: {
+          success: false,
+          message: 'Could not send notification emails, but booking was recorded',
+        }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      });
     }
-
-    // Always return success for the overall operation
-    return new Response(JSON.stringify({ 
-      success: true,
-      email: email,
-      notification: emailResults
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200,
-    });
 
   } catch (error) {
     console.error('Top-level error caught:', error);
-    console.error('Error type:', typeof error);
     
     // Return a user-friendly error without technical details
     return new Response(
