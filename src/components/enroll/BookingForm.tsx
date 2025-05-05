@@ -164,59 +164,114 @@ export const BookingForm = () => {
       
       console.log("Sending booking data to Supabase:", JSON.stringify(bookingData));
       
-      // Store booking in Supabase
-      const { error: dbError } = await supabase
-        .from('trial_bookings')
-        .insert(bookingData);
-
-      if (dbError) {
-        console.error('Error storing booking in Supabase:', dbError);
-        throw new Error(`Failed to store booking information: ${dbError.message}`);
+      // Store booking in Supabase with detailed error logging
+      console.log("Attempting to store booking in Supabase trial_bookings table with data:", JSON.stringify(bookingData, null, 2));
+      
+      try {
+        const { data, error: dbError } = await supabase
+          .from('trial_bookings')
+          .insert(bookingData)
+          .select(); // Add select to get the inserted row
+  
+        if (dbError) {
+          console.error('Error storing booking in Supabase:', dbError);
+          console.error('Error details:', {
+            code: dbError.code,
+            message: dbError.message,
+            details: dbError.details,
+            hint: dbError.hint
+          });
+          throw new Error(`Failed to store booking information: ${dbError.message}`);
+        }
+        
+        console.log("Booking stored in Supabase successfully, received data:", data);
+      } catch (insertError) {
+        console.error('Exception caught during Supabase insert:', insertError);
+        throw insertError; // Re-throw to be caught by the outer try/catch
       }
       
-      console.log("Booking stored in Supabase successfully");
-      
-      // Send notification based on contact method
+      // Send notification based on contact method with enhanced error handling
       if (values.contact_method === 'whatsapp' && values.phone_number) {
         try {
-          console.log("Attempting to send WhatsApp notification");
+          const whatsappPayload = {
+            phone: values.phone_number,
+            grade: values.grade,
+            hasLaptop: values.has_laptop === "yes",
+            countryCode: values.country_code
+          };
+          
+          console.log("Attempting to send WhatsApp notification with payload:", JSON.stringify(whatsappPayload, null, 2));
+          
           const { data, error } = await supabase.functions.invoke('send-whatsapp-notification', {
-            body: {
-              phone: values.phone_number,
-              grade: values.grade,
-              hasLaptop: values.has_laptop === "yes",
-              countryCode: values.country_code
-            }
+            body: whatsappPayload
           });
           
           if (error) {
             console.error('WhatsApp notification error:', error);
+            console.error('WhatsApp error details:', {
+              message: error.message,
+              context: error.context,
+              statusText: error.statusText,
+              status: error.status
+            });
           } else {
-            console.log("WhatsApp notification sent successfully", data);
+            console.log("WhatsApp notification sent successfully, response:", JSON.stringify(data, null, 2));
           }
         } catch (whatsappError) {
           console.error('Exception while sending WhatsApp notification:', whatsappError);
+          console.error('WhatsApp error type:', typeof whatsappError);
+          console.error('WhatsApp error message:', whatsappError instanceof Error ? whatsappError.message : String(whatsappError));
           // Continue with the flow even if notification fails
         }
       } else if (values.contact_method === 'email' && values.email) {
         try {
-          console.log("Attempting to send email notification");
+          const emailPayload = {
+            email: values.email,
+            grade: values.grade,
+            hasLaptop: values.has_laptop === "yes",
+          };
+          
+          console.log("Attempting to send email notification with payload:", JSON.stringify(emailPayload, null, 2));
+          
           const { data, error } = await supabase.functions.invoke('send-enrollment-email', {
-            body: {
-              email: values.email,
-              grade: values.grade,
-              hasLaptop: values.has_laptop === "yes",
-            }
+            body: emailPayload
           });
           
           if (error) {
             console.error('Email notification error:', error);
+            console.error('Email error details:', {
+              message: error.message,
+              context: error.context,
+              statusText: error.statusText,
+              status: error.status
+            });
+            
+            // Continue with booking flow but warn the user
+            toast({
+              variant: "warning",
+              title: "Booking saved, but email notification failed",
+              description: "We've saved your booking, but couldn't send an email confirmation. Please check your inbox later or contact support if needed.",
+            });
+            
           } else {
-            console.log("Email notification sent successfully", data);
+            console.log("Email notification sent successfully, response:", JSON.stringify(data, null, 2));
+            console.log("Email notification detailed response:", {
+              success: data?.success,
+              notification: data?.notification,
+              email: data?.email
+            });
           }
         } catch (emailError) {
           console.error('Exception while sending email notification:', emailError);
-          // Continue with the flow even if notification fails
+          console.error('Email error type:', typeof emailError);
+          console.error('Email error message:', emailError instanceof Error ? emailError.message : String(emailError));
+          
+          // Continue with booking flow but warn the user
+          toast({
+            variant: "warning",
+            title: "Booking saved, but email notification failed",
+            description: "We've saved your booking, but couldn't send an email confirmation. Please check your inbox later or contact support if needed.",
+          });
         }
       }
       
