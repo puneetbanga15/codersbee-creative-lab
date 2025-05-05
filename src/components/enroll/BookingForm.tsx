@@ -244,9 +244,9 @@ export const BookingForm = () => {
               status: error.status
             });
             
-            // Continue with booking flow but warn the user
+            // Continue with booking flow but warn the user - FIXED variant
             toast({
-              variant: "warning",
+              variant: "destructive",
               title: "Booking saved, but email notification failed",
               description: "We've saved your booking, but couldn't send an email confirmation. Please check your inbox later or contact support if needed.",
             });
@@ -264,9 +264,9 @@ export const BookingForm = () => {
           console.error('Email error type:', typeof emailError);
           console.error('Email error message:', emailError instanceof Error ? emailError.message : String(emailError));
           
-          // Continue with booking flow but warn the user
+          // Continue with booking flow but warn the user - FIXED variant
           toast({
-            variant: "warning",
+            variant: "destructive",
             title: "Booking saved, but email notification failed",
             description: "We've saved your booking, but couldn't send an email confirmation. Please check your inbox later or contact support if needed.",
           });
@@ -352,7 +352,7 @@ export const BookingForm = () => {
 
       {/* Only show validation alert after user has interacted with form AND there are errors */}
       {formInitialized && showValidationAlert && Object.keys(form.formState.errors).length > 0 && (
-        <Alert className="mb-4 bg-amber-50 border-amber-200">
+        <Alert variant="default" className="mb-4 bg-amber-50 border-amber-200">
           <AlertTitle className="text-amber-800">Form has validation errors</AlertTitle>
           <AlertDescription className="text-amber-700">
             Please check the highlighted fields below.
