@@ -167,10 +167,11 @@ export const BookingForm = () => {
       console.log("Attempting to store booking in Supabase trial_bookings table with data:", JSON.stringify(bookingData, null, 2));
       
       try {
+        // Use the supabase client with anon key for public access
         const { data, error: dbError } = await supabase
           .from('trial_bookings')
           .insert(bookingData)
-          .select(); // Add select to get the inserted row
+          .select();
   
         if (dbError) {
           console.error('Error storing booking in Supabase:', dbError);
@@ -184,6 +185,24 @@ export const BookingForm = () => {
         }
         
         console.log("Booking stored in Supabase successfully, received data:", data);
+        
+        // Set success state immediately to provide feedback
+        setIsSuccess(true);
+        
+        // Show confirmation toast
+        toast({
+          title: "Booking Confirmed!",
+          description: values.contact_method === 'whatsapp' 
+            ? "We'll contact you on your WhatsApp number shortly."
+            : "We'll contact you via email shortly.",
+        });
+        
+        // Open Calendly in a new tab for scheduling
+        console.log("Opening Calendly scheduling page");
+        setTimeout(() => {
+          window.open('https://calendly.com/codersbee/class-slot', '_blank');
+        }, 500);
+        
       } catch (insertError) {
         console.error('Exception caught during Supabase insert:', insertError);
         throw insertError; // Re-throw to be caught by the outer try/catch
@@ -245,7 +264,7 @@ export const BookingForm = () => {
               status: error.status
             });
             
-            // Continue with booking flow but warn the user - FIXED variant
+            // Continue with booking flow but warn the user
             toast({
               variant: "destructive",
               title: "Booking saved, but email notification failed",
@@ -265,7 +284,7 @@ export const BookingForm = () => {
           console.error('Email error type:', typeof emailError);
           console.error('Email error message:', emailError instanceof Error ? emailError.message : String(emailError));
           
-          // Continue with booking flow but warn the user - FIXED variant
+          // Continue with booking flow but warn the user
           toast({
             variant: "destructive",
             title: "Booking saved, but email notification failed",
@@ -273,21 +292,6 @@ export const BookingForm = () => {
           });
         }
       }
-      
-      // Set success state and show confirmation toast
-      setIsSuccess(true);
-      toast({
-        title: "Booking Confirmed!",
-        description: values.contact_method === 'whatsapp' 
-          ? "We'll contact you on your WhatsApp number shortly."
-          : "We'll contact you via email shortly.",
-      });
-      
-      // Open Calendly in a new tab for scheduling
-      console.log("Opening Calendly scheduling page");
-      setTimeout(() => {
-        window.open('https://calendly.com/codersbee/class-slot', '_blank');
-      }, 500);
       
     } catch (error) {
       console.error('Error in form submission:', error);
@@ -297,6 +301,7 @@ export const BookingForm = () => {
         title: "Something went wrong",
         description: error.message || "Please try again or contact us directly.",
       });
+      setIsSuccess(false); // Ensure success state is false on error
     } finally {
       setIsSubmitting(false);
     }
@@ -353,9 +358,9 @@ export const BookingForm = () => {
 
       {/* Only show validation alert after user has interacted with form AND there are errors */}
       {formInitialized && showValidationAlert && Object.keys(form.formState.errors).length > 0 && (
-        <Alert variant="default" className="mb-4 bg-amber-50 border-amber-200">
-          <AlertTitle className="text-amber-800">Form has validation errors</AlertTitle>
-          <AlertDescription className="text-amber-700">
+        <Alert variant="warning" className="mb-4">
+          <AlertTitle>Form has validation errors</AlertTitle>
+          <AlertDescription>
             Please check the highlighted fields below.
           </AlertDescription>
         </Alert>
