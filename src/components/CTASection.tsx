@@ -1,12 +1,16 @@
+
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const CTASection = () => {
+  const navigate = useNavigate();
+  
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/919996465023', '_blank');
   };
 
   const handleTrialClick = () => {
-    window.open('https://calendly.com/codersbee/class-slot', '_blank');
+    navigate('/enroll');
   };
 
   return (

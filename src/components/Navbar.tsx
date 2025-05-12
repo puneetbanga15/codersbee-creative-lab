@@ -27,7 +27,7 @@ export const Navbar = () => {
   };
 
   const handleTrialClick = () => {
-    window.open('https://calendly.com/codersbee/class-slot', '_blank');
+    navigate('/enroll');
   };
 
   const handleCoursesClick = (e: React.MouseEvent) => {

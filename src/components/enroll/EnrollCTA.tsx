@@ -2,9 +2,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const EnrollCTA = () => {
+  const navigate = useNavigate();
+  
+  const handleWhatsAppClick = () => {
+    window.open('https://wa.me/919996465023', '_blank');
+  };
+
   return (
     <section className="py-16 bg-gradient-to-b from-codersbee-purple/10 to-white">
       <div className="container mx-auto px-4 max-w-4xl text-center">
@@ -32,7 +38,7 @@ export const EnrollCTA = () => {
             <Button
               size="lg"
               variant="outline"
-              onClick={() => window.open('https://wa.me/919996465023', '_blank')}
+              onClick={handleWhatsAppClick}
               className="border-codersbee-vivid text-codersbee-vivid hover:bg-codersbee-vivid/10"
             >
               Chat on WhatsApp
