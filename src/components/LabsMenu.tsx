@@ -15,7 +15,7 @@ export const LabsMenu = () => {
         <ChevronRight className="h-4 w-4" />
         <span>Student Labs</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white">
+      <DropdownMenuContent className="w-56 bg-white z-50">
         <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
           <Link to="/ai-lab" className="w-full">
             <div className="flex items-start gap-3">

@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export const EnrollCTA = () => {
   return (
@@ -20,13 +21,14 @@ export const EnrollCTA = () => {
             Book a FREE trial class and see how our personalized approach can help your child master coding and AI
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-              className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
-            >
-              Book FREE Trial Class
-            </Button>
+            <Link to="/enroll">
+              <Button
+                size="lg"
+                className="bg-codersbee-vivid hover:bg-codersbee-vivid/90"
+              >
+                Book FREE Trial Class
+              </Button>
+            </Link>
             <Button
               size="lg"
               variant="outline"
