@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Link } from "react-router-dom";
 
 export const Hero = () => {
   return <div className="relative min-h-[90vh] overflow-hidden pt-16 md:pt-24">
@@ -28,13 +29,14 @@ export const Hero = () => {
             
             {/* Primary CTA */}
             <div className="flex flex-col items-center justify-center max-w-2xl mx-auto px-4 md:px-0">
-              <Button 
-                className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group relative" 
-                onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-              >
-                Build Your First AI Project{' '}
-                <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
-              </Button>
+              <Link to="/enroll">
+                <Button 
+                  className="w-full md:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white px-8 py-6 text-xl rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group relative" 
+                >
+                  Build Your First AI Project{' '}
+                  <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
+                </Button>
+              </Link>
               
               {/* Social Proof */}
               <div className="mt-4 flex flex-col items-center space-y-2">

@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen, Brain } from "lucide-react";
+import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LabsMenu, MobileLabsMenu } from "@/components/LabsMenu";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ export const Navbar = () => {
   };
 
   const handleTrialClick = () => {
-    window.open('https://calendly.com/codersbee/class-slot', '_blank');
+    navigate('/enroll');
   };
 
   const handleCoursesClick = (e: React.MouseEvent) => {
@@ -58,15 +59,7 @@ export const Navbar = () => {
             Courses
           </a>
           
-          <Link 
-            to="/ai-lab" 
-            className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
-          >
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-[#9b87f5]" />
-              <span>AI Lab</span>
-            </div>
-          </Link>
+          <MobileLabsMenu />
           
           <div className="py-2 space-y-2">
             <span className="block text-[#9b87f5] font-medium">Student's Corner</span>
@@ -190,17 +183,14 @@ export const Navbar = () => {
               Courses
             </a>
             
-            <Link to="/ai-lab" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
-              <Brain className="h-4 w-4" />
-              AI Lab
-            </Link>
+            <LabsMenu />
 
             <DropdownMenu>
               <DropdownMenuTrigger className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors flex items-center gap-2">
                 <GraduationCap className="h-4 w-4" />
                 Student's Corner
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 bg-white">
+              <DropdownMenuContent className="w-64 bg-white z-[100]">
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
@@ -298,3 +288,4 @@ export const Navbar = () => {
     </nav>
   );
 };
+

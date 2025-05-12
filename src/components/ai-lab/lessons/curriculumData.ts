@@ -1,4 +1,3 @@
-
 export type LessonType = {
   id: string;
   number: number;
@@ -23,32 +22,44 @@ export const curriculumData: LessonType[] = [
     icon: 'messageSquare',
     concepts: ['What is AI', 'Computer Communication', 'Chatbots'],
     duration: 30,
-    completed: true
+    completed: false
+  },
+  {
+    id: 'llm-basics',
+    number: 2,
+    title: 'Understanding LLMs',
+    description: 'Learn how large language models work and how to talk to them effectively with prompt engineering.',
+    stage: 'foundation',
+    icon: 'brain',
+    concepts: ['Large Language Models', 'Prompt Engineering', 'AI Communication'],
+    duration: 45,
+    completed: false
   },
   {
     id: 'pattern-detective',
-    number: 2,
+    number: 3,
     title: 'Pattern Detective',
     description: 'Train an AI to recognize simple patterns like shapes, colors, and numbers.',
     stage: 'foundation',
     icon: 'shapes',
     concepts: ['Pattern Recognition', 'Basic Machine Learning', 'Training Data'],
     duration: 40,
-    completed: true
+    locked: true
   },
   {
     id: 'decision-trees',
-    number: 3,
+    number: 4,
     title: 'Decision Trees Adventure',
     description: 'Build a "choose your own adventure" game using decision trees and logical reasoning.',
     stage: 'foundation',
     icon: 'sparkles',
     concepts: ['Decision Trees', 'Logical Reasoning', 'If-Then Structures'],
-    duration: 45
+    duration: 45,
+    locked: true
   },
   {
     id: 'image-recognition',
-    number: 4,
+    number: 5,
     title: 'Image Recognition Magic',
     description: 'Use a pre-trained model to identify objects in images, drawings, or camera feed.',
     stage: 'foundation',
@@ -59,7 +70,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'sentiment-sleuth',
-    number: 5,
+    number: 6,
     title: 'Sentiment Sleuth',
     description: 'Analyze text to determine if it\'s positive, negative, or neutral and understand emotions in writing.',
     stage: 'foundation',
@@ -72,7 +83,7 @@ export const curriculumData: LessonType[] = [
   // Application Stage (6-12)
   {
     id: 'voice-command',
-    number: 6,
+    number: 7,
     title: 'Voice Command Creator',
     description: 'Create simple voice commands for a virtual assistant that responds to spoken instructions.',
     stage: 'application',
@@ -83,7 +94,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'animal-classifier',
-    number: 7,
+    number: 8,
     title: 'Animal Classifier',
     description: 'Train a model to distinguish between different animals and test its accuracy with new images.',
     stage: 'application',
@@ -94,7 +105,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'story-generator',
-    number: 8,
+    number: 9,
     title: 'Story Generator',
     description: 'Create a text generation system that builds stories based on your prompts and ideas.',
     stage: 'application',
@@ -105,138 +116,138 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'music-mood-maker',
-    number: 9,
+    number: 10,
     title: 'Music Mood Maker',
     description: 'Use AI to generate simple melodies based on emotions and customize your own music.',
     stage: 'application',
     icon: 'music',
     concepts: ['Pattern Generation', 'Creative AI', 'Music Theory Basics'],
     duration: 40,
-    locked: true
+    locked: false
   },
   {
     id: 'recommendation-engine',
-    number: 10,
+    number: 11,
     title: 'Simple Recommendation Engine',
     description: 'Build a system that recommends books or movies based on user preferences and ratings.',
     stage: 'application',
     icon: 'star',
     concepts: ['Recommendation Systems', 'Personalization', 'Preference Matching'],
     duration: 50,
-    locked: true
+    locked: false
   },
   {
     id: 'translation-explorer',
-    number: 11,
+    number: 12,
     title: 'Translation Explorer',
     description: 'Create a simple translation tool that can convert text between different languages.',
     stage: 'application',
     icon: 'languages',
     concepts: ['Language Processing', 'Translation Models', 'Multilingual AI'],
     duration: 45,
-    locked: true
+    locked: false
   },
   {
     id: 'facial-expression',
-    number: 12,
+    number: 13,
     title: 'Facial Expression Detector',
     description: 'Use AI to recognize basic emotions in faces through your camera or uploaded images.',
     stage: 'application',
     icon: 'smile',
     concepts: ['Facial Recognition', 'Emotion Detection', 'Computer Vision'],
     duration: 60,
-    locked: true
+    locked: false
   },
   
   // Understanding Stage (13-17)
   {
     id: 'data-detective',
-    number: 13,
+    number: 14,
     title: 'Data Detective',
     description: 'Learn to clean and prepare data for AI training by fixing problems in messy datasets.',
     stage: 'understanding',
     icon: 'database',
     concepts: ['Data Preparation', 'Data Cleaning', 'Structured vs. Unstructured Data'],
     duration: 45,
-    locked: true
+    locked: false
   },
   {
     id: 'neural-network',
-    number: 14,
+    number: 15,
     title: 'Neural Network Playground',
     description: 'Experiment with a simple neural network and see how changing parameters affects results.',
     stage: 'understanding',
     icon: 'network',
     concepts: ['Neural Networks', 'Weights', 'Activation Functions', 'Layers'],
     duration: 60,
-    locked: true
+    locked: false
   },
   {
     id: 'reinforcement-learning',
-    number: 15,
+    number: 16,
     title: 'Reinforcement Learning Games',
     description: 'Train an AI to play a simple game like tic-tac-toe through rewards and practice.',
     stage: 'understanding',
     icon: 'gamepad',
     concepts: ['Reinforcement Learning', 'Rewards', 'Exploration vs. Exploitation'],
     duration: 55,
-    locked: true
+    locked: false
   },
   {
     id: 'style-transfer',
-    number: 16,
+    number: 17,
     title: 'Image Style Transfer',
     description: 'Apply artistic styles to photos and create unique artwork using AI techniques.',
     stage: 'understanding',
     icon: 'palette',
     concepts: ['GANs', 'Style Transfer', 'Creative AI'],
     duration: 50,
-    locked: true
+    locked: false
   },
   {
     id: 'ethical-ai',
-    number: 17,
+    number: 18,
     title: 'Ethical AI Detective',
     description: 'Identify bias in datasets and AI outputs, and learn how to make AI systems more fair.',
     stage: 'understanding',
     icon: 'shield',
     concepts: ['AI Ethics', 'Fairness', 'Bias Detection'],
     duration: 45,
-    locked: true
+    locked: false
   },
   
   // Advanced Creation Stage (18-20)
   {
     id: 'ai-app-builder',
-    number: 18,
+    number: 19,
     title: 'AI App Builder',
     description: 'Combine multiple AI capabilities into a simple application with a user interface.',
     stage: 'advanced',
     icon: 'layers',
     concepts: ['System Integration', 'User Experience', 'Application Design'],
     duration: 90,
-    locked: true
+    locked: false
   },
   {
     id: 'robot-simulator',
-    number: 19,
+    number: 20,
     title: 'Robot Simulator',
     description: 'Program a virtual robot using AI for navigation and object manipulation in simulated environments.',
     stage: 'advanced',
     icon: 'robot',
     concepts: ['Robotics', 'Spatial Awareness', 'Sensor Fusion'],
     duration: 75,
-    locked: true
+    locked: false
   },
   {
     id: 'ai-invention',
-    number: 20,
+    number: 21,
     title: 'Your AI Invention',
     description: 'Create a unique AI solution to solve a problem of your choice in this open-ended project.',
     stage: 'advanced',
     icon: 'bot',
     concepts: ['Project Planning', 'Problem Solving', 'Implementation'],
     duration: 120,
-    locked: true
+    locked: false
   }
 ];
