@@ -190,7 +190,7 @@ export const Navbar = () => {
                 <GraduationCap className="h-4 w-4" />
                 Student's Corner
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 bg-white">
+              <DropdownMenuContent className="w-64 bg-white z-[100]">
                 <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
                   <Link to="/quizzes" className="w-full">
                     <div className="flex items-start gap-3">
@@ -288,3 +288,4 @@ export const Navbar = () => {
     </nav>
   );
 };
+
