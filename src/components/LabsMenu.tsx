@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Brain, Code, ChevronRight } from 'lucide-react';
@@ -15,7 +16,7 @@ export const LabsMenu = () => {
         <ChevronRight className="h-4 w-4" />
         <span>Student Labs</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white z-50">
+      <DropdownMenuContent className="w-56 bg-white z-[100]">
         <DropdownMenuItem className="focus:bg-[#9b87f5]/10">
           <Link to="/ai-lab" className="w-full">
             <div className="flex items-start gap-3">
