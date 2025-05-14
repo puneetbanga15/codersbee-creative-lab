@@ -3,8 +3,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { SupabaseProvider } from "@/providers/SupabaseProvider";
+import { usePageTracking } from "@/utils/analytics";
 import Index from "./pages/Index";
 import AboutUs from "./pages/AboutUs";
 import Enroll from "./pages/Enroll";
@@ -26,6 +27,12 @@ import AILab from "./pages/AILab";
 import CodingLab from "./pages/CodingLab";
 import TestPage from "./pages/TestPage";
 
+// Analytics wrapper component
+const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
+  usePageTracking();
+  return <>{children}</>;
+};
+
 function App() {
   const queryClient = new QueryClient();
 
@@ -34,28 +41,30 @@ function App() {
       <SupabaseProvider>
         <TooltipProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="/enroll" element={<Enroll />} />
-              <Route path="/parents/login" element={<ParentsLogin />} />
-              <Route path="/parents/register" element={<ParentsRegister />} />
-              <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
-              <Route path="/teachers/login" element={<TeacherLogin />} />
-              <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
-              <Route path="/quizzes" element={<Quizzes />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/tutorials" element={<Tutorials />} />
-              <Route path="/tutorials/scratch/intro" element={<ScratchIntro />} />
-              <Route path="/tutorials/python/intro" element={<PythonIntro />} />
-              <Route path="/tutorials/web/intro" element={<WebIntro />} />
-              <Route path="/tutorials/ai/intro" element={<AIIntro />} />
-              <Route path="/certificate" element={<VerifyCertificate />} />
-              <Route path="/buzzy-ai" element={<BuzzyAI />} />
-              <Route path="/ai-lab/*" element={<AILab />} />
-              <Route path="/coding-lab/*" element={<CodingLab />} />
-              <Route path="/test" element={<TestPage />} />
-            </Routes>
+            <AnalyticsWrapper>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/enroll" element={<Enroll />} />
+                <Route path="/parents/login" element={<ParentsLogin />} />
+                <Route path="/parents/register" element={<ParentsRegister />} />
+                <Route path="/parents/dashboard/*" element={<ParentDashboard />} />
+                <Route path="/teachers/login" element={<TeacherLogin />} />
+                <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
+                <Route path="/quizzes" element={<Quizzes />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/tutorials" element={<Tutorials />} />
+                <Route path="/tutorials/scratch/intro" element={<ScratchIntro />} />
+                <Route path="/tutorials/python/intro" element={<PythonIntro />} />
+                <Route path="/tutorials/web/intro" element={<WebIntro />} />
+                <Route path="/tutorials/ai/intro" element={<AIIntro />} />
+                <Route path="/certificate" element={<VerifyCertificate />} />
+                <Route path="/buzzy-ai" element={<BuzzyAI />} />
+                <Route path="/ai-lab/*" element={<AILab />} />
+                <Route path="/coding-lab/*" element={<CodingLab />} />
+                <Route path="/test" element={<TestPage />} />
+              </Routes>
+            </AnalyticsWrapper>
             <Toaster />
             <Sonner />
           </BrowserRouter>
