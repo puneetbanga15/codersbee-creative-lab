@@ -1,129 +1,143 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Calculator, Lightbulb, Brain, MoveHorizontal } from 'lucide-react';
+import { Star, Calculator, Moon, Sun } from 'lucide-react';
+import { BuzzyLearningCard } from '@/components/ai-lab/ui/BuzzyLearningCard';
+import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 
-export const PatternPalaceIntro = () => {
+export const PatternPalaceIntro: React.FC = () => {
   return (
-    <div className="space-y-8">
-      {/* Hero section with Aryabhatta intro */}
+    <div className="space-y-6">
+      {/* Hero section */}
       <motion.div 
-        className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-xl border border-amber-200"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200"
+      >
+        <div className="flex items-start gap-4">
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-3 rounded-lg">
+            <Star className="h-8 w-8" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-blue-800 mb-2">Welcome to Pattern Palace!</h2>
+            <p className="text-gray-700 mb-4">
+              Join Aryabhatta, the brilliant mathematician from ancient India, on an adventure 
+              through the stars where you'll discover the magic of patterns and the power of zero!
+            </p>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+              <h3 className="font-semibold text-blue-700 mb-2">In this lesson, you will:</h3>
+              <ul className="space-y-2 pl-5 list-disc text-gray-700">
+                <li>Discover how to find patterns in numbers and objects</li>
+                <li>Learn to predict what comes next in a sequence</li>
+                <li>Understand how zero works as a placeholder</li>
+                <li>Use patterns to solve celestial puzzles</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+      
+      {/* Who was Aryabhatta */}
+      <CollapsibleSection
+        title="Who was Aryabhatta?"
+        defaultOpen={true}
+        icon={<Star className="w-5 h-5" />}
       >
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Image placeholder - will be added later */}
-          <div className="flex-shrink-0 w-full md:w-48 h-48 bg-amber-100 rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300">
-            <Star className="w-12 h-12 text-amber-400" />
-            <span className="text-amber-700 font-medium">Aryabhatta's image will go here</span>
-          </div>
-          
-          {/* Introduction text */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-amber-800">Meet Aryabhatta - The Star Gazing Math Wizard!</h2>
-            <p className="text-lg">
-              Over 1,500 years ago in ancient India, a boy named Aryabhatta gazed at the stars and wondered 
-              about their patterns and movements. He grew up to become one of the world's greatest 
-              mathematicians and astronomers!
+          <div className="flex-1">
+            <p className="text-gray-700 mb-3">
+              Aryabhatta was one of history's greatest mathematicians and astronomers, 
+              born in India around 476 CE. He made incredible discoveries about our universe 
+              at a time when most people thought Earth was the center of everything!
             </p>
-            <p className="bg-white p-3 rounded-lg border border-amber-200 text-amber-700 italic">
-              "Aryabhatta is like the ancient Indian version of a NASA scientist and a math superhero combined into one!"
+            <p className="text-gray-700 mb-3">
+              His most famous work is called the "Aryabhatiya," a book that explained complex 
+              mathematical ideas in beautiful poetry. Imagine explaining algebra in rhymes!
             </p>
+            <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-3">
+              <h4 className="font-semibold text-amber-800 mb-2">Aryabhatta's Amazing Discoveries:</h4>
+              <ul className="space-y-2 pl-5 list-disc text-gray-700">
+                <li><span className="font-medium">The concept of zero</span> - He was among the first to treat zero as both a placeholder and a number</li>
+                <li><span className="font-medium">The value of π (pi)</span> - He calculated it as 3.1416, amazingly accurate for his time</li>
+                <li><span className="font-medium">Earth's rotation</span> - He figured out that Earth rotates on its axis, causing day and night</li>
+                <li><span className="font-medium">Solar and lunar eclipses</span> - He correctly explained how they happen</li>
+              </ul>
+            </div>
+          </div>
+          <div className="md:w-1/3 flex justify-center">
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-1 rounded-full">
+              <div className="bg-white rounded-full p-3">
+                <div className="space-y-4 flex flex-col items-center">
+                  <div className="bg-indigo-100 w-32 h-32 rounded-full flex items-center justify-center">
+                    <div className="relative">
+                      <Moon className="w-12 h-12 text-indigo-800 absolute" style={{transform: "rotate(-30deg) translate(-15px, -5px)"}} />
+                      <Sun className="w-16 h-16 text-amber-500" />
+                      <Calculator className="w-10 h-10 text-green-600 absolute" style={{transform: "rotate(30deg) translate(20px, 15px)"}} />
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-medium text-white">Aryabhatta</div>
+                    <div className="text-xs text-indigo-100">476-550 CE</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </CollapsibleSection>
       
-      {/* Fun facts about Aryabhatta */}
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="bg-white p-4 rounded-lg border border-blue-200 flex items-start gap-3">
-          <div className="mt-1 bg-blue-100 p-2 rounded-full">
-            <Star className="w-5 h-5 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-blue-800">Star Explorer</h3>
-            <p className="text-gray-600">Aryabhatta studied the stars and planets carefully and figured out that the Earth rotates on its axis! He calculated the length of a day very accurately.</p>
-          </div>
-        </div>
+      {/* Learning cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <BuzzyLearningCard
+          title="What are Patterns?"
+          description="Patterns are designs or sequences that repeat in a predictable way. They're everywhere - in nature, music, art, and especially in mathematics!"
+          concept="Recognizing patterns helps us understand how things work and predict what might happen next. It's one of the key skills in computational thinking."
+          example="Look at this sequence: 2, 4, 6, 8, ... Can you guess what comes next? If you said 10, you spotted the pattern! Each number is 2 more than the previous one."
+          buzzyState="teaching"
+        />
         
-        <div className="bg-white p-4 rounded-lg border border-purple-200 flex items-start gap-3">
-          <div className="mt-1 bg-purple-100 p-2 rounded-full">
-            <Calculator className="w-5 h-5 text-purple-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-purple-800">Zero Hero</h3>
-            <p className="text-gray-600">Imagine a world without zero! Aryabhatta worked with the concept of zero and helped develop the place value system we use for numbers today.</p>
-          </div>
-        </div>
-        
-        <div className="bg-white p-4 rounded-lg border border-green-200 flex items-start gap-3">
-          <div className="mt-1 bg-green-100 p-2 rounded-full">
-            <Brain className="w-5 h-5 text-green-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-green-800">Pattern Master</h3>
-            <p className="text-gray-600">Aryabhatta could recognize patterns in numbers and stars, helping him make incredible discoveries about our universe and mathematics.</p>
-          </div>
-        </div>
-        
-        <div className="bg-white p-4 rounded-lg border border-orange-200 flex items-start gap-3">
-          <div className="mt-1 bg-orange-100 p-2 rounded-full">
-            <MoveHorizontal className="w-5 h-5 text-orange-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-orange-800">Math Magician</h3>
-            <p className="text-gray-600">He calculated the value of π (pi) to be 3.1416, which is super close to the actual value! He did this without modern calculators or computers.</p>
-          </div>
-        </div>
-      </motion.div>
+        <BuzzyLearningCard
+          title="The Magic of Zero"
+          description="Before Aryabhatta's time, people struggled with calculations because they didn't have a symbol for 'nothing'. Imagine trying to write 507 without the zero!"
+          concept="Zero as a placeholder gives numbers their correct value. In 507, the zero holds the 'tens' place, showing there are 5 hundreds, 0 tens, and 7 ones."
+          example="Without zero, 507 might look like 57, which is a completely different number! Zero helps us keep track of place values."
+          buzzyState="excited"
+        />
+      </div>
       
-      {/* What we'll learn */}
+      {/* Fun fact */}
       <motion.div 
-        className="bg-white p-6 rounded-xl border border-blue-200"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-200"
       >
-        <h2 className="text-xl font-bold text-blue-800 flex items-center gap-2 mb-4">
-          <Lightbulb className="w-5 h-5" />
-          What We'll Learn in this Lesson
-        </h2>
-        
-        <ul className="space-y-3">
-          <li className="flex items-center gap-3">
-            <div className="bg-blue-100 w-7 h-7 rounded-full flex items-center justify-center text-blue-600 font-semibold">1</div>
-            <span>How to recognize and create <span className="font-semibold">number patterns</span> just like Aryabhatta did</span>
-          </li>
-          <li className="flex items-center gap-3">
-            <div className="bg-blue-100 w-7 h-7 rounded-full flex items-center justify-center text-blue-600 font-semibold">2</div>
-            <span>The importance of <span className="font-semibold">zero</span> and how it works in our number system</span>
-          </li>
-          <li className="flex items-center gap-3">
-            <div className="bg-blue-100 w-7 h-7 rounded-full flex items-center justify-center text-blue-600 font-semibold">3</div>
-            <span>How to predict what comes next in a <span className="font-semibold">sequence</span></span>
-          </li>
-          <li className="flex items-center gap-3">
-            <div className="bg-blue-100 w-7 h-7 rounded-full flex items-center justify-center text-blue-600 font-semibold">4</div>
-            <span>Creating our own <span className="font-semibold">celestial calculator</span> to work with patterns</span>
-          </li>
-        </ul>
+        <h3 className="flex items-center gap-2 font-semibold text-purple-800 mb-3">
+          <Star className="h-5 w-5 text-purple-600" /> Fun Fact
+        </h3>
+        <p className="text-gray-700">
+          The word "zero" comes from the Sanskrit word "śūnya" which Aryabhatta used. 
+          It traveled through Arabic ("sifr") to Italian ("zefiro") and finally to English as "zero"!
+        </p>
       </motion.div>
       
       {/* Ready to start */}
       <motion.div 
-        className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-xl text-white text-center"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+        className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mt-8"
       >
-        <h2 className="text-2xl font-bold mb-2">Ready for a Stellar Adventure?</h2>
-        <p className="text-lg mb-0">Let's travel back in time to ancient India and explore the world of patterns and numbers with Aryabhatta!</p>
+        <h3 className="text-xl font-semibold text-blue-800 mb-2">Ready to Explore?</h3>
+        <p className="text-gray-700">
+          Click the "Tutorial" tab above to learn more about patterns and sequences, 
+          or jump right into the "Activity" tab to start your journey through Aryabhatta's Pattern Palace!
+        </p>
       </motion.div>
     </div>
   );
 };
+
+export default PatternPalaceIntro;

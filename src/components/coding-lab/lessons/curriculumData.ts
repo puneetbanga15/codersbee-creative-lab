@@ -1,4 +1,3 @@
-
 export type LessonType = {
   id: string;
   number: number;
@@ -33,7 +32,8 @@ export const curriculumData: LessonType[] = [
       origin: 'India (476-550 CE)',
       contribution: 'Astronomer and mathematician who made significant contributions to the concept of zero and calculated π to 3.1416.'
     },
-    completed: false
+    completed: false,
+    locked: false  // Changed from false to ensure it's unlocked
   },
   {
     id: 'algorithm-archipelago',

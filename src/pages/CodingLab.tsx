@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,6 +9,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { BuzzyCornerHelper } from '@/components/ai-lab/ui/BuzzyCornerHelper';
+
+// Update this in the curriculumData file if needed
+import { curriculumData } from '@/components/coding-lab/lessons/curriculumData';
 
 const CodingLab = () => {
   const navigate = useNavigate();
