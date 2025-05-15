@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { BuzzyCornerHelper } from '@/components/ai-lab/ui/BuzzyCornerHelper';
+import { Helmet } from 'react-helmet';
 
 const AILab = () => {
   const navigate = useNavigate();
@@ -75,12 +76,23 @@ const AILab = () => {
   
   return (
     <>
+      <Helmet>
+        <title>AI Lab for Kids | Learn Generative AI & Coding | CodersBee</title>
+        <meta name="description" content="Interactive AI and machine learning lessons for kids. Learn generative AI, LLMs, prompt engineering, and coding fundamentals in a fun, educational environment." />
+        <meta name="keywords" content="AI Lab for kids, generative AI learning, kids coding classes, AI coding for kids, machine learning for children, prompt engineering basics, LLM for beginners, interactive AI lessons" />
+      </Helmet>
+      
       <Navbar />
       
       <main className="container mx-auto px-4 pt-24 pb-16">
         <Routes>
           <Route path="/" element={
             <>
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold mb-2">AI Lab for Kids: Learn Generative AI & Machine Learning</h1>
+                <p className="text-gray-600">Interactive lessons teaching AI fundamentals, generative AI, and coding skills for children ages 6-14</p>
+              </div>
+              
               <AILabHeader 
                 activeTab={activeTab}
                 onTabChange={handleTabChange} 
