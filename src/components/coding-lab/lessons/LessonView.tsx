@@ -23,6 +23,10 @@ import { curriculumData } from './curriculumData';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 
+// Import lesson-specific components
+import { PatternPalaceIntro } from './introductions/pattern-palace/PatternPalaceIntro';
+import { PatternPalaceActivity } from './activities/pattern-palace/PatternPalaceActivity';
+
 type LessonViewProps = {
   lessonId: string;
   onBack?: () => void;
@@ -77,8 +81,51 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   }
   
   const renderLessonContent = (tab: string) => {
-    // In a real implementation, we would import specific lesson components
-    // Just like in the AI lab example with MeetAIFriend components
+    // Pattern Palace lesson (first lesson)
+    if (lessonId === 'pattern-palace') {
+      switch (tab) {
+        case 'introduction':
+          return <PatternPalaceIntro />;
+        case 'activity':
+          return <PatternPalaceActivity />;
+        case 'tutorial':
+          return (
+            <div className="text-center py-12">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-20 h-20 mx-auto mb-6 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <Book className="w-10 h-10 text-yellow-500" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
+                <p className="text-gray-600 mb-6">The detailed tutorial for this lesson is under development.</p>
+              </motion.div>
+            </div>
+          );
+        case 'code':
+          return (
+            <div className="text-center py-12">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Code className="w-10 h-10 text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
+                <p className="text-gray-600 mb-6">Code examples for this lesson are being prepared.</p>
+              </motion.div>
+            </div>
+          );
+        default:
+          return null;
+      }
+    }
+    
+    // For other lessons, use the default rendering
     switch (tab) {
       case 'introduction':
         return (
