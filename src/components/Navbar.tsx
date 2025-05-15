@@ -1,4 +1,4 @@
-
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -13,12 +13,12 @@ import {
 import { LabsMenu, MobileLabsMenu } from "@/components/LabsMenu";
 
 export const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
@@ -288,4 +288,3 @@ export const Navbar = () => {
     </nav>
   );
 };
-
