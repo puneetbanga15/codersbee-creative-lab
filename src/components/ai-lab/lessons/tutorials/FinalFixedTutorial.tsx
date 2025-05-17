@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
+import { FixedBuzzyAnimation } from '@/components/ai-lab/ui/FixedBuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
 // Custom AIBrainCanvas component with no external image references
@@ -22,11 +22,44 @@ const AIBrainCanvas = () => {
 export const FinalFixedTutorial = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showBuzzy, setShowBuzzy] = useState(true);
+  const mainRef = useRef<HTMLDivElement>(null);
   
   // Log to see when component renders
   useEffect(() => {
     console.log(`FinalFixedTutorial rendering slide: ${currentSlide}`);
   }, [currentSlide]);
+  
+  // Run effect to check for duplicate Buzzy images
+  useEffect(() => {
+    if (!mainRef.current) return;
+    
+    // Wait for everything to render
+    setTimeout(() => {
+      console.log('FinalFixedTutorial - Checking for duplicate Buzzy images...');
+      
+      // Find all Buzzy images in the DOM
+      const allImages = document.querySelectorAll('img');
+      allImages.forEach((img, i) => {
+        const imgEl = img as HTMLImageElement;
+        const src = imgEl.src || '';
+        const alt = imgEl.alt || '';
+        
+        // Check if this image is a Buzzy image
+        if (src.toLowerCase().includes('buzzy') || alt.toLowerCase().includes('buzzy')) {
+          console.log(`Found Buzzy image #${i+1}: ${src.substring(0, 50)}...`);
+          
+          // Add visible highlight for debugging
+          imgEl.style.border = '3px solid red';
+          
+          // Hide duplicate images
+          if (imgEl.parentElement && !imgEl.parentElement.hasAttribute('data-buzzy-keep')) {
+            console.log('Hiding duplicate Buzzy image');
+            imgEl.style.display = 'none';
+          }
+        }
+      });
+    }, 1000);
+  }, []);
   
   const slides = [
     {
@@ -225,7 +258,7 @@ export const FinalFixedTutorial = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={mainRef} className="space-y-6">
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4">
           <h2 className="text-xl font-bold text-purple-900">Meet Your AI Friend</h2>
@@ -237,9 +270,9 @@ export const FinalFixedTutorial = () => {
           
           {/* Buzzy section - carefully structured to avoid duplicates */}
           {showBuzzy && (
-            <div className="mb-6 flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <BuzzyAnimation 
+            <div className="mb-6 flex items-start gap-4" data-buzzy-container="true" data-buzzy-keep="true">
+              <div className="flex-shrink-0" data-buzzy-animation-wrapper="true">
+                <FixedBuzzyAnimation 
                   state={slides[currentSlide].buzzyState as any} 
                   size="md"
                 />
