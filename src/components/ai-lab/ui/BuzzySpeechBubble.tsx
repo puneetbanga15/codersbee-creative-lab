@@ -1,6 +1,4 @@
-
-import React from 'react';
-import { BuzzyAnimation } from './BuzzyAnimation';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -21,6 +19,24 @@ export const BuzzySpeechBubble: React.FC<BuzzySpeechBubbleProps> = ({
   onClose,
   className = ''
 }) => {
+  // Create a unique ID for this instance for debugging
+  const instanceId = useRef(`bubble-${Math.random().toString(36).substring(2, 9)}`);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  
+  // Log component render to help debug
+  useEffect(() => {
+    console.log(`BuzzySpeechBubble(${instanceId.current}) rendering with message: ${message.substring(0, 20)}...`);
+    
+    // Mark this component with a data attribute for debugging
+    if (bubbleRef.current) {
+      bubbleRef.current.setAttribute('data-bubble-instance', instanceId.current);
+    }
+    
+    return () => {
+      console.log(`BuzzySpeechBubble(${instanceId.current}) unmounted`);
+    };
+  }, [message]);
+  
   // Animations
   const bubbleAnimation = {
     initial: { opacity: 0, y: 10, scale: 0.95 },
@@ -36,9 +52,12 @@ export const BuzzySpeechBubble: React.FC<BuzzySpeechBubbleProps> = ({
   };
 
   return (
-    <div className={`flex items-end gap-2 ${position === 'right' ? 'flex-row-reverse' : 'flex-row'} ${className}`}>
-      <BuzzyAnimation state={state} size={size} />
-      
+    <div 
+      className={`flex items-end ${position === 'right' ? 'flex-row-reverse' : 'flex-row'} ${className}`}
+      ref={bubbleRef}
+      data-buzzy-speech-bubble="true"
+      data-bubble-state={state}
+    >
       <motion.div
         className={`${bubbleSizes[size]} bg-white border border-purple-100 p-3 rounded-lg shadow-sm relative`}
         initial="initial"
