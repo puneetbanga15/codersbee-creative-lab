@@ -29,42 +29,60 @@ export const FinalFixedTutorial = () => {
     console.log(`FinalFixedTutorial rendering slide: ${currentSlide}`);
   }, [currentSlide]);
   
-  // Run effect to check for duplicate Buzzy images
+  // Create a unique ID for this instance to help with debugging
+  const instanceId = useRef(`tutorial-${Math.random().toString(36).substring(2, 9)}`);
+  
+  // Run effect to check for duplicate Buzzy images and handle duplicates
   useEffect(() => {
+    console.log(`FinalFixedTutorial instance ${instanceId.current} mounted`);
+    
     if (!mainRef.current) return;
     
-    // Wait for everything to render
-    setTimeout(() => {
-      console.log('FinalFixedTutorial - Checking for duplicate Buzzy images...');
+    // Give a bit of time for everything to render
+    const timeoutId = setTimeout(() => {
+      console.log(`FinalFixedTutorial ${instanceId.current} - Checking for duplicate Buzzy images...`);
       
-      // Find all Buzzy images in the DOM
-      const allImages = document.querySelectorAll('img');
-      allImages.forEach((img, i) => {
-        const imgEl = img as HTMLImageElement;
-        const src = imgEl.src || '';
-        const alt = imgEl.alt || '';
-        
-        // Check if this image is a Buzzy image
-        if (src.toLowerCase().includes('buzzy') || alt.toLowerCase().includes('buzzy')) {
-          console.log(`Found Buzzy image #${i+1}: ${src.substring(0, 50)}...`);
-          
-          // Add visible highlight for debugging
-          imgEl.style.border = '3px solid red';
-          
-          // Hide duplicate images
-          if (imgEl.parentElement && !imgEl.parentElement.hasAttribute('data-buzzy-keep')) {
-            console.log('Hiding duplicate Buzzy image');
-            imgEl.style.display = 'none';
-          }
+      try {
+        // Mark this component's container to indicate we want to keep its Buzzy image
+        const containerEl = mainRef.current;
+        if (containerEl) {
+          containerEl.setAttribute('data-buzzy-container', instanceId.current);
         }
-      });
-    }, 1000);
+        
+        // Find and clean up duplicate Buzzy images if needed
+        const buzzyContainers = document.querySelectorAll('[data-buzzy-container]');
+        console.log(`Found ${buzzyContainers.length} Buzzy containers in the DOM`);
+        
+        // If we have multiple Buzzy containers, keep only the most recent one
+        if (buzzyContainers.length > 1) {
+          // The current one should be kept
+          const currentContainer = mainRef.current;
+          
+          buzzyContainers.forEach(container => {
+            if (container !== currentContainer && container.getAttribute('data-buzzy-container') !== instanceId.current) {
+              // Hide Buzzy in other containers
+              const buzzyEl = container.querySelector('[data-buzzy-animation-wrapper]');
+              if (buzzyEl) {
+                console.log('Hiding duplicate Buzzy element');
+                buzzyEl.setAttribute('style', 'display: none;');
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Error while handling Buzzy duplicates:', err);
+      }
+    }, 500);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      console.log(`FinalFixedTutorial instance ${instanceId.current} unmounted`);
+    };
   }, []);
   
   const slides = [
     {
       title: "What is an AI Friend?",
-      // IMPORTANT: Notice there are NO img tags or embedded images in the content
       content: (
         <div className="space-y-4">
           <p className="text-center text-lg">
@@ -258,7 +276,7 @@ export const FinalFixedTutorial = () => {
   };
 
   return (
-    <div ref={mainRef} className="space-y-6">
+    <div ref={mainRef} className="space-y-6" data-fixed-tutorial={instanceId.current}>
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4">
           <h2 className="text-xl font-bold text-purple-900">Meet Your AI Friend</h2>
@@ -270,11 +288,12 @@ export const FinalFixedTutorial = () => {
           
           {/* Buzzy section - carefully structured to avoid duplicates */}
           {showBuzzy && (
-            <div className="mb-6 flex items-start gap-4" data-buzzy-container="true" data-buzzy-keep="true">
+            <div className="mb-6 flex items-start gap-4" data-buzzy-container={instanceId.current}>
               <div className="flex-shrink-0" data-buzzy-animation-wrapper="true">
                 <FixedBuzzyAnimation 
                   state={slides[currentSlide].buzzyState as any} 
                   size="md"
+                  uniqueId={`buzzy-${instanceId.current}`}
                 />
               </div>
               <BuzzySpeechBubble 
