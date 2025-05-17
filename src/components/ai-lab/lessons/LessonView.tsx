@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 // Import lesson-specific components
 import { MeetAIFriendIntro } from './introductions/MeetAIFriendIntro';
-import { FinalFixedBuzzyTutorial } from './tutorials/FinalFixedBuzzyTutorial';
+import { FinalFixedTutorial } from './tutorials/FinalFixedTutorial';
 import { MeetAIFriendActivityWrapper } from './activities/MeetAIFriendActivityWrapper';
 import { MeetAIFriendCode } from './code-samples/MeetAIFriendCode';
 
@@ -82,7 +82,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
         case 'introduction':
           return <MeetAIFriendIntro />;
         case 'tutorial':
-          return <FinalFixedBuzzyTutorial />;
+          return <FinalFixedTutorial />;
         case 'activity':
           return <MeetAIFriendActivityWrapper />;
         case 'code':
