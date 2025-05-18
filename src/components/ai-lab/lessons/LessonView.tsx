@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 // Import lesson-specific components
 import { MeetAIFriendIntro } from './introductions/MeetAIFriendIntro';
-import { MeetAIFriendTutorial } from './tutorials/MeetAIFriendTutorial';
+import { FinalFixedTutorial } from './tutorials/FinalFixedTutorial';
 import { MeetAIFriendActivityWrapper } from './activities/MeetAIFriendActivityWrapper';
 import { MeetAIFriendCode } from './code-samples/MeetAIFriendCode';
 
@@ -19,6 +19,9 @@ import { LLMBasicsIntro } from './introductions/LLMBasicsIntro';
 import { LLMBasicsTutorial } from './tutorials/LLMBasicsTutorial';
 import { LLMBasicsActivityWrapper } from './activities/LLMBasicsActivityWrapper';
 import { LLMBasicsCode } from './code-samples/LLMBasicsCode';
+
+// Import DebugDuplicateImages component
+import { DebugDuplicateImages } from './DebugDuplicateImages';
 
 type LessonViewProps = {
   lessonId: string;
@@ -79,7 +82,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
         case 'introduction':
           return <MeetAIFriendIntro />;
         case 'tutorial':
-          return <MeetAIFriendTutorial />;
+          return <FinalFixedTutorial />;
         case 'activity':
           return <MeetAIFriendActivityWrapper />;
         case 'code':
@@ -147,6 +150,8 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   
   return (
     <div className="space-y-6">
+      <DebugDuplicateImages />
+      
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Link to="/ai-lab" className="inline-block">

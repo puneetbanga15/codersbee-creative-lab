@@ -1,181 +1,84 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Zap, Brain, Bot, Sparkles, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
-import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FixedBuzzyAnimation } from '@/components/ai-lab/ui/FixedBuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
-// AI Brain Canvas Component
+// Custom AIBrainCanvas component with no external image references
 const AIBrainCanvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    // Set canvas dimensions
-    canvas.width = 200;
-    canvas.height = 200;
-    
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw brain outline
-    ctx.beginPath();
-    ctx.fillStyle = '#f3e8ff'; // Light purple background
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw brain shape
-    ctx.beginPath();
-    ctx.fillStyle = '#c084fc'; // Purple
-    
-    // Brain curves
-    ctx.moveTo(100, 40);
-    ctx.bezierCurveTo(140, 30, 180, 60, 170, 100);
-    ctx.bezierCurveTo(180, 140, 140, 170, 100, 160);
-    ctx.bezierCurveTo(60, 170, 20, 140, 30, 100);
-    ctx.bezierCurveTo(20, 60, 60, 30, 100, 40);
-    ctx.fill();
-    
-    // Draw circuit patterns
-    ctx.strokeStyle = '#f0abfc'; // Lighter purple
-    ctx.lineWidth = 2;
-    
-    // Horizontal lines
-    for (let y = 50; y < 150; y += 20) {
-      ctx.beginPath();
-      ctx.moveTo(40, y);
-      ctx.lineTo(160, y);
-      ctx.stroke();
-    }
-    
-    // Vertical lines
-    for (let x = 50; x < 150; x += 20) {
-      ctx.beginPath();
-      ctx.moveTo(x, 40);
-      ctx.lineTo(x, 160);
-      ctx.stroke();
-    }
-    
-    // Draw nodes
-    ctx.fillStyle = '#f0f0f0';
-    const nodePositions = [
-      [60, 60], [100, 60], [140, 60],
-      [60, 100], [100, 100], [140, 100],
-      [60, 140], [100, 140], [140, 140]
-    ];
-    
-    nodePositions.forEach(([x, y]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Add glow effect
-      ctx.beginPath();
-      const glow = ctx.createRadialGradient(x, y, 0, x, y, 10);
-      glow.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-      glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = glow;
-      ctx.arc(x, y, 10, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    
-    // Add pulsing animation
-    let pulse = 0;
-    const animate = () => {
-      pulse = (pulse + 1) % 60;
-      const scale = 1 + Math.sin(pulse / 10) * 0.05;
-      
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Background
-      ctx.fillStyle = '#f3e8ff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Save context for scaling
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.scale(scale, scale);
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-      
-      // Brain shape
-      ctx.beginPath();
-      ctx.fillStyle = '#c084fc';
-      ctx.moveTo(100, 40);
-      ctx.bezierCurveTo(140, 30, 180, 60, 170, 100);
-      ctx.bezierCurveTo(180, 140, 140, 170, 100, 160);
-      ctx.bezierCurveTo(60, 170, 20, 140, 30, 100);
-      ctx.bezierCurveTo(20, 60, 60, 30, 100, 40);
-      ctx.fill();
-      
-      // Circuit patterns
-      ctx.strokeStyle = '#f0abfc';
-      ctx.lineWidth = 2;
-      
-      // Horizontal lines
-      for (let y = 50; y < 150; y += 20) {
-        ctx.beginPath();
-        ctx.moveTo(40, y);
-        ctx.lineTo(160, y);
-        ctx.stroke();
-      }
-      
-      // Vertical lines
-      for (let x = 50; x < 150; x += 20) {
-        ctx.beginPath();
-        ctx.moveTo(x, 40);
-        ctx.lineTo(x, 160);
-        ctx.stroke();
-      }
-      
-      // Nodes with pulsing effect
-      nodePositions.forEach(([x, y], i) => {
-        const nodePulse = (pulse + i * 5) % 60;
-        const nodeScale = 1 + Math.sin(nodePulse / 10) * 0.3;
-        
-        ctx.beginPath();
-        ctx.fillStyle = '#f0f0f0';
-        ctx.arc(x, y, 5 * nodeScale, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Glow effect
-        ctx.beginPath();
-        const glow = ctx.createRadialGradient(x, y, 0, x, y, 15);
-        glow.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-        glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = glow;
-        ctx.arc(x, y, 15, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      
-      ctx.restore();
-      requestAnimationFrame(animate);
-    };
-    
-    const animationId = requestAnimationFrame(animate);
-    
-    // Cleanup
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-  
   return (
-    <canvas 
-      ref={canvasRef} 
-      width={200} 
-      height={200} 
-      className="rounded-lg shadow-md"
-    />
+    <div className="w-40 h-40 bg-purple-100 rounded-lg mx-auto flex items-center justify-center">
+      <div className="text-purple-500 text-center">
+        <div className="w-16 h-16 rounded-full bg-purple-200 mx-auto flex items-center justify-center mb-2">
+          <span className="text-2xl">🧠</span>
+        </div>
+        <p className="text-sm font-medium">AI Brain</p>
+      </div>
+    </div>
   );
 };
 
-export const MeetAIFriendTutorial = () => {
+export const FinalFixedTutorial = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showBuzzy, setShowBuzzy] = useState(true);
+  const mainRef = useRef<HTMLDivElement>(null);
+  
+  // Log to see when component renders
+  useEffect(() => {
+    console.log(`FinalFixedTutorial rendering slide: ${currentSlide}`);
+  }, [currentSlide]);
+  
+  // Create a unique ID for this instance to help with debugging
+  const instanceId = useRef(`tutorial-${Math.random().toString(36).substring(2, 9)}`);
+  
+  // Run effect to check for duplicate Buzzy images and handle duplicates
+  useEffect(() => {
+    console.log(`FinalFixedTutorial instance ${instanceId.current} mounted`);
+    
+    if (!mainRef.current) return;
+    
+    // Give a bit of time for everything to render
+    const timeoutId = setTimeout(() => {
+      console.log(`FinalFixedTutorial ${instanceId.current} - Checking for duplicate Buzzy images...`);
+      
+      try {
+        // Mark this component's container to indicate we want to keep its Buzzy image
+        const containerEl = mainRef.current;
+        if (containerEl) {
+          containerEl.setAttribute('data-buzzy-container', instanceId.current);
+        }
+        
+        // Find and clean up duplicate Buzzy images if needed
+        const buzzyContainers = document.querySelectorAll('[data-buzzy-container]');
+        console.log(`Found ${buzzyContainers.length} Buzzy containers in the DOM`);
+        
+        // If we have multiple Buzzy containers, keep only the most recent one
+        if (buzzyContainers.length > 1) {
+          // The current one should be kept
+          const currentContainer = mainRef.current;
+          
+          buzzyContainers.forEach(container => {
+            if (container !== currentContainer && container.getAttribute('data-buzzy-container') !== instanceId.current) {
+              // Hide Buzzy in other containers
+              const buzzyEl = container.querySelector('[data-buzzy-animation-wrapper]');
+              if (buzzyEl) {
+                console.log('Hiding duplicate Buzzy element');
+                buzzyEl.setAttribute('style', 'display: none;');
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Error while handling Buzzy duplicates:', err);
+      }
+    }, 500);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      console.log(`FinalFixedTutorial instance ${instanceId.current} unmounted`);
+    };
+  }, []);
   
   const slides = [
     {
@@ -199,7 +102,7 @@ export const MeetAIFriendTutorial = () => {
           </div>
         </div>
       ),
-      buzzyMessage: "Hi there! I'm Buzzy, and I'm excited to teach you about AI Friends! AI Friends are like digital buddies that can talk with you.",
+      buzzyMessage: "Hi there! I'm Buzzy, and I'm excited to teach you about AI Friends!",
       buzzyState: "teaching"
     },
     {
@@ -208,6 +111,11 @@ export const MeetAIFriendTutorial = () => {
         <div className="space-y-4">
           <div className="flex justify-center mb-4">
             <AIBrainCanvas />
+          </div>
+          <div className="bg-purple-50 p-4 rounded-lg">
+            <p className="text-center">
+              AI Friends process your words, understand what you're asking, and create responses.
+            </p>
           </div>
           <div className="flex items-center bg-purple-50 p-3 rounded-lg mb-2">
             <div className="bg-purple-200 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
@@ -229,8 +137,8 @@ export const MeetAIFriendTutorial = () => {
           </div>
         </div>
       ),
-      buzzyMessage: "When you talk to an AI Friend like me, I process your words, understand what you're asking, and create a response. It's like a conversation, but with a computer!",
-      buzzyState: "default"
+      buzzyMessage: "When you talk to me, I process your words, understand what you're asking, and create a response!",
+      buzzyState: "thinking"
     },
     {
       title: "Training Your AI Friend",
@@ -294,28 +202,47 @@ export const MeetAIFriendTutorial = () => {
             AI Friends can have different personalities!
           </p>
           
-          <div className="grid grid-cols-1 gap-2">
-            <div className="bg-gradient-to-r from-red-50 to-amber-50 p-3 rounded-lg">
-              <h3 className="font-medium mb-1 text-center">Harry Potter</h3>
-              <p className="text-xs text-center">Magical, brave, and loyal</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-amber-50 p-4 rounded-lg border border-amber-100">
+              <h3 className="font-medium text-amber-800 mb-2 text-center">Magical Friend</h3>
+              <ul className="text-sm space-y-1">
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                  <span>Brave and adventurous</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                  <span>Loves magical stories</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                  <span>Very loyal</span>
+                </li>
+              </ul>
             </div>
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-3 rounded-lg">
-              <h3 className="font-medium mb-1 text-center">Albert Einstein</h3>
-              <p className="text-xs text-center">Smart, curious, and thoughtful</p>
-            </div>
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-lg">
-              <h3 className="font-medium mb-1 text-center">Krishna</h3>
-              <p className="text-xs text-center">Wise, playful, and compassionate</p>
-            </div>
-            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-lg">
-              <h3 className="font-medium mb-1 text-center">William Shakespeare</h3>
-              <p className="text-xs text-center">Poetic, dramatic, and expressive</p>
+            
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+              <h3 className="font-medium text-blue-800 mb-2 text-center">Science Friend</h3>
+              <ul className="text-sm space-y-1">
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Smart and curious</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Loves to explain things</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Very thoughtful</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       ),
       buzzyMessage: "AI Friends can have different personalities! They can be magical, brave, and loyal, or smart, curious, and thoughtful.",
-      buzzyState: "default"
+      buzzyState: "encouraging"
     },
     {
       title: "Let's Get Started!",
@@ -330,7 +257,7 @@ export const MeetAIFriendTutorial = () => {
         </div>
       ),
       buzzyMessage: "Ready to create your AI Friend? Click 'Start Activity' to begin your AI adventure!",
-      buzzyState: "teaching"
+      buzzyState: "default"
     }
   ];
 
@@ -349,7 +276,7 @@ export const MeetAIFriendTutorial = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={mainRef} className="space-y-6" data-fixed-tutorial={instanceId.current}>
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4">
           <h2 className="text-xl font-bold text-purple-900">Meet Your AI Friend</h2>
@@ -359,13 +286,16 @@ export const MeetAIFriendTutorial = () => {
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-4">{slides[currentSlide].title}</h3>
           
+          {/* Buzzy section - carefully structured to avoid duplicates */}
           {showBuzzy && (
-            <div className="mb-6 flex items-start gap-4">
-              <BuzzyAnimation 
-                state={slides[currentSlide].buzzyState as any} 
-                size="md" 
-                className="flex-shrink-0" 
-              />
+            <div className="mb-6 flex items-start gap-4" data-buzzy-container={instanceId.current}>
+              <div className="flex-shrink-0" data-buzzy-animation-wrapper="true">
+                <FixedBuzzyAnimation 
+                  state={slides[currentSlide].buzzyState as any} 
+                  size="md"
+                  uniqueId={`buzzy-${instanceId.current}`}
+                />
+              </div>
               <BuzzySpeechBubble 
                 message={slides[currentSlide].buzzyMessage}
                 state={slides[currentSlide].buzzyState as any}
@@ -374,6 +304,7 @@ export const MeetAIFriendTutorial = () => {
             </div>
           )}
           
+          {/* The actual slide content goes here */}
           {slides[currentSlide].content}
           
           <div className="flex justify-between mt-8">
