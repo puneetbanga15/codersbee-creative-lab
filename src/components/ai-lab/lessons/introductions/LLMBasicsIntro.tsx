@@ -1,11 +1,28 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 
 export const LLMBasicsIntro: React.FC = () => {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  
+  // Emit event when component mounts to indicate we're at the end of the section
+  useEffect(() => {
+    // Create and dispatch a custom event to notify the parent component
+    const event = new CustomEvent('sectionEndReached', { 
+      detail: { isAtEnd: true }
+    });
+    window.dispatchEvent(event);
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, []);
   
   const toggleItem = (id: string) => {
     setOpenItems(prev => ({

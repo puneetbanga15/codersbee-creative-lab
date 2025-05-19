@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -18,6 +18,30 @@ export const LLMBasicsActivityWrapper: React.FC = () => {
   const [completedSections, setCompletedSections] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [chatHistory, setChatHistory] = useState<Array<{type: 'user' | 'ai', message: string}>>([]);
+  
+  // Emit section end event when all activities are completed
+  useEffect(() => {
+    if (completedSections.length === 3) {
+      // Create and dispatch a custom event to notify the parent component
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: true }
+      });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(event);
+    }
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, [completedSections]);
   const [isTyping, setIsTyping] = useState(false);
   const [showBuzzyTip, setShowBuzzyTip] = useState(true);
   

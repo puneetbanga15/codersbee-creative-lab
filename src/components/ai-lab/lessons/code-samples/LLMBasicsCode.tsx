@@ -1,8 +1,25 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const LLMBasicsCode: React.FC = () => {
+  // Emit event when component mounts to indicate we're at the end of the section
+  useEffect(() => {
+    // Create and dispatch a custom event to notify the parent component
+    const event = new CustomEvent('sectionEndReached', { 
+      detail: { isAtEnd: true }
+    });
+    window.dispatchEvent(event);
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, []);
+  
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-100">

@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users } from 'lucide-react';
 import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 import { motion } from 'framer-motion';
 
 export const MeetAIFriendIntro = () => {
+  // Emit event when component mounts to indicate we're at the end of the section
+  useEffect(() => {
+    // Create and dispatch a custom event to notify the parent component
+    const event = new CustomEvent('sectionEndReached', { 
+      detail: { isAtEnd: true }
+    });
+    window.dispatchEvent(event);
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-100">

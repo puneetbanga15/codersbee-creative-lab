@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useAIFriendActivity } from './useAIFriendActivity';
 import { CharacterSelection } from './components/CharacterSelection';
@@ -32,6 +31,30 @@ export const MeetAIFriendActivityWrapper: React.FC<{
 
   const [showBuzzyTip, setShowBuzzyTip] = useState(true);
   const [sectionCompleted, setSectionCompleted] = useState(false);
+  
+  // Emit section end event when reaching the summary phase
+  useEffect(() => {
+    if (progress.currentPhase === 'summary') {
+      // Create and dispatch a custom event to notify the parent component
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: true }
+      });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(event);
+    }
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, [progress.currentPhase]);
   
   // Buzzy animation states for different phases
   const buzzyAnimationStates = {

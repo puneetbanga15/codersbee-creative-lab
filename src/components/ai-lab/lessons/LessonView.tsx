@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -34,9 +33,23 @@ const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
 
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
+  const [isAtSectionEnd, setIsAtSectionEnd] = useState(false);
   const [tabContentCompleted, setTabContentCompleted] = useState(false);
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
+  
+  // Listen for events from child components to know when we're at the end of a section
+  useEffect(() => {
+    const handleSectionEnd = (event: CustomEvent) => {
+      setIsAtSectionEnd(event.detail.isAtEnd);
+    };
+    
+    window.addEventListener('sectionEndReached' as any, handleSectionEnd);
+    
+    return () => {
+      window.removeEventListener('sectionEndReached' as any, handleSectionEnd);
+    };
+  }, []);
   
   const handleBackToLab = () => {
     if (onBack) {
@@ -180,6 +193,15 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const nextLessonIndex = curriculumData.findIndex(l => l.id === lessonId) + 1;
   const nextLesson = nextLessonIndex < curriculumData.length ? curriculumData[nextLessonIndex] : null;
   
+  // Track if we're at the end of the entire lesson (last section's end)
+  const [isAtLessonEnd, setIsAtLessonEnd] = useState(false);
+  
+  // Update lesson end state when section and tab change
+  useEffect(() => {
+    // Consider the lesson complete when we're at the end of the code section
+    setIsAtLessonEnd(isAtSectionEnd && activeTab === 'code');
+  }, [isAtSectionEnd, activeTab]);
+  
   return (
     <div className="space-y-6">
       <DebugDuplicateImages />
@@ -242,6 +264,47 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                 transition={{ duration: 0.3 }}
               >
                 {renderLessonContent(activeTab)}
+                
+                {/* Section Navigation Buttons */}
+                <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      const sections = ['introduction', 'tutorial', 'activity', 'code'];
+                      const currentIndex = sections.indexOf(activeTab);
+                      if (currentIndex > 0) {
+                        setActiveTab(sections[currentIndex - 1]);
+                      }
+                    }}
+                    disabled={activeTab === 'introduction'}
+                    className="flex items-center gap-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Previous Section
+                  </Button>
+                  
+                  {/* Only show Next Section button when at the end of a section */}
+                  {isAtSectionEnd && (
+                    <Button 
+                      variant="default"
+                      onClick={() => {
+                        const sections = ['introduction', 'tutorial', 'activity', 'code'];
+                        const currentIndex = sections.indexOf(activeTab);
+                        if (currentIndex < sections.length - 1) {
+                          setActiveTab(sections[currentIndex + 1]);
+                          setIsAtSectionEnd(false); // Reset the state when moving to next section
+                        }
+                      }}
+                      disabled={activeTab === 'code'}
+                      className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600"
+                    >
+                      {activeTab === 'introduction' && "Let's Start the Tutorial"}
+                      {activeTab === 'tutorial' && "Let's Move to Activity"}
+                      {activeTab === 'activity' && "Let's Look at the Code"}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  )}
+                </div>
               </motion.div>
             </div>
           </Tabs>
@@ -249,34 +312,22 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       </Card>
       
       <div className="flex justify-between">
-        {tabContentCompleted && (
-          <>
-            {isLastTab && nextLesson ? (
-              <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
-                <Button 
-                  className="bg-purple-500 hover:bg-purple-600" 
-                >
-                  <ArrowRight className="mr-2 h-4 w-4" />
-                  Next Lesson: {nextLesson.title}
-                </Button>
-              </Link>
-            ) : isLastTab ? (
-              <Button className="bg-green-500 hover:bg-green-600">
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Complete Lesson
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleNextTab}
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                <ArrowRight className="mr-2 h-4 w-4" />
-                Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
-                  tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
-                  tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
-              </Button>
-            )}
-          </>
+        {isAtLessonEnd && nextLesson ? (
+          <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
+            <Button 
+              className="bg-purple-500 hover:bg-purple-600" 
+            >
+              <ArrowRight className="mr-2 h-4 w-4" />
+              Next Lesson: {nextLesson.title}
+            </Button>
+          </Link>
+        ) : isAtLessonEnd ? (
+          <Button className="bg-green-500 hover:bg-green-600">
+            <CheckCircle className="mr-2 h-4 w-4" />
+            Complete Lesson
+          </Button>
+        ) : (
+          <div>{/* Empty div to maintain flex layout */}</div>
         )}
       </div>
     </div>
