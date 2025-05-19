@@ -34,13 +34,6 @@ const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
 
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
-  const [tabProgress, setTabProgress] = useState({
-    introduction: { completed: true }, // Introduction is typically one page, so mark as completed
-    tutorial: { completed: false, currentSlide: 0, totalSlides: 5 }, // Default values
-    activity: { completed: false },
-    code: { completed: true }, // Code section typically doesn't have progression
-  });
-  
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
   
@@ -60,21 +53,8 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     }
   };
   
-  // Handle progress updates from child components
-  const updateTabProgress = (tab: string, progress: any) => {
-    setTabProgress(prev => ({
-      ...prev,
-      [tab]: { ...prev[tab], ...progress }
-    }));
-  };
-  
   // Check if this is the last tab
   const isLastTab = activeTab === tabOrder[tabOrder.length - 1];
-  
-  // Check if the current tab is completed
-  const isCurrentTabCompleted = () => {
-    return tabProgress[activeTab as keyof typeof tabProgress]?.completed || false;
-  };
   
   if (!lesson) {
     return (
@@ -115,21 +95,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     if (lessonId === 'meet-ai-friend') {
       switch (tab) {
         case 'introduction':
-          return <MeetAIFriendIntro onComplete={() => updateTabProgress('introduction', { completed: true })} />;
+          return <MeetAIFriendIntro />;
         case 'tutorial':
-          return <FinalFixedTutorial 
-            onSlideChange={(currentSlide, totalSlides) => 
-              updateTabProgress('tutorial', { 
-                currentSlide, 
-                totalSlides, 
-                completed: currentSlide === totalSlides - 1 
-              })
-            } 
-          />;
+          return <FinalFixedTutorial />;
         case 'activity':
-          return <MeetAIFriendActivityWrapper onComplete={() => updateTabProgress('activity', { completed: true })} />;
+          return <MeetAIFriendActivityWrapper />;
         case 'code':
-          return <MeetAIFriendCode onComplete={() => updateTabProgress('code', { completed: true })} />;
+          return <MeetAIFriendCode />;
         default:
           return <div>Content not available</div>;
       }
@@ -137,21 +109,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     else if (lessonId === 'llm-basics') {
       switch (tab) {
         case 'introduction':
-          return <LLMBasicsIntro onComplete={() => updateTabProgress('introduction', { completed: true })} />;
+          return <LLMBasicsIntro />;
         case 'tutorial':
-          return <LLMBasicsTutorial 
-            onSlideChange={(currentSlide, totalSlides) => 
-              updateTabProgress('tutorial', { 
-                currentSlide, 
-                totalSlides, 
-                completed: currentSlide === totalSlides - 1 
-              })
-            } 
-          />;
+          return <LLMBasicsTutorial />;
         case 'activity':
-          return <LLMBasicsActivityWrapper onComplete={() => updateTabProgress('activity', { completed: true })} />;
+          return <LLMBasicsActivityWrapper />;
         case 'code':
-          return <LLMBasicsCode onComplete={() => updateTabProgress('code', { completed: true })} />;
+          return <LLMBasicsCode />;
         default:
           return <div>Content not available</div>;
       }
@@ -283,18 +247,15 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             Complete Lesson
           </Button>
         ) : (
-          // Show the "Next" button only if the current tab is completed
-          isCurrentTabCompleted() && (
-            <Button 
-              onClick={handleNextTab}
-              className="bg-blue-500 hover:bg-blue-600"
-            >
-              <ArrowRight className="mr-2 h-4 w-4" />
-              Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
-                tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
-                tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
-            </Button>
-          )
+          <Button 
+            onClick={handleNextTab}
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            <ArrowRight className="mr-2 h-4 w-4" />
+            Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
+              tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
+              tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
+          </Button>
         )}
       </div>
     </div>

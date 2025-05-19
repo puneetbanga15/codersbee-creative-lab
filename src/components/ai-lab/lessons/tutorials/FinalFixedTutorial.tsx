@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,11 +19,7 @@ const AIBrainCanvas = () => {
   );
 };
 
-interface FinalFixedTutorialProps {
-  onSlideChange?: (currentSlide: number, totalSlides: number) => void;
-}
-
-export const FinalFixedTutorial = ({ onSlideChange }: FinalFixedTutorialProps) => {
+export const FinalFixedTutorial = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showBuzzy, setShowBuzzy] = useState(true);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -268,36 +263,17 @@ export const FinalFixedTutorial = ({ onSlideChange }: FinalFixedTutorialProps) =
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
-      const nextSlide = currentSlide + 1;
-      setCurrentSlide(nextSlide);
+      setCurrentSlide(currentSlide + 1);
       setShowBuzzy(true);
-      
-      // Notify parent about slide change
-      if (onSlideChange) {
-        onSlideChange(nextSlide, slides.length);
-      }
     }
   };
 
   const handlePrev = () => {
     if (currentSlide > 0) {
-      const prevSlide = currentSlide - 1;
-      setCurrentSlide(prevSlide);
+      setCurrentSlide(currentSlide - 1);
       setShowBuzzy(true);
-      
-      // Notify parent about slide change
-      if (onSlideChange) {
-        onSlideChange(prevSlide, slides.length);
-      }
     }
   };
-
-  // Call onSlideChange on initial render
-  useEffect(() => {
-    if (onSlideChange) {
-      onSlideChange(currentSlide, slides.length);
-    }
-  }, []);
 
   return (
     <div ref={mainRef} className="space-y-6" data-fixed-tutorial={instanceId.current}>
