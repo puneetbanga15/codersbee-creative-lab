@@ -1,284 +1,134 @@
 
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useEffect } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
 
-export const LLMBasicsCode: React.FC = () => {
+interface LLMBasicsCodeProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsCode = ({ onComplete }: LLMBasicsCodeProps) => {
+  // Call onComplete when component mounts
+  useEffect(() => {
+    if (onComplete) {
+      onComplete();
+    }
+  }, [onComplete]);
+  
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-100">
-        <h2 className="text-xl font-bold text-purple-900 mb-3">Behind the Code: How LLMs Work</h2>
-        <p className="text-gray-700 mb-4">
-          Let's take a peek at some simplified code that represents how large language models work.
-          Remember that real LLMs are much more complex, but these examples will help you understand the basic concepts!
-        </p>
-      </div>
-      
-      <Tabs defaultValue="prediction">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="prediction">Text Prediction</TabsTrigger>
-          <TabsTrigger value="tokenization">Tokenization</TabsTrigger>
-          <TabsTrigger value="prompt-processing">Prompt Processing</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="prediction" className="mt-4">
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-xl font-bold mb-4">Behind the Scenes: Language Model Code</h2>
+          
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Next Word Prediction (Simplified)</h3>
             <p className="text-gray-700">
-              At its core, an LLM predicts the next token (usually a word or part of a word) based on what came before it.
-              Here's a very simplified example of how this might work:
+              Here's a simplified example of how you might interact with a language model through code. 
+              This shows how prompts are sent to the AI and how responses are received.
             </p>
             
-            <div className="bg-gray-900 text-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              <pre>{`// A very simplified example of next word prediction
+            <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+              <pre>{`
+// Example of using a language model API in JavaScript
 
-// Imagine this is our training data
-const trainingExamples = [
-  "The cat sat on the mat",
-  "The dog sat on the floor",
-  "The bird flew in the sky"
-];
-
-// Build a simple prediction model based on word pairs
-function buildModel(examples) {
-  const model = {};
+// This function sends a prompt to a language model and gets a response
+async function askLanguageModel(prompt, options = {}) {
+  // In a real application, this would make an API call to an LLM service
+  console.log("Sending prompt to language model:", prompt);
   
-  examples.forEach(example => {
-    const words = example.split(' ');
-    
-    for (let i = 0; i < words.length - 1; i++) {
-      const currentWord = words[i];
-      const nextWord = words[i + 1];
-      
-      if (!model[currentWord]) {
-        model[currentWord] = {};
-      }
-      
-      if (!model[currentWord][nextWord]) {
-        model[currentWord][nextWord] = 0;
-      }
-      
-      model[currentWord][nextWord] += 1;
-    }
-  });
-  
-  return model;
-}
-
-// Predict the next word based on the current word
-function predictNextWord(model, currentWord) {
-  if (!model[currentWord]) {
-    return "I don't know what comes next";
-  }
-  
-  // Find the most likely next word
-  let bestNextWord = null;
-  let highestCount = 0;
-  
-  for (const [word, count] of Object.entries(model[currentWord])) {
-    if (count > highestCount) {
-      highestCount = count;
-      bestNextWord = word;
-    }
-  }
-  
-  return bestNextWord;
-}
-
-// Build our simple model
-const simpleModel = buildModel(trainingExamples);
-
-// Use it to predict
-console.log(predictNextWord(simpleModel, "The")); // Might return "cat" or "dog" or "bird"
-console.log(predictNextWord(simpleModel, "sat")); // Would return "on"
-console.log(predictNextWord(simpleModel, "the")); // Might return "mat" or "floor" or "sky"
-
-// Real LLMs are much more complex, with billions of parameters,
-// but the basic idea of predicting what comes next based on patterns
-// in training data is similar`}</pre>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <h4 className="font-medium text-blue-800 mb-2">Why This Matters:</h4>
-              <p className="text-gray-700">
-                Real LLMs don't just look at the previous word - they consider the entire context. 
-                They also use much more sophisticated neural networks with billions of parameters. 
-                But this simple example helps you understand that fundamentally, LLMs are making predictions
-                based on patterns they've seen during training.
-              </p>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="tokenization" className="mt-4">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Tokenization</h3>
-            <p className="text-gray-700">
-              Before processing text, LLMs break it down into "tokens" - these can be words, parts of words, 
-              or even individual characters. Here's a simplified example of tokenization:
-            </p>
-            
-            <div className="bg-gray-900 text-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              <pre>{`// A simplified tokenization example
-
-// This is a very basic tokenizer that splits text into words
-function simpleTokenizer(text) {
-  // Remove punctuation and convert to lowercase
-  const cleanedText = text.toLowerCase().replace(/[.,\\/#!$%\\^&\\*;:{}=\\-_\`~()]/g, "");
-  
-  // Split into words
-  const tokens = cleanedText.split(' ');
-  
-  return tokens;
-}
-
-// Real tokenizers are more complex and might split words into subwords
-function subwordTokenizer(text) {
-  // This is just a demonstration, real subword tokenizers use algorithms
-  // like Byte-Pair Encoding (BPE) or WordPiece
-  
-  // For example, "playing" might be split into "play" + "ing"
-  const madeUpVocabulary = {
-    "play": 1,
-    "ing": 2,
-    "super": 3,
-    "hero": 4,
-    "dog": 5,
-    "s": 6,
-    "like": 7,
-    "bone": 8
+  // Define default options for our request
+  const defaultOptions = {
+    temperature: 0.7,       // Controls randomness (0 = deterministic, 1 = creative)
+    maxTokens: 100,         // Maximum length of response
+    topP: 0.9,              // Controls diversity
+    presencePenalty: 0.0,   // Discourages repetition
+    frequencyPenalty: 0.0,  // Discourages frequent tokens
   };
   
-  // Pretend we're doing proper subword tokenization
-  // In reality, this is much more complex
-  let result = [];
-  const words = text.toLowerCase().split(' ');
+  // Combine default options with any user-provided options
+  const requestOptions = { ...defaultOptions, ...options };
   
-  words.forEach(word => {
-    // Check if the word is in our vocabulary
-    if (madeUpVocabulary[word]) {
-      result.push(word);
-    } else {
-      // Pretend we're breaking it down
-      // (This is not how real subword tokenization works)
-      result.push("[UNKNOWN_TOKEN]");
-    }
-  });
-  
-  return result;
-}
-
-// Example usage
-const sentence = "Superheroes like playing with dogs";
-
-console.log("Word tokens:", simpleTokenizer(sentence));
-// Would output: ["superheroes", "like", "playing", "with", "dogs"]
-
-// In real subword tokenization, it might output something like:
-// ["super", "hero", "es", "like", "play", "ing", "with", "dog", "s"]
-// depending on the vocabulary and algorithm used`}</pre>
-            </div>
-            
-            <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
-              <h4 className="font-medium text-purple-800 mb-2">Why Tokenization Matters:</h4>
-              <p className="text-gray-700">
-                Breaking text into tokens helps the AI process language more efficiently. It allows the model 
-                to handle words it hasn't seen before by breaking them into familiar parts. This is why LLMs 
-                can sometimes understand made-up words if they're composed of familiar parts!
-              </p>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="prompt-processing" className="mt-4">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Prompt Processing</h3>
-            <p className="text-gray-700">
-              When you send a prompt to an LLM, it goes through several processing steps. Here's a 
-              simplified example of what might happen:
-            </p>
-            
-            <div className="bg-gray-900 text-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              <pre>{`// Simplified prompt processing
-
-// This function represents how an AI might process your prompt
-function processPrompt(prompt, maxTokens = 100) {
-  // Step 1: Tokenize the prompt
-  const tokens = tokenize(prompt);
-  
-  // Step 2: Add any system instructions or context
-  const processedPrompt = [
-    "You are a helpful AI assistant that provides accurate information.",
-    prompt
-  ];
-  
-  // Step 3: Generate a response
-  const response = generateResponse(processedPrompt, maxTokens);
-  
-  return response;
-}
-
-// Pretend tokenizer
-function tokenize(text) {
-  return text.split(' ');
-}
-
-// Pretend response generator
-function generateResponse(promptArray, maxTokens) {
-  // In a real LLM, this would be where the neural network does its magic,
-  // using billions of parameters to predict the most likely next tokens
-  
-  // For this example, we'll return a hardcoded response
-  if (promptArray[1].includes("weather")) {
-    return "I don't have access to real-time weather data, but I can tell you that weather is the state of the atmosphere at a particular place and time.";
-  } else if (promptArray[1].includes("help")) {
-    return "I'm here to help! Please let me know what you're looking for information about.";
-  } else {
-    return "I'm an AI assistant designed to provide helpful information. I don't have access to real-time data or the ability to browse the internet.";
+  try {
+    // In a real app, we would make an API call like this:
+    // const response = await fetch('https://api.languagemodel.com/generate', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': 'Bearer YOUR_API_KEY'
+    //   },
+    //   body: JSON.stringify({
+    //     prompt: prompt,
+    //     ...requestOptions
+    //   })
+    // });
+    // const data = await response.json();
+    // return data.text;
+    
+    // For this example, we'll simulate a response
+    return simulateLanguageModelResponse(prompt, requestOptions);
+  } catch (error) {
+    console.error("Error calling language model:", error);
+    return "Sorry, I couldn't process your request.";
   }
 }
 
-// Example usage
-const userPrompt = "Can you help me understand how weather works?";
-console.log(processPrompt(userPrompt));
+// This is a simplified simulation of how a language model might respond
+// Real language models are much more sophisticated!
+function simulateLanguageModelResponse(prompt, options) {
+  // In reality, language models use billions of parameters
+  // and complex neural networks to generate text
+  
+  if (prompt.includes("hello") || prompt.includes("hi")) {
+    return "Hello! How can I help you today?";
+  }
+  
+  if (prompt.includes("poem") || prompt.includes("poetry")) {
+    return "Here's a short poem for you:\n\nDigital dreams in code,\nSilicon thoughts unfold,\nLanguage models learn and grow,\nIn the data's endless flow.";
+  }
+  
+  if (prompt.includes("explain") || prompt.includes("what is")) {
+    return "I'd be happy to explain that topic! When providing explanations, I analyze relevant information and present it in a clear, structured way that's easy to understand.";
+  }
+  
+  return "I've processed your request. Is there anything specific you'd like to know more about?";
+}
 
-// In reality, prompt processing includes much more:
-// - Checking against safety guidelines
-// - Adding conversation history for context
-// - Temperature settings for creativity vs. accuracy
-// - Complex neural network operations
-// - Many more steps!`}</pre>
+// Example usage:
+async function demonstrateLLM() {
+  console.log("Example 1: Basic question");
+  const response1 = await askLanguageModel("Hello, how are you?");
+  console.log("Response:", response1);
+  
+  console.log("\nExample 2: Creative request");
+  const response2 = await askLanguageModel(
+    "Write a short poem about coding", 
+    { temperature: 0.9, maxTokens: 150 }
+  );
+  console.log("Response:", response2);
+  
+  console.log("\nExample 3: Specific instructions");
+  const response3 = await askLanguageModel(
+    "Explain how language models work in 3 simple points", 
+    { temperature: 0.2 }  // Lower temperature for more focused response
+  );
+  console.log("Response:", response3);
+}
+
+// Run the demonstration
+demonstrateLLM();
+              `}</pre>
             </div>
             
-            <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-              <h4 className="font-medium text-green-800 mb-2">Why This Matters for Prompt Engineering:</h4>
-              <p className="text-gray-700">
-                Understanding how your prompt is processed helps you write better prompts. For example, 
-                knowing that the AI considers your prompt in context with system instructions helps explain 
-                why being clear and specific is important. The better your prompt, the more accurately the 
-                AI can generate the response you're looking for!
-              </p>
-            </div>
+            <h3 className="font-semibold mt-6">Key Points:</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Language models are accessed through APIs (Application Programming Interfaces)</li>
+              <li>You send a prompt and receive a response</li>
+              <li>You can control various parameters to adjust how the AI responds</li>
+              <li>Real language models are much more complex than this simplified example</li>
+              <li>The quality of the response depends greatly on the quality of the prompt</li>
+            </ul>
           </div>
-        </TabsContent>
-      </Tabs>
-      
-      <div className="bg-orange-50 p-5 rounded-lg border border-orange-100">
-        <h3 className="font-medium text-orange-800 mb-2">Remember:</h3>
-        <p className="text-gray-700">
-          These code examples are extremely simplified! Real large language models use:
-        </p>
-        <ul className="list-disc pl-5 mt-2 space-y-1 text-gray-700">
-          <li>Neural networks with billions of parameters</li>
-          <li>Attention mechanisms to focus on relevant parts of text</li>
-          <li>Advanced tokenization algorithms</li>
-          <li>Multiple layers of processing</li>
-          <li>Sophisticated training techniques</li>
-        </ul>
-        <p className="mt-3 text-gray-700">
-          The code here is meant to help you understand the basic concepts, but real LLMs are much
-          more complex and powerful!
-        </p>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
