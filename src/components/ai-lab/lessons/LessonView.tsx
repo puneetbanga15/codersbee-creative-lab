@@ -34,6 +34,7 @@ const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
 
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
+  const [tabContentCompleted, setTabContentCompleted] = useState(false);
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
   
@@ -50,7 +51,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     const currentIndex = tabOrder.indexOf(activeTab);
     if (currentIndex < tabOrder.length - 1) {
       setActiveTab(tabOrder[currentIndex + 1]);
+      setTabContentCompleted(false);
     }
+  };
+  
+  // Handle content completion within a tab
+  const handleContentComplete = () => {
+    setTabContentCompleted(true);
   };
   
   // Check if this is the last tab
@@ -95,13 +102,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     if (lessonId === 'meet-ai-friend') {
       switch (tab) {
         case 'introduction':
-          return <MeetAIFriendIntro />;
+          return <MeetAIFriendIntro onComplete={handleContentComplete} />;
         case 'tutorial':
-          return <FinalFixedTutorial />;
+          return <FinalFixedTutorial onComplete={handleContentComplete} />;
         case 'activity':
-          return <MeetAIFriendActivityWrapper />;
+          return <MeetAIFriendActivityWrapper onComplete={handleContentComplete} />;
         case 'code':
-          return <MeetAIFriendCode />;
+          return <MeetAIFriendCode onComplete={handleContentComplete} />;
         default:
           return <div>Content not available</div>;
       }
@@ -109,13 +116,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     else if (lessonId === 'llm-basics') {
       switch (tab) {
         case 'introduction':
-          return <LLMBasicsIntro />;
+          return <LLMBasicsIntro onComplete={handleContentComplete} />;
         case 'tutorial':
-          return <LLMBasicsTutorial />;
+          return <LLMBasicsTutorial onComplete={handleContentComplete} />;
         case 'activity':
-          return <LLMBasicsActivityWrapper />;
+          return <LLMBasicsActivityWrapper onComplete={handleContentComplete} />;
         case 'code':
-          return <LLMBasicsCode />;
+          return <LLMBasicsCode onComplete={handleContentComplete} />;
         default:
           return <div>Content not available</div>;
       }
@@ -137,6 +144,12 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                   <li key={index} className="text-gray-700">{concept}</li>
                 ))}
               </ul>
+              
+              <div className="flex justify-end mt-8">
+                <Button onClick={handleContentComplete} className="bg-blue-500 hover:bg-blue-600">
+                  I've Read This
+                </Button>
+              </div>
             </div>
           );
         default:
@@ -152,6 +165,10 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
                 <p className="text-gray-600 mb-6">This lesson content is under development.</p>
+                
+                <Button onClick={handleContentComplete} className="bg-blue-500 hover:bg-blue-600">
+                  Continue
+                </Button>
               </motion.div>
             </div>
           );
@@ -232,30 +249,34 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       </Card>
       
       <div className="flex justify-between">
-        {isLastTab && nextLesson ? (
-          <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
-            <Button 
-              className="bg-purple-500 hover:bg-purple-600" 
-            >
-              <ArrowRight className="mr-2 h-4 w-4" />
-              Next Lesson: {nextLesson.title}
-            </Button>
-          </Link>
-        ) : isLastTab ? (
-          <Button className="bg-green-500 hover:bg-green-600">
-            <CheckCircle className="mr-2 h-4 w-4" />
-            Complete Lesson
-          </Button>
-        ) : (
-          <Button 
-            onClick={handleNextTab}
-            className="bg-blue-500 hover:bg-blue-600"
-          >
-            <ArrowRight className="mr-2 h-4 w-4" />
-            Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
-              tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
-              tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
-          </Button>
+        {tabContentCompleted && (
+          <>
+            {isLastTab && nextLesson ? (
+              <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
+                <Button 
+                  className="bg-purple-500 hover:bg-purple-600" 
+                >
+                  <ArrowRight className="mr-2 h-4 w-4" />
+                  Next Lesson: {nextLesson.title}
+                </Button>
+              </Link>
+            ) : isLastTab ? (
+              <Button className="bg-green-500 hover:bg-green-600">
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Complete Lesson
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleNextTab}
+                className="bg-blue-500 hover:bg-blue-600"
+              >
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
+                  tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
+                  tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>
