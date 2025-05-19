@@ -19,10 +19,10 @@ export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
   return (
     <div className="space-y-6">
       <div className="flex items-start gap-4 mb-6">
-        <BuzzyAnimation state="greeting" size="md" className="flex-shrink-0" />
+        <BuzzyAnimation state="excited" size="md" className="flex-shrink-0" />
         <BuzzySpeechBubble 
           message="Hello there! I'm Buzzy, and I'm excited to teach you about AI Friends! Are you ready to learn how to create your own AI buddy?"
-          state="greeting"
+          state="excited"
         />
       </div>
       
