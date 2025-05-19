@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,9 @@ type LessonViewProps = {
   onBack?: () => void;
 };
 
+// Define the tab order for navigation
+const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
+
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
   const lesson = curriculumData.find(l => l.id === lessonId);
@@ -40,6 +44,17 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       navigate('/ai-lab');
     }
   };
+  
+  // Handle next tab navigation
+  const handleNextTab = () => {
+    const currentIndex = tabOrder.indexOf(activeTab);
+    if (currentIndex < tabOrder.length - 1) {
+      setActiveTab(tabOrder[currentIndex + 1]);
+    }
+  };
+  
+  // Check if this is the last tab
+  const isLastTab = activeTab === tabOrder[tabOrder.length - 1];
   
   if (!lesson) {
     return (
@@ -217,7 +232,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       </Card>
       
       <div className="flex justify-between">
-        {nextLesson ? (
+        {isLastTab && nextLesson ? (
           <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
             <Button 
               className="bg-purple-500 hover:bg-purple-600" 
@@ -226,10 +241,20 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
               Next Lesson: {nextLesson.title}
             </Button>
           </Link>
-        ) : (
+        ) : isLastTab ? (
           <Button className="bg-green-500 hover:bg-green-600">
             <CheckCircle className="mr-2 h-4 w-4" />
             Complete Lesson
+          </Button>
+        ) : (
+          <Button 
+            onClick={handleNextTab}
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            <ArrowRight className="mr-2 h-4 w-4" />
+            Next: {tabOrder.indexOf(activeTab) < tabOrder.length - 1 ? 
+              tabOrder[tabOrder.indexOf(activeTab) + 1].charAt(0).toUpperCase() + 
+              tabOrder[tabOrder.indexOf(activeTab) + 1].slice(1) : ''}
           </Button>
         )}
       </div>
