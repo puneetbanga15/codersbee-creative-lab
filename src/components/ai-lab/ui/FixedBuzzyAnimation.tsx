@@ -10,24 +10,27 @@ interface FixedBuzzyAnimationProps {
   uniqueId?: string;
 }
 
+// Generate a simple static ID outside of component to avoid runtime errors
+let componentCounter = 0;
+
 export const FixedBuzzyAnimation: React.FC<FixedBuzzyAnimationProps> = ({ 
   state = 'default', 
   size = 'md',
   className = '',
-  uniqueId = 'fixed-buzzy-default'
+  uniqueId = ''
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const videoDivRef = useRef<HTMLDivElement>(null);
   
-  // Create a unique ID for this component instance to help debugging
-  const randomId = React.useMemo(() => Math.random().toString(36).substring(2, 9), []);
-  const instanceId = useRef(uniqueId || `buzzy-${randomId}`);
+  // Create a simple deterministic ID for this component
+  const instanceId = useRef(uniqueId || `buzzy-fixed-${componentCounter++}`);
   
   useEffect(() => {
+    // Log component lifecycle for debugging
     console.log(`FixedBuzzyAnimation(${instanceId.current}) rendered with state: ${state}`);
     
-    // Mark this component with a data attribute so we can find it in the DOM
+    // Mark this component with a data attribute for DOM identification
     if (videoDivRef.current) {
       videoDivRef.current.setAttribute('data-buzzy-instance', instanceId.current);
     }
@@ -63,13 +66,16 @@ export const FixedBuzzyAnimation: React.FC<FixedBuzzyAnimationProps> = ({
     return `/buzzy-animations/${fileMap[state]}`;
   };
 
+  // Get a safe ID for DOM attributes
+  const safeId = instanceId?.current || 'fixed-buzzy-fallback';
+  
   // If there's an error, use a fallback
   if (error) {
     return (
       <div 
         className={`${sizeMap[size]} ${className} bg-purple-100 rounded-full flex items-center justify-center`}
         data-buzzy-error="true"
-        data-buzzy-id={instanceId.current}
+        data-buzzy-id={safeId}
       >
         <span className="text-purple-500 text-xs">Error</span>
       </div>
@@ -82,7 +88,7 @@ export const FixedBuzzyAnimation: React.FC<FixedBuzzyAnimationProps> = ({
       ref={videoDivRef}
       className={`${sizeMap[size]} ${className} bg-purple-100 rounded-full flex items-center justify-center overflow-hidden`}
       data-buzzy-state={state}
-      data-buzzy-id={instanceId.current}
+      data-buzzy-id={safeId}
     >
       <img 
         src={getBuzzyImage()}
