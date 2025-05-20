@@ -322,9 +322,17 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
             </Button>
           </Link>
         ) : isAtLessonEnd ? (
-          <Button className="bg-green-500 hover:bg-green-600">
+          <Button 
+            className="bg-green-500 hover:bg-green-600"
+            onClick={() => {
+              if (activeTab === 'tutorial') {
+                setActiveTab('activity');
+                setIsAtSectionEnd(false);
+              }
+            }}
+          >
             <CheckCircle className="mr-2 h-4 w-4" />
-            Complete Lesson
+            {activeTab === 'tutorial' ? "Move to Activity" : "Complete Lesson"}
           </Button>
         ) : (
           <div>{/* Empty div to maintain flex layout */}</div>

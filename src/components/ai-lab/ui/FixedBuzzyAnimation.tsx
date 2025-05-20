@@ -21,7 +21,8 @@ export const FixedBuzzyAnimation: React.FC<FixedBuzzyAnimationProps> = ({
   const videoDivRef = useRef<HTMLDivElement>(null);
   
   // Create a unique ID for this component instance to help debugging
-  const instanceId = useRef(uniqueId || `buzzy-${Math.random().toString(36).substring(2, 9)}`);
+  const randomId = React.useMemo(() => Math.random().toString(36).substring(2, 9), []);
+  const instanceId = useRef(uniqueId || `buzzy-${randomId}`);
   
   useEffect(() => {
     console.log(`FixedBuzzyAnimation(${instanceId.current}) rendered with state: ${state}`);
