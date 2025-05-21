@@ -4,7 +4,11 @@ import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users } from 'lucid
 import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 import { motion } from 'framer-motion';
 
-export const MeetAIFriendIntro = () => {
+interface MeetAIFriendIntroProps {
+  onComplete?: () => void;
+}
+
+export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
   // Emit event when component mounts to indicate we're at the end of the section
   useEffect(() => {
     // Create and dispatch a custom event to notify the parent component
