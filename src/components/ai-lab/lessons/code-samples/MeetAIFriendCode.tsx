@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-export const MeetAIFriendCode = () => {
+interface MeetAIFriendCodeProps {
+  onComplete?: () => void;
+}
+
+export const MeetAIFriendCode = ({ onComplete }: MeetAIFriendCodeProps) => {
   // Emit event when component mounts to indicate we're at the end of the section
   useEffect(() => {
     // Create and dispatch a custom event to notify the parent component
