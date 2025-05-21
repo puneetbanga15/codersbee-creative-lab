@@ -13,7 +13,11 @@ import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const LLMBasicsActivityWrapper: React.FC = () => {
+interface LLMBasicsActivityWrapperProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsActivityWrapper: React.FC<LLMBasicsActivityWrapperProps> = ({ onComplete }) => {
   const [activeTab, setActiveTab] = useState("prompt-practice");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");

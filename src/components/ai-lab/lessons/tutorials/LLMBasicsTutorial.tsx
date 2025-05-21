@@ -7,7 +7,11 @@ import { FixedBuzzyAnimation } from '@/components/ai-lab/ui/FixedBuzzyAnimation'
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 
-export const LLMBasicsTutorial: React.FC = () => {
+interface LLMBasicsTutorialProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsTutorial: React.FC<LLMBasicsTutorialProps> = ({ onComplete }) => {
   const [activeTab, setActiveTab] = useState("how-llms-work");
   const [showBuzzy, setShowBuzzy] = useState(true);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -64,7 +68,9 @@ export const LLMBasicsTutorial: React.FC = () => {
         
         // Check if this image is a Buzzy image
         if (src.toLowerCase().includes('buzzy') || alt.toLowerCase().includes('buzzy')) {
-          console.log(`Found Buzzy image #${i+1}: ${src.substring(0, 50)}...`);
+          // Create a safe substring preview of the source
+          const sourcePreview = src && src.length > 0 ? src.substring(0, Math.min(50, src.length)) : '';
+          console.log(`Found Buzzy image #${i+1}: ${sourcePreview}...`);
           
           // Add visible highlight for debugging
           imgEl.style.border = '3px solid red';

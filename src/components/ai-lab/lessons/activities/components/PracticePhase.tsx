@@ -77,7 +77,7 @@ const ChatInterface = ({ messages, onSendMessage, characterName, trainedQuestion
                 onClick={() => handleSuggestedQuestionClick(question)}
                 className="text-xs bg-white border border-gray-200 rounded-full px-3 py-1 hover:bg-purple-50 hover:border-purple-200 transition-colors"
               >
-                {question.length > 40 ? question.substring(0, 40) + '...' : question}
+                {question && question.length > 40 ? question.substring(0, 40) + '...' : question}
               </button>
             ))}
           </div>

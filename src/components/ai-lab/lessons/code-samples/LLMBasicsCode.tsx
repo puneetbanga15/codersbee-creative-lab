@@ -2,7 +2,11 @@
 import React, { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const LLMBasicsCode: React.FC = () => {
+interface LLMBasicsCodeProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsCode: React.FC<LLMBasicsCodeProps> = ({ onComplete }) => {
   // Emit event when component mounts to indicate we're at the end of the section
   useEffect(() => {
     // Create and dispatch a custom event to notify the parent component

@@ -4,7 +4,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 
-export const LLMBasicsIntro: React.FC = () => {
+interface LLMBasicsIntroProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsIntro: React.FC<LLMBasicsIntroProps> = ({ onComplete }) => {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
   
   // Emit event when component mounts to indicate we're at the end of the section
