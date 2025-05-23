@@ -34,6 +34,7 @@ const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
   const [isAtSectionEnd, setIsAtSectionEnd] = useState(false);
+  const [justAutoAdvanced, setJustAutoAdvanced] = useState(false);
   const [tabContentCompleted, setTabContentCompleted] = useState(false);
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
@@ -43,11 +44,10 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     const handleSectionEnd = (event: CustomEvent) => {
       setIsAtSectionEnd(event.detail.isAtEnd);
     };
-    
-    window.addEventListener('sectionEndReached' as any, handleSectionEnd);
-    
+    const eventListener = (e: Event) => handleSectionEnd(e as CustomEvent);
+    window.addEventListener('sectionEndReached', eventListener);
     return () => {
-      window.removeEventListener('sectionEndReached' as any, handleSectionEnd);
+      window.removeEventListener('sectionEndReached', eventListener);
     };
   }, []);
   
@@ -71,6 +71,12 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   // Handle content completion within a tab
   const handleContentComplete = () => {
     setTabContentCompleted(true);
+    // Automatically move to the next tab when content is completed
+    const currentIndex = tabOrder.indexOf(activeTab);
+    if (currentIndex < tabOrder.length - 1) {
+      setActiveTab(tabOrder[currentIndex + 1]);
+      setTabContentCompleted(false);
+    }
   };
   
   // Check if this is the last tab
@@ -235,7 +241,14 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       
       <Card>
         <CardContent className="p-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs 
+            value={activeTab} 
+            onValueChange={(val) => {
+              setActiveTab(val);
+              setIsAtSectionEnd(false); // Reset section end state when changing tabs
+            }} 
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="introduction" className="flex items-center gap-2">
                 <Info className="h-4 w-4" />
@@ -283,27 +296,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                     Previous Section
                   </Button>
                   
-                  {/* Only show Next Section button when at the end of a section */}
-                  {isAtSectionEnd && (
-                    <Button 
-                      variant="default"
-                      onClick={() => {
-                        const sections = ['introduction', 'tutorial', 'activity', 'code'];
-                        const currentIndex = sections.indexOf(activeTab);
-                        if (currentIndex < sections.length - 1) {
-                          setActiveTab(sections[currentIndex + 1]);
-                          setIsAtSectionEnd(false); // Reset the state when moving to next section
-                        }
-                      }}
-                      disabled={activeTab === 'code'}
-                      className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600"
-                    >
-                      {activeTab === 'introduction' && "Let's Start the Tutorial"}
-                      {activeTab === 'tutorial' && "Let's Move to Activity"}
-                      {activeTab === 'activity' && "Let's Look at the Code"}
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  )}
+
                 </div>
               </motion.div>
             </div>

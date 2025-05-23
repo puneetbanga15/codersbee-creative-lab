@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
@@ -11,18 +10,39 @@ interface LLMBasicsIntroProps {
 export const LLMBasicsIntro: React.FC<LLMBasicsIntroProps> = ({ onComplete }) => {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
   
-  // Emit event when component mounts to indicate we're at the end of the section
-  useEffect(() => {
-    // Create and dispatch a custom event to notify the parent component
+  // Handle continue button click
+  const handleContinue = () => {
+    // Signal that we want to move to the next tab
     const event = new CustomEvent('sectionEndReached', { 
-      detail: { isAtEnd: true }
+      detail: { 
+        isAtEnd: true,
+        autoAdvance: true  // Explicitly request auto-advance
+      }
+    });
+    window.dispatchEvent(event);
+    
+    // Call the onComplete handler if provided
+    if (onComplete) {
+      onComplete();
+    }
+  };
+  
+  // Set initial section state
+  useEffect(() => {
+    const event = new CustomEvent('sectionEndReached', { 
+      detail: { 
+        isAtEnd: true,
+        autoAdvance: false  // Don't auto-advance on initial load
+      }
     });
     window.dispatchEvent(event);
     
     return () => {
-      // Reset when unmounting
       const resetEvent = new CustomEvent('sectionEndReached', { 
-        detail: { isAtEnd: false }
+        detail: { 
+          isAtEnd: false,
+          autoAdvance: false
+        }
       });
       window.dispatchEvent(resetEvent);
     };
@@ -202,6 +222,15 @@ export const LLMBasicsIntro: React.FC<LLMBasicsIntroProps> = ({ onComplete }) =>
             </div>
           </CollapsibleContent>
         </Collapsible>
+      </div>
+      
+      <div className="mt-6 pt-4 border-t border-gray-200 flex justify-end">
+        <Button 
+          onClick={handleContinue}
+          className="bg-purple-600 hover:bg-purple-700"
+        >
+          Continue to Tutorial
+        </Button>
       </div>
     </div>
   );

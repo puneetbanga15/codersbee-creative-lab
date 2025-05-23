@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
@@ -195,9 +195,11 @@ export const FinalFixedTutorial = ({ onComplete }: FinalFixedTutorialProps) => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
       setShowBuzzy(true);
-    } else if (currentSlide === slides.length - 1 && onComplete) {
-      // If we're on the last slide, call onComplete
-      onComplete();
+    } else {
+      // Call onComplete to move to the next tab
+      if (onComplete) {
+        onComplete();
+      }
     }
   };
 
@@ -254,8 +256,17 @@ export const FinalFixedTutorial = ({ onComplete }: FinalFixedTutorialProps) => {
               onClick={handleNext}
               className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
             >
-              {currentSlide === slides.length - 1 ? "Complete Tutorial" : "Next"} 
-              <ChevronRight className="h-4 w-4" />
+              {currentSlide === slides.length - 1 ? (
+                <>
+                  Complete & Go to Activity
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
