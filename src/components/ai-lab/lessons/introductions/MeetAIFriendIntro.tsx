@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users } from 'lucide-react';
+import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users, ArrowRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 import { motion } from 'framer-motion';
 
-export const MeetAIFriendIntro = () => {
+interface MeetAIFriendIntroProps {
+  onComplete?: () => void;
+}
+
+export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
+  // Emit event when component mounts to indicate we're at the end of the section
+  useEffect(() => {
+    // Create and dispatch a custom event to notify the parent component
+    const event = new CustomEvent('sectionEndReached', { 
+      detail: { isAtEnd: true }
+    });
+    window.dispatchEvent(event);
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-100">
@@ -22,7 +44,7 @@ export const MeetAIFriendIntro = () => {
       <CollapsibleSection 
         title="What You'll Learn" 
         icon={<BookOpen className="h-5 w-5" />}
-        defaultOpen={true}
+        defaultOpen={false}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card>
@@ -78,7 +100,7 @@ export const MeetAIFriendIntro = () => {
       <CollapsibleSection 
         title="Meet Your Characters" 
         icon={<Users className="h-5 w-5" />}
-        defaultOpen={true}
+        defaultOpen={false}
       >
         <p className="mb-4">
           Choose from these amazing characters to be your AI friend! Each one has their own unique personality and way of thinking:
@@ -157,6 +179,8 @@ export const MeetAIFriendIntro = () => {
           Consider discussing with your child how AI is used in their everyday life after completing this lesson.
         </p>
       </div>
+      
+
     </div>
   );
 };

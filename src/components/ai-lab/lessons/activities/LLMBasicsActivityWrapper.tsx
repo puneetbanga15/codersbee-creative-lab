@@ -1,24 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Wand, Brain, Check, Send } from 'lucide-react';
+import { MessageSquare, Wand, Brain, Check } from 'lucide-react';
 import { CollapsibleSection } from '../../ui/CollapsibleSection';
-import { Input } from "@/components/ui/input";
 import { PromptPractice } from './components/llm-basics/PromptPractice';
 import { PromptComparison } from './components/llm-basics/PromptComparison';
 import { PromptBuilder } from './components/llm-basics/PromptBuilder';
 import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BuzzyChat } from '@/components/buzzy-ai/BuzzyChat';
 
-export const LLMBasicsActivityWrapper: React.FC = () => {
+interface LLMBasicsActivityWrapperProps {
+  onComplete?: () => void;
+}
+
+export const LLMBasicsActivityWrapper: React.FC<LLMBasicsActivityWrapperProps> = ({ onComplete }) => {
   const [activeTab, setActiveTab] = useState("prompt-practice");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
-  const [prompt, setPrompt] = useState("");
-  const [chatHistory, setChatHistory] = useState<Array<{type: 'user' | 'ai', message: string}>>([]);
-  const [isTyping, setIsTyping] = useState(false);
+  // Emit section end event when all activities are completed
+  useEffect(() => {
+    if (completedSections.length === 3) {
+      // Create and dispatch a custom event to notify the parent component
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: true }
+      });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(event);
+    }
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, [completedSections]);
+  
   const [showBuzzyTip, setShowBuzzyTip] = useState(true);
   
   // Buzzy animation states and messages for different tabs
@@ -38,25 +63,6 @@ export const LLMBasicsActivityWrapper: React.FC = () => {
     if (!completedSections.includes(section)) {
       setCompletedSections([...completedSections, section]);
     }
-  };
-
-  const handlePromptSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim()) return;
-
-    // Add user message to chat
-    setChatHistory(prev => [...prev, { type: 'user', message: prompt }]);
-    setPrompt("");
-    setIsTyping(true);
-
-    // Simulate AI response (replace with actual API call)
-    setTimeout(() => {
-      setChatHistory(prev => [...prev, { 
-        type: 'ai', 
-        message: "Hi! I'm your AI friend. I'm here to help you learn about AI and prompt engineering. Try asking me something specific about AI or how to write better prompts!" 
-      }]);
-      setIsTyping(false);
-    }, 1000);
   };
   
   return (
@@ -93,60 +99,14 @@ export const LLMBasicsActivityWrapper: React.FC = () => {
       </div>
 
       <CollapsibleSection
-        title="Try Chatting with AI"
+        title="Try Chatting with Buzzy AI"
         icon={<MessageSquare className="h-5 w-5" />}
         defaultOpen={true}
       >
-        <div className="bg-white rounded-lg p-4">
-          <div className="h-[300px] overflow-y-auto mb-4 space-y-4">
-            <AnimatePresence>
-              {chatHistory.map((msg, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      msg.type === 'user'
-                        ? 'bg-purple-500 text-white rounded-br-none'
-                        : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                    }`}
-                  >
-                    {msg.message}
-                  </div>
-                </motion.div>
-              ))}
-              {isTyping && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-gray-100 text-gray-800 p-3 rounded-lg rounded-bl-none">
-                    <div className="flex space-x-2">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+          <div className="h-[400px] overflow-hidden">
+            <BuzzyChat isCompact={true} />
           </div>
-          <form onSubmit={handlePromptSubmit} className="flex gap-2">
-            <Input
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Type your prompt here..."
-              className="flex-1"
-            />
-            <Button type="submit" className="bg-purple-500 hover:bg-purple-600">
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
         </div>
       </CollapsibleSection>
 

@@ -26,7 +26,10 @@ export const DebugDuplicateImages: React.FC = () => {
         console.log(`  - src: ${htmlElement.src}`);
         console.log(`  - alt: ${htmlElement.alt}`);
         console.log(`  - DOM path: ${path}`);
-        console.log(`  - parent: ${img.parentElement?.outerHTML.substring(0, 100)}...`);
+        // Safely get a preview of the parent HTML
+        const parentHTML = img.parentElement?.outerHTML || '';
+        const parentPreview = parentHTML.length > 0 ? parentHTML.substring(0, Math.min(100, parentHTML.length)) : '';
+        console.log(`  - parent: ${parentPreview}...`);
       });
       
       // Find all videos on the page (BuzzyAnimation uses video elements)

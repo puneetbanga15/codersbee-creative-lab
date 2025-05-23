@@ -11,6 +11,8 @@ interface BuzzySpeechBubbleProps {
   className?: string;
 }
 
+// Generate a simple counter for unique IDs
+let bubbleCounter = 0;
 export const BuzzySpeechBubble: React.FC<BuzzySpeechBubbleProps> = ({
   message,
   state = 'default',
@@ -19,13 +21,15 @@ export const BuzzySpeechBubble: React.FC<BuzzySpeechBubbleProps> = ({
   onClose,
   className = ''
 }) => {
-  // Create a unique ID for this instance for debugging
-  const instanceId = useRef(`bubble-${Math.random().toString(36).substring(2, 9)}`);
+  // Create a unique sequential ID for this instance for debugging
+  const instanceId = useRef(`bubble-${bubbleCounter++}`);
   const bubbleRef = useRef<HTMLDivElement>(null);
   
   // Log component render to help debug
   useEffect(() => {
-    console.log(`BuzzySpeechBubble(${instanceId.current}) rendering with message: ${message.substring(0, 20)}...`);
+    // Safely get a preview of the message
+    const messagePreview = message ? message.substring(0, Math.min(20, message.length)) : '';
+    console.log(`BuzzySpeechBubble(${instanceId.current}) rendering with message: ${messagePreview}...`);
     
     // Mark this component with a data attribute for debugging
     if (bubbleRef.current) {

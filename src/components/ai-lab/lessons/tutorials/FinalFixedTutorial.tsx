@@ -1,84 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { FixedBuzzyAnimation } from '@/components/ai-lab/ui/FixedBuzzyAnimation';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 
-// Custom AIBrainCanvas component with no external image references
-const AIBrainCanvas = () => {
-  return (
-    <div className="w-40 h-40 bg-purple-100 rounded-lg mx-auto flex items-center justify-center">
-      <div className="text-purple-500 text-center">
-        <div className="w-16 h-16 rounded-full bg-purple-200 mx-auto flex items-center justify-center mb-2">
-          <span className="text-2xl">🧠</span>
-        </div>
-        <p className="text-sm font-medium">AI Brain</p>
-      </div>
-    </div>
-  );
-};
+interface FinalFixedTutorialProps {
+  onComplete?: () => void;
+}
 
-export const FinalFixedTutorial = () => {
+export const FinalFixedTutorial = ({ onComplete }: FinalFixedTutorialProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showBuzzy, setShowBuzzy] = useState(true);
-  const mainRef = useRef<HTMLDivElement>(null);
-  
-  // Log to see when component renders
-  useEffect(() => {
-    console.log(`FinalFixedTutorial rendering slide: ${currentSlide}`);
-  }, [currentSlide]);
-  
-  // Create a unique ID for this instance to help with debugging
-  const instanceId = useRef(`tutorial-${Math.random().toString(36).substring(2, 9)}`);
-  
-  // Run effect to check for duplicate Buzzy images and handle duplicates
-  useEffect(() => {
-    console.log(`FinalFixedTutorial instance ${instanceId.current} mounted`);
-    
-    if (!mainRef.current) return;
-    
-    // Give a bit of time for everything to render
-    const timeoutId = setTimeout(() => {
-      console.log(`FinalFixedTutorial ${instanceId.current} - Checking for duplicate Buzzy images...`);
-      
-      try {
-        // Mark this component's container to indicate we want to keep its Buzzy image
-        const containerEl = mainRef.current;
-        if (containerEl) {
-          containerEl.setAttribute('data-buzzy-container', instanceId.current);
-        }
-        
-        // Find and clean up duplicate Buzzy images if needed
-        const buzzyContainers = document.querySelectorAll('[data-buzzy-container]');
-        console.log(`Found ${buzzyContainers.length} Buzzy containers in the DOM`);
-        
-        // If we have multiple Buzzy containers, keep only the most recent one
-        if (buzzyContainers.length > 1) {
-          // The current one should be kept
-          const currentContainer = mainRef.current;
-          
-          buzzyContainers.forEach(container => {
-            if (container !== currentContainer && container.getAttribute('data-buzzy-container') !== instanceId.current) {
-              // Hide Buzzy in other containers
-              const buzzyEl = container.querySelector('[data-buzzy-animation-wrapper]');
-              if (buzzyEl) {
-                console.log('Hiding duplicate Buzzy element');
-                buzzyEl.setAttribute('style', 'display: none;');
-              }
-            }
-          });
-        }
-      } catch (err) {
-        console.error('Error while handling Buzzy duplicates:', err);
-      }
-    }, 500);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      console.log(`FinalFixedTutorial instance ${instanceId.current} unmounted`);
-    };
-  }, []);
   
   const slides = [
     {
@@ -102,16 +35,13 @@ export const FinalFixedTutorial = () => {
           </div>
         </div>
       ),
-      buzzyMessage: "Hi there! I'm Buzzy, and I'm excited to teach you about AI Friends!",
+      buzzyMessage: "Hi there! I'm Buzzy, and I'm excited to teach you about AI Friends! AI Friends are like digital buddies that can talk with you.",
       buzzyState: "teaching"
     },
     {
       title: "How AI Friends Work",
       content: (
         <div className="space-y-4">
-          <div className="flex justify-center mb-4">
-            <AIBrainCanvas />
-          </div>
           <div className="bg-purple-50 p-4 rounded-lg">
             <p className="text-center">
               AI Friends process your words, understand what you're asking, and create responses.
@@ -137,7 +67,7 @@ export const FinalFixedTutorial = () => {
           </div>
         </div>
       ),
-      buzzyMessage: "When you talk to me, I process your words, understand what you're asking, and create a response!",
+      buzzyMessage: "When you talk to an AI Friend like me, I process your words, understand what you're asking, and create a response. It's like a conversation, but with a computer!",
       buzzyState: "thinking"
     },
     {
@@ -265,6 +195,11 @@ export const FinalFixedTutorial = () => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
       setShowBuzzy(true);
+    } else {
+      // Call onComplete to move to the next tab
+      if (onComplete) {
+        onComplete();
+      }
     }
   };
 
@@ -275,8 +210,11 @@ export const FinalFixedTutorial = () => {
     }
   };
 
+  console.log('FinalFixedTutorial rendering slide:', currentSlide);
+  console.log('FinalFixedTutorial instance tutorial-' + Math.random().toString(36).substr(2, 8) + ' mounted');
+
   return (
-    <div ref={mainRef} className="space-y-6" data-fixed-tutorial={instanceId.current}>
+    <div className="space-y-6">
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4">
           <h2 className="text-xl font-bold text-purple-900">Meet Your AI Friend</h2>
@@ -286,25 +224,22 @@ export const FinalFixedTutorial = () => {
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-4">{slides[currentSlide].title}</h3>
           
-          {/* Buzzy section - carefully structured to avoid duplicates */}
           {showBuzzy && (
-            <div className="mb-6 flex items-start gap-4" data-buzzy-container={instanceId.current}>
-              <div className="flex-shrink-0" data-buzzy-animation-wrapper="true">
-                <FixedBuzzyAnimation 
-                  state={slides[currentSlide].buzzyState as any} 
-                  size="md"
-                  uniqueId={`buzzy-${instanceId.current}`}
-                />
-              </div>
+            <div className="mb-6 flex items-start gap-4">
+              <BuzzyAnimation 
+                state={slides[currentSlide].buzzyState as any} 
+                size="md" 
+                className="flex-shrink-0" 
+              />
               <BuzzySpeechBubble 
                 message={slides[currentSlide].buzzyMessage}
                 state={slides[currentSlide].buzzyState as any}
                 onClose={() => setShowBuzzy(false)}
-              />
+              >
+              </BuzzySpeechBubble>
             </div>
           )}
           
-          {/* The actual slide content goes here */}
           {slides[currentSlide].content}
           
           <div className="flex justify-between mt-8">
@@ -319,10 +254,19 @@ export const FinalFixedTutorial = () => {
             
             <Button
               onClick={handleNext}
-              disabled={currentSlide === slides.length - 1}
               className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
             >
-              Next <ChevronRight className="h-4 w-4" />
+              {currentSlide === slides.length - 1 ? (
+                <>
+                  Complete & Go to Activity
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </CardContent>

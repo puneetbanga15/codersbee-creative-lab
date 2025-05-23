@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -28,10 +28,28 @@ type LessonViewProps = {
   onBack?: () => void;
 };
 
+// Define the tab order for navigation
+const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
+
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
+  const [isAtSectionEnd, setIsAtSectionEnd] = useState(false);
+  const [justAutoAdvanced, setJustAutoAdvanced] = useState(false);
+  const [tabContentCompleted, setTabContentCompleted] = useState(false);
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
+  
+  // Listen for events from child components to know when we're at the end of a section
+  useEffect(() => {
+    const handleSectionEnd = (event: CustomEvent) => {
+      setIsAtSectionEnd(event.detail.isAtEnd);
+    };
+    const eventListener = (e: Event) => handleSectionEnd(e as CustomEvent);
+    window.addEventListener('sectionEndReached', eventListener);
+    return () => {
+      window.removeEventListener('sectionEndReached', eventListener);
+    };
+  }, []);
   
   const handleBackToLab = () => {
     if (onBack) {
@@ -40,6 +58,29 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       navigate('/ai-lab');
     }
   };
+  
+  // Handle next tab navigation
+  const handleNextTab = () => {
+    const currentIndex = tabOrder.indexOf(activeTab);
+    if (currentIndex < tabOrder.length - 1) {
+      setActiveTab(tabOrder[currentIndex + 1]);
+      setTabContentCompleted(false);
+    }
+  };
+  
+  // Handle content completion within a tab
+  const handleContentComplete = () => {
+    setTabContentCompleted(true);
+    // Automatically move to the next tab when content is completed
+    const currentIndex = tabOrder.indexOf(activeTab);
+    if (currentIndex < tabOrder.length - 1) {
+      setActiveTab(tabOrder[currentIndex + 1]);
+      setTabContentCompleted(false);
+    }
+  };
+  
+  // Check if this is the last tab
+  const isLastTab = activeTab === tabOrder[tabOrder.length - 1];
   
   if (!lesson) {
     return (
@@ -80,13 +121,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     if (lessonId === 'meet-ai-friend') {
       switch (tab) {
         case 'introduction':
-          return <MeetAIFriendIntro />;
+          return <MeetAIFriendIntro onComplete={handleContentComplete} />;
         case 'tutorial':
-          return <FinalFixedTutorial />;
+          return <FinalFixedTutorial onComplete={handleContentComplete} />;
         case 'activity':
-          return <MeetAIFriendActivityWrapper />;
+          return <MeetAIFriendActivityWrapper onComplete={handleContentComplete} />;
         case 'code':
-          return <MeetAIFriendCode />;
+          return <MeetAIFriendCode onComplete={handleContentComplete} />;
         default:
           return <div>Content not available</div>;
       }
@@ -94,13 +135,13 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     else if (lessonId === 'llm-basics') {
       switch (tab) {
         case 'introduction':
-          return <LLMBasicsIntro />;
+          return <LLMBasicsIntro onComplete={handleContentComplete} />;
         case 'tutorial':
-          return <LLMBasicsTutorial />;
+          return <LLMBasicsTutorial onComplete={handleContentComplete} />;
         case 'activity':
-          return <LLMBasicsActivityWrapper />;
+          return <LLMBasicsActivityWrapper onComplete={handleContentComplete} />;
         case 'code':
-          return <LLMBasicsCode />;
+          return <LLMBasicsCode onComplete={handleContentComplete} />;
         default:
           return <div>Content not available</div>;
       }
@@ -122,6 +163,12 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                   <li key={index} className="text-gray-700">{concept}</li>
                 ))}
               </ul>
+              
+              <div className="flex justify-end mt-8">
+                <Button onClick={handleContentComplete} className="bg-blue-500 hover:bg-blue-600">
+                  I've Read This
+                </Button>
+              </div>
             </div>
           );
         default:
@@ -137,6 +184,10 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
                 <p className="text-gray-600 mb-6">This lesson content is under development.</p>
+                
+                <Button onClick={handleContentComplete} className="bg-blue-500 hover:bg-blue-600">
+                  Continue
+                </Button>
               </motion.div>
             </div>
           );
@@ -147,6 +198,15 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   // Find the next lesson
   const nextLessonIndex = curriculumData.findIndex(l => l.id === lessonId) + 1;
   const nextLesson = nextLessonIndex < curriculumData.length ? curriculumData[nextLessonIndex] : null;
+  
+  // Track if we're at the end of the entire lesson (last section's end)
+  const [isAtLessonEnd, setIsAtLessonEnd] = useState(false);
+  
+  // Update lesson end state when section and tab change
+  useEffect(() => {
+    // Consider the lesson complete when we're at the end of the code section
+    setIsAtLessonEnd(isAtSectionEnd && activeTab === 'code');
+  }, [isAtSectionEnd, activeTab]);
   
   return (
     <div className="space-y-6">
@@ -181,7 +241,14 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       
       <Card>
         <CardContent className="p-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs 
+            value={activeTab} 
+            onValueChange={(val) => {
+              setActiveTab(val);
+              setIsAtSectionEnd(false); // Reset section end state when changing tabs
+            }} 
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="introduction" className="flex items-center gap-2">
                 <Info className="h-4 w-4" />
@@ -210,6 +277,27 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                 transition={{ duration: 0.3 }}
               >
                 {renderLessonContent(activeTab)}
+                
+                {/* Section Navigation Buttons */}
+                <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      const sections = ['introduction', 'tutorial', 'activity', 'code'];
+                      const currentIndex = sections.indexOf(activeTab);
+                      if (currentIndex > 0) {
+                        setActiveTab(sections[currentIndex - 1]);
+                      }
+                    }}
+                    disabled={activeTab === 'introduction'}
+                    className="flex items-center gap-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Previous Section
+                  </Button>
+                  
+
+                </div>
               </motion.div>
             </div>
           </Tabs>
@@ -217,7 +305,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       </Card>
       
       <div className="flex justify-between">
-        {nextLesson ? (
+        {isAtLessonEnd && nextLesson ? (
           <Link to={`/ai-lab/lessons/${nextLesson.id}`} className="inline-block">
             <Button 
               className="bg-purple-500 hover:bg-purple-600" 
@@ -226,11 +314,21 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
               Next Lesson: {nextLesson.title}
             </Button>
           </Link>
-        ) : (
-          <Button className="bg-green-500 hover:bg-green-600">
+        ) : isAtLessonEnd ? (
+          <Button 
+            className="bg-green-500 hover:bg-green-600"
+            onClick={() => {
+              if (activeTab === 'tutorial') {
+                setActiveTab('activity');
+                setIsAtSectionEnd(false);
+              }
+            }}
+          >
             <CheckCircle className="mr-2 h-4 w-4" />
-            Complete Lesson
+            {activeTab === 'tutorial' ? "Move to Activity" : "Complete Lesson"}
           </Button>
+        ) : (
+          <div>{/* Empty div to maintain flex layout */}</div>
         )}
       </div>
     </div>

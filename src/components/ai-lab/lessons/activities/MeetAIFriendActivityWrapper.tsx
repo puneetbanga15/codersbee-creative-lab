@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useAIFriendActivity } from './useAIFriendActivity';
 import { CharacterSelection } from './components/CharacterSelection';
@@ -13,7 +13,9 @@ import { BuzzySpeechBubble } from '@/components/ai-lab/ui/BuzzySpeechBubble';
 import { BuzzyAnimation } from '@/components/ai-lab/ui/BuzzyAnimation';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const MeetAIFriendActivityWrapper: React.FC = () => {
+export const MeetAIFriendActivityWrapper: React.FC<{
+  onComplete?: () => void;
+}> = ({ onComplete }) => {
   const {
     characters,
     selectedCharacter,
@@ -28,6 +30,31 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
   } = useAIFriendActivity();
 
   const [showBuzzyTip, setShowBuzzyTip] = useState(true);
+  const [sectionCompleted, setSectionCompleted] = useState(false);
+  
+  // Emit section end event when reaching the summary phase
+  useEffect(() => {
+    if (progress.currentPhase === 'summary') {
+      // Create and dispatch a custom event to notify the parent component
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: true }
+      });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(event);
+    }
+    
+    return () => {
+      // Reset when unmounting
+      const resetEvent = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(resetEvent);
+    };
+  }, [progress.currentPhase]);
   
   // Buzzy animation states for different phases
   const buzzyAnimationStates = {
@@ -53,13 +80,32 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
     quiz: "Let's test what you've learned about AI training concepts. Good luck!"
   };
 
+  // Handle completion of current section
+  const handleSectionComplete = () => {
+    setSectionCompleted(true);
+  };
+
+  // Handle moving to next phase
+  const handleNextPhase = () => {
+    setSectionCompleted(false);
+    moveToNextPhase();
+    
+    // If we've completed the quiz (final phase), notify parent component
+    if (progress.currentPhase === 'quiz' && onComplete) {
+      onComplete();
+    }
+  };
+
   const renderCurrentPhase = () => {
     switch (progress.currentPhase) {
       case 'selection':
         return (
           <CharacterSelection
             characters={characters}
-            onSelect={handleCharacterSelect}
+            onSelect={(character) => {
+              handleCharacterSelect(character);
+              handleSectionComplete();
+            }}
           />
         );
       case 'pre-training':
@@ -72,14 +118,14 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
             progress={progress}
             onMessage={handleMessage}
             onTrainingResponse={handleTrainingResponse}
-            onComplete={moveToNextPhase}
+            onComplete={handleSectionComplete}
           />
         );
       case 'feedback':
         return (
           <FeedbackPhase
             character={selectedCharacter!}
-            onComplete={moveToNextPhase}
+            onComplete={handleSectionComplete}
           />
         );
       case 'practice':
@@ -88,7 +134,7 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
             character={selectedCharacter!}
             messages={messages}
             onMessage={handleMessage}
-            onComplete={moveToNextPhase}
+            onComplete={handleSectionComplete}
             progress={progress}
           />
         );
@@ -96,14 +142,14 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
         return (
           <SummaryPhase
             learningOutcomes={learningOutcomes}
-            onComplete={moveToNextPhase}
+            onComplete={handleSectionComplete}
           />
         );
       case 'quiz':
         return (
           <QuizPhase
             character={selectedCharacter!}
-            onComplete={moveToNextPhase}
+            onComplete={handleSectionComplete}
           />
         );
       default:
@@ -149,6 +195,17 @@ export const MeetAIFriendActivityWrapper: React.FC = () => {
         
         <Card className="p-6">
           {renderCurrentPhase()}
+          
+          {sectionCompleted && (
+            <div className="flex justify-end mt-6">
+              <button 
+                onClick={handleNextPhase}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+              >
+                Next Step
+              </button>
+            </div>
+          )}
         </Card>
       </div>
     </div>
