@@ -16,29 +16,19 @@ export const LLMBasicsTutorial: React.FC<LLMBasicsTutorialProps> = ({ onComplete
   const [showBuzzy, setShowBuzzy] = useState(true);
   const mainRef = useRef<HTMLDivElement>(null);
   
-  // Handle tab change to ensure proper state updates
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setShowBuzzy(true);
-    // Dispatch section end event on every tab change
-    const event = new CustomEvent('sectionEndReached', { 
-      detail: { isAtEnd: true, autoAdvance: false }
-    });
-    window.dispatchEvent(event);
-  };
-
-  // Always dispatch sectionEndReached on mount and on every inner tab change
+  // Emit event when on the last tab to indicate section end
   useEffect(() => {
-    const event = new CustomEvent('sectionEndReached', { 
-      detail: { isAtEnd: true, autoAdvance: false }
-    });
-    window.dispatchEvent(event);
-    return () => {
-      const resetEvent = new CustomEvent('sectionEndReached', { 
-        detail: { isAtEnd: false, autoAdvance: false }
+    if (activeTab === "ai-tools") {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: true }
       });
-      window.dispatchEvent(resetEvent);
-    };
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent('sectionEndReached', { 
+        detail: { isAtEnd: false }
+      });
+      window.dispatchEvent(event);
+    }
   }, [activeTab]);
   
   // Buzzy messages and states for each tab
@@ -95,7 +85,10 @@ export const LLMBasicsTutorial: React.FC<LLMBasicsTutorialProps> = ({ onComplete
     }, 1000);
   }, []);
   
-  // HandleTabChange is now defined above with additional functionality
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setShowBuzzy(true);
+  };
   
   return (
     <div ref={mainRef} className="space-y-6">
@@ -234,244 +227,61 @@ const HowLLMsWorkSlides = () => {
     {
       title: "What are Large Language Models?",
       content: (
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border border-purple-100">
-            <p className="text-center text-lg mb-4 font-medium text-purple-800">
-              LLMs are like super-smart reading and writing assistants that learn from billions of books, articles, and websites!
+        <div className="space-y-4">
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg">
+            <p className="text-center">
+              Large Language Models (LLMs) are AI systems trained on massive amounts of text data.
             </p>
+            <div className="flex justify-center mt-4">
+              <div className="bg-white p-3 rounded-lg shadow-sm max-w-md">
+                <p className="text-sm text-gray-700">
+                  They learn patterns in language by analyzing billions of examples from books, articles, websites, and other text sources.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+              <h3 className="font-medium text-blue-800 text-center mb-2">Key Features</h3>
+              <ul className="text-sm space-y-1">
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Pattern recognition</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Text generation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>Understanding context</span>
+                </li>
+              </ul>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
-                <h3 className="font-semibold text-blue-700 mb-3 flex items-center gap-2">
-                  <Brain className="h-5 w-5" /> How They Learn
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Read more text than a human could in thousands of lifetimes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Find patterns in how words and sentences fit together</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Create a special 'word math' to predict what comes next</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg shadow-sm border border-purple-100">
-                <h3 className="font-semibold text-purple-700 mb-3 flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" /> What They Can Do
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-500">•</span>
-                    <span>Answer questions in complete sentences</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-500">•</span>
-                    <span>Write stories, poems, or code</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-500">•</span>
-                    <span>Translate between languages</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-500">•</span>
-                    <span>Explain complex topics simply</span>
-                  </li>
-                </ul>
-              </div>
+            <div className="bg-purple-50 p-3 rounded-lg border border-purple-100">
+              <h3 className="font-medium text-purple-800 text-center mb-2">Examples</h3>
+              <ul className="text-sm space-y-1">
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <span>ChatGPT</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <span>Claude</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <span>Gemini</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       )
     },
-    {
-      title: "The Transformer Brain",
-      content: (
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-100">
-            <h3 className="text-lg font-semibold text-center mb-4 text-blue-800">
-              The Transformer: The Special Brain Inside LLMs
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-medium text-blue-700 mb-2 flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5" /> How It Works
-                </h4>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Breaks sentences into tiny pieces called <span className="font-medium">tokens</span> (like words or parts of words)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Looks at all words at once (not just one after another)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">•</span>
-                    <span>Uses <span className="font-medium">attention</span> to see which words are most important</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-blue-200">
-                <div className="text-xs text-center mb-2 text-gray-500">
-                  Like a chef paying attention to key ingredients!
-                </div>
-                <div className="flex justify-center">
-                  <div className="relative w-48 h-32 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200 flex items-center justify-center">
-                    <div className="text-center px-2">
-                      <div className="text-blue-500 text-4xl mb-1">🤖</div>
-                      <div className="text-xs text-gray-600">Transformer Architecture</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Training & Learning Process",
-      content: (
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100">
-            <h3 className="text-lg font-semibold text-center mb-6 text-indigo-800">
-              How LLMs Learn: The Training Process
-            </h3>
-            
-            <div className="space-y-6">
-              <div className="bg-white p-4 rounded-lg border border-indigo-100">
-                <h4 className="font-medium text-indigo-700 mb-3">Step 1: Reading Everything</h4>
-                <div className="flex items-start gap-3">
-                  <div className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      The model reads billions of sentences from books, websites, and articles. It's like reading the biggest library in the world!
-                    </p>
-                    <div className="mt-2 text-xs text-indigo-600 bg-indigo-50 p-2 rounded">
-                      <span className="font-medium">Fun Fact:</span> Some models read more text than all the books in the Library of Congress!
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-indigo-100">
-                <h4 className="font-medium text-indigo-700 mb-3">Step 2: Playing Fill-in-the-Blank</h4>
-                <div className="flex items-start gap-3">
-                  <div className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      The model practices by trying to guess missing words in sentences. It's like a super-charged version of the game Mad Libs!
-                    </p>
-                    <div className="mt-2 text-xs text-indigo-600 bg-indigo-50 p-2 rounded">
-                      <span className="font-medium">Example:</span> "The cat sat on the [blank]" → The model learns that "mat" is more likely than "mountain" here.
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-indigo-100">
-                <h4 className="font-medium text-indigo-700 mb-3">Step 3: Getting Feedback</h4>
-                <div className="flex items-start gap-3">
-                  <div className="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      The model adjusts its 'thinking' based on how close its guesses were to the actual words. Good guesses get reinforced, while bad ones get corrected.
-                    </p>
-                    <div className="mt-2 text-xs text-indigo-600 bg-indigo-50 p-2 rounded">
-                      <span className="font-medium">Like learning to ride a bike:</span> You learn from every wobble and fall!
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Limitations & Fun Facts",
-      content: (
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-100">
-            <h3 className="text-lg font-semibold text-center mb-6 text-purple-800">
-              Cool Facts & Things to Know
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-4 rounded-lg border border-purple-100">
-                <h4 className="font-medium text-purple-700 mb-3 flex items-center gap-2">
-                  <Shield className="h-5 w-5" /> Important Limitations
-                </h4>
-                <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <div className="text-pink-500 mt-1">⚠️</div>
-                    <div>
-                      <span className="font-medium">Not Always Right:</span> Can make up information that sounds real but isn't
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="text-pink-500 mt-1">⚠️</div>
-                    <div>
-                      <span className="font-medium">No Real Understanding:</span> Doesn't truly understand like humans do, just predicts text
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="text-pink-500 mt-1">⚠️</div>
-                    <div>
-                      <span className="font-medium">Can Be Biased:</span> May reflect biases in its training data
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-pink-100">
-                <h4 className="font-medium text-pink-700 mb-3 flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5" /> Fun Facts
-                </h4>
-                <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <div className="text-purple-500">•</div>
-                    <div>
-                      <span className="font-medium">Word Math:</span> Words are turned into numbers (vectors) that the model can work with
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="text-purple-500">•</div>
-                    <div>
-                      <span className="font-medium">Context Windows:</span> Most models can only 'see' a few thousand words at once
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="text-purple-500">•</div>
-                    <div>
-                      <span className="font-medium">Parameters:</span> Some models have over 1 trillion parameters (that's a 1 with 12 zeros!)
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <h4 className="font-medium text-blue-700 mb-2">Try This!</h4>
-              <p className="text-sm text-gray-700 mb-3">
-                Ask an AI to tell you a story about a robot learning to cook. Then ask it to continue the story. Notice how it remembers what came before?
-              </p>
-              <div className="text-xs text-blue-600 bg-blue-100 p-2 rounded">
-                <span className="font-medium">Tip:</span> The more specific your prompt, the better the AI can help you!
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
+    // Add more slides as needed
   ];
   
   return (

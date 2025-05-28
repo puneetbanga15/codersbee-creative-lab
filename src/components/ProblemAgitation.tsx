@@ -47,20 +47,40 @@ export const ProblemAgitation = () => {
   ];
 
   return (
-    <section className="py-12 bg-gradient-to-b from-white via-codersbee-purple/5 to-codersbee-purple/10">
+    <section className="py-16 bg-gradient-to-b from-white via-codersbee-purple/5 to-codersbee-purple/10">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="max-w-4xl mx-auto text-center mb-16 bg-white p-8 rounded-2xl shadow-xl border border-codersbee-purple/20"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-codersbee-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-codersbee-dark mb-6">
             Dear Parents,
           </h2>
-          <p className="text-xl md:text-2xl text-codersbee-vivid font-medium max-w-3xl mx-auto">
-            We Have a Few Important Questions About Your Child's Future
-          </p>
+          <div className="prose prose-lg text-gray-700 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl leading-relaxed mb-6">
+              In a world where <span className="font-bold text-codersbee-vivid">AI is transforming every industry</span>, we understand your concerns about preparing your child for a future that's evolving at an unprecedented pace.
+            </p>
+            <p className="text-xl leading-relaxed mb-6">
+              At CodersBee, we don't just teach coding - we're shaping the <span className="font-bold text-codersbee-vivid">next generation of innovators and problem-solvers</span> who will thrive in the AI era.
+            </p>
+          </div>
+          <motion.div 
+            className="inline-block"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <a 
+              href="/enroll" 
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-codersbee-vivid hover:bg-codersbee-vivid/90 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+            >
+              Secure Your Child's Future Today
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </a>
+          </motion.div>
         </motion.div>
 
         <div className="max-w-5xl mx-auto">

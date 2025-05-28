@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { StudentAICreations } from "@/components/StudentAICreations";
 
 type Project = {
   id: string;
@@ -70,18 +71,18 @@ const Projects = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24">
+      <StudentAICreations />
+      <div className="container mx-auto px-4 py-12">
         <div className="text-center max-w-4xl mx-auto mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-codersbee-dark">
             Student <span className="text-codersbee-vivid">Projects</span>
           </h1>
           <p className="text-lg text-gray-700 mb-4">
-            These are real projects completed by CodersBee students during their learning journey. 
-            We believe in hands-on learning and practical application of concepts.
+            Explore the diverse range of projects created by our talented students. 
+            From beginner to advanced levels, each project showcases the skills and creativity developed through our programs.
           </p>
           <p className="text-lg text-gray-700">
-            Each project represents actual work done in our classes, 
-            demonstrating our commitment to practical, output-driven learning.
+            Filter by project type to see specific examples of what our students are building.
           </p>
         </div>
 

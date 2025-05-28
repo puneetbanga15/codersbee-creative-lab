@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users, ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { MessageSquare, Zap, Brain, Sparkles, Bot, BookOpen, Users } from 'lucide-react';
 import { CollapsibleSection } from '@/components/ai-lab/ui/CollapsibleSection';
 import { motion } from 'framer-motion';
 
@@ -44,7 +43,7 @@ export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
       <CollapsibleSection 
         title="What You'll Learn" 
         icon={<BookOpen className="h-5 w-5" />}
-        defaultOpen={false}
+        defaultOpen={true}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card>
@@ -100,7 +99,7 @@ export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
       <CollapsibleSection 
         title="Meet Your Characters" 
         icon={<Users className="h-5 w-5" />}
-        defaultOpen={false}
+        defaultOpen={true}
       >
         <p className="mb-4">
           Choose from these amazing characters to be your AI friend! Each one has their own unique personality and way of thinking:
@@ -179,8 +178,6 @@ export const MeetAIFriendIntro = ({ onComplete }: MeetAIFriendIntroProps) => {
           Consider discussing with your child how AI is used in their everyday life after completing this lesson.
         </p>
       </div>
-      
-
     </div>
   );
 };
