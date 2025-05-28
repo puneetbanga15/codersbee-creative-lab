@@ -20,6 +20,14 @@ import { LLMBasicsTutorial } from './tutorials/LLMBasicsTutorial';
 import { LLMBasicsActivityWrapper } from './activities/LLMBasicsActivityWrapper';
 import { LLMBasicsCode } from './code-samples/LLMBasicsCode';
 
+// Import What is AI? lesson components
+import { WhatIsAIIntro } from './introductions/WhatIsAIIntro';
+import { WhatIsAITutorial } from './tutorials/WhatIsAITutorial';
+import { AiOrNotActivityWrapper } from './activities/AiOrNotActivityWrapper';
+
+// Import How AI Learns components
+import PatternDetectorActivityWrapper from './activities/PatternDetectorActivityWrapper';
+
 // Import DebugDuplicateImages component
 import { DebugDuplicateImages } from './DebugDuplicateImages';
 
@@ -34,7 +42,6 @@ const tabOrder = ['introduction', 'tutorial', 'activity', 'code'];
 export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   const [activeTab, setActiveTab] = useState('introduction');
   const [isAtSectionEnd, setIsAtSectionEnd] = useState(false);
-  const [justAutoAdvanced, setJustAutoAdvanced] = useState(false);
   const [tabContentCompleted, setTabContentCompleted] = useState(false);
   const lesson = curriculumData.find(l => l.id === lessonId);
   const navigate = useNavigate();
@@ -44,10 +51,11 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
     const handleSectionEnd = (event: CustomEvent) => {
       setIsAtSectionEnd(event.detail.isAtEnd);
     };
-    const eventListener = (e: Event) => handleSectionEnd(e as CustomEvent);
-    window.addEventListener('sectionEndReached', eventListener);
+    
+    window.addEventListener('sectionEndReached' as any, handleSectionEnd);
+    
     return () => {
-      window.removeEventListener('sectionEndReached', eventListener);
+      window.removeEventListener('sectionEndReached' as any, handleSectionEnd);
     };
   }, []);
   
@@ -71,12 +79,6 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   // Handle content completion within a tab
   const handleContentComplete = () => {
     setTabContentCompleted(true);
-    // Automatically move to the next tab when content is completed
-    const currentIndex = tabOrder.indexOf(activeTab);
-    if (currentIndex < tabOrder.length - 1) {
-      setActiveTab(tabOrder[currentIndex + 1]);
-      setTabContentCompleted(false);
-    }
   };
   
   // Check if this is the last tab
@@ -118,7 +120,73 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   }
   
   const renderLessonContent = (tab: string) => {
-    if (lessonId === 'meet-ai-friend') {
+    if (lessonId === 'what-is-ai') {
+      switch (tab) {
+        case 'introduction':
+          return <WhatIsAIIntro onComplete={handleContentComplete} />;
+        case 'tutorial':
+          return <WhatIsAITutorial onComplete={handleContentComplete} />;
+        case 'activity':
+          return <AiOrNotActivityWrapper onComplete={handleContentComplete} />;
+        case 'code':
+          return <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-4">No code for this lesson yet</h3>
+            <Button onClick={handleContentComplete} className="mt-4">
+              Continue
+            </Button>
+          </div>;
+        default:
+          return <div>Content not available</div>;
+      }
+    } else if (lessonId === 'how-ai-learns') {
+      switch (tab) {
+        case 'introduction':
+          return <div className="space-y-6">
+            <h2 className="text-2xl font-bold">How AI Learns</h2>
+            <p>In this lesson, you'll discover how artificial intelligence learns from examples, just like you do!</p>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">What You'll Learn:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>How AI learns from examples (training data)</li>
+                <li>The concept of patterns in machine learning</li>
+                <li>How to train an AI to recognize patterns</li>
+              </ul>
+            </div>
+            <Button onClick={handleContentComplete} className="mt-4">
+              Continue to Activity
+            </Button>
+          </div>;
+        case 'tutorial':
+          return <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Pattern Recognition</h2>
+            <p>AI learns by finding patterns in data. In this activity, you'll train an AI to recognize different patterns.</p>
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">How it works:</h3>
+              <ol className="list-decimal pl-5 space-y-2">
+                <li>You'll see different patterns of colored squares</li>
+                <li>Label each pattern to help the AI learn</li>
+                <li>After training, the AI will try to recognize patterns on its own</li>
+                <li>See how accurate the AI becomes with your training!</li>
+              </ol>
+            </div>
+            <Button onClick={handleContentComplete} className="mt-4">
+              Start Activity
+            </Button>
+          </div>;
+        case 'activity':
+          return <PatternDetectorActivityWrapper onComplete={handleContentComplete} />;
+        case 'code':
+          return <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-4">No code for this lesson yet</h3>
+            <Button onClick={handleContentComplete} className="mt-4">
+              Continue
+            </Button>
+          </div>;
+        default:
+          return <div>Content not available</div>;
+      }
+    }
+    else if (lessonId === 'meet-ai-friend') {
       switch (tab) {
         case 'introduction':
           return <MeetAIFriendIntro onComplete={handleContentComplete} />;
@@ -241,14 +309,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
       
       <Card>
         <CardContent className="p-6">
-          <Tabs 
-            value={activeTab} 
-            onValueChange={(val) => {
-              setActiveTab(val);
-              setIsAtSectionEnd(false); // Reset section end state when changing tabs
-            }} 
-            className="w-full"
-          >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="introduction" className="flex items-center gap-2">
                 <Info className="h-4 w-4" />
@@ -296,7 +357,27 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
                     Previous Section
                   </Button>
                   
-
+                  {/* Only show Next Section button when at the end of a section */}
+                  {isAtSectionEnd && (
+                    <Button 
+                      variant="default"
+                      onClick={() => {
+                        const sections = ['introduction', 'tutorial', 'activity', 'code'];
+                        const currentIndex = sections.indexOf(activeTab);
+                        if (currentIndex < sections.length - 1) {
+                          setActiveTab(sections[currentIndex + 1]);
+                          setIsAtSectionEnd(false); // Reset the state when moving to next section
+                        }
+                      }}
+                      disabled={activeTab === 'code'}
+                      className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600"
+                    >
+                      {activeTab === 'introduction' && "Let's Start the Tutorial"}
+                      {activeTab === 'tutorial' && "Let's Move to Activity"}
+                      {activeTab === 'activity' && "Let's Look at the Code"}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  )}
                 </div>
               </motion.div>
             </div>

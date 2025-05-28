@@ -1,3 +1,11 @@
+type Activity = {
+  id: string;
+  title: string;
+  description: string;
+  component: string;
+  duration: number; // in minutes
+};
+
 export type LessonType = {
   id: string;
   number: number;
@@ -9,13 +17,54 @@ export type LessonType = {
   duration: number; // in minutes
   completed?: boolean;
   locked?: boolean;
+  activities?: Activity[];
 };
 
 export const curriculumData: LessonType[] = [
-  // Foundation Stage (1-5)
+  // Foundation Stage (1-6)
+  {
+    id: 'what-is-ai',
+    number: 1,
+    title: 'What is AI?',
+    description: 'Discover what artificial intelligence is and see examples of AI in everyday life.',
+    stage: 'foundation',
+    icon: 'cpu',
+    concepts: ['AI Basics', 'Real-world AI', 'AI Capabilities'],
+    duration: 25,
+    completed: false,
+    activities: [
+      {
+        id: 'ai-or-not',
+        title: 'AI or Not?',
+        description: 'Test your knowledge by identifying which items use AI and which don\'t!',
+        component: 'AiOrNotActivityWrapper',
+        duration: 10
+      }
+    ]
+  },
+  {
+    id: 'how-ai-learns',
+    number: 2,
+    title: 'How AI Learns',
+    description: 'Explore the basics of machine learning and how AI systems learn from data.',
+    stage: 'foundation',
+    icon: 'graduation-cap',
+    concepts: ['Machine Learning', 'Training Data', 'Patterns'],
+    duration: 30,
+    completed: false,
+    activities: [
+      {
+        id: 'pattern-detective',
+        title: 'Pattern Detective',
+        description: 'Train an AI to recognize patterns by providing examples',
+        component: 'PatternDetectorActivityWrapper',
+        duration: 15
+      }
+    ]
+  },
   {
     id: 'meet-ai-friend',
-    number: 1,
+    number: 3,
     title: 'Meet Your AI Friend',
     description: 'Create a simple chatbot with preset responses and learn how computers "talk" to humans.',
     stage: 'foundation',
@@ -25,8 +74,30 @@ export const curriculumData: LessonType[] = [
     completed: false
   },
   {
+    id: 'ai-detectives',
+    number: 4,
+    title: 'AI Detectives',
+    description: 'Discover how neural networks work by training an AI to recognize patterns and make decisions.',
+    stage: 'foundation',
+    icon: 'search',
+    concepts: ['Neural Networks', 'Pattern Recognition', 'Image Classification'],
+    duration: 40,
+    locked: true
+  },
+  {
+    id: 'ai-storyteller',
+    number: 5,
+    title: 'AI Storyteller',
+    description: 'Collaborate with AI to create amazing stories using creative prompts and AI assistance.',
+    stage: 'foundation',
+    icon: 'book-open',
+    concepts: ['Creative AI', 'Storytelling', 'Human-AI Collaboration'],
+    duration: 35,
+    locked: true
+  },
+  {
     id: 'llm-basics',
-    number: 2,
+    number: 6,
     title: 'Understanding LLMs',
     description: 'Learn how large language models work and how to talk to them effectively with prompt engineering.',
     stage: 'foundation',
@@ -37,7 +108,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'pattern-detective',
-    number: 3,
+    number: 7,
     title: 'Pattern Detective',
     description: 'Train an AI to recognize simple patterns like shapes, colors, and numbers.',
     stage: 'foundation',
@@ -48,7 +119,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'decision-trees',
-    number: 4,
+    number: 8,
     title: 'Decision Trees Adventure',
     description: 'Build a "choose your own adventure" game using decision trees and logical reasoning.',
     stage: 'foundation',
@@ -59,7 +130,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'image-recognition',
-    number: 5,
+    number: 9,
     title: 'Image Recognition Magic',
     description: 'Use a pre-trained model to identify objects in images, drawings, or camera feed.',
     stage: 'foundation',
@@ -70,7 +141,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'sentiment-sleuth',
-    number: 6,
+    number: 10,
     title: 'Sentiment Sleuth',
     description: 'Analyze text to determine if it\'s positive, negative, or neutral and understand emotions in writing.',
     stage: 'foundation',
@@ -80,10 +151,10 @@ export const curriculumData: LessonType[] = [
     locked: true
   },
   
-  // Application Stage (6-12)
+  // Application Stage (11-15)
   {
     id: 'voice-command',
-    number: 7,
+    number: 11,
     title: 'Voice Command Creator',
     description: 'Create simple voice commands for a virtual assistant that responds to spoken instructions.',
     stage: 'application',
@@ -94,7 +165,7 @@ export const curriculumData: LessonType[] = [
   },
   {
     id: 'animal-classifier',
-    number: 8,
+    number: 12,
     title: 'Animal Classifier',
     description: 'Train a model to distinguish between different animals and test its accuracy with new images.',
     stage: 'application',
