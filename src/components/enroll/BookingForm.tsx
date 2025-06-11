@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -74,7 +73,7 @@ export const BookingForm = () => {
     mode: "onChange",
     defaultValues: {
       contact_method: "whatsapp",
-      country_code: "+91",
+      country_code: "+1",
       phone_number: "",
       email: "",
       grade: "",
@@ -314,14 +313,14 @@ export const BookingForm = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full mx-auto"
+        className="bg-white p-6 md:p-8 rounded-2xl shadow-xl max-w-md w-full mx-auto border border-gray-100"
       >
-        <div className="text-center space-y-4">
-          <div className="mx-auto bg-green-100 w-16 h-16 rounded-full flex items-center justify-center">
-            <Check className="w-8 h-8 text-green-600" />
+        <div className="text-center space-y-6">
+          <div className="mx-auto bg-green-100 w-20 h-20 rounded-full flex items-center justify-center">
+            <Check className="w-10 h-10 text-green-600" />
           </div>
           <h3 className="text-2xl font-bold text-codersbee-dark">Booking Confirmed!</h3>
-          <p className="text-gray-600">
+          <p className="text-gray-600 leading-relaxed">
             Thank you for booking a trial class with CodersBee. We'll contact you shortly to confirm your booking.
           </p>
           <p className="text-gray-500 text-sm">
@@ -329,7 +328,7 @@ export const BookingForm = () => {
           </p>
           <Button 
             onClick={() => window.open('https://calendly.com/codersbee/class-slot', '_blank')}
-            className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer mt-4"
+            className="w-full h-12 bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer text-base font-medium shadow-md hover:shadow-lg transition-all duration-200"
           >
             Schedule Your Class Now
           </Button>
@@ -343,11 +342,14 @@ export const BookingForm = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full mx-auto"
+      className="bg-white p-6 md:p-8 rounded-2xl shadow-xl max-w-md w-full mx-auto border border-gray-100"
     >
-      <h3 className="text-2xl font-bold text-codersbee-dark mb-6">
-        Book Your Free Trial Class
-      </h3>
+      <div className="text-center mb-6">
+        <h3 className="text-2xl font-bold text-codersbee-dark mb-2">
+          Book Your Free Trial Class
+        </h3>
+        <p className="text-gray-600 text-sm">Join thousands of happy students</p>
+      </div>
 
       {bookingError && (
         <Alert variant="destructive" className="mb-6">
@@ -381,7 +383,7 @@ export const BookingForm = () => {
             name="contact_method"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>How should we contact you?</FormLabel>
+                <FormLabel className="text-base font-medium text-gray-900">How should we contact you?</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={(value) => {
@@ -400,16 +402,16 @@ export const BookingForm = () => {
                     defaultValue={field.value}
                     className="flex gap-4"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="whatsapp" id="whatsapp" />
-                      <label htmlFor="whatsapp" className="flex items-center gap-1">
-                        <Phone className="w-4 h-4" /> WhatsApp
+                    <div className="flex items-center space-x-3">
+                      <RadioGroupItem value="whatsapp" id="whatsapp" className="w-5 h-5" />
+                      <label htmlFor="whatsapp" className="flex items-center gap-2 text-base font-medium cursor-pointer">
+                        <Phone className="w-4 h-4 text-green-600" /> WhatsApp
                       </label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="email" id="email" />
-                      <label htmlFor="email" className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" /> Email
+                    <div className="flex items-center space-x-3">
+                      <RadioGroupItem value="email" id="email" className="w-5 h-5" />
+                      <label htmlFor="email" className="flex items-center gap-2 text-base font-medium cursor-pointer">
+                        <Mail className="w-4 h-4 text-blue-600" /> Email
                       </label>
                     </div>
                   </RadioGroup>
@@ -425,8 +427,8 @@ export const BookingForm = () => {
               name="phone_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>WhatsApp Number</FormLabel>
-                  <div className="flex gap-2">
+                  <FormLabel className="text-base font-medium text-gray-900">WhatsApp Number</FormLabel>
+                  <div className="flex gap-3">
                     <FormField
                       control={form.control}
                       name="country_code"
@@ -452,7 +454,8 @@ export const BookingForm = () => {
                           field.onChange(e);
                           initializeForm();
                         }}
-                        className="flex-1"
+                        className="flex-1 h-12 text-base border-gray-300 focus:border-codersbee-vivid focus:ring-codersbee-vivid"
+                        type="tel"
                       />
                     </FormControl>
                   </div>
@@ -466,7 +469,7 @@ export const BookingForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel className="text-base font-medium text-gray-900">Email Address</FormLabel>
                   <FormControl>
                     <Input 
                       type="email" 
@@ -476,6 +479,7 @@ export const BookingForm = () => {
                         field.onChange(e);
                         initializeForm();
                       }}
+                      className="h-12 text-base border-gray-300 focus:border-codersbee-vivid focus:ring-codersbee-vivid"
                     />
                   </FormControl>
                   <FormMessage />
@@ -489,7 +493,7 @@ export const BookingForm = () => {
             name="grade"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Child's Grade</FormLabel>
+                <FormLabel className="text-base font-medium text-gray-900">Child's Grade</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
@@ -501,6 +505,7 @@ export const BookingForm = () => {
                       field.onChange(e);
                       initializeForm();
                     }}
+                    className="h-12 text-base border-gray-300 focus:border-codersbee-vivid focus:ring-codersbee-vivid"
                   />
                 </FormControl>
                 <FormMessage />
@@ -513,7 +518,7 @@ export const BookingForm = () => {
             name="has_laptop"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Do you have a laptop?</FormLabel>
+                <FormLabel className="text-base font-medium text-gray-900">Do you have a laptop?</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={(value) => {
@@ -521,15 +526,15 @@ export const BookingForm = () => {
                       initializeForm();
                     }}
                     defaultValue={field.value}
-                    className="flex gap-4"
+                    className="flex gap-6"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="yes" id="yes" />
-                      <label htmlFor="yes">Yes</label>
+                    <div className="flex items-center space-x-3">
+                      <RadioGroupItem value="yes" id="yes" className="w-5 h-5" />
+                      <label htmlFor="yes" className="text-base font-medium cursor-pointer">Yes</label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="no" id="no" />
-                      <label htmlFor="no">No</label>
+                    <div className="flex items-center space-x-3">
+                      <RadioGroupItem value="no" id="no" className="w-5 h-5" />
+                      <label htmlFor="no" className="text-base font-medium cursor-pointer">No</label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -540,12 +545,12 @@ export const BookingForm = () => {
 
           <Button 
             type="submit" 
-            className="w-full bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer"
+            className="w-full h-12 bg-codersbee-vivid hover:bg-codersbee-vivid/90 cursor-pointer text-base font-medium shadow-md hover:shadow-lg transition-all duration-200"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> 
                 Processing...
               </>
             ) : (
@@ -555,10 +560,10 @@ export const BookingForm = () => {
         </form>
       </Form>
 
-      <div className="mt-6 bg-codersbee-purple/5 p-4 rounded-lg">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Laptop className="w-4 h-4 text-codersbee-vivid" />
-          <span>Having a laptop is recommended but not mandatory</span>
+      <div className="mt-6 bg-codersbee-purple/5 p-4 rounded-xl border border-codersbee-purple/20">
+        <div className="flex items-center gap-3 text-sm text-gray-600">
+          <Laptop className="w-5 h-5 text-codersbee-vivid flex-shrink-0" />
+          <span className="leading-relaxed">Having a laptop is recommended but not mandatory</span>
         </div>
       </div>
     </motion.div>

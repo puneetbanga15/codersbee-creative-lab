@@ -7,7 +7,7 @@ export const useContactMethod = () => {
   const [contactMethod, setContactMethod] = useState<ContactMethod>('whatsapp');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
+  const [countryCode, setCountryCode] = useState('+1'); // Changed default to US
   const [formInitialized, setFormInitialized] = useState(false);
   
   // Enhanced validation helpers with better logging and simpler logic
