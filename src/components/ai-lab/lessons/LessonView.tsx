@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +19,7 @@ import { MeetAIFriendCode } from './code-samples/MeetAIFriendCode';
 import { LLMBasicsIntro } from './introductions/LLMBasicsIntro';
 import { LLMBasicsTutorial } from './tutorials/LLMBasicsTutorial';
 import { LLMBasicsActivityWrapper } from './activities/LLMBasicsActivityWrapper';
-import { LLMBasicsCode } from './code-samples/MeetAIFriendCode';
+import { LLMBasicsCode } from './code-samples/LLMBasicsCode';
 
 // Import What is AI? lesson components
 import { WhatIsAIIntro } from './introductions/WhatIsAIIntro';
