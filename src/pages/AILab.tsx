@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -49,7 +48,7 @@ const AILab = () => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
           <p className="text-gray-600 max-w-md mx-auto">
-            The AI Playground is under development and will be available soon.
+            The AI Sandbox is under construction. Soon you'll be able to experiment with generative AI here!
           </p>
         </div>
       );
@@ -89,8 +88,8 @@ const AILab = () => {
           <Route path="/" element={
             <>
               <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">AI Lab for Kids: Learn Generative AI & Machine Learning</h1>
-                <p className="text-gray-600">Interactive lessons teaching AI fundamentals, generative AI, and coding skills for children ages 6-14</p>
+                <h1 className="text-3xl font-bold mb-2">Your Journey into Generative AI</h1>
+                <p className="text-gray-600">Interactive lessons to take you from an AI Discoverer to a Creator. Ages 6-14.</p>
               </div>
               
               <AILabHeader 

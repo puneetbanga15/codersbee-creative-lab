@@ -3,7 +3,7 @@ export type LessonType = {
   number: number;
   title: string;
   description: string;
-  stage: 'foundation' | 'intermediate' | 'advanced' | 'expert';
+  stage: 'apprentice' | 'artisan' | 'innovator' | 'master';
   icon: string;
   concepts: string[];
   duration: number; // in minutes
@@ -17,13 +17,13 @@ export type LessonType = {
 };
 
 export const curriculumData: LessonType[] = [
-  // Foundation Stage (1-4)
+  // Apprentice Stage (1-4)
   {
     id: 'pattern-palace',
     number: 1,
     title: "Pattern Palace: Aryabhatta's Celestial Calculator",
     description: "Explore number patterns and sequences as you help Aryabhatta map astronomical objects and discover the magic of zero.",
-    stage: 'foundation',
+    stage: 'apprentice',
     icon: 'stars',
     concepts: ['Pattern Recognition', 'Number Sequences', 'Zero as a Placeholder'],
     duration: 30,
@@ -40,7 +40,7 @@ export const curriculumData: LessonType[] = [
     number: 2,
     title: "Algorithm Archipelago: Brahmagupta's Garden Pathways",
     description: "Create step-by-step instructions to navigate through beautiful garden mazes while learning about the first rules of algebra.",
-    stage: 'foundation',
+    stage: 'apprentice',
     icon: 'map',
     concepts: ['Algorithms', 'Sequential Instructions', 'Path Optimization'],
     duration: 35,
@@ -56,7 +56,7 @@ export const curriculumData: LessonType[] = [
     number: 3,
     title: "Loop Racers: Grace Hopper's Bug Hunt",
     description: "Help Admiral Grace Hopper find computer 'bugs' by using loops to automate repetitive tasks in this fast-paced racing game.",
-    stage: 'foundation',
+    stage: 'apprentice',
     icon: 'bug',
     concepts: ['Loops', 'Iteration', 'Automation', 'Debugging'],
     duration: 35,
@@ -72,7 +72,7 @@ export const curriculumData: LessonType[] = [
     number: 4,
     title: "If-Then Forest: Ramanujan's Intuitive Pathways",
     description: "Navigate a magical forest using conditional logic while discovering the beauty of mathematical intuition as practiced by Ramanujan.",
-    stage: 'foundation',
+    stage: 'apprentice',
     icon: 'git-branch',
     concepts: ['Conditional Logic', 'If-Then Statements', 'Decision Trees'],
     duration: 40,
@@ -84,13 +84,13 @@ export const curriculumData: LessonType[] = [
     locked: true
   },
   
-  // Intermediate Stage (5-8)
+  // Artisan Stage (5-8)
   {
     id: 'variable-voyage',
     number: 5,
     title: "Variable Voyage: Katherine Johnson's Space Mission",
     description: "Launch rockets by calculating trajectories using variables and mathematical formulas, inspired by NASA's human computer.",
-    stage: 'intermediate',
+    stage: 'artisan',
     icon: 'rocket',
     concepts: ['Variables', 'Mathematical Formulas', 'Space Calculations'],
     duration: 45,
@@ -106,7 +106,7 @@ export const curriculumData: LessonType[] = [
     number: 6,
     title: "Function Factory: Harish-Chandra's Symmetry Workshop",
     description: "Build reusable functions that maintain mathematical symmetry to solve increasingly complex challenges.",
-    stage: 'intermediate',
+    stage: 'artisan',
     icon: 'factory',
     concepts: ['Functions', 'Reusable Code', 'Parameters', 'Return Values'],
     duration: 45,
@@ -122,7 +122,7 @@ export const curriculumData: LessonType[] = [
     number: 7,
     title: "Debug Dungeon: Margaret Hamilton's Moonshot",
     description: "Navigate a dungeon by finding and fixing code errors before the lunar landing module reaches its destination.",
-    stage: 'intermediate',
+    stage: 'artisan',
     icon: 'bug',
     concepts: ['Debugging', 'Error Types', 'Problem Solving', 'Code Analysis'],
     duration: 40,
@@ -138,7 +138,7 @@ export const curriculumData: LessonType[] = [
     number: 8,
     title: "Animation Studio: Satyendranath Bose's Quantum Playground",
     description: "Create particle animations that follow quantum principles to understand how code can model physical phenomena.",
-    stage: 'intermediate',
+    stage: 'artisan',
     icon: 'atom',
     concepts: ['Animation Logic', 'State Changes', 'Physics Simulation'],
     duration: 50,
@@ -150,13 +150,13 @@ export const curriculumData: LessonType[] = [
     locked: true
   },
   
-  // Advanced Stage (9-12)
+  // Innovator Stage (9-12)
   {
     id: 'sequence-solver',
     number: 9,
     title: "Sequence Solver: Shakuntala Devi's Mental Math Challenge",
     description: "Race against the clock to solve increasingly complex calculation sequences using the mental math techniques of the 'Human Computer'.",
-    stage: 'advanced',
+    stage: 'innovator',
     icon: 'calculator',
     concepts: ['Sequences', 'Mental Math', 'Optimization', 'Performance'],
     duration: 35,
@@ -172,7 +172,7 @@ export const curriculumData: LessonType[] = [
     number: 10,
     title: "Data Explorer: Ada Lovelace's Analytical Engine",
     description: "Program a simulated Analytical Engine to process different data types, just as Ada Lovelace envisioned in the 1800s.",
-    stage: 'advanced',
+    stage: 'innovator',
     icon: 'database',
     concepts: ['Data Types', 'Data Processing', 'Algorithms', 'Early Computing'],
     duration: 45,
@@ -188,7 +188,7 @@ export const curriculumData: LessonType[] = [
     number: 11,
     title: "Logic Labyrinth: Alan Turing's Decoding Challenge",
     description: "Break secret codes and navigate a maze using logical deduction and pattern recognition, inspired by the father of computer science.",
-    stage: 'advanced',
+    stage: 'innovator',
     icon: 'key',
     concepts: ['Logic Gates', 'Cryptography', 'Pattern Analysis', 'Code Breaking'],
     duration: 50,
@@ -204,7 +204,7 @@ export const curriculumData: LessonType[] = [
     number: 12,
     title: "Recursion Kingdom: C.V. Raman's Light Quest",
     description: "Use recursive functions to trace light paths through crystals, inspired by Raman's Nobel Prize-winning work on light scattering.",
-    stage: 'advanced',
+    stage: 'innovator',
     icon: 'sun',
     concepts: ['Recursion', 'Self-Reference', 'Nested Functions', 'Light Physics'],
     duration: 55,
@@ -216,13 +216,13 @@ export const curriculumData: LessonType[] = [
     locked: true
   },
   
-  // Expert Stage (13-15)
+  // Master Stage (13-15)
   {
     id: 'game-creator',
     number: 13,
     title: "Game Creator: Shigeru Miyamoto's Adventure Lab",
     description: "Design your own mini-game using all coding concepts learned, with guidance from the principles of the legendary game designer.",
-    stage: 'expert',
+    stage: 'master',
     icon: 'gamepad2',
     concepts: ['Game Design', 'User Interaction', 'Event Handling', 'Game Logic'],
     duration: 60,
@@ -238,7 +238,7 @@ export const curriculumData: LessonType[] = [
     number: 14,
     title: "Array Architect: P.C. Mahalanobis' Statistical City",
     description: "Build a city simulation using arrays and data analysis, applying the statistical planning methods of the famous Indian statistician.",
-    stage: 'expert',
+    stage: 'master',
     icon: 'building2',
     concepts: ['Arrays', 'Data Structures', 'Statistical Analysis', 'Simulation'],
     duration: 55,
@@ -254,7 +254,7 @@ export const curriculumData: LessonType[] = [
     number: 15,
     title: "Ultimate Innovator's Challenge: Global Coding Quest",
     description: "Combine all the coding concepts you've learned to create an original project, with guidance from all the featured pioneers.",
-    stage: 'expert',
+    stage: 'master',
     icon: 'globe',
     concepts: ['Project Planning', 'Full Application Development', 'Creative Problem Solving', 'Integration'],
     duration: 90,

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Bot, Zap, Trophy, BookOpen, Sparkles, Star, Diamond, Home } from 'lucide-react';
@@ -44,8 +45,8 @@ export const AILabHeader = ({ activeTab = "lessons", onTabChange, onHomeClick }:
             </Badge>
           </div>
           <p className="text-gray-600 max-w-2xl">
-            Explore the exciting world of Artificial Intelligence through hands-on activities! 
-            Complete lessons, earn badges, and learn how AI works by building your own projects.
+            Welcome, AI adventurer! Your journey from Discoverer to Creator starts here.
+            Complete lessons, earn badges, and build your own amazing AI projects.
           </p>
         </div>
         
@@ -96,7 +97,7 @@ export const AILabHeader = ({ activeTab = "lessons", onTabChange, onHomeClick }:
             </TabsTrigger>
             <TabsTrigger value="playground" className="flex items-center gap-2">
               <Bot className="h-4 w-4" />
-              <span className="hidden sm:inline">Playground</span>
+              <span className="hidden sm:inline">AI Sandbox</span>
             </TabsTrigger>
             <TabsTrigger value="achievements" className="flex items-center gap-2">
               <Trophy className="h-4 w-4" />

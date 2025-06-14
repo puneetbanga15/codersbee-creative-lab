@@ -23,7 +23,7 @@ export const LabsMenu = () => {
               <Brain className="h-5 w-5 text-[#9b87f5] mt-0.5" />
               <div>
                 <div className="font-medium text-[#1A1F2C]">AI Lab</div>
-                <div className="text-sm text-gray-500">Learn AI through interactive lessons</div>
+                <div className="text-sm text-gray-500">Become an AI Creator</div>
               </div>
             </div>
           </Link>
@@ -34,7 +34,7 @@ export const LabsMenu = () => {
               <Code className="h-5 w-5 text-[#23c55e] mt-0.5" />
               <div>
                 <div className="font-medium text-[#1A1F2C]">Coding Lab</div>
-                <div className="text-sm text-gray-500">Interactive coding games with pioneer stories</div>
+                <div className="text-sm text-gray-500">Become a Coding Master</div>
               </div>
             </div>
           </Link>
@@ -56,7 +56,7 @@ export const MobileLabsMenu = () => {
           <Brain className="h-5 w-5 text-[#9b87f5] mt-0.5" />
           <div>
             <div>AI Lab</div>
-            <div className="text-sm text-gray-500">Learn AI through interactive lessons</div>
+            <div className="text-sm text-gray-500">Become an AI Creator</div>
           </div>
         </div>
       </Link>
@@ -68,7 +68,7 @@ export const MobileLabsMenu = () => {
           <Code className="h-5 w-5 text-[#23c55e] mt-0.5" />
           <div>
             <div>Coding Lab</div>
-            <div className="text-sm text-gray-500">Interactive coding games with pioneer stories</div>
+            <div className="text-sm text-gray-500">Become a Coding Master</div>
           </div>
         </div>
       </Link>
