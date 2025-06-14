@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -282,10 +281,7 @@ export const LessonView = ({ lessonId, onBack }: LessonViewProps) => {
   
   return (
     <div className="space-y-6">
-      {/* Ensure DebugDuplicateImages is called without onComplete here as well, if it was intended to be here */}
-      {/* <DebugDuplicateImages />  Re-evaluating if this was the correct place or the one inside renderLessonContent */}
-      {/* Based on the error line number 130, it's likely the one inside the `else` block of `renderLessonContent`. */}
-      {/* The original code had it at the top level of the return, let's restore that structure but without the prop. */}
+      {/* Ensure DebugDuplicateImages is called without onComplete */}
       <DebugDuplicateImages />
 
       <div className="flex items-center justify-between mb-8">
