@@ -26,7 +26,7 @@ export const curriculumData: LessonType[] = [
     id: 'what-is-ai',
     number: 1,
     title: 'What is AI?',
-    description: 'Discover what artificial intelligence is and see examples of AI in everyday life.',
+    description: 'Discover what artificial intelligence is and see amazing examples of AI in our daily lives.',
     stage: 'discoverers',
     icon: 'cpu',
     concepts: ['AI Basics', 'Real-world AI', 'AI Capabilities'],
@@ -46,7 +46,7 @@ export const curriculumData: LessonType[] = [
     id: 'how-ai-learns',
     number: 2,
     title: 'How AI Learns',
-    description: 'Explore the basics of machine learning and how AI systems learn from data.',
+    description: 'Explore the basics of machine learning and teach an AI to recognize patterns, just like a detective!',
     stage: 'discoverers',
     icon: 'graduation-cap',
     concepts: ['Machine Learning', 'Training Data', 'Patterns'],
@@ -63,24 +63,24 @@ export const curriculumData: LessonType[] = [
     ]
   },
   {
-    id: 'meet-ai-friend',
+    id: 'ai-art-assistant',
     number: 3,
-    title: 'Meet Your AI Friend',
-    description: 'Create a simple chatbot with preset responses and learn how computers "talk" to humans.',
+    title: 'Your AI Art Assistant',
+    description: 'Create incredible images from just your words! Learn how AI can turn your imagination into art.',
     stage: 'discoverers',
-    icon: 'messageSquare',
-    concepts: ['What is AI', 'Computer Communication', 'Chatbots'],
+    icon: 'palette',
+    concepts: ['Text-to-Image', 'Generative AI', 'Creative Prompts'],
     duration: 30,
     completed: false
   },
   {
-    id: 'llm-basics',
+    id: 'magic-of-prompts',
     number: 4,
-    title: 'Understanding LLMs',
-    description: 'Learn how large language models work and how to talk to them effectively with prompt engineering.',
+    title: 'The Magic of Prompts',
+    description: 'Learn how to talk to powerful AIs like a pro. Discover how the right words can unlock amazing AI abilities.',
     stage: 'discoverers',
     icon: 'brain',
-    concepts: ['Large Language Models', 'Prompt Engineering', 'AI Communication'],
+    concepts: ['Prompt Engineering', 'Large Language Models', 'AI Communication'],
     duration: 45,
     completed: false
   },
@@ -88,12 +88,12 @@ export const curriculumData: LessonType[] = [
     id: 'ai-storyteller',
     number: 5,
     title: 'AI Storyteller',
-    description: 'Collaborate with AI to create amazing stories using creative prompts and AI assistance.',
+    description: 'Collaborate with an AI to write your own amazing stories. You create the ideas, the AI helps bring them to life!',
     stage: 'discoverers',
     icon: 'book-open',
     concepts: ['Creative AI', 'Storytelling', 'Human-AI Collaboration'],
     duration: 35,
-    locked: true
+    locked: false
   },
   
   // Tier 2: Explorers
