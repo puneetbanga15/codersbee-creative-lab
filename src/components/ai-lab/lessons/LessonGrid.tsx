@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +6,7 @@ import { Lock, Unlock, ArrowRight, CheckCircle, Telescope, Map, Construction, Sp
 import { curriculumData, LessonType } from './curriculumData';
 import { motion } from 'framer-motion';
 import { CollapsibleSection } from '../ui/CollapsibleSection';
+import { TierHeader } from '../ui/TierHeader';
 
 type LessonGridProps = {
   onSelectLesson: (lessonId: string) => void;
@@ -71,85 +71,113 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
   }, {} as Record<string, LessonType[]>);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
       {tiers.map((tier) => (
-        <CollapsibleSection
-          key={tier.stage}
-          title={tier.title}
-          icon={tier.icon}
-          defaultOpen={tier.defaultOpen}
-          className="border-purple-200"
-        >
-          {/* Welcome section with video placeholder and script */}
-          <div className="bg-purple-50/50 rounded-lg mb-6 border border-purple-200">
-            <div className="p-4 md:p-6">
-              <h4 className="font-bold text-lg text-purple-800 mb-4">{welcomeScripts[tier.stage].title}</h4>
-              <div className="flex flex-col md:flex-row gap-6 items-center">
-                <div className="w-full md:w-2/5 lg:w-1/3 flex-shrink-0">
-                  <div className="aspect-video bg-slate-300 rounded-lg flex items-center justify-center hover:bg-slate-400 transition-colors cursor-pointer">
-                    <PlayCircle className="h-16 w-16 text-white/80" />
-                  </div>
+        <div key={tier.stage} className="relative">
+          <TierHeader stage={tier.stage} title={tier.title} />
+
+          {/* Adventure cinematic welcome area with clickable video poster */}
+          <div className="flex items-center gap-4 bg-gradient-to-r from-amber-50/90 via-purple-50/80 to-sky-100/80 border border-purple-100 rounded-xl mb-8 mx-2 shadow">
+            <div className="flex-shrink-0 w-40 md:w-64 p-4">
+              <button
+                type="button"
+                className="group relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform bg-slate-200"
+                aria-label="Play tier introduction video"
+              >
+                <img
+                  src={
+                    tier.stage === 'discoverers' ? '/Discoverers Instructor Video.mp4' :
+                    tier.stage === 'explorers' ? '/Explorers Instructor Video.mp4' :
+                    tier.stage === 'builders' ? '/Builders Instructor Video.mp4' :
+                    '/Creators Instructor Video.mp4'
+                  }
+                  alt={`${tier.title} instructor video`}
+                  className="object-cover w-full h-full opacity-80 blur-sm grayscale group-hover:blur-0 group-hover:grayscale-0"
+                  draggable={false}
+                  onError={e => { (e.target as HTMLImageElement).src = "/Pirate with Captain's Hat.png"; }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className="w-16 h-16 text-white opacity-90 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="#eab308" opacity="0.7"/>
+                    <polygon points="10,8 16,12 10,16" fill="#fff" />
+                  </svg>
                 </div>
-                <div className="w-full md:w-3/5 lg:w-2/3 space-y-2 text-sm text-purple-700">
-                  <p className="font-semibold text-purple-800">Instructor Script:</p>
-                  {welcomeScripts[tier.stage].script.map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
-                </div>
-              </div>
+              </button>
+            </div>
+            <div className="py-2 pr-3 text-base text-sky-900">
+              {welcomeScripts[tier.stage].script.map((paragraph, index) => (
+                <p key={index} className="mb-2">{paragraph}</p>
+              ))}
             </div>
           </div>
-          
-          {/* Grid of lesson cards for the current tier */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+          {/* Grid of lesson cards */}
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`}>
             {lessonsByStage[tier.stage]?.map((lesson, index) => (
               <motion.div
                 key={lesson.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <Card className="overflow-hidden h-full flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all">
-                  <div className={`h-2 ${getBorderColorByStage(lesson.stage)}`}></div>
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="flex justify-between items-start mb-3">
-                      <Badge variant="outline">Lesson {lesson.number}</Badge>
+                <div
+                  className={`relative overflow-hidden flex flex-col shadow-xl border-2 border-yellow-300 bg-gradient-to-br from-white via-yellow-50 to-amber-100 rounded-2xl
+                    group hover:shadow-2xl transition-shadow hover:-translate-y-1 hover:scale-105`}
+                  style={{
+                    boxShadow: '0 6px 32px 0 rgba(245,212,87,0.12), 0 1.5px 12px 0 rgba(137,96,59,0.08)'
+                  }}
+                >
+                  {/* Treasure chest illustration */}
+                  <div className="flex justify-center -mt-7">
+                    <img
+                      src="/Treasure Chest Icon.png"
+                      alt="Treasure chest"
+                      className="w-20 h-16 drop-shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform"
+                      draggable={false}
+                    />
+                  </div>
+                  <div className="p-5 pt-2 flex-1 flex flex-col min-h-[240px]">
+                    <div className="flex gap-4 items-center mb-1">
+                      <span className="block bg-yellow-200 text-yellow-800 rounded-full px-3 py-0.5 text-xs font-bold border border-yellow-500 drop-shadow">
+                        Lesson {lesson.number}
+                      </span>
                       {lesson.locked ? (
-                        <Badge className="bg-gray-200 text-gray-600 border border-gray-300"><Lock className="h-3 w-3 mr-1" />Locked</Badge>
+                        <span className="inline-block bg-gray-200 text-gray-500 rounded px-2 py-0.5 text-xs ml-1">Locked</span>
                       ) : lesson.completed ? (
-                        <Badge className="bg-green-100 text-green-700 border border-green-200"><CheckCircle className="h-3 w-3 mr-1" />Completed</Badge>
+                        <span className="inline-block bg-green-200 text-green-700 rounded px-2 py-0.5 text-xs ml-1">Completed</span>
                       ) : (
-                        <Badge className="bg-blue-100 text-blue-700 border border-blue-200"><Unlock className="h-3 w-3 mr-1" />Available</Badge>
+                        <span className="inline-block bg-blue-100 text-blue-700 rounded px-2 py-0.5 text-xs ml-1">Available</span>
                       )}
                     </div>
-                    
-                    <h3 className="text-lg font-semibold mb-2 text-gray-800">{lesson.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4 flex-grow">{lesson.description}</p>
-                    
-                    <div className="flex flex-wrap gap-1 mb-4">
+                    <h3 className="font-extrabold text-amber-800 text-lg mb-1">{lesson.title}</h3>
+                    <p className="text-sm text-amber-700 mb-3 flex-grow">{lesson.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
                       {lesson.concepts.slice(0, 3).map((concept, idx) => (
-                        <Badge key={idx} variant="secondary">{concept}</Badge>
+                        <span key={idx} className="bg-sky-100 text-sky-800 rounded px-2 py-0.5 text-xs">{concept}</span>
                       ))}
                     </div>
-                    
-                    <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
-                      <div className="text-sm text-gray-500">{lesson.duration} min</div>
-                      <Button 
-                        size="sm" 
-                        onClick={() => onSelectLesson(lesson.id)}
+                    <div className="flex justify-between items-end mt-auto pt-2 border-t border-yellow-100">
+                      <span className="text-xs text-amber-500">{lesson.duration} min</span>
+                      <button
+                        onClick={() => !lesson.locked && onSelectLesson(lesson.id)}
                         disabled={lesson.locked}
-                        className={lesson.locked ? '' : 'bg-purple-600 hover:bg-purple-700 text-white'}
+                        className={`flex items-center gap-1 px-4 py-2 rounded-lg shadow 
+                          ${lesson.locked
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-pink-400 hover:bg-pink-500 text-white font-bold animate-pulse"} transition`}
                       >
-                        {lesson.locked ? 'Locked' : 'Start Lesson'}
-                        {!lesson.locked && <ArrowRight className="h-4 w-4 ml-1" />}
-                      </Button>
+                        {lesson.locked ? 'Locked' : 'Embark'}
+                        {!lesson.locked &&
+                          <span className="ml-1">&#10148;</span>
+                        }
+                      </button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
-            )) || <p className="text-gray-500">Lessons for this tier are coming soon!</p>}
+            ))}
           </div>
-        </CollapsibleSection>
+        </div>
       ))}
     </div>
   );
