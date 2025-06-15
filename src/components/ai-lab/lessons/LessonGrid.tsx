@@ -47,6 +47,12 @@ const welcomeScripts: Record<TierStage, { title: string, script: string[] }> = {
   },
 };
 
+const tierBgMap: Record<string, string> = {
+  discoverers: "/Discoverers (BeachShore).png",
+  explorers: "/Explorers (Jungle).png",
+  builders: "/Builders (Mountain Caves).png",
+  creators: "/Creators (Magical Peak).png",
+};
 
 // Helper function to get a distinct border color for cards based on stage
 function getBorderColorByStage(stage: LessonType['stage']): string {
@@ -77,28 +83,23 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
           <TierHeader stage={tier.stage} title={tier.title} />
 
           {/* Adventure cinematic welcome area with clickable video poster */}
-          <div className="flex items-center gap-4 bg-gradient-to-r from-amber-50/90 via-purple-50/80 to-sky-100/80 border border-purple-100 rounded-xl mb-8 mx-2 shadow">
-            <div className="flex-shrink-0 w-40 md:w-64 p-4">
+          <div className="flex items-center gap-6 bg-gradient-to-r from-amber-50/90 via-purple-50/80 to-sky-100/80 border border-purple-100 rounded-xl mb-8 shadow-lg p-6">
+            <div className="flex-shrink-0 w-48 md:w-80">
               <button
                 type="button"
                 className="group relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform bg-slate-200"
                 aria-label="Play tier introduction video"
               >
                 <img
-                  src={
-                    tier.stage === 'discoverers' ? '/Discoverers Instructor Video.mp4' :
-                    tier.stage === 'explorers' ? '/Explorers Instructor Video.mp4' :
-                    tier.stage === 'builders' ? '/Builders Instructor Video.mp4' :
-                    '/Creators Instructor Video.mp4'
-                  }
-                  alt={`${tier.title} instructor video`}
-                  className="object-cover w-full h-full opacity-80 blur-sm grayscale group-hover:blur-0 group-hover:grayscale-0"
+                  src={tierBgMap[tier.stage]}
+                  alt={`${tier.title} instructor video poster`}
+                  className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                   draggable={false}
-                  onError={e => { (e.target as HTMLImageElement).src = "/Pirate with Captain's Hat.png"; }}
                 />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-16 h-16 text-white opacity-90 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" fill="#eab308" opacity="0.7"/>
+                  <svg className="w-20 h-20 text-white opacity-90 group-hover:scale-110 transition-transform drop-shadow-lg" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="#eab308" opacity="0.8"/>
                     <polygon points="10,8 16,12 10,16" fill="#fff" />
                   </svg>
                 </div>

@@ -16,7 +16,7 @@ const AILab = () => {
       </Helmet>
       <Navbar />
       {/* Adventure island background */}
-      <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: "url('/Discoverers (BeachShore).png')" }}>
+      <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: "url('/Adventure Map Background.png')" }}>
         <main className="container mx-auto px-4 pt-24 pb-16">
           <AdventureMasthead />
           <LessonGrid onSelectLesson={(lessonId) => { window.location.href = `/ai-lab/lessons/${lessonId}`; }} />
@@ -29,4 +29,3 @@ const AILab = () => {
 };
 
 export default AILab;
-
