@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +31,7 @@ const welcomeScripts: Record<TierStage, { title: string, script: string[] }> = {
       "Hey there, future AI adventurers, and welcome to the Discoverers tier! I'm so excited you're here.",
       "Imagine you're an explorer with a brand new telescope, and you've just spotted a mysterious island shimmering in the distance. That's the Island of AI! It's filled with amazing wonders, and we're going to explore its shores together.",
       "In this first part of our journey, we'll learn what AI actually is, teach an AI to recognize patterns, create incredible images from just our words, and even team up with an AI to write our own stories.",
-      "It’s going to be a blast! Are you ready to begin your adventure? Let’s go!",
+      "It's going to be a blast! Are you ready to begin your adventure? Let's go!",
     ]
   },
   explorers: {
@@ -47,11 +48,12 @@ const welcomeScripts: Record<TierStage, { title: string, script: string[] }> = {
   },
 };
 
-const tierBgMap: Record<string, string> = {
-  discoverers: "/Discoverers (BeachShore).png",
-  explorers: "/Explorers (Jungle).png",
-  builders: "/Builders (Mountain Caves).png",
-  creators: "/Creators (Magical Peak).png",
+// Map tier stages to their video files
+const tierVideoMap: Record<TierStage, string> = {
+  discoverers: "/Discoverers Instructor Video.mp4",
+  explorers: "/Explorers Instructor Video.mp4", 
+  builders: "/Builders Instructor Video.mp4",
+  creators: "/Creators Instructor Video.mp4",
 };
 
 // Helper function to get a distinct border color for cards based on stage
@@ -77,100 +79,100 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
   }, {} as Record<string, LessonType[]>);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {tiers.map((tier) => (
         <div key={tier.stage} className="relative">
           <TierHeader stage={tier.stage} title={tier.title} />
 
-          {/* Adventure cinematic welcome area with clickable video poster */}
-          <div className="flex items-center gap-6 bg-gradient-to-r from-amber-50/90 via-purple-50/80 to-sky-100/80 border border-purple-100 rounded-xl mb-8 shadow-lg p-6">
-            <div className="flex-shrink-0 w-48 md:w-80">
-              <button
-                type="button"
-                className="group relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform bg-slate-200"
-                aria-label="Play tier introduction video"
-              >
-                <img
-                  src={tierBgMap[tier.stage]}
-                  alt={`${tier.title} instructor video poster`}
-                  className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                  draggable={false}
-                />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-20 h-20 text-white opacity-90 group-hover:scale-110 transition-transform drop-shadow-lg" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" fill="#eab308" opacity="0.8"/>
-                    <polygon points="10,8 16,12 10,16" fill="#fff" />
-                  </svg>
+          {/* Adventure cinematic welcome area with actual video */}
+          <div className="flex flex-col lg:flex-row items-center gap-8 bg-gradient-to-br from-amber-50/95 via-orange-50/90 to-yellow-100/90 border-4 border-yellow-300 rounded-2xl mb-12 shadow-2xl p-8 backdrop-blur-sm">
+            <div className="flex-shrink-0 w-full lg:w-96">
+              <div className="relative group">
+                <video
+                  className="w-full aspect-video rounded-2xl border-4 border-yellow-400 shadow-2xl group-hover:scale-105 transition-transform duration-300"
+                  poster={`/${tier.stage === 'discoverers' ? 'Discoverers (BeachShore)' : 
+                           tier.stage === 'explorers' ? 'Explorers (Jungle)' : 
+                           tier.stage === 'builders' ? 'Builders (Mountain Caves)' : 
+                           'Creators (Magical Peak)'}.png`}
+                  controls
+                  preload="metadata"
+                >
+                  <source src={tierVideoMap[tier.stage]} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-yellow-400/90 rounded-full p-4 shadow-2xl group-hover:scale-110 transition-transform">
+                    <PlayCircle className="w-12 h-12 text-white" />
+                  </div>
                 </div>
-              </button>
+              </div>
             </div>
-            <div className="py-2 pr-3 text-base text-sky-900">
-              {welcomeScripts[tier.stage].script.map((paragraph, index) => (
-                <p key={index} className="mb-2">{paragraph}</p>
-              ))}
+            <div className="flex-1 text-center lg:text-left">
+              <h3 className="text-3xl font-bold text-sky-900 mb-4">{welcomeScripts[tier.stage].title}</h3>
+              <div className="text-lg text-sky-800 space-y-3">
+                {welcomeScripts[tier.stage].script.map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed">{paragraph}</p>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Grid of lesson cards */}
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {lessonsByStage[tier.stage]?.map((lesson, index) => (
               <motion.div
                 key={lesson.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div
-                  className={`relative overflow-hidden flex flex-col shadow-xl border-2 border-yellow-300 bg-gradient-to-br from-white via-yellow-50 to-amber-100 rounded-2xl
-                    group hover:shadow-2xl transition-shadow hover:-translate-y-1 hover:scale-105`}
-                  style={{
-                    boxShadow: '0 6px 32px 0 rgba(245,212,87,0.12), 0 1.5px 12px 0 rgba(137,96,59,0.08)'
-                  }}
-                >
+                <div className="relative overflow-hidden flex flex-col shadow-2xl border-4 border-yellow-400 bg-gradient-to-br from-white via-yellow-50 to-amber-100 rounded-3xl group hover:shadow-3xl transition-all hover:-translate-y-2 hover:scale-105 duration-300">
+                  
                   {/* Treasure chest illustration */}
-                  <div className="flex justify-center -mt-7">
+                  <div className="flex justify-center -mt-8 mb-4">
                     <img
                       src="/Treasure Chest Icon.png"
                       alt="Treasure chest"
-                      className="w-20 h-16 drop-shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform"
+                      className="w-24 h-20 drop-shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500"
                       draggable={false}
                     />
                   </div>
-                  <div className="p-5 pt-2 flex-1 flex flex-col min-h-[240px]">
-                    <div className="flex gap-4 items-center mb-1">
-                      <span className="block bg-yellow-200 text-yellow-800 rounded-full px-3 py-0.5 text-xs font-bold border border-yellow-500 drop-shadow">
+                  
+                  <div className="p-6 pt-2 flex-1 flex flex-col min-h-[280px]">
+                    <div className="flex gap-4 items-center mb-3">
+                      <span className="block bg-yellow-300 text-yellow-900 rounded-full px-4 py-1 text-sm font-bold border-2 border-yellow-500 shadow-lg">
                         Lesson {lesson.number}
                       </span>
                       {lesson.locked ? (
-                        <span className="inline-block bg-gray-200 text-gray-500 rounded px-2 py-0.5 text-xs ml-1">Locked</span>
+                        <span className="inline-block bg-gray-200 text-gray-600 rounded-full px-3 py-1 text-sm border border-gray-300">🔒 Locked</span>
                       ) : lesson.completed ? (
-                        <span className="inline-block bg-green-200 text-green-700 rounded px-2 py-0.5 text-xs ml-1">Completed</span>
+                        <span className="inline-block bg-green-200 text-green-700 rounded-full px-3 py-1 text-sm border border-green-300">✅ Completed</span>
                       ) : (
-                        <span className="inline-block bg-blue-100 text-blue-700 rounded px-2 py-0.5 text-xs ml-1">Available</span>
+                        <span className="inline-block bg-blue-200 text-blue-700 rounded-full px-3 py-1 text-sm border border-blue-300">⚡ Available</span>
                       )}
                     </div>
-                    <h3 className="font-extrabold text-amber-800 text-lg mb-1">{lesson.title}</h3>
-                    <p className="text-sm text-amber-700 mb-3 flex-grow">{lesson.description}</p>
-                    <div className="flex flex-wrap gap-1 mb-3">
+                    
+                    <h3 className="font-extrabold text-amber-900 text-xl mb-3 leading-tight">{lesson.title}</h3>
+                    <p className="text-base text-amber-800 mb-4 flex-grow leading-relaxed">{lesson.description}</p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {lesson.concepts.slice(0, 3).map((concept, idx) => (
-                        <span key={idx} className="bg-sky-100 text-sky-800 rounded px-2 py-0.5 text-xs">{concept}</span>
+                        <span key={idx} className="bg-sky-100 text-sky-800 rounded-full px-3 py-1 text-xs border border-sky-200">{concept}</span>
                       ))}
                     </div>
-                    <div className="flex justify-between items-end mt-auto pt-2 border-t border-yellow-100">
-                      <span className="text-xs text-amber-500">{lesson.duration} min</span>
+                    
+                    <div className="flex justify-between items-end mt-auto pt-4 border-t-2 border-yellow-200">
+                      <span className="text-sm text-amber-600 font-medium bg-amber-100 px-3 py-1 rounded-full">⏱️ {lesson.duration} min</span>
                       <button
                         onClick={() => !lesson.locked && onSelectLesson(lesson.id)}
                         disabled={lesson.locked}
-                        className={`flex items-center gap-1 px-4 py-2 rounded-lg shadow 
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg shadow-lg transform transition-all duration-200
                           ${lesson.locked
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-pink-400 hover:bg-pink-500 text-white font-bold animate-pulse"} transition`}
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white hover:scale-110 hover:shadow-xl animate-pulse"}`}
                       >
-                        {lesson.locked ? 'Locked' : 'Embark'}
-                        {!lesson.locked &&
-                          <span className="ml-1">&#10148;</span>
-                        }
+                        {lesson.locked ? '🔒 Locked' : '🚀 Embark'}
+                        {!lesson.locked && <ArrowRight className="w-5 h-5" />}
                       </button>
                     </div>
                   </div>
