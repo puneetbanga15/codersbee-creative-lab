@@ -8,6 +8,7 @@ import { curriculumData, LessonType } from './curriculumData';
 import { motion } from 'framer-motion';
 import { CollapsibleSection } from '../ui/CollapsibleSection';
 import { TierHeader } from '../ui/TierHeader';
+import { LessonJourneyMap } from '../ui/LessonJourneyMap';
 
 type LessonGridProps = {
   onSelectLesson: (lessonId: string) => void;
@@ -78,6 +79,10 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
     return acc;
   }, {} as Record<string, LessonType[]>);
 
+  // Mock progress data - in real app, this would come from user progress state
+  const completedLessons: string[] = []; // Add completed lesson IDs here
+  const currentLesson = 'what-is-ai'; // Current lesson ID
+
   return (
     <div className="space-y-16">
       {tiers.map((tier) => (
@@ -120,6 +125,20 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Interactive Journey Map */}
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-center text-purple-800 mb-6 flex items-center justify-center gap-3">
+              <Map className="w-8 h-8" />
+              Your Adventure Journey
+              <Map className="w-8 h-8" />
+            </h3>
+            <LessonJourneyMap 
+              tier={tier.stage}
+              completedLessons={completedLessons}
+              currentLesson={currentLesson}
+            />
           </div>
 
           {/* Grid of lesson cards */}
