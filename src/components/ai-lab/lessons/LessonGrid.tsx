@@ -96,6 +96,11 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
                            'Creators (Magical Peak)'}.png`}
                   controls
                   preload="metadata"
+                  onError={(e) => {
+                    console.log(`Failed to load ${tier.stage} instructor video:`, e);
+                    console.log('Attempted path:', e.currentTarget.src);
+                  }}
+                  onLoadedData={() => console.log(`Successfully loaded ${tier.stage} instructor video`)}
                 >
                   <source src={tierVideoMap[tier.stage]} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -135,6 +140,19 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
                       alt="Treasure chest"
                       className="w-24 h-20 drop-shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500"
                       draggable={false}
+                      onError={(e) => {
+                        console.log('Failed to load Treasure Chest Icon:', e);
+                        // Fallback to an emoji or styled div
+                        e.currentTarget.style.display = 'none';
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'w-24 h-20 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center text-3xl drop-shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500';
+                          fallback.innerHTML = '💎';
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                      onLoad={() => console.log('Successfully loaded Treasure Chest Icon')}
                     />
                   </div>
                   

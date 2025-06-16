@@ -17,6 +17,10 @@ export const AdventureMasthead: React.FC = () => {
             src="/Pirate Ship Icon.png"
             alt="Pirate ship"
             className="w-12 h-12 animate-[float_2.5s_ease-in-out_infinite] drop-shadow-lg"
+            onError={(e) => {
+              console.log('Failed to load Pirate Ship Icon:', e);
+              e.currentTarget.style.display = 'none';
+            }}
           />
           <span className="font-bold text-purple-800 text-lg animate-pulse bg-purple-100 px-4 py-2 rounded-full border-2 border-purple-200">Adventure Points: 0</span>
         </div>
