@@ -56,39 +56,33 @@ const tiers = [
 
 type TierStage = typeof tiers[number]['stage'];
 
-// Enhanced welcome scripts with more engaging storytelling
+// Updated welcome scripts with simplified content
 const welcomeScripts: Record<TierStage, { title: string, script: string[] }> = {
   discoverers: {
     title: "Welcome, Brave Discoverer!",
     script: [
-      "Ahoy there, future AI legend! Welcome aboard the most magical adventure of your lifetime! 🏴‍☠️",
-      "You're about to embark on an epic voyage to the mysterious Island of AI, where ancient secrets of artificial intelligence await your discovery.",
-      "As Captain Buzzy, you'll sail across enchanted waters, meet incredible AI creatures, learn to speak their language, and even create magic from your very thoughts!",
-      "Your journey begins now - are you ready to become an AI legend? Adventure awaits! ⚓"
+      "Welcome aboard Captain Buzzy! In this chapter you'll sail across enchanted waters, meet incredible AI creatures, learn to speak their language, and even create magic from your very thoughts! ⚓"
     ]
   },
   explorers: {
     title: "Welcome, Fearless Explorer!",
     script: [
       "Congratulations on reaching the Explorer tier! Your reputation as an AI adventurer grows stronger! 🗺️",
-      "The jungle ahead holds deeper mysteries - AI that can see, read emotions, and understand the world in ways you've never imagined.",
-      "Prepare to unlock powers that will make you a true AI master!"
+      "The jungle ahead holds deeper mysteries - AI that can see, read emotions, and understand the world in ways you've never imagined."
     ]
   },
   builders: {
     title: "Welcome, Master Builder!",
     script: [
       "You've proven yourself worthy of the Builder's title! The mountain caves reveal their secrets to only the most dedicated! ⛰️",
-      "Here you'll forge your own AI creations, learning the ancient arts of neural networks and algorithmic magic.",
-      "Build your legacy as an AI architect!"
+      "Here you'll forge your own AI creations, learning the ancient arts of neural networks and algorithmic magic."
     ]
   },
   creators: {
     title: "Welcome, Legendary Creator!",
     script: [
       "Behold! You've reached the sacred summit where legends are born! Few have come this far! 👑",
-      "At this mystical peak, you'll transcend all limits and create AI wonders beyond imagination.",
-      "Your destiny as an AI creator awaits - let your imagination run wild!"
+      "At this mystical peak, you'll transcend all limits and create AI wonders beyond imagination."
     ]
   }
 };
@@ -139,13 +133,13 @@ export const LessonGrid: React.FC<LessonGridProps> = ({ onSelectLesson }) => {
         >
           <TierHeader stage={tier.stage} title={tier.title} />
 
-          {/* Enhanced adventure cinematic welcome area */}
+          {/* Enhanced adventure cinematic welcome area - BIGGER */}
           <motion.div 
-            className="flex flex-col lg:flex-row items-center gap-10 bg-gradient-to-br from-amber-50/98 via-orange-50/95 to-yellow-100/98 border-4 border-yellow-300 rounded-3xl mb-16 shadow-2xl p-10 backdrop-blur-sm"
+            className="flex flex-col lg:flex-row items-center gap-12 bg-gradient-to-br from-amber-50/98 via-orange-50/95 to-yellow-100/98 border-4 border-yellow-300 rounded-3xl mb-16 shadow-2xl p-12 backdrop-blur-sm"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="flex-shrink-0 w-full lg:w-[450px]">
+            <div className="flex-shrink-0 w-full lg:w-[600px]">
               <motion.div 
                 className="relative group"
                 whileHover={{ scale: 1.05 }}

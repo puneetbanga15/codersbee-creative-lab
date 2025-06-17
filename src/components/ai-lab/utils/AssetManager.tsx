@@ -24,6 +24,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleLoad = () => {
+    console.log(`Successfully loaded asset: ${src}`);
     setIsLoaded(true);
     onLoad?.();
   };
@@ -43,11 +44,12 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
   // Show fallback if there's an error
   if (hasError) {
     return (
-      <div className={`${className} bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center`}>
+      <div className={`${className} bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center border-4 border-purple-200 rounded-lg`}>
         {fallbackContent || (
           <div className="text-purple-600 font-medium text-center p-4">
-            <div className="text-2xl mb-2">🎨</div>
-            <div className="text-sm">{alt}</div>
+            <div className="text-4xl mb-2">🎨</div>
+            <div className="text-sm font-semibold">{alt}</div>
+            <div className="text-xs text-purple-500 mt-1">Asset Loading...</div>
           </div>
         )}
       </div>
@@ -65,6 +67,7 @@ export const AssetManager: React.FC<AssetManagerProps> = ({
         playsInline
         onLoadedData={handleLoad}
         onError={handleError}
+        poster={`/${alt.replace(' ', '%20')}.png`}
       >
         <source src={src} type="video/mp4" />
         Your browser does not support the video tag.
@@ -109,15 +112,21 @@ export const ASSET_PATHS = {
   }
 };
 
-// Preload critical assets
+// Enhanced preload function with error handling
 export const preloadAssets = (assetPaths: string[]) => {
+  console.log('Preloading assets:', assetPaths);
+  
   assetPaths.forEach(path => {
     if (path.includes('.mp4')) {
       const video = document.createElement('video');
       video.preload = 'metadata';
+      video.onloadedmetadata = () => console.log(`Preloaded video: ${path}`);
+      video.onerror = () => console.warn(`Failed to preload video: ${path}`);
       video.src = path;
     } else {
       const img = new Image();
+      img.onload = () => console.log(`Preloaded image: ${path}`);
+      img.onerror = () => console.warn(`Failed to preload image: ${path}`);
       img.src = path;
     }
   });
@@ -129,19 +138,33 @@ export const useAssetLoader = (assets: string[]) => {
   const [failedAssets, setFailedAssets] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    console.log('Loading assets:', assets);
+    
     assets.forEach(asset => {
       const isVideo = asset.includes('.mp4');
       
       if (isVideo) {
         const video = document.createElement('video');
         video.preload = 'metadata';
-        video.onloadedmetadata = () => setLoadedAssets(prev => new Set([...prev, asset]));
-        video.onerror = () => setFailedAssets(prev => new Set([...prev, asset]));
+        video.onloadedmetadata = () => {
+          console.log(`Loaded video asset: ${asset}`);
+          setLoadedAssets(prev => new Set([...prev, asset]));
+        };
+        video.onerror = () => {
+          console.warn(`Failed to load video asset: ${asset}`);
+          setFailedAssets(prev => new Set([...prev, asset]));
+        };
         video.src = asset;
       } else {
         const img = new Image();
-        img.onload = () => setLoadedAssets(prev => new Set([...prev, asset]));
-        img.onerror = () => setFailedAssets(prev => new Set([...prev, asset]));
+        img.onload = () => {
+          console.log(`Loaded image asset: ${asset}`);
+          setLoadedAssets(prev => new Set([...prev, asset]));
+        };
+        img.onerror = () => {
+          console.warn(`Failed to load image asset: ${asset}`);
+          setFailedAssets(prev => new Set([...prev, asset]));
+        };
         img.src = asset;
       }
     });
@@ -151,6 +174,8 @@ export const useAssetLoader = (assets: string[]) => {
     loadedAssets,
     failedAssets,
     allLoaded: loadedAssets.size === assets.length,
-    hasFailures: failedAssets.size > 0
+    hasFailures: failedAssets.size > 0,
+    loadedCount: loadedAssets.size,
+    totalCount: assets.length
   };
 };
