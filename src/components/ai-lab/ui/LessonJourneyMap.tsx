@@ -9,7 +9,7 @@ interface JourneyMapProps {
   currentLesson?: string;
 }
 
-// Enhanced story progression with character development
+// Enhanced story progression with seamless connections to actual lessons
 const lessonStories = {
   discoverers: [
     {
@@ -17,56 +17,61 @@ const lessonStories = {
       number: 1,
       position: { x: 15, y: 75 },
       title: "The Mysterious Signal",
-      story: "Captain Buzzy spots a strange glowing island through her telescope. 'What could AI mean?' she wonders as mystical signals pulse from the shore...",
+      story: "Captain Buzzy receives a strange, glowing signal from a distant island. 'What could this AI mean?' she wonders. The mysterious island calls to you - what secrets does it hold?",
       sceneImage: "/Ocean Journey Animation.mp4",
       isVideo: true,
       character: "Captain Buzzy",
       mood: "curious",
-      xpReward: 100
+      xpReward: 100,
+      questDescription: "Discover what AI really means and why it's everywhere around us!"
     },
     {
       id: 'how-ai-learns',
       number: 2,
       position: { x: 35, y: 55 },
-      title: "The Learning Beach",
-      story: "Landing on the sandy shores, Buzzy discovers footprints that change and adapt. 'These patterns... they're learning!' she exclaims as the sand reveals AI's learning secrets.",
+      title: "The Learning Shores",
+      story: "Landing on sandy beaches, Buzzy discovers magical footprints that change and adapt. 'These patterns... they're learning from each step!' How does AI learn from examples just like you do?",
       sceneImage: "/Discoverers (BeachShore).png",
-      character: "Beach Guardian",
+      character: "Beach Pattern Guardian",
       mood: "wonder",
-      xpReward: 150
+      xpReward: 150,
+      questDescription: "Train an AI to recognize patterns and see how machines learn!"
     },
     {
       id: 'meet-ai-friend',
       number: 3,
       position: { x: 55, y: 40 },
       title: "The AI Companion Awakens",
-      story: "Deep in the jungle, a friendly AI spirit materializes! 'I've been waiting for someone like you,' it says. Your first AI friend is born!",
+      story: "Deep in the jungle, a friendly AI spirit materializes! 'I've been waiting for someone like you,' it whispers. Your first AI friend is born - what adventures await together?",
       sceneImage: "/Explorers (Jungle).png",
       character: "Pixel the AI Spirit",
       mood: "friendly",
-      xpReward: 200
+      xpReward: 200,
+      questDescription: "Create and chat with your very own AI companion!"
     },
     {
       id: 'llm-basics',
       number: 4,
       position: { x: 75, y: 30 },
       title: "The Cave of Ancient Words",
-      story: "In the mountain caves, ancient runes glow with the power of language. Pixel whispers, 'Here lies the secret of how AI understands and speaks!'",
+      story: "In mystical mountain caves, ancient runes glow with the power of language. 'Here lies the secret of how AI understands and speaks!' whispers your AI friend. What magic will you unlock?",
       sceneImage: "/Builders (Mountain Caves).png",
-      character: "Word Sage",
+      character: "Word Sage Oracle",
       mood: "wise",
-      xpReward: 250
+      xpReward: 250,
+      questDescription: "Master the art of talking to AI and unlock its language powers!"
     },
     {
       id: 'image-ai',
       number: 5,
       position: { x: 90, y: 15 },
       title: "The Summit of Creation",
-      story: "At the magical peak, reality bends as thoughts become images! 'You've mastered the art of AI creation!' Pixel cheers as magic swirls around you.",
+      story: "At the magical peak, reality bends as thoughts become images! 'You've mastered the art of AI creation!' cheers Pixel as pure magic swirls around you. You are now an AI Master!",
       sceneImage: "/Creators (Magical Peak).png",
       character: "Master Creator",
       mood: "triumphant",
-      xpReward: 300
+      xpReward: 300,
+      questDescription: "Create amazing images with AI and become a true AI wizard!"
     }
   ]
 };
@@ -167,23 +172,23 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
   const pathData = generateSmoothPath(lessons);
 
   return (
-    <div className="relative w-full h-[600px] bg-gradient-to-b from-sky-200 via-blue-300 to-blue-600 rounded-3xl overflow-hidden border-4 border-yellow-400 shadow-2xl">
-      {/* Enhanced Background with Multiple Layers */}
+    <div className="relative w-full h-[600px] bg-gradient-to-b from-sky-100 via-blue-200 to-blue-400 rounded-3xl overflow-hidden border-4 border-yellow-400 shadow-2xl">
+      {/* Enhanced Background with Lighter Opacity */}
       <div className="absolute inset-0">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-20"
         >
           <source src="/Ocean Journey Animation.mp4" type="video/mp4" />
         </video>
       </div>
 
-      {/* Adventure Map Overlay with Enhanced Opacity */}
+      {/* Adventure Map Overlay with Reduced Opacity */}
       <div 
-        className="absolute inset-0 opacity-25 bg-cover bg-center"
+        className="absolute inset-0 opacity-15 bg-cover bg-center"
         style={{ backgroundImage: "url('/Adventure Map Background.png')" }}
       />
 
@@ -230,7 +235,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
         />
       </svg>
 
-      {/* Enhanced Lesson Islands */}
+      {/* Enhanced Lesson Islands with Story Connections */}
       {lessons.map((lesson, index) => {
         const isCompleted = completedLessons.includes(lesson.id);
         const isCurrent = currentLesson === lesson.id;
@@ -253,7 +258,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
           >
             {/* Island base with glow effect */}
             <div className="relative">
-              {/* Treasure chest with enhanced styling */}
+              {/* Enhanced treasure chest with story theme */}
               <div className="relative group">
                 <motion.div
                   className={`w-16 h-14 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg border-4 border-yellow-600 shadow-2xl flex items-center justify-center text-2xl ${
@@ -264,7 +269,10 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
                   animate={isCurrent ? { y: [-3, 3, -3] } : {}}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  {isCompleted ? '✨' : isCurrent ? '⚡' : '💎'}
+                  {lesson.id === 'what-is-ai' ? '📡' :
+                   lesson.id === 'how-ai-learns' ? '🧠' :
+                   lesson.id === 'meet-ai-friend' ? '🤖' :
+                   lesson.id === 'llm-basics' ? '💬' : '🎨'}
                 </motion.div>
                 
                 {/* Floating XP indicator */}
@@ -279,12 +287,12 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
                 )}
               </div>
               
-              {/* Lesson number badge with character preview */}
+              {/* Lesson number badge */}
               <div className="absolute -top-3 -right-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg border-2 border-white">
                 {lesson.number}
               </div>
               
-              {/* Completion indicator with celebration */}
+              {/* Completion indicator */}
               {isCompleted && (
                 <motion.div 
                   className="absolute -top-2 -right-2 text-green-400 text-xl"
@@ -323,21 +331,22 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
               )}
             </div>
             
-            {/* Enhanced lesson tooltip */}
+            {/* Enhanced lesson tooltip with story connection */}
             <motion.div 
-              className="absolute top-full mt-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-white to-yellow-50 rounded-xl px-4 py-3 text-sm font-medium shadow-xl border-2 border-yellow-300 whitespace-nowrap max-w-48 text-center"
+              className="absolute top-full mt-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-white to-yellow-50 rounded-xl px-4 py-3 text-sm font-medium shadow-xl border-2 border-yellow-300 whitespace-nowrap max-w-56 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 + 0.5 }}
             >
               <div className="font-bold text-purple-800">{lesson.title}</div>
               <div className="text-xs text-gray-600 mt-1">{lesson.character}</div>
+              <div className="text-xs text-blue-700 mt-1 italic">{lesson.questDescription}</div>
             </motion.div>
           </motion.div>
         );
       })}
 
-      {/* Enhanced Animated Pirate Ship with Trail */}
+      {/* Enhanced Animated Pirate Ship */}
       <motion.div
         className="absolute transform -translate-x-1/2 -translate-y-1/2 z-20"
         animate={{ 
@@ -366,7 +375,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
           🚢
         </motion.div>
         
-        {/* Enhanced ship wake with particles */}
+        {/* Ship wake with particles */}
         <motion.div className="absolute top-1/2 left-full">
           {Array.from({ length: 3 }).map((_, i) => (
             <motion.div
@@ -389,7 +398,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
         </motion.div>
       </motion.div>
 
-      {/* Enhanced Story Modal with Character Development */}
+      {/* Enhanced Story Modal with seamless lesson connection */}
       <AnimatePresence>
         {showStoryModal && (
           <motion.div
@@ -460,13 +469,25 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
                 </motion.div>
                 
                 <motion.p 
-                  className="text-amber-800 mb-6 leading-relaxed text-lg"
+                  className="text-amber-800 mb-4 leading-relaxed text-lg"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
                 >
                   {lessons[currentStoryIndex]?.story}
                 </motion.p>
+
+                {/* Quest description connecting to actual lesson */}
+                <motion.div
+                  className="bg-blue-100 rounded-lg p-3 mb-4 border-2 border-blue-200"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.65 }}
+                >
+                  <div className="text-blue-800 font-semibold text-sm">
+                    🎯 Your Quest: {lessons[currentStoryIndex]?.questDescription}
+                  </div>
+                </motion.div>
                 
                 {/* XP reward display */}
                 <motion.div
@@ -488,7 +509,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Continue Adventure! ⚔️
+                  Begin This Quest! ⚔️
                 </motion.button>
               </div>
             </motion.div>
@@ -505,7 +526,7 @@ export const LessonJourneyMap: React.FC<JourneyMapProps> = ({
               Captain's Log
             </div>
             <div className="text-sm text-purple-600">
-              Islands: {completedLessons.length}/{lessons.length} • XP: {totalXP}
+              Quests: {completedLessons.length}/{lessons.length} • XP: {totalXP}
             </div>
           </div>
         </div>

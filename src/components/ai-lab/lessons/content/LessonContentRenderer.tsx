@@ -18,7 +18,7 @@ import { WhatIsAIIntro } from '../introductions/WhatIsAIIntro';
 import { WhatIsAITutorial } from '../tutorials/WhatIsAITutorial';
 import { AiOrNotActivityWrapper } from '../activities/AiOrNotActivityWrapper';
 
-import { PatternDetectorActivityWrapper } from '../activities/PatternDetectorActivityWrapper';
+import PatternDetectorActivityWrapper from '../activities/PatternDetectorActivityWrapper';
 
 // Default/Fallback components
 import { DefaultLessonIntroductionContent } from './DefaultLessonIntroductionContent';
