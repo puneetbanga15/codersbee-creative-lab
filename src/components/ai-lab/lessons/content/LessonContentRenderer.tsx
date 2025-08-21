@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { LessonType } from '../curriculumData';
@@ -23,6 +22,7 @@ import PatternDetectorActivityWrapper from '../activities/PatternDetectorActivit
 // Default/Fallback components
 import { DefaultLessonIntroductionContent } from './DefaultLessonIntroductionContent';
 import { ComingSoonLessonContent } from './ComingSoonLessonContent';
+import { LessonSlides } from '../slides/LessonSlides';
 
 interface LessonContentRendererProps {
   lessonId: string;
@@ -43,6 +43,8 @@ export const LessonContentRenderer: React.FC<LessonContentRendererProps> = ({
     switch (activeTab) {
       case 'introduction':
         return <WhatIsAIIntro onComplete={onContentComplete} />;
+      case 'slides':
+        return <LessonSlides lessonId={lessonId} />;
       case 'tutorial':
         return <WhatIsAITutorial onComplete={onContentComplete} />;
       case 'activity':
@@ -85,6 +87,8 @@ export const LessonContentRenderer: React.FC<LessonContentRendererProps> = ({
             </Button>
           </div>
         );
+      case 'slides':
+        return <LessonSlides lessonId={lessonId} />;
       case 'tutorial':
         return (
           <div className="space-y-6">
@@ -128,6 +132,8 @@ export const LessonContentRenderer: React.FC<LessonContentRendererProps> = ({
     switch (activeTab) {
       case 'introduction':
         return <MeetAIFriendIntro onComplete={onContentComplete} />;
+      case 'slides':
+        return <LessonSlides lessonId={lessonId} />;
       case 'tutorial':
         return <FinalFixedTutorial onComplete={onContentComplete} />;
       case 'activity':
@@ -141,6 +147,8 @@ export const LessonContentRenderer: React.FC<LessonContentRendererProps> = ({
     switch (activeTab) {
       case 'introduction':
         return <LLMBasicsIntro onComplete={onContentComplete} />;
+      case 'slides':
+        return <LessonSlides lessonId={lessonId} />;
       case 'tutorial':
         return <LLMBasicsTutorial onComplete={onContentComplete} />;
       case 'activity':
@@ -155,6 +163,8 @@ export const LessonContentRenderer: React.FC<LessonContentRendererProps> = ({
     switch (activeTab) {
       case 'introduction':
         return <DefaultLessonIntroductionContent lesson={lesson} onComplete={onContentComplete} />;
+      case 'slides':
+        return <LessonSlides lessonId={lessonId} />;
       default:
         return <ComingSoonLessonContent onComplete={onContentComplete} />;
     }
