@@ -8,15 +8,15 @@ interface LessonSlidesProps {
 
 const SLIDE_MAPPINGS = {
   'what-is-ai': {
-    url: 'https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%201%20-%20What%20is%20AI%20and%20GenAI.pdf',
+    url: `https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%201%20-%20What%20is%20AI%20and%20GenAI.pdf?t=${Date.now()}`,
     title: 'Lesson 1 - What is AI and GenAI'
   },
   'llm-basics': {
-    url: 'https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%202%20-%20LLMs%20and%20RAG.pdf',
+    url: `https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%202%20-%20LLMs%20and%20RAG.pdf?t=${Date.now()}`,
     title: 'Lesson 2 - LLMs and RAG'
   },
   'magic-of-prompts': {
-    url: 'https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%203%20-%20Prompt%20Engineering.pdf',
+    url: `https://jjshsfsmgbrhypotcwvx.supabase.co/storage/v1/object/public/ai-learning-slides/Lesson%203%20-%20Prompt%20Engineering.pdf?t=${Date.now()}`,
     title: 'Lesson 3 - Prompt Engineering'
   }
 } as const;
