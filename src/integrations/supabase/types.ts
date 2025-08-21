@@ -843,7 +843,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      verify_quiz_access_code: {
+        Args: { code_input: string; quiz_uuid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       document_type:
