@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Download, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Maximize2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
@@ -16,6 +16,7 @@ export const PDFSlideViewer: React.FC<PDFSlideViewerProps> = ({
   className = '' 
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -28,6 +29,10 @@ export const PDFSlideViewer: React.FC<PDFSlideViewerProps> = ({
 
   const handleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
+  };
+
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -43,6 +48,15 @@ export const PDFSlideViewer: React.FC<PDFSlideViewerProps> = ({
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">{title}</h3>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -73,19 +87,28 @@ export const PDFSlideViewer: React.FC<PDFSlideViewerProps> = ({
             </div>
           </div>
 
-          {/* PDF Viewer */}
+          {/* PDF Viewer with error handling */}
           <div className="flex-1 border rounded-lg overflow-hidden bg-muted/30">
             <iframe
-              src={`${pdfUrl}#view=FitH`}
+              key={refreshKey}
+              src={`${pdfUrl}#view=FitH&toolbar=1`}
               className="w-full h-full min-h-[600px]"
               title={title}
               loading="lazy"
+              onError={(e) => {
+                console.error('PDF loading error:', e);
+              }}
             />
           </div>
 
-          {/* Instructions */}
-          <div className="mt-4 text-sm text-muted-foreground text-center">
-            <p>Use your browser's PDF controls to navigate through slides</p>
+          {/* Instructions and debug info */}
+          <div className="mt-4 text-sm text-muted-foreground">
+            <p className="text-center mb-2">Use your browser's PDF controls to navigate through slides</p>
+            <details className="text-xs bg-muted/50 p-2 rounded">
+              <summary className="cursor-pointer">Debug Info</summary>
+              <p className="mt-2">PDF URL: {pdfUrl}</p>
+              <p>If the PDF doesn't load, try the Refresh button or check if the file exists in storage.</p>
+            </details>
           </div>
         </CardContent>
       </Card>
