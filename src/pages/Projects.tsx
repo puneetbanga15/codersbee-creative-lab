@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { StudentAICreations } from "@/components/StudentAICreations";
+import { useNavigate } from "react-router-dom";
+import { User } from "@supabase/supabase-js";
 
 type Project = {
   id: string;
@@ -37,7 +39,29 @@ const projectTypeColors = {
 
 const Projects = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState<ProjectType>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  useEffect(() => {
+    // Check current auth status
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setIsAuthLoading(false);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setIsAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const { data: projects, isLoading } = useQuery({
     queryKey: ['projects', selectedType],
@@ -66,7 +90,61 @@ const Projects = () => {
       
       return data as Project[];
     },
+    enabled: !!user, // Only run query if user is authenticated
   });
+
+  // Show loading while checking authentication
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+        <Navbar />
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="text-lg">Loading...</div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show login prompt if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
+        <Navbar />
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-codersbee-dark">
+              Student <span className="text-codersbee-vivid">Projects</span>
+            </h1>
+            <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold mb-4">Login Required</h2>
+              <p className="text-gray-600 mb-6">
+                Please log in to view our student projects and see the amazing work our students have created.
+              </p>
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => navigate('/parents-login')} 
+                  className="w-full"
+                >
+                  Parent Login
+                </Button>
+                <Button 
+                  onClick={() => navigate('/teacher-login')} 
+                  variant="outline"
+                  className="w-full"
+                >
+                  Teacher Login
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-codersbee-purple/50 to-white">
