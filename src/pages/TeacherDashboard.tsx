@@ -9,6 +9,7 @@ import { DocumentsTab } from "@/components/dashboard/DocumentsTab";
 import { FeeManagementTab } from "@/components/dashboard/FeeManagementTab";
 import { SchedulingTab } from "@/components/dashboard/SchedulingTab";
 import { OverviewTab } from "@/components/dashboard/OverviewTab";
+import { CreateQuizTab } from "@/components/dashboard/teacher/CreateQuizTab";
 import { AdminSidebar } from "@/components/dashboard/admin/AdminSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -34,6 +35,7 @@ const TeacherDashboard = () => {
               <Route path="teachers" element={<TeachersTab />} />
               <Route path="parents" element={<ParentsTab />} />
               {isAdmin && <Route path="admins" element={<AdminsTab />} />}
+              <Route path="create-quiz" element={<CreateQuizTab />} />
               <Route path="certificates" element={<CertificatesTab />} />
               <Route path="documents" element={<DocumentsTab />} />
               {isAdmin && <Route path="fees" element={<FeeManagementTab />} />}

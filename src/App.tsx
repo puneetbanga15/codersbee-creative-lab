@@ -15,6 +15,7 @@ import ParentDashboard from "./pages/ParentDashboard";
 import TeacherLogin from "./pages/TeacherLogin";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import Quizzes from "./pages/Quizzes";
+import QuizSession from "./pages/QuizSession";
 import Projects from "./pages/Projects";
 import Tutorials from "./pages/Tutorials";
 import ScratchIntro from "./pages/tutorials/scratch/ScratchIntro";
@@ -52,6 +53,7 @@ function App() {
                 <Route path="/teachers/login" element={<TeacherLogin />} />
                 <Route path="/teachers/dashboard/*" element={<TeacherDashboard />} />
                 <Route path="/quizzes" element={<Quizzes />} />
+                <Route path="/quiz-session/:sessionId" element={<QuizSession />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/tutorials" element={<Tutorials />} />
                 <Route path="/tutorials/scratch/intro" element={<ScratchIntro />} />

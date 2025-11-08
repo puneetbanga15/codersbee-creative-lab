@@ -8,17 +8,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { 
-  Home, 
-  Users, 
-  GraduationCap, 
+import {
+  Home,
+  Users,
+  GraduationCap,
   FileText,
   Settings,
   UserPlus,
   ScrollText,
   FolderOpen,
   Calendar,
-  CreditCard
+  CreditCard,
+  Sparkles
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -46,6 +47,11 @@ export function AdminSidebar() {
       title: "Admins",
       icon: UserPlus,
       path: "/teachers/dashboard/admins"
+    },
+    {
+      title: "Create Quiz",
+      icon: Sparkles,
+      path: "/teachers/dashboard/create-quiz"
     },
     {
       title: "Certificates",

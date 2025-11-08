@@ -584,10 +584,228 @@ export type Database = {
           },
         ]
       }
+      quiz_session_answers: {
+        Row: {
+          answered_at: string | null
+          id: string
+          is_correct: boolean
+          player_id: string
+          question_id: string
+          selected_answer: string | null
+          session_id: string
+          time_taken_seconds: number | null
+        }
+        Insert: {
+          answered_at?: string | null
+          id?: string
+          is_correct: boolean
+          player_id: string
+          question_id: string
+          selected_answer?: string | null
+          session_id: string
+          time_taken_seconds?: number | null
+        }
+        Update: {
+          answered_at?: string | null
+          id?: string
+          is_correct?: boolean
+          player_id?: string
+          question_id?: string
+          selected_answer?: string | null
+          session_id?: string
+          time_taken_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_session_answers_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_session_players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_session_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_session_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_session_players: {
+        Row: {
+          answers_correct: number | null
+          answers_wrong: number | null
+          id: string
+          joined_at: string | null
+          score: number | null
+          session_id: string
+          student_name: string
+          user_id: string | null
+        }
+        Insert: {
+          answers_correct?: number | null
+          answers_wrong?: number | null
+          id?: string
+          joined_at?: string | null
+          score?: number | null
+          session_id: string
+          student_name: string
+          user_id?: string | null
+        }
+        Update: {
+          answers_correct?: number | null
+          answers_wrong?: number | null
+          id?: string
+          joined_at?: string | null
+          score?: number | null
+          session_id?: string
+          student_name?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_session_players_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_session_players_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_sessions: {
+        Row: {
+          created_at: string | null
+          current_question_index: number | null
+          ended_at: string | null
+          host_id: string
+          id: string
+          max_players: number | null
+          quiz_id: string
+          room_code: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["session_status"] | null
+          time_per_question: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_question_index?: number | null
+          ended_at?: string | null
+          host_id: string
+          id?: string
+          max_players?: number | null
+          quiz_id: string
+          room_code: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          time_per_question?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          current_question_index?: number | null
+          ended_at?: string | null
+          host_id?: string
+          id?: string
+          max_players?: number | null
+          quiz_id?: string
+          room_code?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          time_per_question?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_sessions_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_sessions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_topics: {
+        Row: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          difficulty: Database["public"]["Enums"]["quiz_difficulty"]
+          generated_quiz_id: string | null
+          generation_status: string | null
+          id: string
+          num_questions: number
+          quiz_type: Database["public"]["Enums"]["quiz_type"]
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["quiz_difficulty"]
+          generated_quiz_id?: string | null
+          generation_status?: string | null
+          id?: string
+          num_questions?: number
+          quiz_type: Database["public"]["Enums"]["quiz_type"]
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["quiz_difficulty"]
+          generated_quiz_id?: string | null
+          generation_status?: string | null
+          id?: string
+          num_questions?: number
+          quiz_type?: Database["public"]["Enums"]["quiz_type"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_topics_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_topics_generated_quiz_id_fkey"
+            columns: ["generated_quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quizzes: {
         Row: {
           created_at: string
           description: string | null
+          difficulty: Database["public"]["Enums"]["quiz_difficulty"] | null
           id: string
           is_premium: boolean | null
           quiz_type: Database["public"]["Enums"]["quiz_type"]
@@ -596,6 +814,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["quiz_difficulty"] | null
           id?: string
           is_premium?: boolean | null
           quiz_type: Database["public"]["Enums"]["quiz_type"]
@@ -604,6 +823,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          difficulty?: Database["public"]["Enums"]["quiz_difficulty"] | null
           id?: string
           is_premium?: boolean | null
           quiz_type?: Database["public"]["Enums"]["quiz_type"]
@@ -853,7 +1073,9 @@ export type Database = {
         | "web_advanced"
         | "ai_fundamentals"
         | "ai_master"
+      quiz_difficulty: "easy" | "intermediate" | "complex"
       quiz_type: "scratch" | "python" | "ai" | "web" | "cloud"
+      session_status: "waiting" | "active" | "completed" | "cancelled"
       user_role: "admin" | "teacher" | "parent"
     }
     CompositeTypes: {
