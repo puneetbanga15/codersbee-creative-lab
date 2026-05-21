@@ -4,7 +4,7 @@ import { useCampAuth } from "@/context/CampAuthContext";
 import { Loader2, Lock, User, Eye, EyeOff, Sun, ArrowLeft } from "lucide-react";
 
 export default function SummerCampLogin() {
-  const { isAuthenticated, login, isLoading } = useCampAuth();
+  const { isAuthenticated, role, login, isLoading } = useCampAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const next = searchParams.get("next") ?? "/summer-camp/module/2";
@@ -15,10 +15,12 @@ export default function SummerCampLogin() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Already logged in → go straight through
+  // Already logged in → go straight through (teachers → their dashboard)
   useEffect(() => {
-    if (!isLoading && isAuthenticated) navigate(next, { replace: true });
-  }, [isAuthenticated, isLoading, navigate, next]);
+    if (!isLoading && isAuthenticated) {
+      navigate(role === "teacher" ? "/summer-camp/teacher" : next, { replace: true });
+    }
+  }, [isAuthenticated, isLoading, role, navigate, next]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ export default function SummerCampLogin() {
     const result = await login(username.trim(), password);
     setSubmitting(false);
     if (result.success) {
-      navigate(next, { replace: true });
+      // role is updated in context; Login.tsx useEffect will redirect
     } else {
       setError(result.error ?? "Something went wrong. Try again!");
     }

@@ -26,7 +26,7 @@ import {
 export default function ModuleDetail() {
   const { moduleId } = useParams<{ moduleId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading } = useCampAuth();
+  const { isAuthenticated, isLoading, token } = useCampAuth();
   const id = parseInt(moduleId || "1", 10);
   const mod = summerCampModules.find((m) => m.id === id);
 
@@ -78,7 +78,16 @@ export default function ModuleDetail() {
 
   const handleQuizSubmit = () => {
     if (quizAnswers.filter((a) => a !== null && a !== undefined).length < mod.quiz.length) return;
+    const score = mod.quiz.filter((q, i) => quizAnswers[i] === q.correct).length;
     setQuizSubmitted(true);
+    // Save progress to server (fire-and-forget — don't block the UI)
+    if (token) {
+      fetch("/.netlify/functions/camp-progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ moduleId: id, score, total: mod.quiz.length }),
+      }).catch(() => { /* silent — progress saving is best-effort */ });
+    }
   };
 
   const quizScore = quizSubmitted
@@ -177,14 +186,16 @@ export default function ModuleDetail() {
               </div>
             </div>
 
-            {/* Video player */}
-            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-black aspect-video">
+            {/* Video player — responsive 16:9 wrapper works across all browsers */}
+            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-black relative w-full" style={{ paddingTop: "56.25%" }}>
               <iframe
                 src={mod.videoUrl}
                 title="Day 1 — Your First Line of Python"
+                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
-                className="w-full h-full"
+                className="absolute inset-0 w-full h-full"
               />
             </div>
 

@@ -29,6 +29,7 @@ import TestPage from "./pages/TestPage";
 import SummerCamp from "./pages/SummerCamp";
 import ModuleDetail from "./pages/summer-camp/ModuleDetail";
 import SummerCampLogin from "./pages/summer-camp/Login";
+import SummerCampTeacher from "./pages/summer-camp/TeacherDashboard";
 import { CampAuthProvider } from "./context/CampAuthContext";
 
 // Analytics wrapper component
@@ -70,6 +71,7 @@ function App() {
                 <Route path="/test" element={<TestPage />} />
                 <Route path="/summer-camp" element={<SummerCamp />} />
                 <Route path="/summer-camp/login" element={<SummerCampLogin />} />
+                <Route path="/summer-camp/teacher" element={<SummerCampTeacher />} />
                 <Route path="/summer-camp/module/:moduleId" element={<ModuleDetail />} />
               </Routes>
             </AnalyticsWrapper>
