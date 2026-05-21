@@ -73,7 +73,7 @@ export const summerCampModules: SummerCampModule[] = [
     borderColor: "border-green-200",
     duration: "Day 1",
     topics: ["What is programming?", "Why Python?", "Your first program", "How to run code"],
-    videoUrl: "/videos/Python_Day_1__Your_First_Line_of_Code.mp4",
+    videoUrl: "https://www.youtube.com/embed/2oVlYl1Wu8g",
     intro: "Imagine you have a magical robot that does EXACTLY what you tell it to do — no more, no less. That robot is Python! Python is a programming language, which means it's a special language that both you and computers can understand. Today we're going to have a conversation with our robot for the very first time!",
     sections: [
       {
