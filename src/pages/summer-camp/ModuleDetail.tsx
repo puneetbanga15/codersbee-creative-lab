@@ -223,17 +223,29 @@ export default function ModuleDetail() {
             </div>
 
             {/* Video player — responsive 16:9 wrapper works across all browsers */}
-            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-black relative w-full" style={{ paddingTop: "56.25%" }}>
+            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-gray-100 relative w-full" style={{ paddingTop: "56.25%" }}>
               <iframe
                 src={mod.videoUrl}
                 title="Day 1 — Your First Line of Python"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
                 className="absolute inset-0 w-full h-full"
               />
             </div>
+
+            {/* Fallback link if iframe is blocked by browser settings */}
+            <p className="text-center text-xs text-gray-400 mt-2">
+              Video not showing?{" "}
+              <a
+                href="https://youtu.be/2oVlYl1Wu8g"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-orange-500 font-semibold hover:underline"
+              >
+                Watch directly on YouTube ↗
+              </a>
+            </p>
 
             {/* After-video prompt */}
             <div className={`mt-3 flex items-center gap-2 ${mod.bgColor} border ${mod.borderColor} rounded-xl px-4 py-2.5`}>
