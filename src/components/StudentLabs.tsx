@@ -33,21 +33,21 @@ export const StudentLabs = () => {
               </div>
               
               <p className="text-gray-600 mb-6">
-                Learn the fundamentals of artificial intelligence through interactive lessons, guided activities, and hands-on projects that demonstrate AI concepts in action.
+                Journey from a Discoverer to a Creator! Learn AI fundamentals through interactive lessons, guided activities, and hands-on projects that bring concepts to life.
               </p>
               
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
                   <span className="text-[#9b87f5] font-medium">•</span>
-                  <span>Create your own AI chatbot</span>
+                  <span>Start as a Discoverer, finish as a Creator</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#9b87f5] font-medium">•</span>
-                  <span>Experiment with image recognition</span>
+                  <span>Experiment with real generative AI</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#9b87f5] font-medium">•</span>
-                  <span>Design AI-powered applications</span>
+                  <span>Build your own unique AI projects</span>
                 </li>
               </ul>
               
@@ -75,21 +75,21 @@ export const StudentLabs = () => {
               </div>
               
               <p className="text-gray-600 mb-6">
-                Master coding concepts through gamified lessons inspired by mathematical pioneers from around the world, with engaging puzzles and interactive challenges.
+                Go from Apprentice to Master! Master coding concepts through gamified lessons inspired by mathematical pioneers, with engaging puzzles and creative challenges.
               </p>
               
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
                   <span className="text-[#23c55e] font-medium">•</span>
-                  <span>Learn coding with mathematical pioneers</span>
+                  <span>Learn with stories of math pioneers</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#23c55e] font-medium">•</span>
-                  <span>Solve fun puzzles and coding challenges</span>
+                  <span>Solve fun puzzles and build games</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#23c55e] font-medium">•</span>
-                  <span>Build creative coding projects</span>
+                  <span>Become a creative Coding Master</span>
                 </li>
               </ul>
               

@@ -26,6 +26,10 @@ import BuzzyAI from "./pages/BuzzyAI";
 import AILab from "./pages/AILab";
 import CodingLab from "./pages/CodingLab";
 import TestPage from "./pages/TestPage";
+import SummerCamp from "./pages/SummerCamp";
+import ModuleDetail from "./pages/summer-camp/ModuleDetail";
+import SummerCampLogin from "./pages/summer-camp/Login";
+import { CampAuthProvider } from "./context/CampAuthContext";
 
 // Analytics wrapper component
 const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -41,6 +45,7 @@ function App() {
       <SupabaseProvider>
         <TooltipProvider>
           <BrowserRouter>
+            <CampAuthProvider>
             <AnalyticsWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -63,8 +68,12 @@ function App() {
                 <Route path="/ai-lab/*" element={<AILab />} />
                 <Route path="/coding-lab/*" element={<CodingLab />} />
                 <Route path="/test" element={<TestPage />} />
+                <Route path="/summer-camp" element={<SummerCamp />} />
+                <Route path="/summer-camp/login" element={<SummerCampLogin />} />
+                <Route path="/summer-camp/module/:moduleId" element={<ModuleDetail />} />
               </Routes>
             </AnalyticsWrapper>
+            </CampAuthProvider>
             <Toaster />
             <Sonner />
           </BrowserRouter>

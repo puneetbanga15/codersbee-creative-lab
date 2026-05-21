@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen } from "lucide-react";
+import { User, GraduationCap, Menu, X, CheckCircle, Trophy, BookOpen, Sun } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -104,9 +104,18 @@ export const Navbar = () => {
             </Link>
           </div>
           
-          <Link 
-            to="/about" 
-            onClick={() => setIsMobileMenuOpen(false)} 
+          <Link
+            to="/summer-camp"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center gap-2 text-orange-500 hover:text-orange-600 font-semibold py-2"
+          >
+            <Sun className="h-4 w-4" />
+            Summer Camp 🐍
+          </Link>
+
+          <Link
+            to="/about"
+            onClick={() => setIsMobileMenuOpen(false)}
             className="block text-[#9b87f5] hover:text-[#7E69AB] py-2"
           >
             About Us
@@ -116,17 +125,24 @@ export const Navbar = () => {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <span className="block text-[#9b87f5] font-medium mb-2">Login Options</span>
-                <Link 
-                  to="/parents/login" 
+                <Link
+                  to="/summer-camp/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full text-center px-4 py-2 border rounded-md text-[#9b87f5] hover:bg-[#9b87f5]/10"
+                  className="block w-full text-center px-4 py-2 border-2 border-orange-400 rounded-md text-orange-600 font-semibold hover:bg-orange-50"
+                >
+                  ☀️ Summer Camp Login
+                </Link>
+                <Link
+                  to="/parents/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full text-center px-4 py-2 border rounded-md text-gray-400 hover:bg-gray-50 text-sm"
                 >
                   Parent Login
                 </Link>
-                <Link 
-                  to="/teachers/login" 
+                <Link
+                  to="/teachers/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full text-center px-4 py-2 border rounded-md text-[#9b87f5] hover:bg-[#9b87f5]/10"
+                  className="block w-full text-center px-4 py-2 border rounded-md text-gray-400 hover:bg-gray-50 text-sm"
                 >
                   Teacher Login
                 </Link>
@@ -227,6 +243,14 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
+            <Link
+              to="/summer-camp"
+              className="flex items-center gap-1.5 text-orange-500 hover:text-orange-600 transition-colors font-semibold"
+            >
+              <Sun className="h-4 w-4" />
+              Summer Camp
+            </Link>
+
             <Link to="/about" className="text-[#9b87f5] hover:text-[#7E69AB] transition-colors">
               About Us
             </Link>
@@ -242,10 +266,13 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Link to="/parents/login" className="w-full">Parent Login</Link>
+                  <Link to="/summer-camp/login" className="w-full font-medium">☀️ Summer Camp Login</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/teachers/login" className="w-full">Teacher Login</Link>
+                  <Link to="/parents/login" className="w-full text-gray-500">Parent Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/teachers/login" className="w-full text-gray-500">Teacher Login</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

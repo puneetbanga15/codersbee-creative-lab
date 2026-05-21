@@ -21,17 +21,10 @@ const Quizzes = () => {
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ['quizzes'],
     queryFn: async () => {
-      console.log('Fetching quizzes and access codes...');
+      console.log('Fetching quizzes...');
       const { data, error } = await supabase
         .from('quizzes')
-        .select(`
-          *,
-          quiz_access_codes (
-            access_code,
-            is_active,
-            created_at
-          )
-        `);
+        .select('*');
 
       if (error) throw error;
       console.log('Fetched quizzes:', data);
@@ -67,22 +60,21 @@ const Quizzes = () => {
         return true;
       }
 
-      // Step 2: Check for matching active access code
-      const { data: accessCodes, error: accessCodeError } = await supabase
-        .from('quiz_access_codes')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .eq('access_code', code.trim())
-        .eq('is_active', true);
+      // Step 2: Use secure verification function instead of direct table access
+      const { data: isValidCode, error: verificationError } = await supabase
+        .rpc('verify_quiz_access_code', {
+          quiz_uuid: quizId,
+          code_input: code.trim()
+        });
 
-      if (accessCodeError) {
-        console.error('Error checking access code:', accessCodeError);
-        throw accessCodeError;
+      if (verificationError) {
+        console.error('Error verifying access code:', verificationError);
+        throw verificationError;
       }
 
-      console.log('Access codes found:', accessCodes);
+      console.log('Access code verification result:', isValidCode);
 
-      if (!accessCodes || accessCodes.length === 0) {
+      if (!isValidCode) {
         setVerificationError("Invalid access code. Please try again.");
         return false;
       }

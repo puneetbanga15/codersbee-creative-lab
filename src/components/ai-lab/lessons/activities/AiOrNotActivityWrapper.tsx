@@ -1,11 +1,17 @@
+
 import React from 'react';
 import { ActivityWrapper } from '@/components/ai-lab/lessons/activities/ActivityWrapper';
 import { AiOrNotGame } from '@/components/ai-lab/lessons/activities/components/ai-or-not/AiOrNotGame';
 
-export const AiOrNotActivityWrapper: React.FC = () => {
+interface AiOrNotActivityWrapperProps {
+  onComplete: () => void;
+}
+
+export const AiOrNotActivityWrapper: React.FC<AiOrNotActivityWrapperProps> = ({ onComplete }) => {
   const handleComplete = () => {
     // Handle activity completion (e.g., mark lesson as complete)
     console.log('AI or Not activity completed');
+    onComplete();
   };
 
   return (

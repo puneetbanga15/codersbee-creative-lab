@@ -1,5 +1,6 @@
+
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 const blogs = [
   {
@@ -30,8 +31,8 @@ export const BlogList = () => (
       <div key={blog.slug} className="border rounded-lg p-6 bg-white shadow hover:shadow-lg transition">
         <h2 className="text-2xl font-semibold mb-2">{blog.title}</h2>
         <p className="text-gray-600 mb-4">{blog.description}</p>
-        <Link href={`/blogs/${blog.slug}`} legacyBehavior>
-          <a className="text-codersbee-vivid font-bold hover:underline">Read More →</a>
+        <Link to={`/blogs/${blog.slug}`} className="text-codersbee-vivid font-bold hover:underline">
+          Read More →
         </Link>
       </div>
     ))}

@@ -1,120 +1,129 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route, useParams } from 'react-router-dom';
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { AILabHeader } from "@/components/ai-lab/ui/LabHeader";
-import { LessonGrid } from "@/components/ai-lab/lessons/LessonGrid";
-import { LessonView } from "@/components/ai-lab/lessons/LessonView";
-import { ProjectsGrid } from "@/components/ai-lab/projects/ProjectsGrid";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { BuzzyCornerHelper } from '@/components/ai-lab/ui/BuzzyCornerHelper';
+import { SimpleLessonGrid } from "@/components/ai-lab/lessons/SimpleLessonGrid";
+import { ColorfulLessonView } from "@/components/ai-lab/lessons/ColorfulLessonView";
 import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
+import { BookOpen, Play, FileText } from 'lucide-react';
 
 const AILab = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("lessons");
-  
-  // Extract lesson ID from URL if present
-  const lessonIdFromUrl = location.pathname.startsWith('/ai-lab/lessons/') 
-    ? location.pathname.replace('/ai-lab/lessons/', '')
-    : null;
-  
-  const handleSelectLesson = (lessonId: string) => {
-    setSelectedLesson(lessonId);
-    navigate(`/ai-lab/lessons/${lessonId}`);
-  };
-  
-  const handleBackToLab = () => {
-    setSelectedLesson(null);
-    navigate('/ai-lab');
-  };
-  
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-  };
-  
-  const renderContent = () => {
-    if (activeTab === "lessons") {
-      return <LessonGrid onSelectLesson={handleSelectLesson} />;
-    } 
-    else if (activeTab === "playground") {
-      return (
-        <div className="text-center py-20">
-          <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-            <InfoIcon className="w-10 h-10 text-blue-500" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
-          <p className="text-gray-600 max-w-md mx-auto">
-            The AI Playground is under development and will be available soon.
-          </p>
-        </div>
-      );
-    }
-    else if (activeTab === "projects") {
-      return <ProjectsGrid />;
-    }
-    else if (activeTab === "resources") {
-      return (
-        <div className="text-center py-20">
-          <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-            <InfoIcon className="w-10 h-10 text-blue-500" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon!</h2>
-          <p className="text-gray-600 max-w-md mx-auto">
-            Additional resources are being prepared and will be available soon.
-          </p>
-        </div>
-      );
-    }
-    
-    return null;
-  };
-  
+  return (
+    <Routes>
+      <Route path="/" element={<AILabHome />} />
+      <Route path="/lessons/:lessonId" element={<AILabLessonPage />} />
+    </Routes>
+  );
+};
+
+const AILabHome = () => {
   return (
     <>
       <Helmet>
-        <title>AI Lab for Kids | Learn Generative AI & Coding | CodersBee</title>
-        <meta name="description" content="Interactive AI and machine learning lessons for kids. Learn generative AI, LLMs, prompt engineering, and coding fundamentals in a fun, educational environment." />
-        <meta name="keywords" content="AI Lab for kids, generative AI learning, kids coding classes, AI coding for kids, machine learning for children, prompt engineering basics, LLM for beginners, interactive AI lessons" />
+        <title>AI Learning Lab | CodersBee - Interactive AI Education</title>
+        <meta name="description" content="Learn artificial intelligence through interactive lessons, slides, and hands-on activities. Perfect for young learners aged 6-14." />
+        <meta name="keywords" content="AI for kids, artificial intelligence education, AI lessons, interactive learning, kids programming" />
       </Helmet>
       
       <Navbar />
       
-      <main className="container mx-auto px-4 pt-24 pb-16">
-        <Routes>
-          <Route path="/" element={
-            <>
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">AI Lab for Kids: Learn Generative AI & Machine Learning</h1>
-                <p className="text-gray-600">Interactive lessons teaching AI fundamentals, generative AI, and coding skills for children ages 6-14</p>
+      <main className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+        <div className="container mx-auto px-4 py-12">
+          {/* Simple, clean header */}
+          <motion.div
+            className="text-center mb-12"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              AI Learning Lab
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+              Discover the world of artificial intelligence through interactive lessons, comprehensive slides, and hands-on activities.
+            </p>
+            
+            {/* Learning format indicators */}
+            <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" />
+                <span>Interactive Lessons</span>
               </div>
-              
-              <AILabHeader 
-                activeTab={activeTab}
-                onTabChange={handleTabChange} 
-              />
-              <main className="mt-8">
-                {renderContent()}
-              </main>
-            </>
-          } />
-          <Route path="/lessons/:lessonId" element={
-            <LessonView 
-              lessonId={lessonIdFromUrl || ''} 
-              onBack={handleBackToLab} 
-            />
-          } />
-        </Routes>
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-primary" />
+                <span>PDF Slides</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Play className="h-4 w-4 text-primary" />
+                <span>Hands-on Activities</span>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Enhanced lesson grid with more colors */}
+          <motion.div
+            className="mb-8"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Tier 1: Discoverers</h3>
+                <p className="text-sm text-blue-100">Foundation concepts & basics</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-500 to-emerald-500 text-white p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Tier 2: Explorers</h3>
+                <p className="text-sm text-green-100">Applied skills & practice</p>
+              </div>
+              <div className="bg-gradient-to-br from-orange-500 to-amber-500 text-white p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Tier 3: Builders</h3>
+                <p className="text-sm text-orange-100">Deeper understanding</p>
+              </div>
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Tier 4: Creators</h3>
+                <p className="text-sm text-purple-100">Advanced creation</p>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Lesson grid */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <SimpleLessonGrid onSelectLesson={(lessonId) => { 
+              console.log(`Navigating to lesson: ${lessonId}`);
+              // Use React Router navigation instead of window.location
+              window.location.href = `/ai-lab/lessons/${lessonId}`; 
+            }} />
+          </motion.div>
+        </div>
       </main>
       
-      <BuzzyCornerHelper />
       <Footer />
     </>
   );
+};
+
+const AILabLessonPage = () => {
+  const { lessonId } = useParams<{ lessonId: string }>();
+  
+  if (!lessonId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">No lesson specified</h2>
+          <a href="/ai-lab" className="text-primary hover:underline">Back to AI Lab</a>
+        </div>
+      </div>
+    );
+  }
+
+  return <ColorfulLessonView lessonId={lessonId} />;
 };
 
 export default AILab;
