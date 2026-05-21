@@ -13,6 +13,10 @@ import {
   Zap,
   Users,
   CheckCircle,
+  Bot,
+  GraduationCap,
+  MessageCircle,
+  Lightbulb,
 } from "lucide-react";
 
 const features = [
@@ -176,6 +180,107 @@ export default function SummerCamp() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Teacher + AI Section */}
+      <section className="py-16 bg-gradient-to-b from-violet-50 to-white">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-violet-100 text-violet-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+              <GraduationCap className="h-4 w-4" />
+              The CodersBee Difference
+            </div>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">
+              Not just videos. <span className="text-violet-600">Teacher + AI,</span> together.
+            </h2>
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
+              Your child isn't learning alone. Every module has an AI coding companion
+              to help instantly — and a real teacher who checks in, reviews progress,
+              and gives personal guidance.
+            </p>
+          </div>
+
+          {/* Two column cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            {/* AI side */}
+            <div className="bg-gradient-to-br from-orange-50 to-pink-50 border-2 border-orange-200 rounded-3xl p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center">
+                  <Bot className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <div className="font-extrabold text-gray-900">AI Coding Companion</div>
+                  <div className="text-xs text-orange-600 font-medium">Available 24/7</div>
+                </div>
+              </div>
+              <ul className="space-y-2.5">
+                {[
+                  "Runs your Python code and explains what happened",
+                  "Spots errors and gives hints without just giving answers",
+                  "Validates your challenge solutions instantly",
+                  "Never gets impatient — explains the same thing 10 different ways",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                    <CheckCircle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Teacher side */}
+            <div className="bg-gradient-to-br from-violet-50 to-blue-50 border-2 border-violet-200 rounded-3xl p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center">
+                  <GraduationCap className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <div className="font-extrabold text-gray-900">Real Teacher</div>
+                  <div className="text-xs text-violet-600 font-medium">2× per week live sessions</div>
+                </div>
+              </div>
+              <ul className="space-y-2.5">
+                {[
+                  "Reviews each student's quiz scores and module progress",
+                  "Runs live sessions to answer questions and unstick blockers",
+                  "Tracks who needs encouragement vs. who's ready for more",
+                  "Sends personalised feedback via WhatsApp to parents",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                    <CheckCircle className="h-4 w-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* How a typical day looks */}
+          <div className="bg-white border border-gray-100 rounded-3xl p-7 shadow-sm">
+            <h3 className="font-extrabold text-gray-900 mb-5 text-center">A typical camp day looks like this 👇</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-sm">
+              {[
+                { emoji: "🎬", step: "Watch", desc: "Short intro video for the day" },
+                { emoji: "📖", step: "Read", desc: "Go through the lesson at your pace" },
+                { emoji: "💻", step: "Code", desc: "Complete 3 hands-on challenges with AI help" },
+                { emoji: "📝", step: "Quiz", desc: "10-question quiz — teacher sees your score" },
+              ].map(({ emoji, step, desc }, i) => (
+                <div key={step} className="flex flex-col items-center gap-2">
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl">
+                      {emoji}
+                    </div>
+                    {i < 3 && (
+                      <ChevronRight className="absolute -right-5 top-3 h-5 w-5 text-gray-300 hidden sm:block" />
+                    )}
+                  </div>
+                  <div className="font-bold text-gray-900">{step}</div>
+                  <div className="text-gray-500 text-xs">{desc}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -10,6 +10,7 @@ import { useCampAuth } from "@/context/CampAuthContext";
 import {
   ChevronLeft,
   ChevronRight,
+  LogOut,
   CheckCircle,
   XCircle,
   Lightbulb,
@@ -26,7 +27,7 @@ import {
 export default function ModuleDetail() {
   const { moduleId } = useParams<{ moduleId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading, token } = useCampAuth();
+  const { isAuthenticated, isLoading, token, username, logout } = useCampAuth();
   const id = parseInt(moduleId || "1", 10);
   const mod = summerCampModules.find((m) => m.id === id);
 
@@ -98,8 +99,24 @@ export default function ModuleDetail() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
+      {/* Student session bar — shows when logged in */}
+      {isAuthenticated && username && (
+        <div className="fixed top-[72px] left-0 right-0 z-50 bg-orange-500 text-white text-xs flex items-center justify-between px-4 py-1.5 shadow-sm">
+          <span className="font-medium">
+            👋 Hi, <strong>{username}</strong> — your quiz scores are being saved!
+          </span>
+          <button
+            onClick={() => { logout(); navigate("/summer-camp/login"); }}
+            className="flex items-center gap-1 opacity-80 hover:opacity-100 transition font-semibold"
+          >
+            <LogOut className="h-3 w-3" />
+            Logout
+          </button>
+        </div>
+      )}
+
       {/* Top bar */}
-      <div className={`pt-20 ${mod.bgColor} border-b ${mod.borderColor}`}>
+      <div className={`${isAuthenticated ? "pt-28" : "pt-20"} ${mod.bgColor} border-b ${mod.borderColor}`}>
         <div className="container mx-auto px-4 max-w-4xl py-6">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
