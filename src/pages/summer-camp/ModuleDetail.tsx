@@ -178,15 +178,14 @@ export default function ModuleDetail() {
             </div>
 
             {/* Video player */}
-            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-black">
-              <video
-                controls
-                preload="metadata"
-                className="w-full max-h-[480px]"
+            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg bg-black aspect-video">
+              <iframe
                 src={mod.videoUrl}
-              >
-                Your browser does not support the video tag.
-              </video>
+                title="Day 1 — Your First Line of Python"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+              />
             </div>
 
             {/* After-video prompt */}
