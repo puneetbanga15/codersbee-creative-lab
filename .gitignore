@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Environment variables (NEVER commit — contains API keys & credentials)
+.env
+.env.local
+.env.*.local
+
+# Video assets (large files — host externally, not in git)
+public/videos/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
