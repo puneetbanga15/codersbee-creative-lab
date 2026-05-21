@@ -166,6 +166,25 @@ export default function ModuleDetail() {
       {/* Main content */}
       <div className="container mx-auto px-4 max-w-4xl py-10">
 
+        {/* ── Login nudge for free Day 1 visitors ── */}
+        {id === 1 && !isAuthenticated && (
+          <div className="mb-6 flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4">
+            <span className="text-xl flex-shrink-0">💡</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-blue-800 leading-relaxed">
+                <strong>Day 1 is free — no login needed!</strong> But if you log in, your teacher
+                can see your quiz scores and track your progress across all 15 days.
+              </p>
+            </div>
+            <Link
+              to="/summer-camp/login?next=/summer-camp/module/1"
+              className="flex-shrink-0 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
+            >
+              Log in →
+            </Link>
+          </div>
+        )}
+
         {/* ── Video Section ── */}
         {mod.videoUrl && (
           <div className="mb-8">
@@ -552,6 +571,22 @@ export default function ModuleDetail() {
                 >
                   Try Again
                 </button>
+              )}
+
+              {/* Login nudge after quiz — only for unauthenticated visitors on Module 1 */}
+              {id === 1 && !isAuthenticated && (
+                <div className="mt-4 bg-white border border-blue-200 rounded-xl px-4 py-3 text-sm text-left">
+                  <p className="text-blue-800 font-semibold mb-1">📊 Want your teacher to see this score?</p>
+                  <p className="text-gray-500 text-xs mb-3">
+                    Log in so your progress is saved and your teacher can track how you're doing.
+                  </p>
+                  <Link
+                    to="/summer-camp/login?next=/summer-camp/module/1"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition"
+                  >
+                    Log in to save my progress →
+                  </Link>
+                </div>
               )}
             </div>
           )}
