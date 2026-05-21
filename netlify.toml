@@ -3,6 +3,12 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Allow YouTube iframes to load inside our site (required by Chrome)
+    Content-Security-Policy = "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'self'"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
