@@ -263,20 +263,24 @@ export default function SummerCamp() {
   return (
     <div style={{ fontFamily: "'Manrope', system-ui, sans-serif", background: C.bg, color: C.ink, overflowX: "hidden" }}>
 
-      {/* ── Promo strip ─────────────────────────────────────────────── */}
-      <div style={{
-        background: C.ink, color: C.yellow,
-        padding: "10px 24px", fontSize: 13, fontWeight: 600,
-        display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap",
-      }}>
-        <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
-        <span style={{ opacity: 0.4 }}>·</span>
-        <span style={{ color: "#fff" }}>Summer 2026 · Batches: June 1, 8 &amp; 15</span>
-      </div>
+      {/* ── Promo strip — fixed on desktop, hidden on mobile ────────── */}
+      {!mob && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          background: C.ink, color: C.yellow,
+          padding: "8px 24px", fontSize: 13, fontWeight: 600,
+          display: "flex", justifyContent: "center", alignItems: "center", gap: 16,
+          height: 36,
+        }}>
+          <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
+          <span style={{ opacity: 0.4 }}>·</span>
+          <span style={{ color: "#fff" }}>Summer 2026 · Batches: June 1, 8 &amp; 15</span>
+        </div>
+      )}
 
       {/* ── Header ──────────────────────────────────────────────────── */}
       <header style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 40,
+        position: "fixed", top: mob ? 0 : 36, left: 0, right: 0, zIndex: 40,
         background: "rgba(251,250,245,.94)", backdropFilter: "blur(10px)",
         borderBottom: `1px solid ${C.line}`,
       }}>
@@ -305,7 +309,7 @@ export default function SummerCamp() {
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section style={{ position: "relative", padding: mob ? "100px 20px 48px" : "136px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
+      <section style={{ position: "relative", padding: mob ? "100px 20px 48px" : "172px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1.1fr 1fr", gap: mob ? 32 : 56, alignItems: "center" }}>
           {/* Left copy */}
           <div>
