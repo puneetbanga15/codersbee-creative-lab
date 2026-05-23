@@ -304,8 +304,8 @@ export default function SummerCamp() {
               <span style={{ background: "#fff", color: C.ink, border: `1px solid ${C.line}`, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>
                 SUMMER 2026 · 15 DAYS · AGES 8–15
               </span>
-              <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
-                JUNE 1, 8 &amp; 15
+              <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                🗓 Pick your start: June 1, 8 or 15
               </span>
             </div>
 
@@ -667,6 +667,73 @@ export default function SummerCamp() {
         </div>
       </section>
 
+      {/* ── Batch Picker ────────────────────────────────────────────── */}
+      <section style={{ padding: "72px 32px", background: C.bg }}>
+        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              3 batches · limited seats each
+            </span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+              Pick your start date.
+            </h2>
+            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12 }}>
+              Same curriculum, same teacher — just pick what fits your summer.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
+            {[
+              { date: "June 1",  day: "Sunday",   urgency: "⚡ Filling fast", urgencyColor: "#E05C00", badge: "Earliest batch", badgeBg: C.yellow },
+              { date: "June 8",  day: "Sunday",   urgency: "✅ Spots open",    urgencyColor: C.green,   badge: "Most popular",  badgeBg: C.green },
+              { date: "June 15", day: "Sunday",   urgency: "✅ Spots open",    urgencyColor: C.green,   badge: "Last batch",    badgeBg: C.ink },
+            ].map(({ date, day, urgency, urgencyColor, badge, badgeBg }) => (
+              <div key={date} style={{
+                background: C.paper, border: `2.5px solid ${C.ink}`,
+                borderRadius: 22, padding: "32px 28px",
+                boxShadow: `8px 8px 0 ${C.ink}`,
+                display: "flex", flexDirection: "column", gap: 16,
+                position: "relative",
+              }}>
+                <div style={{
+                  position: "absolute", top: -14, left: 24,
+                  background: badgeBg, color: badgeBg === C.yellow ? C.ink : "#fff",
+                  padding: "4px 12px", borderRadius: 999,
+                  fontSize: 11, fontWeight: 700, border: `2px solid ${C.ink}`,
+                }}>{badge}</div>
+
+                <div>
+                  <div style={{ fontFamily: "'Fraunces',serif", fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.02em" }}>{date}</div>
+                  <div style={{ fontSize: 13, color: C.ink3, marginTop: 4 }}>{day} · 2026</div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: urgencyColor }}>
+                  {urgency}
+                </div>
+
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2 }}>
+                  {["15 self-paced lessons", "2× live sessions / week", "WhatsApp support"].map(f => (
+                    <li key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <Check/>{f}
+                    </li>
+                  ))}
+                </ul>
+
+                <button onClick={openWA} style={{
+                  marginTop: "auto", width: "100%", padding: "14px 18px",
+                  background: C.wa, color: "#fff", border: `2px solid ${C.ink}`,
+                  borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: "pointer",
+                  boxShadow: `0 4px 0 ${C.waD}`,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                }}>
+                  💬 Reserve a spot for {date}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Meet Manisha ────────────────────────────────────────────── */}
       <section id="teacher" style={{ padding: "88px 32px" }}>
         <div style={{
@@ -889,6 +956,19 @@ export default function SummerCamp() {
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <CTA kind="primary" size="xl" icon="▶" sub="No signup needed" onClick={openFree}>Start free lesson now</CTA>
             <CTA kind="whatsapp" size="xl" icon="💬" sub="Talk to a human first" onClick={openWA}>WhatsApp Manisha</CTA>
+          </div>
+          <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>🗓 Pick your start date:</span>
+            {["June 1", "June 8", "June 15"].map((d, i) => (
+              <button key={d} onClick={openWA} style={{
+                background: i === 0 ? C.ink : "rgba(14,17,22,.12)",
+                color: i === 0 ? "#fff" : C.ink,
+                border: `2px solid ${C.ink}`,
+                padding: "8px 16px", borderRadius: 999,
+                fontWeight: 700, fontSize: 13, cursor: "pointer",
+              }}>{d}</button>
+            ))}
+            <span style={{ fontSize: 12, opacity: 0.6 }}>· limited seats per batch</span>
           </div>
         </div>
       </section>
