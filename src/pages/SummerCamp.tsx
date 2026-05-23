@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { summerCampModules } from "@/data/summerCampModules";
 
@@ -214,6 +214,13 @@ function FreeLessonModal({ onClose, openWA }: { onClose: () => void; openWA: () 
 export default function SummerCamp() {
   const [modal, setModal] = useState<null | "free" | "wa">(null);
   const [faqOpen, setFaqOpen] = useState(0);
+  const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
+  useEffect(() => {
+    const fn = () => setVw(window.innerWidth);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+  const mob = vw < 768;
 
   const openFree = () => setModal("free");
   const openWA   = () => setModal("wa");
@@ -274,30 +281,32 @@ export default function SummerCamp() {
         borderBottom: `1px solid ${C.line}`,
       }}>
         <div style={{
-          maxWidth: 1240, margin: "0 auto", padding: "14px 32px",
-          display: "flex", alignItems: "center", gap: 24,
+          maxWidth: 1240, margin: "0 auto", padding: mob ? "12px 16px" : "14px 32px",
+          display: "flex", alignItems: "center", gap: 16,
         }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="CodersBee" style={{ height: 36 }}/>
-            <span style={{ fontWeight: 800, fontSize: 18, color: C.ink }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="CodersBee" style={{ height: 32 }}/>
+            <span style={{ fontWeight: 800, fontSize: mob ? 16 : 18, color: C.ink }}>
               Coders<span style={{ background: C.yellow, padding: "0 4px", borderRadius: 4 }}>Bee</span>
             </span>
           </Link>
-          <nav style={{ marginLeft: "auto", display: "flex", gap: 28, fontSize: 14, fontWeight: 600, color: C.ink2 }}>
-            {[["#what","What you'll build"],["#curriculum","15 lessons"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
-              <a key={h} href={h} style={{ color: C.ink2, textDecoration: "none" }}>{l}</a>
-            ))}
-          </nav>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <CTA kind="whatsapp" size="sm" icon="💬" onClick={openWA}>WhatsApp</CTA>
-            <CTA kind="primary" size="sm" onClick={openFree}>Try free lesson →</CTA>
+          {!mob && (
+            <nav style={{ marginLeft: "auto", display: "flex", gap: 28, fontSize: 14, fontWeight: 600, color: C.ink2 }}>
+              {[["#what","What you'll build"],["#curriculum","15 lessons"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
+                <a key={h} href={h} style={{ color: C.ink2, textDecoration: "none" }}>{l}</a>
+              ))}
+            </nav>
+          )}
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: mob ? "auto" : undefined }}>
+            <CTA kind="whatsapp" size="sm" icon="💬" onClick={openWA}>{mob ? "" : "WhatsApp"}</CTA>
+            <CTA kind="primary" size="sm" onClick={openFree}>{mob ? "Free lesson →" : "Try free lesson →"}</CTA>
           </div>
         </div>
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section style={{ position: "relative", padding: "136px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 56, alignItems: "center" }}>
+      <section style={{ position: "relative", padding: mob ? "100px 20px 48px" : "136px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1.1fr 1fr", gap: mob ? 32 : 56, alignItems: "center" }}>
           {/* Left copy */}
           <div>
             <div style={{ marginBottom: 18, display: "flex", gap: 8 }}>
@@ -343,8 +352,8 @@ export default function SummerCamp() {
             </div>
           </div>
 
-          {/* Right — code window */}
-          <div style={{ position: "relative", height: 560 }}>
+          {/* Right — code window (hidden on mobile) */}
+          {!mob && <div style={{ position: "relative", height: 560 }}>
             <div style={{
               position: "absolute", top: 30, right: 0, left: 10,
               background: "#fff", borderRadius: 18,
@@ -414,12 +423,13 @@ export default function SummerCamp() {
                 Manisha reviews every project
               </div>
             </div>
-          </div>
+          </div>}
         </div>
 
         {/* Trust strip */}
         <div style={{
-          marginTop: 64, display: "grid", gridTemplateColumns: "repeat(5, 1fr)",
+          marginTop: mob ? 36 : 64, display: "grid",
+          gridTemplateColumns: mob ? "repeat(2, 1fr)" : "repeat(5, 1fr)",
           border: `1.5px solid ${C.ink}`, borderRadius: 18, overflow: "hidden",
           background: C.paper,
         }}>
@@ -431,11 +441,13 @@ export default function SummerCamp() {
             { big: "June",  sm: "batches: 1st, 8th & 15th · 2026" },
           ].map((s, i) => (
             <div key={i} style={{
-              padding: "20px 22px", ...(i < 4 ? sep : {}),
+              padding: mob ? "14px 16px" : "20px 22px",
+              borderRight: mob ? (i % 2 === 0 ? `1.5px solid ${C.ink}` : "none") : (i < 4 ? `1.5px solid ${C.ink}` : "none"),
+              borderBottom: mob && i < 4 ? `1.5px solid ${C.ink}` : "none",
               background: i === 1 ? C.yellow : C.paper,
             }}>
-              <div style={{ fontFamily: "'Fraunces',serif", fontSize: 34, fontWeight: 900, lineHeight: 1 }}>{s.big}</div>
-              <div style={{ fontSize: 12, color: C.ink2, marginTop: 7, lineHeight: 1.4 }}>{s.sm}</div>
+              <div style={{ fontFamily: "'Fraunces',serif", fontSize: mob ? 26 : 34, fontWeight: 900, lineHeight: 1 }}>{s.big}</div>
+              <div style={{ fontSize: 11, color: C.ink2, marginTop: 5, lineHeight: 1.4 }}>{s.sm}</div>
             </div>
           ))}
         </div>
@@ -448,7 +460,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Perfect Combo ───────────────────────────────────────────── */}
-      <section style={{ padding: "88px 32px", background: C.bg2 }}>
+      <section style={{ padding: mob ? "56px 20px" : "88px 32px", background: C.bg2 }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
@@ -461,7 +473,7 @@ export default function SummerCamp() {
               Most online courses are one or the other. This camp is both — and that's why kids stick with it.
             </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: mob ? 16 : 24 }}>
             {[
               { icon: "🎬", color: C.blue,  t: "Self-paced lessons",        d: "Watch, read, code — all in one page. No installing anything. Replay anything anytime." },
               { icon: "👩‍🏫", color: C.green, t: "Live with Manisha · 2×/wk", d: "Two small-group sessions every week. Same teacher, same kids — they actually know each other by week 2." },
@@ -486,12 +498,12 @@ export default function SummerCamp() {
       </section>
 
       {/* ── A typical day ───────────────────────────────────────────── */}
-      <section style={{ padding: "88px 32px", background: C.bg }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", background: C.paper, border: `2px solid ${C.ink}`, borderRadius: 28, padding: "48px 48px", boxShadow: `8px 8px 0 ${C.ink}` }}>
-          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, textAlign: "center", marginBottom: 36, letterSpacing: "-0.02em" }}>
+      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", background: C.paper, border: `2px solid ${C.ink}`, borderRadius: 28, padding: mob ? "32px 24px" : "48px 48px", boxShadow: `8px 8px 0 ${C.ink}` }}>
+          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: mob ? 28 : 36, fontWeight: 900, textAlign: "center", marginBottom: 28, letterSpacing: "-0.02em" }}>
             A typical camp day 👇
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, textAlign: "center" }}>
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: mob ? 20 : 8, textAlign: "center" }}>
             {[
               { emoji: "🎬", step: "Watch",  desc: "Short intro video to set the scene" },
               { emoji: "📖", step: "Read",   desc: "Go through the lesson at your own pace" },
@@ -517,7 +529,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── What you'll build ───────────────────────────────────────── */}
-      <section id="what" style={{ padding: "88px 32px" }}>
+      <section id="what" style={{ padding: mob ? "48px 20px" : "88px 32px" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 48 }}>
             <div>
@@ -533,7 +545,7 @@ export default function SummerCamp() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 14 }}>
+          <div style={{ display: mob ? "flex" : "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 14, overflowX: mob ? "auto" : "visible", paddingBottom: mob ? 8 : 0 }}>
             {/* Project 1 — Number-guessing game */}
             {([
               {
@@ -606,6 +618,7 @@ export default function SummerCamp() {
               <div key={i} style={{
                 background: C.paper, borderRadius: 16, border: `2px solid ${C.ink}`,
                 padding: 18, display: "flex", flexDirection: "column", gap: 10, minHeight: 280,
+                minWidth: mob ? 240 : "auto", flexShrink: mob ? 0 : undefined,
               }}>
                 {p.preview}
                 <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.ink3, textTransform: "uppercase", letterSpacing: "0.08em" }}>{p.tag}</span>
@@ -618,7 +631,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Curriculum ──────────────────────────────────────────────── */}
-      <section id="curriculum" style={{ padding: "88px 32px", background: C.ink, color: "#fff" }}>
+      <section id="curriculum" style={{ padding: mob ? "56px 20px" : "88px 32px", background: C.ink, color: "#fff" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 40 }}>
             <div>
@@ -634,7 +647,7 @@ export default function SummerCamp() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 10 }}>
             {lessons.map(l => (
               <Link key={l.n} to={`/summer-camp/module/${l.n}`} style={{
                 padding: "14px 18px", borderRadius: 12, textDecoration: "none",
@@ -668,7 +681,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Batch Picker ────────────────────────────────────────────── */}
-      <section style={{ padding: "72px 32px", background: C.bg }}>
+      <section style={{ padding: mob ? "48px 20px" : "72px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1060, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
@@ -682,7 +695,7 @@ export default function SummerCamp() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
             {[
               { date: "June 1",  day: "Sunday",   urgency: "⚡ Filling fast", urgencyColor: "#E05C00", badge: "Earliest batch", badgeBg: C.yellow },
               { date: "June 8",  day: "Sunday",   urgency: "✅ Spots open",    urgencyColor: C.green,   badge: "Most popular",  badgeBg: C.green },
@@ -735,13 +748,13 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Meet Manisha ────────────────────────────────────────────── */}
-      <section id="teacher" style={{ padding: "88px 32px" }}>
+      <section id="teacher" style={{ padding: mob ? "48px 20px" : "88px 32px" }}>
         <div style={{
           maxWidth: 1160, margin: "0 auto",
           background: C.paper, border: `2px solid ${C.ink}`,
-          borderRadius: 30, padding: "52px 52px",
+          borderRadius: 30, padding: mob ? "32px 24px" : "52px 52px",
           boxShadow: `10px 10px 0 ${C.ink}`,
-          display: "grid", gridTemplateColumns: "300px 1fr", gap: 48, alignItems: "center",
+          display: "grid", gridTemplateColumns: mob ? "1fr" : "300px 1fr", gap: mob ? 28 : 48, alignItems: "center",
         }}>
           <div style={{ position: "relative" }}>
             <div style={{
@@ -798,8 +811,8 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Parent dashboard preview ─────────────────────────────────── */}
-      <section style={{ padding: "88px 32px", background: C.bg2 }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 56, alignItems: "center" }}>
+      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg2 }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1.2fr", gap: mob ? 32 : 56, alignItems: "center" }}>
           <div>
             <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>For parents</span>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: "0 0 16px", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
@@ -865,7 +878,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Testimonials ────────────────────────────────────────────── */}
-      <section style={{ padding: "88px 32px", background: C.bg }}>
+      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>Parents talking</span>
@@ -873,7 +886,7 @@ export default function SummerCamp() {
               Specific things they say after week 3.
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 18 }}>
             {[
               { q: "Aarav was glued to YouTube before. Now he's glued to his code editor. Worth every rupee for the screen-time pivot alone.", n: "Priya M.", r: "parent · Aarav, 10", loc: "Bengaluru" },
               { q: "Manisha Mam knows my daughter by name. She sends me a WhatsApp note after every session. Magical for an online course.", n: "Rohan S.", r: "parent · Anaya, 12", loc: "Mumbai" },
@@ -906,7 +919,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── FAQ ─────────────────────────────────────────────────────── */}
-      <section id="faq" style={{ padding: "88px 32px" }}>
+      <section id="faq" style={{ padding: mob ? "48px 20px" : "88px 32px" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
           <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>Parent questions</span>
           <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: "0 0 36px", letterSpacing: "-0.02em" }}>
@@ -934,11 +947,11 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Final CTA ───────────────────────────────────────────────── */}
-      <section style={{ padding: "88px 32px 64px" }}>
+      <section style={{ padding: mob ? "40px 20px 48px" : "88px 32px 64px" }}>
         <div style={{
           maxWidth: 1060, margin: "0 auto",
           background: C.yellow, border: `3px solid ${C.ink}`,
-          borderRadius: 30, padding: "64px 52px",
+          borderRadius: 30, padding: mob ? "36px 24px" : "64px 52px",
           position: "relative", overflow: "hidden",
           boxShadow: `14px 14px 0 ${C.ink}`,
         }}>
@@ -974,8 +987,8 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────────── */}
-      <footer style={{ background: C.ink, color: "rgba(255,255,255,.75)", padding: "48px 32px 28px" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40 }}>
+      <footer style={{ background: C.ink, color: "rgba(255,255,255,.75)", padding: mob ? "40px 20px 24px" : "48px 32px 28px" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: mob ? "1fr 1fr" : "2fr 1fr 1fr 1fr", gap: mob ? 28 : 40 }}>
           <div>
             <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
               <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="" style={{ height: 32 }}/>
