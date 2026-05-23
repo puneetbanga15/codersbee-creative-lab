@@ -269,7 +269,7 @@ export default function SummerCamp() {
 
       {/* ── Header ──────────────────────────────────────────────────── */}
       <header style={{
-        position: "sticky", top: 0, zIndex: 40,
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 40,
         background: "rgba(251,250,245,.94)", backdropFilter: "blur(10px)",
         borderBottom: `1px solid ${C.line}`,
       }}>
@@ -296,13 +296,13 @@ export default function SummerCamp() {
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section style={{ position: "relative", padding: "64px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
+      <section style={{ position: "relative", padding: "136px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 56, alignItems: "center" }}>
           {/* Left copy */}
           <div>
             <div style={{ marginBottom: 18, display: "flex", gap: 8 }}>
               <span style={{ background: "#fff", color: C.ink, border: `1px solid ${C.line}`, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>
-                SUMMER 2026 · 15 DAYS · AGES 10–14
+                SUMMER 2026 · 15 DAYS · AGES 8–15
               </span>
               <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
                 JUNE 1, 8 &amp; 15
@@ -324,7 +324,7 @@ export default function SummerCamp() {
               Build. Create. Think. With <strong style={{ color: C.blue }}>Python</strong> & <strong style={{ color: C.green }}>AI</strong>.
             </p>
             <p style={{ fontSize: 15, color: C.ink2, marginBottom: 28, maxWidth: 500 }}>
-              15 lessons · self-paced + 2× live with Manisha · WhatsApp support · ages 10–14
+              15 lessons · self-paced + 2× live with Manisha · WhatsApp support · ages 8–15
             </p>
 
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
@@ -904,7 +904,7 @@ export default function SummerCamp() {
               </span>
             </Link>
             <p style={{ fontSize: 13, marginTop: 14, maxWidth: 300, lineHeight: 1.6, opacity: 0.75 }}>
-              Live + self-paced coding for kids 10–14. Built around a real teacher who actually knows your kid's name.
+              Live + self-paced coding for kids 8–15. Built around a real teacher who actually knows your kid's name.
             </p>
           </div>
           {[
