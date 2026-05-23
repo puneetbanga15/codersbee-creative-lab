@@ -264,7 +264,7 @@ export default function SummerCamp() {
       }}>
         <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
         <span style={{ opacity: 0.4 }}>·</span>
-        <span style={{ color: "#fff" }}>Summer 2025 · limited seats</span>
+        <span style={{ color: "#fff" }}>Summer 2026 · Batches: June 1, 8 &amp; 15</span>
       </div>
 
       {/* ── Header ──────────────────────────────────────────────────── */}
@@ -302,10 +302,10 @@ export default function SummerCamp() {
           <div>
             <div style={{ marginBottom: 18, display: "flex", gap: 8 }}>
               <span style={{ background: "#fff", color: C.ink, border: `1px solid ${C.line}`, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>
-                SUMMER 2025 · 15 DAYS · AGES 10–14
+                SUMMER 2026 · 15 DAYS · AGES 10–14
               </span>
               <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
-                STARTS JUNE
+                JUNE 1, 8 &amp; 15
               </span>
             </div>
 
@@ -344,7 +344,7 @@ export default function SummerCamp() {
           </div>
 
           {/* Right — code window */}
-          <div style={{ position: "relative", height: 520 }}>
+          <div style={{ position: "relative", height: 560 }}>
             <div style={{
               position: "absolute", top: 30, right: 0, left: 10,
               background: "#fff", borderRadius: 18,
@@ -386,30 +386,33 @@ export default function SummerCamp() {
               Real student · lesson 13
             </div>
 
-            {/* floating chips */}
+            {/* floating chips — sit below the code window in a tidy row */}
             <div style={{
-              position: "absolute", bottom: 100, left: -8,
-              background: C.blue, color: "#fff", padding: "11px 15px", borderRadius: 12,
-              fontWeight: 700, fontSize: 13, transform: "rotate(-6deg)",
-              border: `2px solid ${C.ink}`, boxShadow: "0 10px 20px -8px rgba(30,91,183,.4)",
-              animation: "float 4s ease-in-out infinite",
-            }}>🐍 Python · 9 lessons</div>
-            <div style={{
-              position: "absolute", bottom: 40, right: -10,
-              background: C.green, color: "#fff", padding: "11px 15px", borderRadius: 12,
-              fontWeight: 700, fontSize: 13, transform: "rotate(5deg)",
-              border: `2px solid ${C.ink}`, boxShadow: "0 10px 20px -8px rgba(34,165,92,.4)",
-              animation: "float 4.5s ease-in-out infinite",
-            }}>🤖 AI · 6 lessons</div>
-            <div style={{
-              position: "absolute", bottom: -10, left: 60,
-              background: "#fff", color: C.ink, padding: "9px 13px", borderRadius: 12,
-              fontWeight: 700, fontSize: 12, transform: "rotate(3deg)",
-              border: `2px solid ${C.ink}`,
-              display: "flex", alignItems: "center", gap: 8,
+              position: "absolute", bottom: 16, left: 0, right: 0,
+              display: "flex", gap: 10, justifyContent: "flex-start", flexWrap: "wrap",
+              padding: "0 10px",
             }}>
-              <img src="/manisha.png" alt="" style={{ width: 26, height: 26, borderRadius: 999, objectFit: "cover" }}/>
-              Manisha reviews every project
+              <div style={{
+                background: C.blue, color: "#fff", padding: "10px 15px", borderRadius: 12,
+                fontWeight: 700, fontSize: 13, transform: "rotate(-3deg)",
+                border: `2px solid ${C.ink}`, boxShadow: "0 8px 18px -6px rgba(30,91,183,.4)",
+                animation: "float 4s ease-in-out infinite", whiteSpace: "nowrap",
+              }}>🐍 Python · 9 lessons</div>
+              <div style={{
+                background: C.green, color: "#fff", padding: "10px 15px", borderRadius: 12,
+                fontWeight: 700, fontSize: 13, transform: "rotate(3deg)",
+                border: `2px solid ${C.ink}`, boxShadow: "0 8px 18px -6px rgba(34,165,92,.4)",
+                animation: "float 4.5s ease-in-out infinite", whiteSpace: "nowrap",
+              }}>🤖 AI · 6 lessons</div>
+              <div style={{
+                background: "#fff", color: C.ink, padding: "10px 13px", borderRadius: 12,
+                fontWeight: 700, fontSize: 12, transform: "rotate(-1.5deg)",
+                border: `2px solid ${C.ink}`,
+                display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
+              }}>
+                <img src="/manisha.png" alt="" style={{ width: 24, height: 24, borderRadius: 999, objectFit: "cover" }}/>
+                Manisha reviews every project
+              </div>
             </div>
           </div>
         </div>
@@ -425,7 +428,7 @@ export default function SummerCamp() {
             { big: "5.0★",  sm: "rated by 1,000+ students · Manisha" },
             { big: "2×/wk", sm: "live sessions + self-paced anytime" },
             { big: "Free",  sm: "Day 1 — no signup, no card" },
-            { big: "June",  sm: "cohort starts · limited seats" },
+            { big: "June",  sm: "batches: 1st, 8th & 15th · 2026" },
           ].map((s, i) => (
             <div key={i} style={{
               padding: "20px 22px", ...(i < 4 ? sep : {}),
@@ -531,20 +534,80 @@ export default function SummerCamp() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 14 }}>
-            {[
-              { tag: "Python · Day 8", emoji: "🎮", t: "Number-guessing game",  d: "Variables, loops, randomness. The first thing they can show their family.", c: C.blue },
-              { tag: "Python · Day 9", emoji: "📖", t: "Story generator",        d: "Mad-libs style — lists, input, string formatting. Hilarious every run.",    c: C.blue },
-              { tag: "AI · Day 13",    emoji: "💬", t: "Homework helper chatbot",d: "Prompts, system roles, safety rails. Kid-built, kid-tested.",               c: C.green },
-              { tag: "AI · Day 14",    emoji: "🎨", t: "AI image generator",     d: "Type a description, get an image. They see AI create something from words.", c: C.green },
-              { tag: "Day 15",         emoji: "🚀", t: "Demo Day — their choice",d: "Design and build their own original AI app. Then demo it to family.",        c: C.yellowD },
-            ].map((p, i) => (
+            {/* Project 1 — Number-guessing game */}
+            {([
+              {
+                tag: "Python · Day 8", t: "Number-guessing game",
+                d: "Variables, loops, randomness. The first thing they can show their family.",
+                preview: (
+                  <div style={{ height: 110, borderRadius: 10, background: "#0D1117", border: `2px solid ${C.ink}`, padding: "10px 12px", fontFamily: "'JetBrains Mono',monospace", fontSize: 11, lineHeight: 1.6, overflow: "hidden" }}>
+                    <div style={{ color: "#8B949E" }}>Guess a number 1–100:</div>
+                    <div style={{ color: "#79C0FF" }}>&gt; 42</div>
+                    <div style={{ color: "#FF7B72" }}>↑ too low</div>
+                    <div style={{ color: "#79C0FF" }}>&gt; 73</div>
+                    <div style={{ color: "#3FB950" }}>🎉 you got it!</div>
+                  </div>
+                ),
+              },
+              {
+                tag: "Python · Day 9", t: "Story generator",
+                d: "Mad-libs style — lists, input, string formatting. Hilarious every run.",
+                preview: (
+                  <div style={{ height: 110, borderRadius: 10, background: "#3B2F8F", border: `2px solid ${C.ink}`, padding: "10px 12px", fontSize: 11, lineHeight: 1.7, overflow: "hidden" }}>
+                    <div style={{ color: "#fff" }}>The <span style={{ background: C.yellow, color: C.ink, borderRadius: 3, padding: "1px 5px", fontWeight: 700 }}>purple</span> cat ate a</div>
+                    <div style={{ color: "#fff" }}><span style={{ background: C.yellow, color: C.ink, borderRadius: 3, padding: "1px 5px", fontWeight: 700 }}>taco</span> and flew to <span style={{ background: C.blue, color: "#fff", borderRadius: 3, padding: "1px 5px", fontWeight: 700 }}>Mars</span>.</div>
+                    <div style={{ color: "#fff", marginTop: 4 }}>It said <span style={{ background: C.green, color: "#fff", borderRadius: 3, padding: "1px 5px", fontWeight: 700 }}>"meowza!"</span></div>
+                  </div>
+                ),
+              },
+              {
+                tag: "AI · Day 13", t: "Homework helper chatbot",
+                d: "Prompts, system roles, safety rails. Kid-built, kid-tested.",
+                preview: (
+                  <div style={{ height: 110, borderRadius: 10, background: "#1A5C3A", border: `2px solid ${C.ink}`, padding: "10px 12px", fontSize: 11, lineHeight: 1.5, display: "flex", flexDirection: "column", gap: 6, overflow: "hidden" }}>
+                    <div style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "5px 8px", borderRadius: "8px 8px 8px 2px", maxWidth: "80%" }}>What's a fraction, simply?</div>
+                    <div style={{ background: C.yellow, color: C.ink, padding: "5px 8px", borderRadius: "8px 8px 2px 8px", maxWidth: "90%", alignSelf: "flex-end", fontWeight: 600, fontSize: 10 }}>🍕 1/4 = one of four slices. It's a slice of a whole!</div>
+                  </div>
+                ),
+              },
+              {
+                tag: "AI · Day 14", t: "AI image generator",
+                d: "Type a description, get an image. They see AI create something from words.",
+                preview: (
+                  <div style={{ height: 110, borderRadius: 10, background: "#2C7A4B", border: `2px solid ${C.ink}`, padding: "10px 12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, overflow: "hidden" }}>
+                    <div style={{ fontSize: 36 }}>🐕</div>
+                    <div style={{ background: "rgba(255,255,255,.2)", color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 10, fontFamily: "'JetBrains Mono',monospace", display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontWeight: 700, color: C.yellow }}>PREDICTION</span> dog · 94%
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                tag: "Day 15", t: "Demo Day — their choice",
+                d: "Design and build their own original AI app. Then demo it to family.",
+                preview: (
+                  <div style={{ height: 110, borderRadius: 10, background: C.yellow, border: `2px solid ${C.ink}`, padding: "10px 12px", overflow: "hidden" }}>
+                    <div style={{ background: C.ink, borderRadius: 8, padding: "6px 10px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ color: C.yellow, fontSize: 10, fontWeight: 700 }}>✦ Study Buddy</span>
+                        <span style={{ color: "#555", fontSize: 9 }}>by Aanya · v1</span>
+                        <span style={{ background: C.green, color: "#fff", padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700 }}>● live</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        {["quiz me", "explain"].map(btn => (
+                          <span key={btn} style={{ background: "rgba(255,255,255,.1)", color: "#ccc", padding: "3px 8px", borderRadius: 4, fontSize: 9 }}>{btn}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            ] as Array<{ tag: string; t: string; d: string; preview: React.ReactNode }>).map((p, i) => (
               <div key={i} style={{
                 background: C.paper, borderRadius: 16, border: `2px solid ${C.ink}`,
-                padding: 18, display: "flex", flexDirection: "column", gap: 10, minHeight: 260,
+                padding: 18, display: "flex", flexDirection: "column", gap: 10, minHeight: 280,
               }}>
-                <div style={{ height: 100, borderRadius: 10, background: p.c, border: `2px solid ${C.ink}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
-                  {p.emoji}
-                </div>
+                {p.preview}
                 <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.ink3, textTransform: "uppercase", letterSpacing: "0.08em" }}>{p.tag}</span>
                 <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0, lineHeight: 1.25 }}>{p.t}</h3>
                 <p style={{ fontSize: 12, color: C.ink2, lineHeight: 1.5, margin: 0 }}>{p.d}</p>
