@@ -81,7 +81,7 @@ export default function ModuleDetail() {
     if (quizAnswers.filter((a) => a !== null && a !== undefined).length < mod.quiz.length) return;
     const score = mod.quiz.filter((q, i) => quizAnswers[i] === q.correct).length;
     setQuizSubmitted(true);
-    // Save progress to server (fire-and-forget — don't block the UI)
+    // Save progress (fire-and-forget — don't block the UI)
     if (token) {
       fetch("/.netlify/functions/camp-progress", {
         method: "POST",

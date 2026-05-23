@@ -1,8 +1,8 @@
-import type { Handler } from "@netlify/functions";
+import type { Config } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
 import crypto from "crypto";
 
-// ── token verification (copied from camp-auth) ───────────────────────────────
+// ── token verification ────────────────────────────────────────────────────────
 
 const SECRET = process.env.CAMP_AUTH_SECRET ?? "change-me-in-netlify";
 
@@ -28,61 +28,60 @@ function verifyToken(token: string): { username: string; role: Role } | null {
 
 // ── types ─────────────────────────────────────────────────────────────────────
 
-export interface ModuleProgress {
+interface ModuleProgress {
   moduleId: number;
   score: number;
   total: number;
-  completedAt: string; // ISO string
+  completedAt: string;
 }
 
-export interface StudentProgress {
+interface StudentProgress {
   username: string;
   modules: Record<number, ModuleProgress>;
 }
 
-// ── handler ───────────────────────────────────────────────────────────────────
+// ── CORS headers ──────────────────────────────────────────────────────────────
 
-const HEADERS = {
+const CORS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
-export const handler: Handler = async (event) => {
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers: HEADERS, body: "" };
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: CORS });
+}
+
+// ── handler (v2 format — required for Netlify Blobs to work) ─────────────────
+
+export default async (req: Request) => {
+  // CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: CORS });
   }
 
-  // Auth: expect "Bearer <token>" in Authorization header
-  const authHeader = event.headers["authorization"] ?? "";
+  // Auth
+  const authHeader = req.headers.get("authorization") ?? "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
   const auth = verifyToken(token);
-
-  if (!auth) {
-    return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: "Unauthorized" }) };
-  }
+  if (!auth) return json({ error: "Unauthorized" }, 401);
 
   const store = getStore("camp-progress");
 
-  // ── POST: student saves their quiz result ────────────────────────────────
-  if (event.httpMethod === "POST") {
-    if (auth.role !== "student") {
-      return { statusCode: 403, headers: HEADERS, body: JSON.stringify({ error: "Students only" }) };
-    }
+  // ── POST: student saves quiz result ────────────────────────────────────────
+  if (req.method === "POST") {
+    if (auth.role !== "student") return json({ error: "Students only" }, 403);
 
     let body: { moduleId?: number; score?: number; total?: number };
-    try {
-      body = JSON.parse(event.body ?? "{}");
-    } catch {
-      return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: "Invalid JSON" }) };
-    }
+    try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
 
     const { moduleId, score, total } = body;
     if (typeof moduleId !== "number" || typeof score !== "number" || typeof total !== "number") {
-      return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: "moduleId, score, total required" }) };
+      return json({ error: "moduleId, score, total required" }, 400);
     }
 
-    // Load existing progress for this student
+    // Load existing, only update if score improves
     let progress: StudentProgress;
     try {
       const existing = await store.get(auth.username, { type: "json" });
@@ -91,32 +90,19 @@ export const handler: Handler = async (event) => {
       progress = { username: auth.username, modules: {} };
     }
 
-    // Only update if this is a better score (allows retries)
     const prev = progress.modules[moduleId];
     if (!prev || score > prev.score) {
-      progress.modules[moduleId] = {
-        moduleId,
-        score,
-        total,
-        completedAt: new Date().toISOString(),
-      };
+      progress.modules[moduleId] = { moduleId, score, total, completedAt: new Date().toISOString() };
       await store.setJSON(auth.username, progress);
     }
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify({ saved: true, progress: progress.modules[moduleId] }),
-    };
+    return json({ saved: true, progress: progress.modules[moduleId] });
   }
 
-  // ── GET: teacher fetches all students' progress ──────────────────────────
-  if (event.httpMethod === "GET") {
-    if (auth.role !== "teacher") {
-      return { statusCode: 403, headers: HEADERS, body: JSON.stringify({ error: "Teachers only" }) };
-    }
+  // ── GET: teacher reads all students ───────────────────────────────────────
+  if (req.method === "GET") {
+    if (auth.role !== "teacher") return json({ error: "Teachers only" }, 403);
 
-    // List all student blobs
     const { blobs } = await store.list();
     const allProgress: StudentProgress[] = await Promise.all(
       blobs.map(async (blob) => {
@@ -129,12 +115,10 @@ export const handler: Handler = async (event) => {
       })
     );
 
-    return {
-      statusCode: 200,
-      headers: HEADERS,
-      body: JSON.stringify({ students: allProgress }),
-    };
+    return json({ students: allProgress });
   }
 
-  return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: "Method not allowed" }) };
+  return json({ error: "Method not allowed" }, 405);
 };
+
+export const config: Config = {};

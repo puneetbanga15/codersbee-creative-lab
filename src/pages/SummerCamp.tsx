@@ -1,497 +1,897 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { summerCampModules } from "@/data/summerCampModules";
-import {
-  Sun,
-  Rocket,
-  Star,
-  Trophy,
-  Clock,
-  BookOpen,
-  ChevronRight,
-  Zap,
-  Users,
-  CheckCircle,
-  Bot,
-  GraduationCap,
-  MessageCircle,
-  Lightbulb,
-} from "lucide-react";
 
-const features = [
-  {
-    icon: <BookOpen className="h-5 w-5" />,
-    title: "15 Daily Modules",
-    desc: "One module per day — perfectly paced for summer",
-  },
-  {
-    icon: <Zap className="h-5 w-5" />,
-    title: "Learn by Doing",
-    desc: "Every module has hands-on coding challenges",
-  },
-  {
-    icon: <Users className="h-5 w-5" />,
-    title: "Teacher Check-ins",
-    desc: "2× weekly teacher sessions for guidance & review",
-  },
-  {
-    icon: <Trophy className="h-5 w-5" />,
-    title: "Real AI Projects",
-    desc: "Build actual AI apps — chatbots, image tools & more",
-  },
-];
+/* ── Design tokens (matching the design file) ─────────────────────────── */
+const C = {
+  yellow:    "#FFC72C",
+  yellowD:   "#F2B705",
+  ink:       "#0E1116",
+  ink2:      "#3A4150",
+  ink3:      "#6A7180",
+  blue:      "#1E5BB7",
+  blueD:     "#154695",
+  green:     "#22A55C",
+  wa:        "#25D366",
+  waD:       "#128C7E",
+  bg:        "#FBFAF5",
+  bg2:       "#F4F1E8",
+  paper:     "#FFFFFF",
+  line:      "rgba(14,17,22,0.08)",
+};
 
-const phases = [
-  {
-    label: "Phase 1",
-    title: "Python Foundations",
-    days: "Days 1–9",
-    color: "bg-green-100 text-green-700 border-green-200",
-    dotColor: "bg-green-500",
-    modules: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    desc: "From zero to confident Python programmer",
-  },
-  {
-    label: "Phase 2",
-    title: "AI & Real Projects",
-    days: "Days 10–15",
-    color: "bg-violet-100 text-violet-700 border-violet-200",
-    dotColor: "bg-violet-500",
-    modules: [10, 11, 12, 13, 14, 15],
-    desc: "Apply Python to build real AI-powered apps",
-  },
-];
+const WA_NUMBER = "919996465023";
+const WA_URL = `https://wa.me/${WA_NUMBER}`;
+
+/* ── Shared primitives ───────────────────────────────────────────────── */
+
+function Check() {
+  return (
+    <span style={{
+      width: 20, height: 20, borderRadius: 999, background: C.green,
+      display: "inline-flex", alignItems: "center", justifyContent: "center",
+      color: "#fff", fontSize: 11, fontWeight: 800, flexShrink: 0,
+    }}>✓</span>
+  );
+}
+
+interface CTAProps {
+  kind?: "yellow" | "primary" | "whatsapp" | "outline";
+  size?: "sm" | "md" | "lg" | "xl";
+  icon?: string;
+  sub?: string;
+  onClick?: () => void;
+  href?: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}
+function CTA({ kind = "primary", size = "md", icon, sub, onClick, href, children, style }: CTAProps) {
+  const pad = { sm: "10px 16px", md: "14px 22px", lg: "18px 26px", xl: "22px 32px" }[size];
+  const fs  = { sm: 14, md: 15, lg: 17, xl: 19 }[size];
+  const br  = { sm: 10, md: 12, lg: 14, xl: 16 }[size];
+
+  const variants: Record<string, React.CSSProperties> = {
+    primary:  { background: C.ink, color: "#fff", boxShadow: `0 5px 0 #000` },
+    yellow:   { background: C.yellow, color: C.ink, boxShadow: `0 5px 0 ${C.yellowD}` },
+    whatsapp: { background: C.wa, color: "#fff", boxShadow: `0 5px 0 ${C.waD}` },
+    outline:  { background: "#fff", color: C.ink, border: `2px solid ${C.ink}` },
+  };
+
+  const base: React.CSSProperties = {
+    display: "inline-flex", alignItems: "center", gap: 10,
+    padding: pad, fontSize: fs, borderRadius: br,
+    fontWeight: 800, cursor: "pointer", border: "none",
+    fontFamily: "inherit", letterSpacing: "-0.01em",
+    transition: "transform .12s",
+    ...variants[kind], ...style,
+  };
+
+  const inner = (
+    <>
+      {icon && <span style={{ fontSize: fs * 1.1 }}>{icon}</span>}
+      <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1.1 }}>
+        {children}
+        {sub && <span style={{ fontSize: fs * 0.65, fontWeight: 600, opacity: 0.8, marginTop: 2 }}>{sub}</span>}
+      </span>
+    </>
+  );
+
+  if (href) return <Link to={href} style={{ ...base, textDecoration: "none" }}>{inner}</Link>;
+  return <button style={base} onClick={onClick}>{inner}</button>;
+}
+
+function Stars({ n = 5 }: { n?: number }) {
+  return <span style={{ color: C.yellowD, letterSpacing: 2, fontSize: 14 }}>{"★".repeat(n)}</span>;
+}
+
+/* ── Modal shell ─────────────────────────────────────────────────────── */
+function ModalShell({ children, onClose, width = 540 }: { children: React.ReactNode; onClose: () => void; width?: number }) {
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, background: "rgba(14,17,22,.7)", zIndex: 100,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
+      backdropFilter: "blur(6px)",
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width, maxWidth: "100%", background: C.paper,
+        borderRadius: 24, padding: 32, position: "relative",
+        border: `2.5px solid ${C.ink}`,
+        boxShadow: `10px 10px 0 rgba(0,0,0,.35)`,
+      }}>
+        <button onClick={onClose} style={{
+          position: "absolute", top: 14, right: 14,
+          width: 32, height: 32, borderRadius: 999,
+          background: C.bg2, border: `1.5px solid ${C.ink}`,
+          fontSize: 18, cursor: "pointer",
+        }}>×</button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ── WhatsApp modal ──────────────────────────────────────────────────── */
+function WhatsAppModal({ onClose }: { onClose: () => void }) {
+  const [msg, setMsg] = useState("Hi Manisha! I saw the Summer Coding Camp. Can my kid try the free lesson?");
+  const suggestions = [
+    "I want the free first lesson.",
+    "What time are the live classes?",
+    "My kid is 10 — is this OK?",
+    "Can I pay via UPI?",
+  ];
+  return (
+    <ModalShell onClose={onClose} width={520}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
+        <div style={{
+          width: 52, height: 52, borderRadius: "50%", background: C.yellow,
+          border: `2px solid ${C.ink}`, overflow: "hidden", flexShrink: 0,
+        }}>
+          <img src="/manisha.png" alt="Manisha Mam" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+        </div>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 18 }}>Manisha Mam</div>
+          <div style={{ fontSize: 12, color: C.green, fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 7, height: 7, borderRadius: 999, background: C.green, display: "inline-block" }}/>
+            usually replies in &lt;1 hour
+          </div>
+        </div>
+      </div>
+      <textarea value={msg} onChange={e => setMsg(e.target.value)} style={{
+        width: "100%", padding: 14, fontSize: 14, borderRadius: 12,
+        border: `2px solid ${C.ink}`, fontFamily: "inherit", lineHeight: 1.5,
+        background: C.bg, resize: "vertical", minHeight: 90, boxSizing: "border-box",
+      }}/>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
+        {suggestions.map(s => (
+          <button key={s} onClick={() => setMsg(s)} style={{
+            background: C.bg2, padding: "6px 12px", borderRadius: 999,
+            fontSize: 12, fontWeight: 600, color: C.ink2, border: `1.5px solid ${C.line}`,
+            cursor: "pointer",
+          }}>{s}</button>
+        ))}
+      </div>
+      <button onClick={() => { window.open(`${WA_URL}?text=${encodeURIComponent(msg)}`, "_blank"); onClose(); }}
+        style={{
+          marginTop: 18, width: "100%", padding: "16px 20px",
+          background: C.wa, color: "#fff", border: `2px solid ${C.ink}`,
+          borderRadius: 12, fontWeight: 800, fontSize: 16, cursor: "pointer",
+          boxShadow: `0 4px 0 ${C.waD}`, display: "flex", alignItems: "center",
+          justifyContent: "center", gap: 10,
+        }}>💬 Send on WhatsApp →</button>
+      <p style={{ fontSize: 11, color: C.ink3, marginTop: 8, textAlign: "center" }}>
+        Opens WhatsApp with your message pre-filled. You hit send. Done.
+      </p>
+    </ModalShell>
+  );
+}
+
+/* ── Free lesson modal ───────────────────────────────────────────────── */
+function FreeLessonModal({ onClose, openWA }: { onClose: () => void; openWA: () => void }) {
+  return (
+    <ModalShell onClose={onClose}>
+      <div style={{ display: "inline-block", background: C.green, color: "#fff", padding: "5px 12px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 10 }}>
+        No signup needed
+      </div>
+      <h2 style={{ fontSize: 28, fontWeight: 900, margin: "0 0 8px", fontFamily: "'Fraunces', serif" }}>
+        Day 1 is completely free.
+      </h2>
+      <p style={{ fontSize: 14, color: C.ink2, marginTop: 4, marginBottom: 20 }}>
+        No login, no card, no email. Just click and start coding right now.
+      </p>
+      <Link to="/summer-camp/module/1" onClick={onClose} style={{
+        display: "flex", alignItems: "center", gap: 14,
+        background: C.yellow, color: C.ink, padding: "18px 22px",
+        borderRadius: 14, border: `2px solid ${C.ink}`,
+        boxShadow: `0 5px 0 ${C.yellowD}`,
+        fontWeight: 800, fontSize: 17, textDecoration: "none", marginBottom: 12,
+      }}>
+        <span style={{ fontSize: 28 }}>🐍</span>
+        <span>
+          <span style={{ display: "block" }}>Day 1 — Hello, Python!</span>
+          <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>15 min · watch, read, code — all in one page</span>
+        </span>
+        <span style={{ marginLeft: "auto" }}>→</span>
+      </Link>
+      <div style={{
+        marginTop: 16, padding: 14, background: C.bg2, borderRadius: 12,
+        border: `1.5px dashed ${C.ink}`, display: "flex", justifyContent: "space-between",
+        alignItems: "center", gap: 12,
+      }}>
+        <p style={{ fontSize: 13, color: C.ink2, margin: 0 }}>Want Manisha to guide your kid personally?</p>
+        <button onClick={() => { onClose(); openWA(); }} style={{
+          background: C.wa, color: "#fff", padding: "10px 16px", borderRadius: 10,
+          fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer",
+        }}>💬 WhatsApp</button>
+      </div>
+    </ModalShell>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   MAIN PAGE
+   ──────────────────────────────────────────────────────────────────── */
 
 export default function SummerCamp() {
+  const [modal, setModal] = useState<null | "free" | "wa">(null);
+  const [faqOpen, setFaqOpen] = useState(0);
+
+  const openFree = () => setModal("free");
+  const openWA   = () => setModal("wa");
+
+  const lessons = [
+    { n: 1,  t: "Hello, Python!",                      track: "P", kind: "F" },
+    { n: 2,  t: "Strings & Numbers",                   track: "P", kind: "F" },
+    { n: 3,  t: "Variables — give Python a memory",    track: "P", kind: "F" },
+    { n: 4,  t: "Input & Making Decisions",             track: "P", kind: "F" },
+    { n: 5,  t: "Loops — do it again!",                track: "P", kind: "F" },
+    { n: 6,  t: "Lists & Collections",                 track: "P", kind: "F" },
+    { n: 7,  t: "Functions — reusable code",           track: "P", kind: "F" },
+    { n: 8,  t: "Project: Number-guessing game",       track: "P", kind: "Proj" },
+    { n: 9,  t: "Project: Story generator",            track: "P", kind: "Proj" },
+    { n: 10, t: "What is AI, really?",                 track: "A", kind: "F" },
+    { n: 11, t: "Talking to AI — prompting",           track: "A", kind: "F" },
+    { n: 12, t: "AI Safety & Ethics for Kids",         track: "A", kind: "F" },
+    { n: 13, t: "Project: Homework helper chatbot",    track: "A", kind: "Proj" },
+    { n: 14, t: "Project: AI Image Generator",         track: "A", kind: "Proj" },
+    { n: 15, t: "Demo Day — show your family!",        track: "A", kind: "Proj" },
+  ];
+
+  const faq = [
+    ["My kid has never coded before — is this right for them?",
+     "Yes — this is built for first-timers. Day 1 starts at \"what is code?\" By Day 8 they ship their first game."],
+    ["Is Day 1 really free? Do I need to sign up?",
+     "Truly free. No signup, no card, no email. Click 'Start free lesson' and your kid is coding in 30 seconds. We ask for nothing until you're sure."],
+    ["What does my child need to get started?",
+     "Any laptop with Chrome. We provide the coding environment in-browser — no installs, no setup. Python runs right inside the lesson page."],
+    ["How does the teacher track progress?",
+     "Manisha has a live dashboard showing each student's quiz scores and completed modules. She also sends WhatsApp updates after live sessions."],
+    ["Can I pay in INR?",
+     "Yes — UPI, cards, or a WhatsApp invoice. Message Manisha and she'll send the right link in 2 minutes."],
+    ["What if my kid doesn't enjoy it after the first week?",
+     "Full refund, no questions, no forms. Just message Manisha. We can say that because almost nobody asks."],
+  ];
+
+  const sep = { borderRight: `1.5px solid ${C.ink}` };
+
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
+    <div style={{ fontFamily: "'Manrope', system-ui, sans-serif", background: C.bg, color: C.ink, overflowX: "hidden" }}>
 
-      {/* Hero */}
-      <section className="pt-24 pb-16 bg-gradient-to-b from-yellow-50 via-orange-50 to-white">
-        <div className="container mx-auto px-4 max-w-5xl text-center">
-          <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-            <Sun className="h-4 w-4" />
-            Summer 2025 · 15 Modules · Self-Paced
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-5 leading-tight">
-            Python + AI{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-              Summer Camp
-            </span>{" "}
-            🐍🤖
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-            15 days. From printing "Hello World" to building your own AI chatbot.
-            Kids aged 10–14 learn Python the fun way — one module a day, at
-            their own pace, with a teacher steering every few days.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mb-10">
-            <Link
-              to="/summer-camp/module/1"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold px-8 py-3.5 rounded-xl text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-            >
-              <Rocket className="h-5 w-5" />
-              Start Day 1 — Free!
-            </Link>
-            <a
-              href="#modules"
-              className="inline-flex items-center gap-2 bg-white text-gray-700 font-semibold px-8 py-3.5 rounded-xl text-lg border-2 border-gray-200 hover:border-orange-300 transition-all duration-200"
-            >
-              Browse All 15 Modules
-              <ChevronRight className="h-5 w-5" />
-            </a>
-          </div>
+      {/* ── Promo strip ─────────────────────────────────────────────── */}
+      <div style={{
+        background: C.ink, color: C.yellow,
+        padding: "10px 24px", fontSize: 13, fontWeight: 600,
+        display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap",
+      }}>
+        <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span style={{ color: "#fff" }}>Summer 2025 · limited seats</span>
+      </div>
 
-          {/* Stats row */}
-          <div className="flex flex-wrap justify-center gap-8 text-center">
-            {[
-              { num: "15", label: "Modules" },
-              { num: "10–14", label: "Age Group" },
-              { num: "2×/week", label: "Teacher Reviews" },
-              { num: "1", label: "AI App Built" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-3xl font-extrabold text-orange-500">
-                  {s.num}
-                </div>
-                <div className="text-sm text-gray-500 mt-0.5">{s.label}</div>
-              </div>
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <header style={{
+        position: "sticky", top: 0, zIndex: 40,
+        background: "rgba(251,250,245,.94)", backdropFilter: "blur(10px)",
+        borderBottom: `1px solid ${C.line}`,
+      }}>
+        <div style={{
+          maxWidth: 1240, margin: "0 auto", padding: "14px 32px",
+          display: "flex", alignItems: "center", gap: 24,
+        }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="CodersBee" style={{ height: 36 }}/>
+            <span style={{ fontWeight: 800, fontSize: 18, color: C.ink }}>
+              Coders<span style={{ background: C.yellow, padding: "0 4px", borderRadius: 4 }}>Bee</span>
+            </span>
+          </Link>
+          <nav style={{ marginLeft: "auto", display: "flex", gap: 28, fontSize: 14, fontWeight: 600, color: C.ink2 }}>
+            {[["#what","What you'll build"],["#curriculum","15 lessons"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
+              <a key={h} href={h} style={{ color: C.ink2, textDecoration: "none" }}>{l}</a>
             ))}
+          </nav>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <CTA kind="whatsapp" size="sm" icon="💬" onClick={openWA}>WhatsApp</CTA>
+            <CTA kind="primary" size="sm" onClick={openFree}>Try free lesson →</CTA>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* How It Works */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-3">
-            How the Camp Works
-          </h2>
-          <p className="text-center text-gray-500 mb-10">
-            Designed for kids who learn best when they drive their own journey
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="bg-gradient-to-b from-orange-50 to-white border border-orange-100 rounded-2xl p-6 text-center"
-              >
-                <div className="inline-flex items-center justify-center w-10 h-10 bg-orange-100 text-orange-600 rounded-full mb-4">
-                  {f.icon}
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">{f.title}</h3>
-                <p className="text-sm text-gray-500">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Phase breakdown */}
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {phases.map((phase) => (
-              <div
-                key={phase.label}
-                className={`border-2 rounded-2xl p-6 ${phase.color}`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold uppercase tracking-widest opacity-70">
-                    {phase.label}
-                  </span>
-                  <span className="text-xs font-semibold bg-white/60 px-2 py-0.5 rounded-full">
-                    {phase.days}
-                  </span>
-                </div>
-                <h3 className="text-xl font-extrabold mb-1">{phase.title}</h3>
-                <p className="text-sm opacity-80 mb-4">{phase.desc}</p>
-                <div className="flex flex-wrap gap-2">
-                  {phase.modules.map((m) => (
-                    <Link
-                      key={m}
-                      to={`/summer-camp/module/${m}`}
-                      className="inline-flex items-center gap-1 bg-white/70 hover:bg-white text-xs font-semibold px-2.5 py-1 rounded-full transition"
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${phase.dotColor}`}
-                      />
-                      Day {m}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Teacher + AI Section */}
-      <section className="py-16 bg-gradient-to-b from-violet-50 to-white">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 bg-violet-100 text-violet-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
-              <GraduationCap className="h-4 w-4" />
-              The CodersBee Difference
+      {/* ── Hero ────────────────────────────────────────────────────── */}
+      <section style={{ position: "relative", padding: "64px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 56, alignItems: "center" }}>
+          {/* Left copy */}
+          <div>
+            <div style={{ marginBottom: 18, display: "flex", gap: 8 }}>
+              <span style={{ background: "#fff", color: C.ink, border: `1px solid ${C.line}`, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>
+                SUMMER 2025 · 15 DAYS · AGES 10–14
+              </span>
+              <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
+                STARTS JUNE
+              </span>
             </div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">
-              Not just videos. <span className="text-violet-600">Teacher + AI,</span> together.
-            </h2>
-            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
-              Your child isn't learning alone. Every module has an AI coding companion
-              to help instantly — and a real teacher who checks in, reviews progress,
-              and gives personal guidance.
+
+            <h1 style={{
+              fontFamily: "'Fraunces', serif", fontWeight: 900,
+              fontSize: "clamp(60px, 7vw, 96px)", lineHeight: 0.93,
+              letterSpacing: "-0.03em", marginBottom: 24,
+            }}>
+              SUMMER<br/>
+              <span style={{ color: C.yellowD, WebkitTextStroke: `2px ${C.ink}` } as React.CSSProperties}>
+                CODING CAMP
+              </span>
+            </h1>
+
+            <p style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.35, marginBottom: 14, maxWidth: 520 }}>
+              Build. Create. Think. With <strong style={{ color: C.blue }}>Python</strong> & <strong style={{ color: C.green }}>AI</strong>.
             </p>
-          </div>
+            <p style={{ fontSize: 15, color: C.ink2, marginBottom: 28, maxWidth: 500 }}>
+              15 lessons · self-paced + 2× live with Manisha · WhatsApp support · ages 10–14
+            </p>
 
-          {/* Two column cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {/* AI side */}
-            <div className="bg-gradient-to-br from-orange-50 to-pink-50 border-2 border-orange-200 rounded-3xl p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center">
-                  <Bot className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <div className="font-extrabold text-gray-900">AI Coding Companion</div>
-                  <div className="text-xs text-orange-600 font-medium">Available 24/7</div>
-                </div>
-              </div>
-              <ul className="space-y-2.5">
-                {[
-                  "Runs your Python code and explains what happened",
-                  "Spots errors and gives hints without just giving answers",
-                  "Validates your challenge solutions instantly",
-                  "Never gets impatient — explains the same thing 10 different ways",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
-                    <CheckCircle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+              <CTA kind="yellow" size="xl" icon="▶" sub="No signup · no card" onClick={openFree}>
+                Start free lesson
+              </CTA>
+              <CTA kind="whatsapp" size="xl" icon="💬" sub="Reply in &lt; 1 hour" onClick={openWA}>
+                WhatsApp Manisha
+              </CTA>
             </div>
 
-            {/* Teacher side */}
-            <div className="bg-gradient-to-br from-violet-50 to-blue-50 border-2 border-violet-200 rounded-3xl p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center">
-                  <GraduationCap className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <div className="font-extrabold text-gray-900">Real Teacher</div>
-                  <div className="text-xs text-violet-600 font-medium">2× per week live sessions</div>
-                </div>
-              </div>
-              <ul className="space-y-2.5">
-                {[
-                  "Reviews each student's quiz scores and module progress",
-                  "Runs live sessions to answer questions and unstick blockers",
-                  "Tracks who needs encouragement vs. who's ready for more",
-                  "Sends personalised feedback via WhatsApp to parents",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
-                    <CheckCircle className="h-4 w-4 text-violet-500 mt-0.5 flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* How a typical day looks */}
-          <div className="bg-white border border-gray-100 rounded-3xl p-7 shadow-sm">
-            <h3 className="font-extrabold text-gray-900 mb-5 text-center">A typical camp day looks like this 👇</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-sm">
-              {[
-                { emoji: "🎬", step: "Watch", desc: "Short intro video for the day" },
-                { emoji: "📖", step: "Read", desc: "Go through the lesson at your pace" },
-                { emoji: "💻", step: "Code", desc: "Complete 3 hands-on challenges with AI help" },
-                { emoji: "📝", step: "Quiz", desc: "10-question quiz — teacher sees your score" },
-              ].map(({ emoji, step, desc }, i) => (
-                <div key={step} className="flex flex-col items-center gap-2">
-                  <div className="relative">
-                    <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl">
-                      {emoji}
-                    </div>
-                    {i < 3 && (
-                      <ChevronRight className="absolute -right-5 top-3 h-5 w-5 text-gray-300 hidden sm:block" />
-                    )}
-                  </div>
-                  <div className="font-bold text-gray-900">{step}</div>
-                  <div className="text-gray-500 text-xs">{desc}</div>
-                </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 24, fontSize: 13, color: C.ink2, flexWrap: "wrap" }}>
+              {["No signup required", "Live + self-paced", "Money-back guarantee"].map(t => (
+                <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Check/>{t}</span>
               ))}
             </div>
           </div>
+
+          {/* Right — code window */}
+          <div style={{ position: "relative", height: 520 }}>
+            <div style={{
+              position: "absolute", top: 30, right: 0, left: 10,
+              background: "#fff", borderRadius: 18,
+              border: `2.5px solid ${C.ink}`,
+              boxShadow: `10px 10px 0 ${C.ink}`,
+              overflow: "hidden",
+            }}>
+              <div style={{ background: C.ink, padding: "12px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+                {["#FF5F57", C.yellow, C.green].map(c => (
+                  <span key={c} style={{ width: 11, height: 11, borderRadius: 999, background: c }}/>
+                ))}
+                <span style={{ marginLeft: 10, fontSize: 12, color: "#FFEFC2", fontFamily: "'JetBrains Mono',monospace" }}>
+                  lesson-13 — homework-helper.py · Aanya, 11
+                </span>
+              </div>
+              <div style={{ padding: "20px 22px", fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.7 }}>
+                <div style={{ color: C.ink3 }}># my AI homework helper</div>
+                <div><span style={{ color: C.blue }}>from</span> codersbee <span style={{ color: C.blue }}>import</span> ai</div>
+                <div style={{ marginTop: 6 }}>tutor = ai.chat(role=<span style={{ color: C.green }}>"kind maths teacher"</span>)</div>
+                <div>tutor.ask(<span style={{ color: C.green }}>"What is 7 × 8?"</span>)</div>
+                <div style={{ marginTop: 10, padding: "8px 10px", background: C.bg2, borderRadius: 8, borderLeft: `3px solid ${C.green}` }}>
+                  <div style={{ color: C.green, fontWeight: 600 }}>&gt; 56!</div>
+                  <div style={{ color: C.ink2 }}>&gt; Think of it as 7 + 7 eight times. Want me to show you?</div>
+                </div>
+                <div style={{ marginTop: 12, color: C.ink3 }}># shipped on Day 13 🎉</div>
+              </div>
+            </div>
+
+            {/* floating sticker */}
+            <div style={{
+              position: "absolute", top: 0, left: 0, zIndex: 2,
+              background: C.yellow, color: C.ink, padding: "7px 13px",
+              borderRadius: 999, border: `2px solid ${C.ink}`,
+              fontSize: 12, fontWeight: 800, transform: "rotate(-3deg)",
+              boxShadow: "0 6px 14px -4px rgba(0,0,0,.2)",
+              display: "inline-flex", alignItems: "center", gap: 6,
+            }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: C.green, display: "inline-block" }}/>
+              Real student · lesson 13
+            </div>
+
+            {/* floating chips */}
+            <div style={{
+              position: "absolute", bottom: 100, left: -8,
+              background: C.blue, color: "#fff", padding: "11px 15px", borderRadius: 12,
+              fontWeight: 700, fontSize: 13, transform: "rotate(-6deg)",
+              border: `2px solid ${C.ink}`, boxShadow: "0 10px 20px -8px rgba(30,91,183,.4)",
+              animation: "float 4s ease-in-out infinite",
+            }}>🐍 Python · 9 lessons</div>
+            <div style={{
+              position: "absolute", bottom: 40, right: -10,
+              background: C.green, color: "#fff", padding: "11px 15px", borderRadius: 12,
+              fontWeight: 700, fontSize: 13, transform: "rotate(5deg)",
+              border: `2px solid ${C.ink}`, boxShadow: "0 10px 20px -8px rgba(34,165,92,.4)",
+              animation: "float 4.5s ease-in-out infinite",
+            }}>🤖 AI · 6 lessons</div>
+            <div style={{
+              position: "absolute", bottom: -10, left: 60,
+              background: "#fff", color: C.ink, padding: "9px 13px", borderRadius: 12,
+              fontWeight: 700, fontSize: 12, transform: "rotate(3deg)",
+              border: `2px solid ${C.ink}`,
+              display: "flex", alignItems: "center", gap: 8,
+            }}>
+              <img src="/manisha.png" alt="" style={{ width: 26, height: 26, borderRadius: 999, objectFit: "cover" }}/>
+              Manisha reviews every project
+            </div>
+          </div>
+        </div>
+
+        {/* Trust strip */}
+        <div style={{
+          marginTop: 64, display: "grid", gridTemplateColumns: "repeat(5, 1fr)",
+          border: `1.5px solid ${C.ink}`, borderRadius: 18, overflow: "hidden",
+          background: C.paper,
+        }}>
+          {[
+            { big: "15",    sm: "lessons · project + quiz after each" },
+            { big: "5.0★",  sm: "rated by 1,000+ students · Manisha" },
+            { big: "2×/wk", sm: "live sessions + self-paced anytime" },
+            { big: "Free",  sm: "Day 1 — no signup, no card" },
+            { big: "June",  sm: "cohort starts · limited seats" },
+          ].map((s, i) => (
+            <div key={i} style={{
+              padding: "20px 22px", ...(i < 4 ? sep : {}),
+              background: i === 1 ? C.yellow : C.paper,
+            }}>
+              <div style={{ fontFamily: "'Fraunces',serif", fontSize: 34, fontWeight: 900, lineHeight: 1 }}>{s.big}</div>
+              <div style={{ fontSize: 12, color: C.ink2, marginTop: 7, lineHeight: 1.4 }}>{s.sm}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Decorative blobs */}
+        <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: -1, overflow: "hidden", pointerEvents: "none" }}>
+          <div style={{ position: "absolute", top: -80, right: -80, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle,#FFC72C55,transparent 70%)" }}/>
+          <div style={{ position: "absolute", bottom: 80, left: -100, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle,#1E5BB722,transparent 70%)" }}/>
         </div>
       </section>
 
-      {/* Module Grid */}
-      <section id="modules" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-3">
-            All 15 Modules
+      {/* ── Perfect Combo ───────────────────────────────────────────── */}
+      <section style={{ padding: "88px 32px", background: C.bg2 }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              The CodersBee Difference
+            </span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(40px,5vw,62px)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>
+              Self-paced freedom <em style={{ fontStyle: "normal", color: C.yellowD }}>+</em> real teacher.
+            </h2>
+            <p style={{ fontSize: 17, color: C.ink2, marginTop: 14, maxWidth: 580, margin: "14px auto 0", lineHeight: 1.5 }}>
+              Most online courses are one or the other. This camp is both — and that's why kids stick with it.
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }}>
+            {[
+              { icon: "🎬", color: C.blue,  t: "Self-paced lessons",        d: "Watch, read, code — all in one page. No installing anything. Replay anything anytime." },
+              { icon: "👩‍🏫", color: C.green, t: "Live with Manisha · 2×/wk", d: "Two small-group sessions every week. Same teacher, same kids — they actually know each other by week 2." },
+              { icon: "💬", color: C.wa,    t: "WhatsApp support",           d: "Stuck at 9pm? Send a photo of the screen. Manisha replies fast — usually within an hour." },
+            ].map((it, i) => (
+              <div key={i} style={{
+                background: C.paper, borderRadius: 22, border: `2px solid ${C.ink}`,
+                padding: 28, boxShadow: `8px 8px 0 ${C.ink}`,
+                display: "flex", flexDirection: "column", gap: 14,
+              }}>
+                <div style={{
+                  width: 60, height: 60, borderRadius: 14, background: it.color,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 30, border: `2px solid ${C.ink}`,
+                }}>{it.icon}</div>
+                <h3 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>{it.t}</h3>
+                <p style={{ fontSize: 15, color: C.ink2, lineHeight: 1.55, margin: 0 }}>{it.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── A typical day ───────────────────────────────────────────── */}
+      <section style={{ padding: "88px 32px", background: C.bg }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", background: C.paper, border: `2px solid ${C.ink}`, borderRadius: 28, padding: "48px 48px", boxShadow: `8px 8px 0 ${C.ink}` }}>
+          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, textAlign: "center", marginBottom: 36, letterSpacing: "-0.02em" }}>
+            A typical camp day 👇
           </h2>
-          <p className="text-center text-gray-500 mb-10">
-            Click any module to start — or follow them in order for the best
-            experience
-          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, textAlign: "center" }}>
+            {[
+              { emoji: "🎬", step: "Watch",  desc: "Short intro video to set the scene" },
+              { emoji: "📖", step: "Read",   desc: "Go through the lesson at your own pace" },
+              { emoji: "💻", step: "Code",   desc: "3 challenges with AI help — right in the browser" },
+              { emoji: "📝", step: "Quiz",   desc: "10-question quiz — teacher sees your score" },
+            ].map(({ emoji, step, desc }, i) => (
+              <div key={step} style={{ position: "relative" }}>
+                <div style={{
+                  width: 56, height: 56, background: C.bg2, borderRadius: 16,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 26, margin: "0 auto 12px", border: `2px solid ${C.ink}`,
+                }}>{emoji}</div>
+                {i < 3 && <span style={{
+                  position: "absolute", right: -10, top: 18,
+                  fontSize: 18, color: C.ink3,
+                }}>›</span>}
+                <div style={{ fontWeight: 800, marginBottom: 4 }}>{step}</div>
+                <div style={{ fontSize: 12, color: C.ink2, lineHeight: 1.4 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {summerCampModules.map((mod) => (
-              <Link
-                key={mod.id}
-                to={`/summer-camp/module/${mod.id}`}
-                className={`group block rounded-2xl border-2 ${mod.borderColor} ${mod.bgColor} p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200`}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      {mod.duration}
-                    </span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-2xl">{mod.emoji}</span>
-                      <h3 className={`font-extrabold text-lg ${mod.color}`}>
-                        {mod.title}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1">{mod.tagline}</p>
-                  </div>
-                  <ChevronRight
-                    className={`h-5 w-5 ${mod.color} opacity-0 group-hover:opacity-100 transition-opacity mt-1`}
-                  />
+      {/* ── What you'll build ───────────────────────────────────────── */}
+      <section id="what" style={{ padding: "88px 32px" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 48 }}>
+            <div>
+              <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+                What your kid will actually build
+              </span>
+              <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,5vw,58px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+                By the end, they'll have shipped<br/>5 real projects.
+              </h2>
+            </div>
+            <p style={{ fontSize: 15, color: C.ink2, maxWidth: 340, lineHeight: 1.55 }}>
+              Not theory. Not slides. Real code they run, break, fix, and show you at dinner.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 14 }}>
+            {[
+              { tag: "Python · Day 8", emoji: "🎮", t: "Number-guessing game",  d: "Variables, loops, randomness. The first thing they can show their family.", c: C.blue },
+              { tag: "Python · Day 9", emoji: "📖", t: "Story generator",        d: "Mad-libs style — lists, input, string formatting. Hilarious every run.",    c: C.blue },
+              { tag: "AI · Day 13",    emoji: "💬", t: "Homework helper chatbot",d: "Prompts, system roles, safety rails. Kid-built, kid-tested.",               c: C.green },
+              { tag: "AI · Day 14",    emoji: "🎨", t: "AI image generator",     d: "Type a description, get an image. They see AI create something from words.", c: C.green },
+              { tag: "Day 15",         emoji: "🚀", t: "Demo Day — their choice",d: "Design and build their own original AI app. Then demo it to family.",        c: C.yellowD },
+            ].map((p, i) => (
+              <div key={i} style={{
+                background: C.paper, borderRadius: 16, border: `2px solid ${C.ink}`,
+                padding: 18, display: "flex", flexDirection: "column", gap: 10, minHeight: 260,
+              }}>
+                <div style={{ height: 100, borderRadius: 10, background: p.c, border: `2px solid ${C.ink}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
+                  {p.emoji}
                 </div>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: C.ink3, textTransform: "uppercase", letterSpacing: "0.08em" }}>{p.tag}</span>
+                <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0, lineHeight: 1.25 }}>{p.t}</h3>
+                <p style={{ fontSize: 12, color: C.ink2, lineHeight: 1.5, margin: 0 }}>{p.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {mod.topics.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="text-xs bg-white/80 text-gray-600 px-2 py-0.5 rounded-full border border-gray-100"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                  {mod.topics.length > 3 && (
-                    <span className="text-xs bg-white/80 text-gray-400 px-2 py-0.5 rounded-full border border-gray-100">
-                      +{mod.topics.length - 3} more
-                    </span>
-                  )}
+      {/* ── Curriculum ──────────────────────────────────────────────── */}
+      <section id="curriculum" style={{ padding: "88px 32px", background: C.ink, color: "#fff" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 40 }}>
+            <div>
+              <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+                The 15-lesson journey
+              </span>
+              <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,5vw,58px)", fontWeight: 900, margin: 0, color: "#fff", letterSpacing: "-0.02em" }}>
+                From <em style={{ fontStyle: "normal", color: C.yellow }}>print("hi")</em> to a working AI app.
+              </h2>
+            </div>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,.6)", maxWidth: 340, lineHeight: 1.55 }}>
+              Each lesson: short video + read + 3 coding challenges + 10-question quiz. Live sessions 2× a week with Manisha.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+            {lessons.map(l => (
+              <Link key={l.n} to={`/summer-camp/module/${l.n}`} style={{
+                padding: "14px 18px", borderRadius: 12, textDecoration: "none",
+                background: l.kind === "Proj" ? C.yellow : "rgba(255,255,255,.06)",
+                color: l.kind === "Proj" ? C.ink : "#fff",
+                border: `1px solid ${l.kind === "Proj" ? C.yellow : "rgba(255,255,255,.12)"}`,
+                display: "flex", alignItems: "center", gap: 12,
+                transition: "opacity .15s",
+              }}>
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                  background: l.kind === "Proj" ? C.ink : "rgba(255,255,255,.12)",
+                  color: l.kind === "Proj" ? C.yellow : "#fff",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: 12, fontWeight: 700,
+                }}>{String(l.n).padStart(2, "0")}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.3 }}>{l.t}</div>
+                  <div style={{ fontSize: 10, opacity: 0.6, marginTop: 2, fontFamily: "'JetBrains Mono',monospace" }}>
+                    {l.track === "P" ? "PYTHON" : "AI"} · {l.kind === "Proj" ? "PROJECT" : "LESSON"}
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
+
+          <div style={{ textAlign: "center", marginTop: 36 }}>
+            <CTA kind="yellow" size="md" onClick={openFree} icon="▶">Try Day 1 free — no signup needed</CTA>
+          </div>
         </div>
       </section>
 
-      {/* What kids will build */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            What You'll Build 🏗️
-          </h2>
-          <p className="text-gray-500 mb-10">
-            Real projects — not just exercises!
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {[
-              {
-                emoji: "🎮",
-                title: "Number Guessing Game",
-                desc: "A fully playable game with hints, lives, and high scores",
-                day: "Day 9",
-              },
-              {
-                emoji: "💬",
-                title: "AI Chatbot",
-                desc: "Your own chatbot with a custom name and personality",
-                day: "Day 12",
-              },
-              {
-                emoji: "🎨",
-                title: "AI Image Generator",
-                desc: "Generate images from text descriptions using DALL-E",
-                day: "Day 13",
-              },
-              {
-                emoji: "📖",
-                title: "Story Generator",
-                desc: "Type a genre and get a unique AI-written story",
-                day: "Day 14",
-              },
-              {
-                emoji: "🧠",
-                title: "AI Quiz Master",
-                desc: "A quiz bot that makes questions on any topic you choose",
-                day: "Day 14",
-              },
-              {
-                emoji: "🚀",
-                title: "Your Dream App",
-                desc: "Design and build your own original AI app!",
-                day: "Day 14–15",
-              },
-            ].map((p) => (
-              <div
-                key={p.title}
-                className="bg-gradient-to-b from-gray-50 to-white border border-gray-200 rounded-2xl p-5 text-left"
-              >
-                <div className="text-3xl mb-3">{p.emoji}</div>
-                <div className="text-xs font-semibold text-orange-500 mb-1">
-                  {p.day}
+      {/* ── Meet Manisha ────────────────────────────────────────────── */}
+      <section id="teacher" style={{ padding: "88px 32px" }}>
+        <div style={{
+          maxWidth: 1160, margin: "0 auto",
+          background: C.paper, border: `2px solid ${C.ink}`,
+          borderRadius: 30, padding: "52px 52px",
+          boxShadow: `10px 10px 0 ${C.ink}`,
+          display: "grid", gridTemplateColumns: "300px 1fr", gap: 48, alignItems: "center",
+        }}>
+          <div style={{ position: "relative" }}>
+            <div style={{
+              width: 260, height: 260, borderRadius: "50%",
+              background: C.yellow, border: `3px solid ${C.ink}`,
+              boxShadow: `6px 6px 0 ${C.ink}`,
+              overflow: "hidden",
+            }}>
+              <img src="/manisha.png" alt="Manisha Mam" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+            </div>
+            <div style={{
+              position: "absolute", bottom: -8, left: -8,
+              background: C.green, color: "#fff", padding: "8px 14px",
+              borderRadius: 999, border: `2px solid ${C.ink}`,
+              fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 6,
+            }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: "#fff", display: "inline-block" }}/>
+              Online now
+            </div>
+            <div style={{
+              position: "absolute", top: -8, right: 0,
+              background: C.yellow, color: C.ink, padding: "8px 14px",
+              borderRadius: 999, border: `2px solid ${C.ink}`,
+              fontSize: 12, fontWeight: 800, transform: "rotate(6deg)",
+            }}>★ 5.0 / 5</div>
+          </div>
+
+          <div>
+            <span style={{ display: "inline-block", background: C.blue, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              Your kid's teacher
+            </span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: 50, fontWeight: 900, margin: "0 0 12px", lineHeight: 1 }}>
+              Meet Manisha Mam.
+            </h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <Stars n={5}/>
+              <span style={{ fontWeight: 700 }}>5.0 / 5</span>
+              <span style={{ color: C.ink2, fontSize: 14 }}>· loved by 1,000+ students</span>
+            </div>
+            <blockquote style={{
+              margin: "0 0 24px", padding: "18px 22px",
+              background: C.bg2, borderLeft: `4px solid ${C.yellowD}`,
+              borderRadius: 12, fontSize: 18, lineHeight: 1.45, fontWeight: 500,
+            }}>
+              "AI is shaping the future, and every child deserves the chance to <strong style={{ color: C.blue }}>understand it</strong>, <strong style={{ color: C.green }}>create with it</strong>, and lead with confidence."
+              <footer style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: C.ink2 }}>— Manisha Mam</footer>
+            </blockquote>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <CTA kind="whatsapp" size="lg" icon="💬" onClick={openWA}>Say hi on WhatsApp</CTA>
+              <CTA kind="outline" size="lg" onClick={openFree}>Try the free lesson →</CTA>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Parent dashboard preview ─────────────────────────────────── */}
+      <section style={{ padding: "88px 32px", background: C.bg2 }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 56, alignItems: "center" }}>
+          <div>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>For parents</span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: "0 0 16px", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
+              See what they're learning — every week.
+            </h2>
+            <p style={{ fontSize: 16, color: C.ink2, lineHeight: 1.55, marginBottom: 24 }}>
+              Manisha tracks each student's quiz scores and completed modules in a live dashboard. You'll know exactly where your child is at.
+            </p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 12 }}>
+              {[
+                ["📊", "Module completion & quiz scores"],
+                ["🎯", "What they built each week"],
+                ["📝", "Teacher notes after each live class"],
+                ["🔔", "WhatsApp updates — no app required"],
+              ].map(([ico, txt]) => (
+                <li key={txt} style={{ display: "flex", gap: 12, alignItems: "center", fontSize: 15 }}>
+                  <span style={{
+                    width: 34, height: 34, borderRadius: 10,
+                    background: C.paper, border: `2px solid ${C.ink}`,
+                    display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0,
+                  }}>{ico}</span>
+                  {txt}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Dashboard mock */}
+          <div style={{ background: C.paper, borderRadius: 18, border: `2px solid ${C.ink}`, boxShadow: `8px 8px 0 ${C.ink}`, overflow: "hidden" }}>
+            <div style={{ padding: "11px 15px", background: C.ink, color: "#fff", display: "flex", alignItems: "center", gap: 7 }}>
+              {["#FF5F57", C.yellow, C.green].map(c => <span key={c} style={{ width: 10, height: 10, borderRadius: 999, background: c }}/>)}
+              <span style={{ marginLeft: 8, fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>codersbee.com/summer-camp/teacher</span>
+            </div>
+            <div style={{ padding: 22 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div>
+                  <div style={{ fontSize: 11, color: C.ink3 }}>WEEK 3 OF 3</div>
+                  <div style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900 }}>Arjun is on lesson 8/15</div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">{p.title}</h3>
-                <p className="text-sm text-gray-500">{p.desc}</p>
+                <Stars/>
+              </div>
+              <div style={{ height: 9, background: C.bg2, borderRadius: 999, overflow: "hidden", marginBottom: 22 }}>
+                <div style={{ width: "53%", height: "100%", background: `linear-gradient(90deg, ${C.yellow}, ${C.yellowD})` }}/>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 18 }}>
+                {[{ v: "8/15", l: "lessons done", c: C.blue }, { v: "2", l: "projects shipped", c: C.green }, { v: "9/10", l: "quiz avg", c: C.yellowD }].map(s => (
+                  <div key={s.l} style={{ padding: 12, borderRadius: 10, border: `1.5px solid ${C.ink}`, background: "#fff" }}>
+                    <div style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900, color: s.c }}>{s.v}</div>
+                    <div style={{ fontSize: 11, color: C.ink2 }}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ padding: 14, borderRadius: 10, background: C.bg2, border: `1.5px dashed ${C.ink}`, fontSize: 13, lineHeight: 1.5 }}>
+                <div style={{ fontWeight: 700, marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>
+                  <img src="/manisha.png" alt="" style={{ width: 22, height: 22, borderRadius: 999, objectFit: "cover" }}/>
+                  Manisha · 2 days ago
+                </div>
+                "Arjun nailed loops this week! He rebuilt the number-guess game with three difficulty levels — totally his own idea. Pushing him into functions next."
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ────────────────────────────────────────────── */}
+      <section style={{ padding: "88px 32px", background: C.bg }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>Parents talking</span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+              Specific things they say after week 3.
+            </h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
+            {[
+              { q: "Aarav was glued to YouTube before. Now he's glued to his code editor. Worth every rupee for the screen-time pivot alone.", n: "Priya M.", r: "parent · Aarav, 10", loc: "Bengaluru" },
+              { q: "Manisha Mam knows my daughter by name. She sends me a WhatsApp note after every session. Magical for an online course.", n: "Rohan S.", r: "parent · Anaya, 12", loc: "Mumbai" },
+              { q: "My son built a chatbot to help with his maths homework. I had words with him — but I was also kind of impressed.", n: "Sarah K.", r: "parent · Theo, 13", loc: "London" },
+            ].map((r, i) => (
+              <blockquote key={i} style={{
+                margin: 0, background: C.paper, padding: 26, borderRadius: 18,
+                border: `2px solid ${C.ink}`, boxShadow: `6px 6px 0 ${C.ink}`,
+                display: "flex", flexDirection: "column", gap: 14,
+              }}>
+                <Stars/>
+                <p style={{ fontSize: 16, lineHeight: 1.45, margin: 0, fontWeight: 500 }}>"{r.q}"</p>
+                <footer style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 10, paddingTop: 12, borderTop: `1px dashed ${C.line}` }}>
+                  <div style={{
+                    width: 38, height: 38, borderRadius: 999,
+                    background: [C.yellow, C.blue, C.green][i],
+                    color: [C.ink, "#fff", "#fff"][i],
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 800, border: `2px solid ${C.ink}`, flexShrink: 0,
+                  }}>{r.n[0]}</div>
+                  <div style={{ fontSize: 13 }}>
+                    <div style={{ fontWeight: 700 }}>{r.n}</div>
+                    <div style={{ color: C.ink2 }}>{r.r} · {r.loc}</div>
+                  </div>
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ─────────────────────────────────────────────────────── */}
+      <section id="faq" style={{ padding: "88px 32px" }}>
+        <div style={{ maxWidth: 820, margin: "0 auto" }}>
+          <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>Parent questions</span>
+          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: "0 0 36px", letterSpacing: "-0.02em" }}>
+            What parents ask before clicking enroll.
+          </h2>
+          <div style={{ display: "grid", gap: 10 }}>
+            {faq.map(([q, a], i) => (
+              <div key={i} style={{ background: C.paper, borderRadius: 14, border: `2px solid ${C.ink}`, overflow: "hidden" }}>
+                <button onClick={() => setFaqOpen(faqOpen === i ? -1 : i)} style={{
+                  width: "100%", textAlign: "left", padding: "18px 22px",
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  fontSize: 16, fontWeight: 700, cursor: "pointer",
+                  background: "none", border: "none", fontFamily: "inherit",
+                }}>
+                  {q}
+                  <span style={{ fontSize: 22, color: C.ink2, flexShrink: 0, marginLeft: 16 }}>{faqOpen === i ? "−" : "+"}</span>
+                </button>
+                {faqOpen === i && (
+                  <div style={{ padding: "0 22px 18px", fontSize: 15, color: C.ink2, lineHeight: 1.6 }}>{a}</div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Prerequisites */}
-      <section className="py-14 bg-gradient-to-r from-orange-50 to-pink-50">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="bg-white rounded-3xl shadow-sm border border-orange-100 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
-              What Do I Need to Start? 🎒
-            </h2>
-            <p className="text-center text-gray-500 mb-6">
-              Almost nothing — seriously!
-            </p>
-            <div className="space-y-3">
-              {[
-                {
-                  ok: true,
-                  text: "A computer or laptop (Windows, Mac, or Chromebook)",
-                },
-                {
-                  ok: true,
-                  text: "Internet connection",
-                },
-                {
-                  ok: true,
-                  text: "A free account on replit.com (no install needed!)",
-                },
-                {
-                  ok: true,
-                  text: "Curiosity and excitement — that's the most important thing!",
-                },
-                {
-                  ok: false,
-                  text: "Previous coding experience — NOT required! We start from zero.",
-                },
-                {
-                  ok: false,
-                  text: "Advanced maths — we only use basic arithmetic.",
-                },
-              ].map((item) => (
-                <div key={item.text} className="flex items-start gap-3">
-                  <div
-                    className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
-                      item.ok
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-400"
-                    }`}
-                  >
-                    {item.ok ? "✓" : "✗"}
-                  </div>
-                  <p
-                    className={`text-sm ${
-                      item.ok ? "text-gray-700" : "text-gray-400"
-                    }`}
-                  >
-                    {item.text}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* ── Final CTA ───────────────────────────────────────────────── */}
+      <section style={{ padding: "88px 32px 64px" }}>
+        <div style={{
+          maxWidth: 1060, margin: "0 auto",
+          background: C.yellow, border: `3px solid ${C.ink}`,
+          borderRadius: 30, padding: "64px 52px",
+          position: "relative", overflow: "hidden",
+          boxShadow: `14px 14px 0 ${C.ink}`,
+        }}>
+          <div aria-hidden style={{ position: "absolute", right: -30, bottom: -30, fontSize: 200, opacity: 0.12, lineHeight: 1, transform: "rotate(-15deg)" }}>🐝</div>
+          <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 16 }}>Last thing.</span>
+          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(42px,6vw,68px)", fontWeight: 900, margin: "0 0 20px", maxWidth: 720, lineHeight: 0.95, letterSpacing: "-0.03em" }}>
+            Just try the first lesson.<br/>
+            <em style={{ fontStyle: "normal", textDecoration: "underline", textDecorationStyle: "wavy", textDecorationColor: C.ink, textUnderlineOffset: 10 } as React.CSSProperties}>
+              That's all we're asking.
+            </em>
+          </h2>
+          <p style={{ fontSize: 18, maxWidth: 560, lineHeight: 1.5, marginBottom: 36, opacity: 0.85 }}>
+            No signup. No card. No email. If your kid loves it, enroll. If they don't, you've lost 45 minutes — and gained a fun afternoon.
+          </p>
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <CTA kind="primary" size="xl" icon="▶" sub="No signup needed" onClick={openFree}>Start free lesson now</CTA>
+            <CTA kind="whatsapp" size="xl" icon="💬" sub="Talk to a human first" onClick={openWA}>WhatsApp Manisha</CTA>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-center">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="text-5xl mb-4">🚀</div>
-          <h2 className="text-4xl font-extrabold mb-4">
-            Ready to Start Coding?
-          </h2>
-          <p className="text-xl opacity-90 mb-8">
-            Day 1 is completely free. No sign-up needed. Just click and start
-            coding right now!
-          </p>
-          <Link
-            to="/summer-camp/module/1"
-            className="inline-flex items-center gap-2 bg-white text-orange-600 font-extrabold px-10 py-4 rounded-2xl text-xl shadow-2xl hover:scale-105 transition-all duration-200"
-          >
-            <Rocket className="h-6 w-6" />
-            Start Day 1 — Meet Python! 🐍
-          </Link>
-          <p className="mt-5 text-sm opacity-70">
-            Questions? WhatsApp us — we're happy to help!
-          </p>
+      {/* ── Footer ──────────────────────────────────────────────────── */}
+      <footer style={{ background: C.ink, color: "rgba(255,255,255,.75)", padding: "48px 32px 28px" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40 }}>
+          <div>
+            <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+              <img src="/lovable-uploads/96665488-c73d-4daf-a6f2-5dc7d468a820.png" alt="" style={{ height: 32 }}/>
+              <span style={{ fontWeight: 800, fontSize: 17, color: "#fff" }}>
+                Coders<span style={{ background: C.yellow, color: C.ink, padding: "0 4px", borderRadius: 4 }}>Bee</span>
+              </span>
+            </Link>
+            <p style={{ fontSize: 13, marginTop: 14, maxWidth: 300, lineHeight: 1.6, opacity: 0.75 }}>
+              Live + self-paced coding for kids 10–14. Built around a real teacher who actually knows your kid's name.
+            </p>
+          </div>
+          {[
+            ["Camp", ["Day 1 — free lesson", "15 lessons", "Meet Manisha", "How it works"]],
+            ["Help", ["FAQ", "WhatsApp Manisha", "Login", "Refund policy"]],
+            ["CodersBee", ["About us", "All courses", "Contact", "Privacy"]],
+          ].map(([h, items]) => (
+            <div key={h as string}>
+              <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 14 }}>{h}</div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 13 }}>
+                {(items as string[]).map(it => <li key={it} style={{ opacity: 0.65 }}>{it}</li>)}
+              </ul>
+            </div>
+          ))}
         </div>
-      </section>
+        <div style={{ maxWidth: 1160, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid rgba(255,255,255,.1)", display: "flex", justifyContent: "space-between", fontSize: 11, opacity: 0.45, flexWrap: "wrap", gap: 8 }}>
+          <span>© 2025 CodersBee</span>
+          <Link to="/summer-camp/login" style={{ color: "inherit", textDecoration: "none" }}>Teacher / Student Login</Link>
+        </div>
+      </footer>
 
-      <Footer />
+      {/* ── Floating WhatsApp button ─────────────────────────────────── */}
+      <button onClick={openWA} style={{
+        position: "fixed", bottom: 24, right: 24, zIndex: 30,
+        width: 60, height: 60, borderRadius: "50%",
+        background: C.wa, color: "#fff", border: `3px solid ${C.ink}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 26, cursor: "pointer",
+        boxShadow: "0 10px 28px -6px rgba(37,211,102,.55)",
+        animation: "wa-pulse 2.2s infinite",
+      }} title="Chat with Manisha on WhatsApp">
+        💬
+      </button>
+
+      {/* ── CSS animations ───────────────────────────────────────────── */}
+      <style>{`
+        @keyframes float {
+          0%,100%{transform:translateY(0) rotate(var(--r,0deg))}
+          50%{transform:translateY(-7px) rotate(var(--r,0deg))}
+        }
+        @keyframes wa-pulse {
+          0%{box-shadow:0 0 0 0 rgba(37,211,102,.55)}
+          70%{box-shadow:0 0 0 14px rgba(37,211,102,0)}
+          100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}
+        }
+      `}</style>
+
+      {/* ── Modals ───────────────────────────────────────────────────── */}
+      {modal === "free" && <FreeLessonModal onClose={() => setModal(null)} openWA={openWA}/>}
+      {modal === "wa"   && <WhatsAppModal   onClose={() => setModal(null)}/>}
     </div>
   );
 }
