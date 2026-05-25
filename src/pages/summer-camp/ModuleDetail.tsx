@@ -797,36 +797,43 @@ function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWh
           </div>
         )}
 
-        {/* Solution video — shown after button click */}
+        {/* Solution video link — shown after button click */}
         {showSolution && solutionVideoUrl && (
-          <div style={{ marginTop: 14 }}>
+          <div style={{
+            marginTop: 14, padding: "16px 18px",
+            background: C.codeBg, borderRadius: 14,
+            border: `2px solid ${C.ink}`,
+            boxShadow: `4px 4px 0 ${C.ink}`,
+            display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+          }}>
             <div style={{
-              padding: "10px 14px", marginBottom: 8,
-              background: C.redSoft, borderRadius: 10,
-              border: `1.5px solid ${C.red}30`,
-              fontSize: 13, color: C.ink2, lineHeight: 1.5,
-            }}>
-              ⚠️ <strong>Try to follow along</strong> rather than just copying — pause the video and type each line yourself. You'll remember it much better!
-            </div>
-            <div style={{ borderRadius: 12, overflow: "hidden", border: `2px solid ${C.ink}` }}>
-              <div style={{
-                background: C.codeBg, padding: "10px 14px",
-                display: "flex", alignItems: "center", gap: 10,
-              }}>
-                <span style={{ fontSize: 14 }}>🎬</span>
-                <span style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>Solution walkthrough — Manisha</span>
+              width: 48, height: 48, borderRadius: 10, flexShrink: 0,
+              background: "#FF0000", display: "flex", alignItems: "center",
+              justifyContent: "center", fontSize: 22,
+            }}>▶</div>
+            <div style={{ flex: 1, minWidth: 160 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
+                Solution walkthrough — Manisha
               </div>
-              <div style={{ position: "relative", paddingTop: "56.25%" }}>
-                <iframe
-                  src={solutionVideoUrl.replace("www.youtube.com", "www.youtube-nocookie.com")}
-                  title="Solution walkthrough"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-                />
+              <div style={{ fontSize: 12, color: "#ffffff80", lineHeight: 1.5 }}>
+                Try to <strong style={{ color: C.yellow }}>follow along</strong> rather than just copying — pause and type each line yourself.
               </div>
             </div>
+            <a
+              href={solutionVideoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: C.yellow, color: C.ink,
+                border: `2px solid ${C.yellowD}`, borderRadius: 10,
+                padding: "10px 18px", fontSize: 13, fontWeight: 800,
+                textDecoration: "none", flexShrink: 0,
+                boxShadow: `3px 3px 0 ${C.yellowD}`,
+              }}
+            >
+              Watch on YouTube ↗
+            </a>
           </div>
         )}
       </div>
