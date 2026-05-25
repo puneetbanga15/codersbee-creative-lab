@@ -2,6 +2,8 @@ export interface ModuleChallenge {
   title: string;
   description: string;
   code?: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface DebugChallenge {
@@ -13,6 +15,8 @@ export interface DebugChallenge {
   expectedOutputDescription: string;
   /** Hint shown after first failed run */
   hint: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface BlankChallenge {
@@ -23,6 +27,8 @@ export interface BlankChallenge {
   validationGoal: string;
   /** Optional scaffolding comment(s) pre-filled in the editor */
   starterComment: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface ModuleSection {
@@ -120,6 +126,7 @@ print("Favourite food: ___")
 print("Favourite game: ___")
 print("My superpower: ___")
 print("====================")`,
+      solutionVideoUrl: "https://youtube.com/shorts/om5wTk_t1ls",
     },
     quiz: [
       {
@@ -208,6 +215,7 @@ print("This summer I will build awesome things! 🚀"
       expectedOutputDescription:
         "Four lines printed cleanly with no errors: a greeting with a name, a learning statement, a favourite number statement, and an excited closing line.",
       hint: "Look carefully at: quotes around text, capital vs lowercase letters, and whether all brackets are closed properly.",
+      solutionVideoUrl: "https://youtube.com/shorts/pIwdWWPUsQA",
     },
 
     blankChallenge: {
@@ -226,6 +234,7 @@ Your program must have at least 4 print() statements and must run without any er
 # Remember: always put text inside "quotes"
 
 `,
+      solutionVideoUrl: "https://youtube.com/shorts/gECNhePNt3M",
     },
 
     funFact: "Python was created in 1991 by a Dutch programmer named Guido van Rossum. He wrote the first version during his Christmas holiday! 🎄",

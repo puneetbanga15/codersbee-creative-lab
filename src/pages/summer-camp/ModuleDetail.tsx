@@ -413,8 +413,9 @@ function ParentNote() {
       <span style={{ fontSize: 18, flexShrink: 0 }}>👨‍👩‍👧</span>
       <p style={{ margin: 0, fontSize: 13, color: C.ink2, lineHeight: 1.6 }}>
         <strong style={{ color: C.blue }}>For parents: </strong>
-        Help your child get settled, press play, and let them watch independently.
-        The lesson and coding exercises follow below.
+        Watch the video <em>together</em> with your child — pause it to discuss key ideas
+        and encourage them to take notes. The quiz and coding challenges below are
+        directly based on the video, so focused watching makes a big difference!
       </p>
     </div>
   );
@@ -451,13 +452,13 @@ function VideoCard({ videoUrl, dayNum }: { videoUrl: string; dayNum: number }) {
         }}>▶ 8:24</span>
       </div>
 
-      {/* iframe */}
+      {/* iframe — use nocookie domain for better browser compatibility */}
       <div style={{ position: "relative", paddingTop: "56.25%", background: "#000" }}>
         <iframe
-          src={videoUrl}
+          src={videoUrl.replace("www.youtube.com", "www.youtube-nocookie.com")}
           title={`Day ${dayNum} — Summer Camp Python & AI`}
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
@@ -657,16 +658,25 @@ function SectionCard({ section, idx, total, onPrev, onNext, atStart, atEnd }: {
 }
 
 /* ─── ChallengeWrapper ─────────────────────────────────────────────── */
-function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWhatsApp, hints }: {
+function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWhatsApp, hints, solutionVideoUrl }: {
   n: number; icon: string; title: string; stamp: string; mission: string;
   tone: "green" | "red" | "blue"; children: React.ReactNode;
-  onWhatsApp: () => void; hints?: string[];
+  onWhatsApp: () => void; hints?: string[]; solutionVideoUrl?: string;
 }) {
   const [hintsShown, setHintsShown] = useState(0);
+  const [showSolution, setShowSolution] = useState(false);
+  const allHintsShown = hints ? hintsShown >= hints.length : false;
+
   const colors = {
     green: { bg: C.greenSoft, border: C.green, deep: C.greenDeep },
     red:   { bg: C.redSoft,   border: C.red,   deep: "#a00735" },
     blue:  { bg: C.blueSoft,  border: C.blue,  deep: C.blue },
+  }[tone];
+
+  const howToSteps = {
+    green: ["Read the mission above", "Replace every ___ with your own info", "Press ▶ Run to see your output", "Fix anything the output flags and run again"],
+    red:   ["Read the buggy code carefully", "Spot each mistake (there are 4)", "Fix them one by one in the editor", "Press ▶ Test Fix to check your work"],
+    blue:  ["Read the mission above", "Click inside the editor to start typing", "Write at least 3 print() statements", "Press ▶ Run to see your program run"],
   }[tone];
 
   return (
@@ -703,34 +713,73 @@ function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWh
       </div>
 
       <div style={{ padding: "20px 24px" }}>
-        <p style={{ fontSize: 15, color: C.ink2, lineHeight: 1.65, margin: "0 0 18px" }}>{mission}</p>
+        <p style={{ fontSize: 15, color: C.ink2, lineHeight: 1.65, margin: "0 0 16px" }}>{mission}</p>
+
+        {/* How to do this guide */}
+        <div style={{
+          display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap",
+        }}>
+          {howToSteps.map((step, i) => (
+            <div key={i} style={{
+              display: "flex", alignItems: "flex-start", gap: 8,
+              background: C.bg2, borderRadius: 10,
+              border: `1.5px solid ${C.line}`,
+              padding: "8px 12px", flex: "1 1 180px",
+            }}>
+              <span style={{
+                width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                background: C.ink, color: C.yellow,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 11, fontWeight: 800, fontFamily: "'JetBrains Mono', monospace",
+              }}>{i + 1}</span>
+              <span style={{ fontSize: 12, color: C.ink2, lineHeight: 1.5 }}>{step}</span>
+            </div>
+          ))}
+        </div>
 
         {children}
 
-        {/* Hint + WA bar */}
+        {/* Help escalation bar */}
         <div style={{
           marginTop: 14, padding: "11px 14px",
           background: C.bg2, borderRadius: 12,
           border: `1.5px solid ${C.line}`,
           display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
         }}>
+          <span style={{ fontSize: 12, color: C.ink3, fontWeight: 600 }}>Need help?</span>
+
+          {/* Step 1: text hints */}
           {hints && hints.length > 0 && (
             <button onClick={() => setHintsShown(h => Math.min(h + 1, hints.length))} style={{
-              fontSize: 12, color: C.ink2, fontWeight: 700,
+              fontSize: 12, color: C.ink, fontWeight: 700,
               padding: "5px 12px", background: C.paper,
               borderRadius: 8, border: `1.5px solid ${C.line}`, cursor: "pointer",
             }}>
-              💡 {hintsShown > 0 ? `Hint ${hintsShown}` : "Hint"}
+              💡 {hintsShown === 0 ? "Show a hint" : hintsShown < hints.length ? `Next hint (${hintsShown}/${hints.length})` : `All hints shown`}
             </button>
           )}
-          <button onClick={onWhatsApp} style={{
-            fontSize: 12, color: "#fff", fontWeight: 700,
-            padding: "5px 14px", background: C.wa,
-            borderRadius: 8, border: `1.5px solid ${C.ink}`,
-            cursor: "pointer", marginLeft: "auto",
-          }}>💬 Stuck? Ask Manisha</button>
+
+          {/* Step 2: solution video — only after all hints revealed */}
+          {solutionVideoUrl && allHintsShown && !showSolution && (
+            <button onClick={() => setShowSolution(true)} style={{
+              fontSize: 12, color: "#fff", fontWeight: 700,
+              padding: "5px 12px", background: C.ink,
+              borderRadius: 8, border: `1.5px solid ${C.ink}`, cursor: "pointer",
+            }}>🎬 Watch solution</button>
+          )}
+
+          {/* Step 3: WhatsApp — last resort */}
+          {allHintsShown && (
+            <button onClick={onWhatsApp} style={{
+              fontSize: 12, color: "#fff", fontWeight: 700,
+              padding: "5px 14px", background: C.wa,
+              borderRadius: 8, border: `1.5px solid ${C.ink}`,
+              cursor: "pointer", marginLeft: "auto",
+            }}>💬 Ask Manisha</button>
+          )}
         </div>
 
+        {/* Current hint */}
         {hintsShown > 0 && hints && (
           <div style={{
             marginTop: 10, padding: "12px 16px",
@@ -738,7 +787,53 @@ function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWh
             border: `1.5px solid ${C.yellowD}`,
             fontSize: 13, lineHeight: 1.6,
           }}>
-            <strong>Hint {hintsShown}: </strong>{hints[hintsShown - 1]}
+            <strong>Hint {hintsShown}/{hints.length}: </strong>{hints[hintsShown - 1]}
+            {hintsShown < hints.length && (
+              <button onClick={() => setHintsShown(h => h + 1)} style={{
+                marginLeft: 12, fontSize: 11, color: C.yellowD, fontWeight: 700,
+                background: "none", border: "none", cursor: "pointer", textDecoration: "underline",
+              }}>next hint →</button>
+            )}
+          </div>
+        )}
+
+        {/* Solution video link — shown after button click */}
+        {showSolution && solutionVideoUrl && (
+          <div style={{
+            marginTop: 14, padding: "16px 18px",
+            background: C.codeBg, borderRadius: 14,
+            border: `2px solid ${C.ink}`,
+            boxShadow: `4px 4px 0 ${C.ink}`,
+            display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+          }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: 10, flexShrink: 0,
+              background: "#FF0000", display: "flex", alignItems: "center",
+              justifyContent: "center", fontSize: 22,
+            }}>▶</div>
+            <div style={{ flex: 1, minWidth: 160 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
+                Solution walkthrough — Manisha
+              </div>
+              <div style={{ fontSize: 12, color: "#ffffff80", lineHeight: 1.5 }}>
+                Try to <strong style={{ color: C.yellow }}>follow along</strong> rather than just copying — pause and type each line yourself.
+              </div>
+            </div>
+            <a
+              href={solutionVideoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: C.yellow, color: C.ink,
+                border: `2px solid ${C.yellowD}`, borderRadius: 10,
+                padding: "10px 18px", fontSize: 13, fontWeight: 800,
+                textDecoration: "none", flexShrink: 0,
+                boxShadow: `3px 3px 0 ${C.yellowD}`,
+              }}
+            >
+              Watch on YouTube ↗
+            </a>
           </div>
         )}
       </div>
@@ -1152,6 +1247,7 @@ export default function ModuleDetail() {
                 tone="green"
                 onWhatsApp={() => setWaOpen(true)}
                 hints={hints.guided}
+                solutionVideoUrl={mod.challenge.solutionVideoUrl}
               >
                 {mod.challenge.code && (
                   <PythonPlayground
@@ -1175,6 +1271,7 @@ export default function ModuleDetail() {
                   tone="red"
                   onWhatsApp={() => setWaOpen(true)}
                   hints={hints.debug}
+                  solutionVideoUrl={mod.debugChallenge.solutionVideoUrl}
                 >
                   <PythonPlayground
                     starterCode={mod.debugChallenge.brokenCode}
@@ -1198,6 +1295,7 @@ export default function ModuleDetail() {
                   tone="blue"
                   onWhatsApp={() => setWaOpen(true)}
                   hints={hints.scratch}
+                  solutionVideoUrl={mod.blankChallenge.solutionVideoUrl}
                 >
                   <PythonPlayground
                     starterCode={mod.blankChallenge.starterComment}
