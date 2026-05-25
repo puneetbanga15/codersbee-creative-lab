@@ -2,6 +2,8 @@ export interface ModuleChallenge {
   title: string;
   description: string;
   code?: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface DebugChallenge {
@@ -13,6 +15,8 @@ export interface DebugChallenge {
   expectedOutputDescription: string;
   /** Hint shown after first failed run */
   hint: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface BlankChallenge {
@@ -23,6 +27,8 @@ export interface BlankChallenge {
   validationGoal: string;
   /** Optional scaffolding comment(s) pre-filled in the editor */
   starterComment: string;
+  /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
+  solutionVideoUrl?: string;
 }
 
 export interface ModuleSection {
