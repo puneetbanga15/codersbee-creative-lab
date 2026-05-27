@@ -1281,6 +1281,7 @@ export default function ModuleDetail() {
                     moduleBorderColor="border-red-200"
                     variant="debug"
                     hint={mod.debugChallenge.hint}
+                    debugBugs={mod.debugChallenge.bugs}
                   />
                 </ChallengeWrapper>
               )}

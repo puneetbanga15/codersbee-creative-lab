@@ -24,6 +24,8 @@ interface PythonPlaygroundProps {
   moduleBorderColor: string;
   variant?: PlaygroundVariant;
   hint?: string;
+  /** Deterministic bug checks for debug challenges — skips LLM validation when provided */
+  debugBugs?: { must: string; hint: string }[];
 }
 
 type RunState = "idle" | "running" | "validating" | "done";
@@ -62,6 +64,7 @@ export function PythonPlayground({
   moduleBorderColor,
   variant = "challenge",
   hint,
+  debugBugs,
 }: PythonPlaygroundProps) {
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState<string | null>(null);
@@ -108,10 +111,27 @@ export function PythonPlayground({
 
       // Validate if code ran cleanly
       if (!result.hasError && !result.hasInputCall && result.output) {
-        setRunState("validating");
-        const val = await validateChallenge(result.output, challengeDescription, API_KEY);
-        setValidation(val);
-        if (!val.passed) setFailCount((n) => n + 1);
+        // Debug challenges with explicit bug definitions → deterministic string check
+        // (more reliable than LLM for fixed-answer problems)
+        if (variant === "debug" && debugBugs && debugBugs.length > 0) {
+          const remaining = debugBugs.filter(b => !code.includes(b.must));
+          if (remaining.length === 0) {
+            setValidation({ passed: true, message: "All bugs squashed! Great debugging work. 🐛✅" });
+          } else {
+            const bugList = remaining.map(b => `• ${b.hint}`).join("\n");
+            setValidation({
+              passed: false,
+              message: `${remaining.length} bug${remaining.length > 1 ? "s" : ""} still to fix:\n${bugList}`,
+            });
+            setFailCount((n) => n + 1);
+          }
+        } else {
+          // All other challenges → LLM validation
+          setRunState("validating");
+          const val = await validateChallenge(result.output, challengeDescription, API_KEY);
+          setValidation(val);
+          if (!val.passed) setFailCount((n) => n + 1);
+        }
       }
     } catch (err) {
       setOutput(`Network error: ${err instanceof Error ? err.message : String(err)}`);
