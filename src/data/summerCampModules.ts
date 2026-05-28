@@ -71,6 +71,7 @@ export interface SummerCampModule {
   intro: string;
   sections: ModuleSection[];
   videoUrl?: string;
+  inputChallenge?: ModuleChallenge;
   challenge: ModuleChallenge;
   debugChallenge?: DebugChallenge;
   blankChallenge?: BlankChallenge;
@@ -125,6 +126,14 @@ print("I love coding because it's AWESOME! 🚀")
 print("Python is my new best friend! 🐍")`,
       },
     ],
+    inputChallenge: {
+      title: "Talk to Python! 🗣️",
+      description: "Run the code — Python will ask for your name. Type it and press Enter to see what happens!",
+      code: `name = input("What is your name? ")
+print("Hello, " + name + "! 👋")
+print("Welcome to Python, " + name + "!")
+print("Today you're going to build something awesome! 🚀")`,
+    },
     challenge: {
       title: "Your Mission: Introduction Bot",
       description: "Create a program that prints 5 things about yourself — your name, age, favourite food, favourite game, and one superpower you wish you had!",

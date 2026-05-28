@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { runPythonCode, validateChallenge } from "@/lib/perplexity";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { runPythonCode, runPythonCodeWithInputs, validateChallenge } from "@/lib/perplexity";
 import {
   Play,
   RotateCcw,
@@ -28,7 +28,7 @@ interface PythonPlaygroundProps {
   debugBugs?: { must: string; hint: string }[];
 }
 
-type RunState = "idle" | "running" | "validating" | "done";
+type RunState = "idle" | "collecting" | "running" | "validating" | "done";
 
 const API_KEY = import.meta.env.VITE_PERPLEXITY_API_KEY as string | undefined;
 
@@ -77,20 +77,36 @@ export function PythonPlayground({
     passed: boolean;
     message: string;
   } | null>(null);
+  const [inputPrompts, setInputPrompts] = useState<string[]>([]);
+  const [collectedInputs, setCollectedInputs] = useState<string[]>([]);
+  const [currentInputIdx, setCurrentInputIdx] = useState(0);
+  const [currentInputText, setCurrentInputText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const meta = VARIANT_META[variant];
   const isLoading = runState === "running" || runState === "validating";
 
-  const handleRun = useCallback(async () => {
-    if (!code.trim() || isLoading) return;
+  // Auto-focus the input box when collecting
+  useEffect(() => {
+    if (runState === "collecting") {
+      inputRef.current?.focus();
+    }
+  }, [runState, currentInputIdx]);
 
-    setRunState("running");
-    setOutput(null);
-    setValidation(null);
-    setHasError(false);
-    setHasInputCall(false);
+  /** Extract the prompt strings from input("...") calls in the code */
+  const parseInputPrompts = (src: string): string[] => {
+    const regex = /\binput\s*\(\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`|)\s*\)/g;
+    const prompts: string[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = regex.exec(src)) !== null) {
+      prompts.push(m[1] ?? m[2] ?? m[3] ?? "");
+    }
+    return prompts;
+  };
 
+  /** Execute code (with optional inputs) and validate */
+  const executeCode = useCallback(async (inputs: string[]) => {
     if (!API_KEY) {
       setOutput("⚠️ No API key configured. Add VITE_PERPLEXITY_API_KEY to your .env file.");
       setHasError(true);
@@ -98,21 +114,23 @@ export function PythonPlayground({
       return;
     }
 
+    setRunState("running");
+
     try {
-      const result = await runPythonCode(code, API_KEY);
+      const result = inputs.length > 0
+        ? await runPythonCodeWithInputs(code, inputs, API_KEY)
+        : await runPythonCode(code, API_KEY);
+
       setOutput(result.output);
       setHasError(result.hasError);
       setHasInputCall(result.hasInputCall);
 
       if (result.hasError) {
-        // After first failure in debug mode, offer the hint
         setFailCount((n) => n + 1);
       }
 
       // Validate if code ran cleanly
       if (!result.hasError && !result.hasInputCall && result.output) {
-        // Debug challenges with explicit bug definitions → deterministic string check
-        // (more reliable than LLM for fixed-answer problems)
         if (variant === "debug" && debugBugs && debugBugs.length > 0) {
           const remaining = debugBugs.filter(b => !code.includes(b.must));
           if (remaining.length === 0) {
@@ -126,7 +144,6 @@ export function PythonPlayground({
             setFailCount((n) => n + 1);
           }
         } else {
-          // All other challenges → LLM validation
           setRunState("validating");
           const val = await validateChallenge(result.output, challengeDescription, API_KEY);
           setValidation(val);
@@ -139,7 +156,43 @@ export function PythonPlayground({
     } finally {
       setRunState("done");
     }
-  }, [code, challengeDescription, isLoading]);
+  }, [code, challengeDescription, variant, debugBugs]);
+
+  const handleRun = useCallback(async () => {
+    if (!code.trim() || isLoading || runState === "collecting") return;
+
+    setOutput(null);
+    setValidation(null);
+    setHasError(false);
+    setHasInputCall(false);
+    setCollectedInputs([]);
+    setCurrentInputIdx(0);
+    setCurrentInputText("");
+
+    const prompts = parseInputPrompts(code);
+    if (prompts.length > 0) {
+      setInputPrompts(prompts);
+      setRunState("collecting");
+    } else {
+      await executeCode([]);
+    }
+  }, [code, isLoading, runState, executeCode]);
+
+  /** Called when user submits one input value */
+  const submitInput = useCallback(async () => {
+    const newInputs = [...collectedInputs, currentInputText];
+    setCollectedInputs(newInputs);
+    setCurrentInputText("");
+
+    if (currentInputIdx + 1 < inputPrompts.length) {
+      setCurrentInputIdx((n) => n + 1);
+    } else {
+      // All inputs collected — run
+      setInputPrompts([]);
+      setCurrentInputIdx(0);
+      await executeCode(newInputs);
+    }
+  }, [collectedInputs, currentInputText, currentInputIdx, inputPrompts, executeCode]);
 
   const handleReset = () => {
     setCode(starterCode);
@@ -150,6 +203,10 @@ export function PythonPlayground({
     setRunState("idle");
     setShowHint(false);
     setFailCount(0);
+    setInputPrompts([]);
+    setCollectedInputs([]);
+    setCurrentInputIdx(0);
+    setCurrentInputText("");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -165,7 +222,7 @@ export function PythonPlayground({
       });
     }
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-      handleRun();
+      if (runState !== "collecting") handleRun();
     }
   };
 
@@ -213,7 +270,7 @@ export function PythonPlayground({
           </button>
           <button
             onClick={handleRun}
-            disabled={isLoading || !code.trim()}
+            disabled={isLoading || runState === "collecting" || !code.trim()}
             className={`flex items-center gap-1.5 text-xs font-bold ${runBtnColor} disabled:bg-gray-700 disabled:text-gray-500 text-white px-3 py-1.5 rounded transition`}
           >
             {isLoading ? (
@@ -225,6 +282,8 @@ export function PythonPlayground({
               ? "Running…"
               : runState === "validating"
               ? "Checking…"
+              : runState === "collecting"
+              ? "Waiting…"
               : `${meta.runLabel}  ⌘↵`}
           </button>
         </div>
@@ -259,6 +318,56 @@ export function PythonPlayground({
           style={{ tabSize: 4 }}
         />
       </div>
+
+      {/* Interactive input terminal — shown while collecting input() values */}
+      {runState === "collecting" && (
+        <div className="border-t border-gray-800">
+          <div className="flex items-center gap-2 px-4 py-2 bg-gray-900/80 border-b border-gray-800">
+            <Terminal className="h-3.5 w-3.5 text-cyan-400" />
+            <span className="text-xs text-cyan-400 font-medium">Interactive Terminal</span>
+            <span className="ml-auto text-xs text-gray-500">
+              Input {currentInputIdx + 1} of {inputPrompts.length}
+            </span>
+          </div>
+          <div className="px-4 py-3 font-mono text-sm bg-gray-950 min-h-[100px]">
+            {/* Show previously submitted inputs */}
+            {collectedInputs.map((val, i) => (
+              <div key={i} className="text-green-300 leading-6">
+                <span className="text-cyan-300">{inputPrompts[i]}</span>{val}
+              </div>
+            ))}
+            {/* Current prompt + live input */}
+            <div className="flex items-center gap-0 leading-6">
+              <span className="text-cyan-300">{inputPrompts[currentInputIdx]}</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={currentInputText}
+                onChange={(e) => setCurrentInputText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") submitInput();
+                }}
+                placeholder="type here and press Enter…"
+                className="flex-1 bg-transparent text-green-300 outline-none caret-green-400 placeholder-gray-600 font-mono text-sm"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between px-4 py-2 bg-gray-900/50 border-t border-gray-800/50">
+            <span className="text-xs text-gray-500">Press <kbd className="bg-gray-800 text-gray-400 px-1 py-0.5 rounded text-[10px]">Enter</kbd> to submit</span>
+            <button
+              onClick={submitInput}
+              className="text-xs font-bold bg-cyan-700 hover:bg-cyan-600 text-white px-3 py-1.5 rounded transition flex items-center gap-1"
+            >
+              <Play className="h-3 w-3 fill-current" />
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Output panel */}
       {(output !== null || isLoading) && (
