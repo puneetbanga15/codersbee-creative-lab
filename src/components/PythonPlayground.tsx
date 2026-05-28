@@ -386,9 +386,18 @@ export function PythonPlayground({
               </span>
             )}
             {!hasError && !hasInputCall && output && (
-              <span className="ml-auto text-xs text-green-400 font-semibold flex items-center gap-1">
-                <CheckCircle className="h-3 w-3" /> Ran successfully
-              </span>
+              // For debug challenges: only show "Ran successfully" once all bugs are fixed
+              // (the LLM often simulates broken code running without errors, which would
+              //  show a misleading green badge while validation still shows "Not quite")
+              variant !== "debug" || validation?.passed ? (
+                <span className="ml-auto text-xs text-green-400 font-semibold flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3" /> Ran successfully
+                </span>
+              ) : (
+                <span className="ml-auto text-xs text-yellow-400 font-semibold flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" /> Bugs still present
+                </span>
+              )
             )}
           </div>
 
