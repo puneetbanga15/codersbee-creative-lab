@@ -112,12 +112,12 @@ function ModalShell({ children, onClose, width = 540 }: { children: React.ReactN
 
 /* ── WhatsApp modal ──────────────────────────────────────────────────── */
 function WhatsAppModal({ onClose }: { onClose: () => void }) {
-  const [msg, setMsg] = useState("Hi Manisha! I saw the Summer Coding Camp. Can my kid try the free lesson?");
+  const [msg, setMsg] = useState("Hi Manisha! My kid tried Day 1 of the Summer Coding Camp and loved it. Can we get the 7-day free trial?");
   const suggestions = [
+    "We'd like the 7-day free trial please!",
     "I want the free first lesson.",
     "What time are the live classes?",
     "My kid is 10 — is this OK?",
-    "Can I pay via UPI?",
   ];
   return (
     <ModalShell onClose={onClose} width={520}>
@@ -213,8 +213,17 @@ function FreeLessonModal({ onClose, openWA }: { onClose: () => void; openWA: () 
 
 export default function SummerCamp() {
   const [modal, setModal] = useState<null | "free" | "wa">(null);
-  const [faqOpen, setFaqOpen] = useState(0);
+  const [faqOpen, setFaqOpen] = useState<number>(-1);
+  const [showAllLessons, setShowAllLessons] = useState(false);
+  const [dayExpanded, setDayExpanded] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 500);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   useEffect(() => {
     const fn = () => setVw(window.innerWidth);
     window.addEventListener("resize", fn);
@@ -252,8 +261,10 @@ export default function SummerCamp() {
      "Any laptop with Chrome. We provide the coding environment in-browser — no installs, no setup. Python runs right inside the lesson page."],
     ["How does the teacher track progress?",
      "Manisha has a live dashboard showing each student's quiz scores and completed modules. She also sends WhatsApp updates after live sessions."],
+    ["What is the 7-day free trial — and how do I get it?",
+     "After your kid finishes Day 1, just message Manisha on WhatsApp and say 'we'd like the trial'. She'll send login credentials within minutes. The trial gives full access to all 15 lessons and coding challenges for 7 days — completely free. What's not included: live sessions with Manisha, WhatsApp teacher support, and the completion certificate. Those come with the full camp."],
     ["How much does the full camp cost?",
-     "₹4,000 (about $49) for all 15 lessons, 6 live sessions with Manisha, WhatsApp support, and 5 real projects. That works out to ₹267 per lesson — less than a single private tuition class. UPI, cards, or WhatsApp invoice — whatever is easiest."],
+     "₹4,000 (about $49) for all 15 lessons, 6 live sessions with Manisha, personal WhatsApp support, project reviews, and a completion certificate. UPI, cards, or WhatsApp invoice — whatever is easiest. And if your kid doesn't love it, full refund, no questions."],
     ["What if my kid doesn't enjoy it after the first week?",
      "Full refund, no questions, no forms. Just message Manisha. We can say that because almost nobody asks."],
   ];
@@ -272,11 +283,9 @@ export default function SummerCamp() {
           display: "flex", justifyContent: "center", alignItems: "center", gap: 16,
           height: 36,
         }}>
-          <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
+          <span>🎁 Day 1 <strong style={{ color: "#fff" }}>FREE</strong> · 7-day trial after · full camp <strong style={{ color: C.yellow }}>₹4,000</strong></span>
           <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ color: "#fff" }}>Full camp <strong style={{ color: C.yellow }}>₹4,000</strong> · ~$49 · money-back guarantee</span>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <span>Summer 2026 · June 1, 8 &amp; 15</span>
+          <span>Money-back guarantee · Summer 2026 · June 1, 8 &amp; 15</span>
         </div>
       )}
 
@@ -298,7 +307,7 @@ export default function SummerCamp() {
           </Link>
           {!mob && (
             <nav style={{ marginLeft: "auto", display: "flex", gap: 28, fontSize: 14, fontWeight: 600, color: C.ink2 }}>
-              {[["#what","What you'll build"],["#curriculum","15 lessons"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
+              {[["#what","What you'll build"],["#curriculum","15 lessons"],["#pricing","Pricing"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
                 <a key={h} href={h} style={{ color: C.ink2, textDecoration: "none" }}>{l}</a>
               ))}
             </nav>
@@ -309,6 +318,36 @@ export default function SummerCamp() {
           </div>
         </div>
       </header>
+
+      {/* ── Sticky enroll bar (appears after hero scrolls away) ─────── */}
+      {scrolled && !mob && (
+        <div style={{
+          position: "fixed", top: mob ? 0 : 36, left: 0, right: 0, zIndex: 35,
+          background: C.ink, color: "#fff",
+          padding: "0 32px", height: 48,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 20,
+          boxShadow: "0 2px 12px rgba(0,0,0,.3)",
+          animation: "slideDown .2s ease",
+        }}>
+          <span style={{ fontSize: 13, fontWeight: 600 }}>
+            🐝 <strong style={{ color: C.yellow }}>Summer Coding Camp 2026</strong> · Python + AI · Ages 8–15
+          </span>
+          <span style={{ opacity: 0.4 }}>|</span>
+          <span style={{ fontSize: 13 }}>Full camp <strong style={{ color: C.yellow }}>₹4,000</strong> · 7-day free trial available</span>
+          <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
+            <button onClick={openFree} style={{
+              background: C.yellow, color: C.ink, border: "none",
+              padding: "7px 16px", borderRadius: 8, fontWeight: 800,
+              fontSize: 12, cursor: "pointer",
+            }}>Try Day 1 free →</button>
+            <button onClick={openWA} style={{
+              background: C.wa, color: "#fff", border: "none",
+              padding: "7px 16px", borderRadius: 8, fontWeight: 800,
+              fontSize: 12, cursor: "pointer",
+            }}>💬 Get trial</button>
+          </div>
+        </div>
+      )}
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section style={{ position: "relative", padding: mob ? "100px 20px 48px" : "172px 32px 80px", maxWidth: 1280, margin: "0 auto" }}>
@@ -503,34 +542,51 @@ export default function SummerCamp() {
         </div>
       </section>
 
-      {/* ── A typical day ───────────────────────────────────────────── */}
-      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", background: C.paper, border: `2px solid ${C.ink}`, borderRadius: 28, padding: mob ? "32px 24px" : "48px 48px", boxShadow: `8px 8px 0 ${C.ink}` }}>
-          <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: mob ? 28 : 36, fontWeight: 900, textAlign: "center", marginBottom: 28, letterSpacing: "-0.02em" }}>
-            A typical camp day 👇
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: mob ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: mob ? 20 : 8, textAlign: "center" }}>
-            {[
-              { emoji: "🎬", step: "Watch",  desc: "Short intro video to set the scene" },
-              { emoji: "📖", step: "Read",   desc: "Go through the lesson at your own pace" },
-              { emoji: "💻", step: "Code",   desc: "3 challenges with AI help — right in the browser" },
-              { emoji: "📝", step: "Quiz",   desc: "10-question quiz — teacher sees your score" },
-            ].map(({ emoji, step, desc }, i) => (
-              <div key={step} style={{ position: "relative" }}>
-                <div style={{
-                  width: 56, height: 56, background: C.bg2, borderRadius: 16,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 26, margin: "0 auto 12px", border: `2px solid ${C.ink}`,
-                }}>{emoji}</div>
-                {i < 3 && <span style={{
-                  position: "absolute", right: -10, top: 18,
-                  fontSize: 18, color: C.ink3,
-                }}>›</span>}
-                <div style={{ fontWeight: 800, marginBottom: 4 }}>{step}</div>
-                <div style={{ fontSize: 12, color: C.ink2, lineHeight: 1.4 }}>{desc}</div>
+      {/* ── A typical day (collapsible) ─────────────────────────────── */}
+      <section style={{ padding: mob ? "24px 20px" : "48px 32px", background: C.bg }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", background: C.paper, border: `2px solid ${C.ink}`, borderRadius: 28, overflow: "hidden", boxShadow: `6px 6px 0 ${C.ink}` }}>
+          <button
+            onClick={() => setDayExpanded(x => !x)}
+            style={{
+              width: "100%", textAlign: "left", padding: mob ? "20px 24px" : "22px 48px",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              background: "none", border: "none", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: mob ? 22 : 28, fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+              📅 How a typical camp day works
+            </h2>
+            <span style={{
+              width: 32, height: 32, borderRadius: 999, border: `2px solid ${C.ink}`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 18, color: C.ink2, flexShrink: 0, background: C.bg2,
+              transition: "transform .2s",
+              transform: dayExpanded ? "rotate(45deg)" : "none",
+            }}>+</span>
+          </button>
+          {dayExpanded && (
+            <div style={{ padding: mob ? "0 24px 28px" : "0 48px 40px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: mob ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: mob ? 20 : 8, textAlign: "center" }}>
+                {[
+                  { emoji: "🎬", step: "Watch",  desc: "Short intro video to set the scene" },
+                  { emoji: "📖", step: "Read",   desc: "Go through the lesson at your own pace" },
+                  { emoji: "💻", step: "Code",   desc: "3 challenges with AI help — right in the browser" },
+                  { emoji: "📝", step: "Quiz",   desc: "10-question quiz — teacher sees your score" },
+                ].map(({ emoji, step, desc }, i) => (
+                  <div key={step} style={{ position: "relative" }}>
+                    <div style={{
+                      width: 56, height: 56, background: C.bg2, borderRadius: 16,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 26, margin: "0 auto 12px", border: `2px solid ${C.ink}`,
+                    }}>{emoji}</div>
+                    {i < 3 && <span style={{ position: "absolute", right: -10, top: 18, fontSize: 18, color: C.ink3 }}>›</span>}
+                    <div style={{ fontWeight: 800, marginBottom: 4 }}>{step}</div>
+                    <div style={{ fontSize: 12, color: C.ink2, lineHeight: 1.4 }}>{desc}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -654,7 +710,7 @@ export default function SummerCamp() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 10 }}>
-            {lessons.map(l => (
+            {(showAllLessons ? lessons : lessons.slice(0, 6)).map(l => (
               <Link key={l.n} to={`/summer-camp/module/${l.n}`} style={{
                 padding: "14px 18px", borderRadius: 12, textDecoration: "none",
                 background: l.kind === "Proj" ? C.yellow : "rgba(255,255,255,.06)",
@@ -680,14 +736,30 @@ export default function SummerCamp() {
             ))}
           </div>
 
-          <div style={{ textAlign: "center", marginTop: 36 }}>
+          {!showAllLessons && (
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <button
+                onClick={() => setShowAllLessons(true)}
+                style={{
+                  background: "rgba(255,255,255,.08)", color: "#fff",
+                  border: "1.5px solid rgba(255,255,255,.2)",
+                  padding: "12px 28px", borderRadius: 10, cursor: "pointer",
+                  fontSize: 14, fontWeight: 700, fontFamily: "inherit",
+                }}
+              >
+                Show all 15 lessons ↓
+              </button>
+            </div>
+          )}
+
+          <div style={{ textAlign: "center", marginTop: 28 }}>
             <CTA kind="yellow" size="md" onClick={openFree} icon="▶">Try Day 1 free — no signup needed</CTA>
           </div>
         </div>
       </section>
 
       {/* ── Batch Picker ────────────────────────────────────────────── */}
-      <section style={{ padding: mob ? "48px 20px" : "72px 32px", background: C.bg }}>
+      <section id="pricing" style={{ padding: mob ? "48px 20px" : "72px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1060, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
@@ -701,32 +773,97 @@ export default function SummerCamp() {
             </p>
           </div>
 
-          {/* Price anchor — shown once above the cards */}
-          <div style={{
-            textAlign: "center", marginBottom: 28,
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap",
-          }}>
-            <div style={{
-              display: "inline-flex", alignItems: "baseline", gap: 8,
-              background: C.paper, border: `2.5px solid ${C.ink}`,
-              borderRadius: 18, padding: "14px 28px",
-              boxShadow: `5px 5px 0 ${C.ink}`,
-            }}>
-              <span style={{ fontFamily: "'Fraunces',serif", fontSize: 48, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em" }}>₹4,000</span>
-              <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                <span style={{ fontSize: 14, fontWeight: 700, color: C.ink2 }}>full camp</span>
-                <span style={{ fontSize: 12, color: C.ink3 }}>~$49 · one-time</span>
-              </div>
+          {/* 3-tier plan comparison */}
+          <div style={{ marginBottom: 40 }}>
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <span style={{ fontSize: 13, color: C.ink2 }}>We trust our value completely — so we let your kid try before you pay a rupee.</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.ink2, fontWeight: 600 }}>
-                <Check/> ₹267/lesson · 15 lessons included
+            <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: mob ? 14 : 18 }}>
+              {/* Tier 1 — Free Day */}
+              <div style={{
+                background: C.paper, border: `2px solid ${C.line}`,
+                borderRadius: 20, padding: "24px 22px",
+                display: "flex", flexDirection: "column", gap: 12,
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.ink3, letterSpacing: "0.1em" }}>STEP 1</div>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>Free Day 1</div>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, color: C.green }}>₹0</div>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2, flex: 1 }}>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>1 full lesson — watch, read, code</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>3 coding challenges in browser</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>10-question quiz</li>
+                  <li style={{ display: "flex", gap: 8 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0, color: C.ink3 }}>–</span>No signup at all</li>
+                </ul>
+                <button onClick={openFree} style={{
+                  marginTop: "auto", width: "100%", padding: "12px 16px",
+                  background: C.ink, color: "#fff", border: `2px solid ${C.ink}`,
+                  borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: "pointer",
+                }}>▶ Start free now →</button>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.ink2, fontWeight: 600 }}>
-                <Check/> 6 live sessions with Manisha included
+
+              {/* Tier 2 — 7-day Trial */}
+              <div style={{
+                background: C.paper, border: `2.5px solid ${C.yellow}`,
+                borderRadius: 20, padding: "24px 22px",
+                display: "flex", flexDirection: "column", gap: 12,
+                boxShadow: `6px 6px 0 ${C.ink}`,
+                position: "relative",
+              }}>
+                <div style={{
+                  position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
+                  background: C.yellow, color: C.ink, padding: "4px 16px",
+                  borderRadius: 999, fontSize: 11, fontWeight: 800,
+                  border: `2px solid ${C.ink}`, whiteSpace: "nowrap",
+                }}>⭐ Our trust guarantee</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.ink3, letterSpacing: "0.1em" }}>STEP 2 · AFTER DAY 1</div>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>7-Day Free Trial</div>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, color: C.green }}>₹0</div>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2, flex: 1 }}>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>All 15 lessons — full access</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>All coding challenges</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>Quizzes + progress tracking</li>
+                  <li style={{ display: "flex", gap: 8, color: C.ink3 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>–</span>Live sessions not included</li>
+                  <li style={{ display: "flex", gap: 8, color: C.ink3 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>–</span>No teacher WhatsApp support</li>
+                  <li style={{ display: "flex", gap: 8, color: C.ink3 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>–</span>No completion certificate</li>
+                </ul>
+                <button onClick={openWA} style={{
+                  marginTop: "auto", width: "100%", padding: "12px 16px",
+                  background: C.wa, color: "#fff", border: `2px solid ${C.ink}`,
+                  borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: "pointer",
+                  boxShadow: `0 3px 0 ${C.waD}`,
+                }}>💬 WhatsApp to request</button>
+                <p style={{ fontSize: 11, color: C.ink3, textAlign: "center", margin: 0 }}>
+                  Message Manisha after Day 1 — she'll send credentials in minutes.
+                </p>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.green, fontWeight: 700 }}>
-                <Check/> Full refund if your kid doesn't love it
+
+              {/* Tier 3 — Full Camp */}
+              <div style={{
+                background: C.ink, border: `2.5px solid ${C.ink}`,
+                borderRadius: 20, padding: "24px 22px",
+                display: "flex", flexDirection: "column", gap: 12,
+                boxShadow: `6px 6px 0 ${C.yellowD}`,
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.5)", letterSpacing: "0.1em" }}>STEP 3 · FULL EXPERIENCE</div>
+                <div style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900, color: "#fff" }}>Full Camp</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  <span style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, color: C.yellow }}>₹4,000</span>
+                  <span style={{ fontSize: 13, color: "rgba(255,255,255,.5)" }}>~$49 · one-time</span>
+                </div>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: "rgba(255,255,255,.8)", flex: 1 }}>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>Everything in trial</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>6 live sessions with Manisha</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>WhatsApp teacher support</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>Manisha reviews your projects</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>Completion certificate</li>
+                  <li style={{ display: "flex", gap: 8 }}><Check/>Full refund if not happy</li>
+                </ul>
+                <button onClick={openWA} style={{
+                  marginTop: "auto", width: "100%", padding: "12px 16px",
+                  background: C.yellow, color: C.ink, border: "none",
+                  borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: "pointer",
+                  boxShadow: `0 3px 0 ${C.yellowD}`,
+                }}>Reserve a spot →</button>
               </div>
             </div>
           </div>
@@ -776,9 +913,9 @@ export default function SummerCamp() {
                 }}>
                   <div>
                     <span style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>₹4,000</span>
-                    <span style={{ fontSize: 12, color: C.ink3, marginLeft: 6 }}>~$49</span>
+                    <span style={{ fontSize: 12, color: C.ink3, marginLeft: 6 }}>~$49 · one-time</span>
                   </div>
-                  <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ refund guarantee</span>
+                  <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ full refund guarantee</span>
                 </div>
 
                 <button onClick={openWA} style={{
@@ -1032,8 +1169,8 @@ export default function SummerCamp() {
             </div>
             <span style={{ width: 1, height: 32, background: "rgba(14,17,22,.2)" }}/>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <span style={{ fontSize: 12, fontWeight: 700 }}>₹267/lesson · 15 lessons + 6 live sessions</span>
-              <span style={{ fontSize: 12, opacity: 0.7 }}>Full refund if your kid doesn't love it. No questions.</span>
+              <span style={{ fontSize: 12, fontWeight: 700 }}>15 lessons · 6 live sessions with Manisha · certificate</span>
+              <span style={{ fontSize: 12, opacity: 0.7 }}>Try Day 1 free → 7-day trial → enroll. Full refund if not happy.</span>
             </div>
           </div>
           <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
@@ -1108,6 +1245,10 @@ export default function SummerCamp() {
           0%{box-shadow:0 0 0 0 rgba(37,211,102,.55)}
           70%{box-shadow:0 0 0 14px rgba(37,211,102,0)}
           100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}
+        }
+        @keyframes slideDown {
+          from{transform:translateY(-100%);opacity:0}
+          to{transform:translateY(0);opacity:1}
         }
       `}</style>
 
