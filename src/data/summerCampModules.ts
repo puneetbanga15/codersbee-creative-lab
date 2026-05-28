@@ -1948,7 +1948,263 @@ elif:                               # Bug 3
       "List comprehension: [expr for item in list if condition] — elegant one-line filtering",
     ],
     funFact: "Python lists are technically dynamic arrays — they automatically grow as you add items. Spotify's 'Liked Songs' playlist, YouTube's recommended videos, and Instagram's feed are all built on list-like data structures. Your morning algorithm is basically a Python list! 🎵",
-    nextPreview: "Day 7: Functions — write your own reusable commands and stop copying the same code everywhere!",
+    nextPreview: "Up next: Bonus Setup Module — get Google Colab and Replit running so you can write real Python beyond the browser!",
+  },
+
+  {
+    id: 6.5,
+    title: "Your Real Python Toolkit",
+    emoji: "🛠️",
+    tagline: "Set up Google Colab & Replit — code like a pro!",
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+    duration: "Bonus",
+    topics: ["Why you need real tools", "Google Colab walkthrough", "Notebook cells & markdown", "Replit for interactive programs", "Moving your camp code"],
+    intro: "You've built real Python programs inside this platform — variables, loops, lists, decisions. Amazing work! 🎉 But our in-browser playground has limits. It can't install libraries, can't make charts, can't save your work, and struggles with longer programs. Time to upgrade to the tools that real Python developers use every day. The great news: both tools are completely FREE and run in your browser — no installation needed!",
+    sections: [
+      {
+        title: "Why You Need Real Tools Now 🚀",
+        content: "Our built-in playground is perfect for learning — it runs Python instantly without any setup. But from Module 7 onwards you'll write longer programs, use libraries like `random`, `turtle`, and `matplotlib`, and build actual projects. Here's what real tools unlock:",
+        code: `# Things you CAN'T do in our browser playground:
+
+# 1. Install libraries
+import matplotlib.pyplot as plt   # make charts!
+import random                      # real randomness
+import turtle                      # draw graphics
+
+# 2. Save your work permanently
+# (browser playground resets every session)
+
+# 3. Run programs that take user input reliably
+name = input("What's your name? ")   # works better in Replit
+
+# 4. Write programs longer than ~50 lines comfortably
+
+# 5. Share your work with your teacher
+# (Colab notebooks have shareable links!)
+
+print("Time to level up! 🚀")`,
+        analogy: "Our browser playground is like training wheels on a bike 🚲 — brilliant for learning, but once you can balance, you switch to a real bike. Google Colab and Replit are your real bikes. Same Python, way more power!",
+      },
+      {
+        title: "Google Colab — Your Cloud Python Lab ☁️",
+        content: "**Google Colab** (Colaboratory) is a free tool from Google that lets you write and run Python in your browser, saves everything to your Google Drive, and comes with hundreds of libraries pre-installed. Data scientists at NASA, Google, and hospitals use it every day.",
+        code: `# What makes Colab special:
+
+# ✅ Completely FREE
+# ✅ Nothing to install — works in Chrome/Firefox/Safari
+# ✅ Saves automatically to Google Drive
+# ✅ 500+ libraries pre-installed (numpy, pandas, matplotlib...)
+# ✅ You can share your notebook link — like a Google Doc for code
+# ✅ Runs on Google's computers — not yours
+# ✅ Supports rich text, images, and headings alongside code
+
+# How to open Colab:
+# 1. Go to: colab.research.google.com
+# 2. Sign in with your Google account
+# 3. Click "New Notebook"
+# 4. You're ready to code!
+
+# The URL of every Colab notebook looks like:
+# colab.research.google.com/drive/1ABC...XYZ
+# Share this link with Manisha so she can see your work! 📤`,
+        tip: "Bookmark **colab.research.google.com** right now! Every notebook auto-saves to Google Drive in a folder called 'Colab Notebooks'. You can also open it from Google Drive → New → More → Google Colaboratory.",
+      },
+      {
+        title: "Inside a Colab Notebook — Cells 📓",
+        content: "A Colab notebook is made of **cells** — individual blocks you can run one at a time. There are two types: **Code cells** (Python code) and **Text cells** (formatted notes using Markdown). This is the key difference from our playground — you can build up a program step by step, running each piece and seeing output immediately.",
+        code: `# ── HOW TO USE COLAB CELLS ──────────────────────────
+
+# RUNNING a cell:
+#   Click the ▶ play button on the left of the cell
+#   OR press Shift + Enter (runs cell and moves to next)
+#   OR press Ctrl + Enter (runs cell and stays)
+
+# ADDING a new cell:
+#   Click "+ Code" or "+ Text" in the toolbar
+#   OR hover between cells — buttons appear
+
+# KEYBOARD SHORTCUTS (learn these — they save time!):
+#   Shift + Enter  → Run cell, go to next
+#   Ctrl + Enter   → Run cell, stay here
+#   Ctrl + M + B   → Insert code cell below
+#   Ctrl + M + A   → Insert code cell above
+#   Ctrl + M + D   → Delete current cell
+
+# TEXT CELL MARKDOWN (makes your notebook readable):
+# # Big heading
+# ## Smaller heading
+# **bold text**
+# *italic text*
+# - bullet point
+# You write this in a Text cell and it renders beautifully!
+
+print("Each cell runs independently — try it!")
+print("Variables from earlier cells are remembered 🧠")`,
+        analogy: "A Colab notebook is like a science lab report 🔬 — you write your hypothesis (text cell), run the experiment (code cell), see the results below, then write your conclusion (text cell). Each experiment is separate but they share the same lab bench (memory)!",
+      },
+      {
+        title: "Replit — For Interactive Programs 💻",
+        content: "**Replit** is your go-to for programs that need `input()` — asking the user to type things. It's also great for multi-file projects, building games, and programs that run continuously. Think of it as a mini online IDE (code editor) that runs your code in a real terminal.",
+        code: `# When to use REPLIT vs COLAB:
+
+# Use REPLIT when your program:
+# ✅ Has lots of input() calls (text adventures, quizzes)
+# ✅ Is a game or runs in a loop waiting for user
+# ✅ Needs a real terminal feel
+# ✅ Has multiple Python files
+# ✅ You want to share a running program (not just a notebook)
+
+# Use COLAB when your program:
+# ✅ Works with lists, data, calculations
+# ✅ Makes charts or graphs (matplotlib)
+# ✅ Is a step-by-step analysis or project
+# ✅ You want to show work + explanation together
+# ✅ You're sharing code for teacher to review
+
+# HOW TO SET UP REPLIT:
+# 1. Go to: replit.com
+# 2. Click "Sign Up" (use Google account — easiest)
+# 3. Click "+ Create Repl"
+# 4. Choose "Python" as language
+# 5. Give it a name (e.g. "CodersBee-Day5")
+# 6. Click "Create Repl"
+# 7. Type your code in the left panel, click Run ▶
+
+print("Replit gives you a real terminal on the right →")
+name = input("What's your name? ")   # This works perfectly in Replit!
+print(f"Hello, {name}! 🎉")`,
+        tip: "Replit saves your code automatically and gives every project a unique URL like `replit.com/@YourName/ProjectName`. You can share this link and anyone can see (and even fork) your project. It's like GitHub for beginners! 🌐",
+      },
+      {
+        title: "Moving Your Camp Code to Real Tools ↗️",
+        content: "The Python you've learned here works **identically** in Colab and Replit — no changes needed! Just copy and paste. There are a few small differences to know about, but nothing that will break your code.",
+        code: `# ── THINGS THAT WORK IDENTICALLY ──────────────────
+# ✅ All variables, strings, numbers, booleans
+# ✅ All operators (+ - * / // % **)
+# ✅ All if/elif/else logic
+# ✅ All for and while loops
+# ✅ All list operations
+# ✅ print() and f-strings
+# ✅ All string methods (.upper(), .split(), etc.)
+
+# ── SMALL DIFFERENCES TO KNOW ──────────────────────
+
+# 1. input() — works perfectly in Replit and Colab
+#    (In our browser playground it needed the special handler)
+name = input("Enter your name: ")    # Just works! ✅
+
+# 2. In Colab — run cells in ORDER (top to bottom)
+#    Variables from a cell only exist after you run that cell
+
+# 3. In Colab — if you restart the runtime (Runtime menu),
+#    ALL variables reset. You need to re-run cells from the top.
+
+# 4. You can install new libraries in Colab with:
+!pip install library_name           # run this in a code cell
+
+# 5. Import libraries at the TOP of your first code cell
+import random
+import math
+
+# ── COPY THIS TEST TO COLAB RIGHT NOW ──────────────
+import random
+number = random.randint(1, 100)
+print(f"🎲 Random number: {number}")
+print("If you see this — Colab is working! 🎉")`,
+        tip: "Start every Colab session by running ALL cells from the top using **Runtime → Run all** (Ctrl+F9). This ensures all your variables are set up correctly before you work on specific cells.",
+      },
+    ],
+    challenge: {
+      title: "Setup Challenge 🏆 — Get Both Tools Running",
+      description: "This challenge is different — no coding puzzles, just real setup! Complete all 5 steps to earn your 'Real Python Developer' badge. Screenshot each step and share with Manisha on WhatsApp.",
+      code: `# ════════════════════════════════════════════
+#   SETUP CHALLENGE — Your checklist:
+# ════════════════════════════════════════════
+
+# STEP 1: Open Google Colab
+# → Go to: colab.research.google.com
+# → Sign in with Google
+# → Click "New Notebook"
+
+# STEP 2: Run your first Colab cell
+# → Copy the code below into a Colab code cell
+# → Press Shift+Enter to run it
+
+my_name = "___"          # put your name here!
+my_age = ___             # put your age here!
+my_favourite_language = "Python 🐍"
+
+print("=" * 40)
+print(f"  👋 Hello from Google Colab!")
+print(f"  Name    : {my_name}")
+print(f"  Age     : {my_age}")
+print(f"  Language: {my_favourite_language}")
+print("=" * 40)
+print("✅ Colab is working! I'm a real Python dev now!")
+
+# STEP 3: Add a Text cell above your code
+# → Click the "+ Text" button
+# → Write: "# My First Colab Notebook"
+# → Write: "This is my Python camp notebook by [Your Name]"
+
+# STEP 4: Share your notebook
+# → Click Share (top right)
+# → Change to "Anyone with the link can view"
+# → Copy the link and send to Manisha on WhatsApp! 📤
+
+# STEP 5: Set up Replit
+# → Go to: replit.com
+# → Sign up with Google
+# → Create a Python repl called "CodersBee-Camp"
+# → Paste the code above and press Run ▶`,
+    },
+
+    quiz: [
+      {
+        question: "What is a 'cell' in Google Colab?",
+        options: ["A spreadsheet cell like in Excel", "An individual block of code or text that you can run independently", "A type of variable", "A folder in Google Drive"],
+        correct: 1,
+        explanation: "A cell is the building block of a Colab notebook. Code cells contain Python code you can run with Shift+Enter. Text cells contain formatted notes using Markdown. Each cell can be run independently, but they all share the same memory (variables from one cell are available in others).",
+      },
+      {
+        question: "What is the keyboard shortcut to run a Colab cell and move to the next one?",
+        options: ["Ctrl + Enter", "Shift + Enter", "Alt + Enter", "Tab + Enter"],
+        correct: 1,
+        explanation: "Shift + Enter runs the current cell AND moves focus to the next cell — the fastest way to work through a notebook. Ctrl + Enter runs the cell but stays on it. Learn Shift + Enter and you'll fly through Colab! ⚡",
+      },
+      {
+        question: "When is Replit a better choice than Google Colab?",
+        options: ["When making charts and graphs", "When writing programs that need lots of input() from the user", "When sharing a step-by-step analysis", "When working with large datasets"],
+        correct: 1,
+        explanation: "Replit shines for interactive programs — anything with lots of input() calls, text adventure games, quiz programs. It gives you a real terminal where the user can type naturally. Colab is better for analysis, charts, and notebook-style learning.",
+      },
+      {
+        question: "What happens to variables in Colab if you restart the runtime?",
+        options: ["They are saved automatically", "They are deleted — you must re-run all cells", "They move to Google Drive", "Nothing changes"],
+        correct: 1,
+        explanation: "When you restart the runtime (Runtime → Restart runtime), ALL variables in memory are wiped clean. It's like turning your computer off. To get back to where you were, run all cells from the top again using Runtime → Run all (Ctrl+F9).",
+      },
+      {
+        question: "How do you install a new library in Google Colab?",
+        options: ["Download it from the internet manually", "Run !pip install library_name in a code cell", "Go to Settings → Libraries", "You can't — only pre-installed libraries work"],
+        correct: 1,
+        explanation: "In Colab, run `!pip install library_name` in a code cell (the ! means 'run this as a terminal command'). For example: `!pip install emoji` installs the emoji library. Hundreds of popular libraries like matplotlib, numpy, and pandas are already pre-installed — no pip needed!",
+      },
+    ],
+    keyLearnings: [
+      "Google Colab is a free, cloud-based Python notebook — no installation, saves to Google Drive",
+      "Colab notebooks are made of cells: Code cells run Python, Text cells show formatted notes",
+      "Shift+Enter runs a cell and moves to the next one — learn this shortcut!",
+      "Replit is better for interactive programs with lots of input() — it has a real terminal",
+      "All the Python you learned in this camp works identically in Colab and Replit",
+      "Share your Colab notebook link so Manisha can review your code — like a Google Doc",
+      "Restart runtime = all variables reset; use Runtime → Run all to rebuild your session",
+      "!pip install library_name in a Colab cell installs any Python library instantly",
+    ],
+    funFact: "Google Colab was built for machine learning researchers and is used to train AI models — including some of the AI systems that power Google Search and Google Translate. When you open a Colab notebook, you're using the same tool that world-class AI researchers use every day! 🤖",
+    nextPreview: "Day 7: Functions — write your own reusable Python commands and stop copy-pasting code forever!",
   },
 
   {

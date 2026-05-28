@@ -235,21 +235,22 @@ export default function SummerCamp() {
   const openWA   = () => setModal("wa");
 
   const lessons = [
-    { n: 1,  t: "Hello, Python!",                      track: "P", kind: "F" },
-    { n: 2,  t: "Strings & Numbers",                   track: "P", kind: "F" },
-    { n: 3,  t: "Variables — give Python a memory",    track: "P", kind: "F" },
-    { n: 4,  t: "Input & Making Decisions",             track: "P", kind: "F" },
-    { n: 5,  t: "Loops — do it again!",                track: "P", kind: "F" },
-    { n: 6,  t: "Lists & Collections",                 track: "P", kind: "F" },
-    { n: 7,  t: "Functions — reusable code",           track: "P", kind: "F" },
-    { n: 8,  t: "Project: Number-guessing game",       track: "P", kind: "Proj" },
-    { n: 9,  t: "Project: Story generator",            track: "P", kind: "Proj" },
-    { n: 10, t: "What is AI, really?",                 track: "A", kind: "F" },
-    { n: 11, t: "Talking to AI — prompting",           track: "A", kind: "F" },
-    { n: 12, t: "AI Safety & Ethics for Kids",         track: "A", kind: "F" },
-    { n: 13, t: "Project: Homework helper chatbot",    track: "A", kind: "Proj" },
-    { n: 14, t: "Project: AI Image Generator",         track: "A", kind: "Proj" },
-    { n: 15, t: "Demo Day — show your family!",        track: "A", kind: "Proj" },
+    { n: 1,   t: "Hello, Python!",                      track: "P", kind: "F" },
+    { n: 2,   t: "Strings & Numbers",                   track: "P", kind: "F" },
+    { n: 3,   t: "Variables — give Python a memory",    track: "P", kind: "F" },
+    { n: 4,   t: "Input & Making Decisions",             track: "P", kind: "F" },
+    { n: 5,   t: "Loops — do it again!",                track: "P", kind: "F" },
+    { n: 6,   t: "Lists & Collections",                 track: "P", kind: "F" },
+    { n: 6.5, t: "🛠️ Bonus: Google Colab & Replit Setup", track: "P", kind: "Bonus" },
+    { n: 7,   t: "Functions — reusable code",           track: "P", kind: "F" },
+    { n: 8,   t: "Project: Number-guessing game",       track: "P", kind: "Proj" },
+    { n: 9,   t: "Project: Story generator",            track: "P", kind: "Proj" },
+    { n: 10,  t: "What is AI, really?",                 track: "A", kind: "F" },
+    { n: 11,  t: "Talking to AI — prompting",           track: "A", kind: "F" },
+    { n: 12,  t: "AI Safety & Ethics for Kids",         track: "A", kind: "F" },
+    { n: 13,  t: "Project: Homework helper chatbot",    track: "A", kind: "Proj" },
+    { n: 14,  t: "Project: AI Image Generator",         track: "A", kind: "Proj" },
+    { n: 15,  t: "Demo Day — show your family!",        track: "A", kind: "Proj" },
   ];
 
   const faq = [
@@ -710,30 +711,39 @@ export default function SummerCamp() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 10 }}>
-            {(showAllLessons ? lessons : lessons.slice(0, 6)).map(l => (
-              <Link key={l.n} to={`/summer-camp/module/${l.n}`} style={{
-                padding: "14px 18px", borderRadius: 12, textDecoration: "none",
-                background: l.kind === "Proj" ? C.yellow : "rgba(255,255,255,.06)",
-                color: l.kind === "Proj" ? C.ink : "#fff",
-                border: `1px solid ${l.kind === "Proj" ? C.yellow : "rgba(255,255,255,.12)"}`,
-                display: "flex", alignItems: "center", gap: 12,
-                transition: "opacity .15s",
-              }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                  background: l.kind === "Proj" ? C.ink : "rgba(255,255,255,.12)",
-                  color: l.kind === "Proj" ? C.yellow : "#fff",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: "'JetBrains Mono',monospace", fontSize: 12, fontWeight: 700,
-                }}>{String(l.n).padStart(2, "0")}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.3 }}>{l.t}</div>
-                  <div style={{ fontSize: 10, opacity: 0.6, marginTop: 2, fontFamily: "'JetBrains Mono',monospace" }}>
-                    {l.track === "P" ? "PYTHON" : "AI"} · {l.kind === "Proj" ? "PROJECT" : "LESSON"}
+            {(showAllLessons ? lessons : lessons.slice(0, 6)).map(l => {
+              const isBonus = l.kind === "Bonus";
+              const isProj  = l.kind === "Proj";
+              const bg      = isBonus ? "#FFF8E1" : isProj ? C.yellow : "rgba(255,255,255,.06)";
+              const clr     = isBonus ? "#7B5800" : isProj ? C.ink   : "#fff";
+              const bdr     = isBonus ? "#F2B705" : isProj ? C.yellow : "rgba(255,255,255,.12)";
+              const badgeBg = isBonus ? "#F2B705" : isProj ? C.ink   : "rgba(255,255,255,.12)";
+              const badgeClr= isBonus ? C.ink     : isProj ? C.yellow : "#fff";
+              const label   = isBonus ? "BONUS"   : isProj ? "PROJECT" : "LESSON";
+              return (
+                <Link key={l.n} to={`/summer-camp/module/${l.n}`} style={{
+                  padding: "14px 18px", borderRadius: 12, textDecoration: "none",
+                  background: bg, color: clr,
+                  border: `1px solid ${bdr}`,
+                  display: "flex", alignItems: "center", gap: 12,
+                  transition: "opacity .15s",
+                  ...(isBonus ? { gridColumn: mob ? "1" : "span 1", boxShadow: `0 0 0 2px ${C.yellow}` } : {}),
+                }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                    background: badgeBg, color: badgeClr,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "'JetBrains Mono',monospace", fontSize: isBonus ? 14 : 12, fontWeight: 700,
+                  }}>{isBonus ? "⭐" : String(l.n).padStart(2, "0")}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.3 }}>{l.t}</div>
+                    <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2, fontFamily: "'JetBrains Mono',monospace" }}>
+                      {l.track === "P" ? "PYTHON" : "AI"} · {label}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
 
           {!showAllLessons && (
