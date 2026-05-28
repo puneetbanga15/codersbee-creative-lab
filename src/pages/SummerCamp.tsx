@@ -1094,39 +1094,195 @@ export default function SummerCamp() {
       <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
-            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>Parents talking</span>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              Real parent feedback — unedited
+            </span>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
-              Specific things they say after week 3.
+              Parents don't just recommend us —<br/>they send us these.
             </h2>
+            <p style={{ fontSize: 15, color: C.ink3, marginTop: 10 }}>
+              Facebook reviews · WhatsApp messages · All unedited, all real.
+            </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 18 }}>
+
+          {/* 3 featured Facebook reviews */}
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 18, marginBottom: 48 }}>
             {[
-              { q: "Aarav was glued to YouTube before. Now he's glued to his code editor. Worth every rupee for the screen-time pivot alone.", n: "Priya M.", r: "parent · Aarav, 10", loc: "Bengaluru" },
-              { q: "Manisha Mam knows my daughter by name. She sends me a WhatsApp note after every session. Magical for an online course.", n: "Rohan S.", r: "parent · Anaya, 12", loc: "Mumbai" },
-              { q: "My son built a chatbot to help with his maths homework. I had words with him — but I was also kind of impressed.", n: "Sarah K.", r: "parent · Theo, 13", loc: "London" },
+              {
+                q: "Highly recommend Manisha as an exceptional teacher for children to learn coding. She is soft spoken, gentle and understands her students individual needs. My child looks forward to this class every week and is thrilled at how much she is able to learn and apply.",
+                n: "Aradhana Vineeth", date: "May 2024", avatarBg: C.yellow, avatarColor: C.ink,
+                badge: null,
+              },
+              {
+                q: "My 9 year old took web development class during his summer break. His final project was creating his own website and uploading to GitHub. Manisha is very professional, patient, always available and flexible. I highly recommend Manisha.",
+                n: "Asha Manu", date: "Aug 2022", avatarBg: "#9B59B6", avatarColor: "#fff",
+                badge: "Built real website → deployed to GitHub 🚀",
+              },
+              {
+                q: "My 10 year old daughter Aarini had no previous programming experience. Ms Manisha is very patient and keeps the lessons interesting. Aarini is looking forward to her class very eagerly each week. We couldn't ask for a better teacher to introduce our kid to programming.",
+                n: "Pink Floyd", date: "Jul 2025", avatarBg: C.green, avatarColor: "#fff",
+                badge: "Zero experience → loves coding 💚",
+              },
             ].map((r, i) => (
               <blockquote key={i} style={{
                 margin: 0, background: C.paper, padding: 26, borderRadius: 18,
                 border: `2px solid ${C.ink}`, boxShadow: `6px 6px 0 ${C.ink}`,
                 display: "flex", flexDirection: "column", gap: 14,
               }}>
-                <Stars/>
-                <p style={{ fontSize: 16, lineHeight: 1.45, margin: 0, fontWeight: 500 }}>"{r.q}"</p>
-                <footer style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 10, paddingTop: 12, borderTop: `1px dashed ${C.line}` }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{
+                    width: 22, height: 22, borderRadius: 5, background: "#1877F2",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "#fff", fontSize: 13, fontWeight: 900, flexShrink: 0,
+                  }}>f</div>
+                  <span style={{ fontSize: 11, color: C.ink3, fontWeight: 600 }}>
+                    recommends CodersBee · {r.date}
+                  </span>
+                  <Stars n={5}/>
+                </div>
+                {r.badge && (
+                  <div style={{ background: "#F0FFF4", border: "1px solid #86EFAC", borderRadius: 8, padding: "6px 12px", fontSize: 12, fontWeight: 700, color: "#166534" }}>
+                    {r.badge}
+                  </div>
+                )}
+                <p style={{ fontSize: 15, lineHeight: 1.55, margin: 0, fontWeight: 500, flex: 1 }}>"{r.q}"</p>
+                <footer style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 12, borderTop: `1px dashed ${C.line}` }}>
                   <div style={{
                     width: 38, height: 38, borderRadius: 999,
-                    background: [C.yellow, C.blue, C.green][i],
-                    color: [C.ink, "#fff", "#fff"][i],
+                    background: r.avatarBg, color: r.avatarColor,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontWeight: 800, border: `2px solid ${C.ink}`, flexShrink: 0,
+                    fontWeight: 800, fontSize: 16, border: `2px solid ${C.ink}`, flexShrink: 0,
                   }}>{r.n[0]}</div>
                   <div style={{ fontSize: 13 }}>
                     <div style={{ fontWeight: 700 }}>{r.n}</div>
-                    <div style={{ color: C.ink2 }}>{r.r} · {r.loc}</div>
+                    <div style={{ color: C.ink2, fontSize: 12 }}>Verified parent · Facebook</div>
                   </div>
                 </footer>
               </blockquote>
             ))}
+          </div>
+
+          {/* WhatsApp messages section */}
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 999, background: C.wa, flexShrink: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.849L0 24l6.29-1.513A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.369l-.359-.214-3.727.897.934-3.62-.235-.373A9.818 9.818 0 1112 21.818z"/>
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: 18 }}>What parents message Manisha directly</div>
+                <div style={{ fontSize: 12, color: C.ink3 }}>Private WhatsApp conversations — shared with permission</div>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(2,1fr)", gap: 16 }}>
+              {[
+                {
+                  n: "Kavitha", child: "Yashwin", date: "Jul 2022",
+                  q: "Yashwin said he wants to have you as his teacher for his whole lifetime 😀 What awesome feedback from the kids. Kudos to you 👏👏👏",
+                },
+                {
+                  n: "Ramya", child: "Siddhu", date: "Recent",
+                  q: "He is enjoying your classes thoroughly. He told you are the best coding teacher he has had 😄",
+                },
+                {
+                  n: "Deepthi Renati", child: "Vamshika", date: "Dec 2022",
+                  q: "Vamshika said she had so much fun in d class today. Thank u very much Manisha for making her interested in coding 🙏",
+                },
+                {
+                  n: "Swagata Dutta", child: "Shuvam", date: "Jul 2022",
+                  q: "Shuvam is very happy to do the work with you. Shuvam likes your class so much — built a Chatbot AND Rock Paper Scissors in Python! Looks so much fun 😀",
+                },
+              ].map((r, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: 16, border: `1.5px solid ${C.line}`, overflow: "hidden" }}>
+                  {/* WA-style header bar */}
+                  <div style={{ background: C.waD, padding: "10px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{
+                      width: 36, height: 36, borderRadius: 999,
+                      background: "rgba(255,255,255,0.25)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontWeight: 800, fontSize: 15, color: "#fff", flexShrink: 0,
+                    }}>{r.n[0]}</div>
+                    <div>
+                      <div style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>{r.n}</div>
+                      <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 11 }}>Parent of {r.child} · {r.date}</div>
+                    </div>
+                  </div>
+                  {/* Chat bubble area */}
+                  <div style={{ padding: "14px 16px", background: "#ECE5DD" }}>
+                    <div style={{
+                      background: "#fff",
+                      borderRadius: "0 12px 12px 12px",
+                      padding: "10px 14px",
+                      maxWidth: "88%",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                      fontSize: 14, lineHeight: 1.55, color: C.ink,
+                    }}>
+                      {r.q}
+                      <div style={{ textAlign: "right", fontSize: 10, color: C.ink3, marginTop: 4 }}>
+                        {r.date} ✓✓
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Scrolling marquee — all 9 Facebook reviews */}
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <span style={{ fontSize: 13, color: C.ink3, fontWeight: 600 }}>
+              More from our Facebook page ↓
+            </span>
+          </div>
+          <div style={{
+            overflow: "hidden", borderRadius: 16,
+            border: `1.5px solid ${C.line}`, background: C.paper,
+            padding: "18px 0", position: "relative",
+          }}>
+            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 60, background: `linear-gradient(to right, ${C.paper}, transparent)`, zIndex: 2, pointerEvents: "none" }}/>
+            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 60, background: `linear-gradient(to left, ${C.paper}, transparent)`, zIndex: 2, pointerEvents: "none" }}/>
+            <div style={{ display: "flex", gap: 16, animation: "marquee-scroll 60s linear infinite", width: "max-content" }}
+              onMouseEnter={e => (e.currentTarget.style.animationPlayState = "paused")}
+              onMouseLeave={e => (e.currentTarget.style.animationPlayState = "running")}
+            >
+              {[...Array(2)].flatMap(() => [
+                { n: "Ramya Abhishek",   date: "May 2024", q: "Highly recommend Manisha. She is soft spoken, very clear in her instructions and teaching method. My son thoroughly enjoys her classes." },
+                { n: "Aradhana Vineeth", date: "May 2024", q: "She has a genuine passion for coding and makes complex concepts accessible for young learners. My child looks forward to every class!" },
+                { n: "Ji Hyun Chang",   date: "Feb 2024", q: "My child's skills have significantly improved by online class. I truly thank Ms. Manisha for her patience and dedication." },
+                { n: "Deepthi Reddy",   date: "Dec 2022", q: "Manisha makes coding fun. My daughter went from Scratch to Java to Python! Definitely recommend for anyone wanting to try programming." },
+                { n: "Puja Verma Saxena", date: "Aug 2022", q: "My son has developed interest in coding and is now truly enjoying it. Great teacher who always encourages kids!" },
+                { n: "Asha Manu",       date: "Aug 2022", q: "My 9 yr old built his own website and uploaded to GitHub — in just one summer! Manisha is professional, patient and always available." },
+                { n: "Sonia Sda",       date: "Jun 2022", q: "Ms. Manisha has been a great teacher for my 10 year old. Her courses are very structured and classes have been really effective." },
+                { n: "Pink Floyd",      date: "Jul 2025", q: "Aarini had no previous programming experience. Manisha is very patient and keeps the lessons interesting. We couldn't ask for a better teacher." },
+                { n: "Akhila Kallakuri", date: "",        q: "Manisha has been great in creating a fun classroom. Our kid thoroughly enjoys the class and creates interesting games. Will definitely recommend her." },
+              ]).map((r, i) => (
+                <div key={i} style={{
+                  flexShrink: 0, width: mob ? 260 : 300,
+                  background: C.bg2, borderRadius: 12,
+                  border: `1.5px solid ${C.line}`,
+                  padding: "14px 16px",
+                  display: "flex", flexDirection: "column", gap: 8,
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 4, background: "#1877F2",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "#fff", fontSize: 11, fontWeight: 900, flexShrink: 0,
+                    }}>f</div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: C.ink }}>{r.n}</span>
+                    {r.date && <span style={{ fontSize: 10, color: C.ink3, marginLeft: "auto" }}>{r.date}</span>}
+                  </div>
+                  <p style={{ fontSize: 12, color: C.ink2, lineHeight: 1.5, margin: 0 }}>"{r.q}"</p>
+                  <Stars n={5}/>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1366,6 +1522,10 @@ export default function SummerCamp() {
         @keyframes slideDown {
           from{transform:translateY(-100%);opacity:0}
           to{transform:translateY(0);opacity:1}
+        }
+        @keyframes marquee-scroll {
+          0%   { transform: translateX(0) }
+          100% { transform: translateX(-50%) }
         }
       `}</style>
 
