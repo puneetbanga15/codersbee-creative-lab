@@ -264,7 +264,7 @@ export default function SummerCamp() {
     ["What is the 7-day free trial — and how do I get it?",
      "After your kid finishes Day 1, just message Manisha on WhatsApp and say 'we'd like the trial'. She'll send login credentials within minutes. The trial gives full access to all 15 lessons and coding challenges for 7 days — completely free. What's not included: live sessions with Manisha, WhatsApp teacher support, and the completion certificate. Those come with the full camp."],
     ["How much does the full camp cost?",
-     "₹4,000 (about $49) for all 15 lessons, 6 live sessions with Manisha, personal WhatsApp support, project reviews, and a completion certificate. UPI, cards, or WhatsApp invoice — whatever is easiest. And if your kid doesn't love it, full refund, no questions."],
+     "$49 (₹4,000) for all 15 lessons, 6 live sessions with Manisha, personal WhatsApp support, project reviews, and a completion certificate. UPI, cards, or WhatsApp invoice — whatever is easiest. And if your kid doesn't love it, full refund, no questions."],
     ["What if my kid doesn't enjoy it after the first week?",
      "Full refund, no questions, no forms. Just message Manisha. We can say that because almost nobody asks."],
   ];
@@ -283,7 +283,7 @@ export default function SummerCamp() {
           display: "flex", justifyContent: "center", alignItems: "center", gap: 16,
           height: 36,
         }}>
-          <span>🎁 Day 1 <strong style={{ color: "#fff" }}>FREE</strong> · 7-day trial after · full camp <strong style={{ color: C.yellow }}>₹4,000</strong></span>
+          <span>🎁 Day 1 <strong style={{ color: "#fff" }}>FREE</strong> · 7-day trial after · full camp <strong style={{ color: C.yellow }}>$49</strong> <span style={{ opacity: 0.6 }}>(₹4,000)</span></span>
           <span style={{ opacity: 0.4 }}>·</span>
           <span>Money-back guarantee · Summer 2026 · June 1, 8 &amp; 15</span>
         </div>
@@ -333,7 +333,7 @@ export default function SummerCamp() {
             🐝 <strong style={{ color: C.yellow }}>Summer Coding Camp 2026</strong> · Python + AI · Ages 8–15
           </span>
           <span style={{ opacity: 0.4 }}>|</span>
-          <span style={{ fontSize: 13 }}>Full camp <strong style={{ color: C.yellow }}>₹4,000</strong> · 7-day free trial available</span>
+          <span style={{ fontSize: 13 }}>Full camp <strong style={{ color: C.yellow }}>$49</strong> <span style={{ opacity: 0.55 }}>(₹4,000)</span> · 7-day free trial available</span>
           <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
             <button onClick={openFree} style={{
               background: C.yellow, color: C.ink, border: "none",
@@ -762,22 +762,24 @@ export default function SummerCamp() {
       <section id="pricing" style={{ padding: mob ? "48px 20px" : "72px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1060, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
-              3 batches · limited seats each
-            </span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+              <span style={{ display: "inline-block", background: C.yellow, color: C.ink, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
+                🎉 Inaugural offer · Summer 2026
+              </span>
+              <span style={{ display: "inline-block", background: C.ink, color: C.yellow, padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
+                3 batches · limited seats
+              </span>
+            </div>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,50px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
-              Pick your start date.
+              Try before you pay a rupee.
             </h2>
-            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12 }}>
-              Same curriculum, same teacher — just pick what fits your summer.
+            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12, maxWidth: 540, margin: "12px auto 0" }}>
+              We're so confident in what Manisha delivers, we built a path where your kid can experience the full camp before you decide.
             </p>
           </div>
 
           {/* 3-tier plan comparison */}
           <div style={{ marginBottom: 40 }}>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <span style={{ fontSize: 13, color: C.ink2 }}>We trust our value completely — so we let your kid try before you pay a rupee.</span>
-            </div>
             <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: mob ? 14 : 18 }}>
               {/* Tier 1 — Free Day */}
               <div style={{
@@ -843,12 +845,21 @@ export default function SummerCamp() {
                 borderRadius: 20, padding: "24px 22px",
                 display: "flex", flexDirection: "column", gap: 12,
                 boxShadow: `6px 6px 0 ${C.yellowD}`,
+                position: "relative",
               }}>
+                <div style={{
+                  position: "absolute", top: -14, right: 20,
+                  background: "#E05C00", color: "#fff", padding: "4px 12px",
+                  borderRadius: 999, fontSize: 11, fontWeight: 800,
+                  border: `2px solid ${C.ink}`, whiteSpace: "nowrap",
+                }}>🎉 Inaugural price</div>
                 <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.5)", letterSpacing: "0.1em" }}>STEP 3 · FULL EXPERIENCE</div>
                 <div style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900, color: "#fff" }}>Full Camp</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                  <span style={{ fontFamily: "'Fraunces',serif", fontSize: 36, fontWeight: 900, color: C.yellow }}>₹4,000</span>
-                  <span style={{ fontSize: 13, color: "rgba(255,255,255,.5)" }}>~$49 · one-time</span>
+                <div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 42, fontWeight: 900, color: C.yellow, lineHeight: 1 }}>$49</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,.5)", marginTop: 3 }}>₹4,000 · one-time · no recurring</div>
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: "rgba(255,255,255,.8)", flex: 1 }}>
                   <li style={{ display: "flex", gap: 8 }}><Check/>Everything in trial</li>
@@ -870,65 +881,81 @@ export default function SummerCamp() {
 
           <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
             {[
-              { date: "June 1",  day: "Sunday",   urgency: "⚡ Filling fast", urgencyColor: "#E05C00", badge: "Earliest batch", badgeBg: C.yellow },
-              { date: "June 8",  day: "Sunday",   urgency: "✅ Spots open",    urgencyColor: C.green,   badge: "Most popular",  badgeBg: C.green },
-              { date: "June 15", day: "Sunday",   urgency: "✅ Spots open",    urgencyColor: C.green,   badge: "Last batch",    badgeBg: C.ink },
-            ].map(({ date, day, urgency, urgencyColor, badge, badgeBg }) => (
-              <div key={date} style={{
-                background: C.paper, border: `2.5px solid ${C.ink}`,
-                borderRadius: 22, padding: "32px 28px",
-                boxShadow: `8px 8px 0 ${C.ink}`,
-                display: "flex", flexDirection: "column", gap: 16,
-                position: "relative",
-              }}>
-                <div style={{
-                  position: "absolute", top: -14, left: 24,
-                  background: badgeBg, color: badgeBg === C.yellow ? C.ink : "#fff",
-                  padding: "4px 12px", borderRadius: 999,
-                  fontSize: 11, fontWeight: 700, border: `2px solid ${C.ink}`,
-                }}>{badge}</div>
-
-                <div>
-                  <div style={{ fontFamily: "'Fraunces',serif", fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.02em" }}>{date}</div>
-                  <div style={{ fontSize: 13, color: C.ink3, marginTop: 4 }}>{day} · 2026</div>
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: urgencyColor }}>
-                  {urgency}
-                </div>
-
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2 }}>
-                  {["15 self-paced lessons", "2× live sessions / week", "WhatsApp support", "5 real projects to keep"].map(f => (
-                    <li key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <Check/>{f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Price line inside card */}
-                <div style={{
-                  padding: "10px 14px", borderRadius: 10,
-                  background: C.bg2, border: `1.5px dashed ${C.ink}`,
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
+              { date: "June 1",  day: "Sunday",   seats: 2, badge: "Earliest batch", badgeBg: C.yellow },
+              { date: "June 8",  day: "Sunday",   seats: 5, badge: "Most popular",   badgeBg: C.green },
+              { date: "June 15", day: "Sunday",   seats: 8, badge: "Last batch",     badgeBg: C.ink },
+            ].map(({ date, day, seats, badge, badgeBg }) => {
+              const isCritical = seats <= 2;
+              const isLow      = seats <= 5;
+              const seatsColor  = isCritical ? "#E05C00" : isLow ? "#B36B00" : C.green;
+              const seatsBg     = isCritical ? "#FFF3E0" : isLow ? "#FFFBEA" : "#F0FFF4";
+              return (
+                <div key={date} style={{
+                  background: C.paper, border: `2.5px solid ${isCritical ? "#E05C00" : C.ink}`,
+                  borderRadius: 22, padding: "32px 28px",
+                  boxShadow: isCritical ? `8px 8px 0 #E05C00` : `8px 8px 0 ${C.ink}`,
+                  display: "flex", flexDirection: "column", gap: 16,
+                  position: "relative",
                 }}>
+                  <div style={{
+                    position: "absolute", top: -14, left: 24,
+                    background: badgeBg, color: badgeBg === C.yellow ? C.ink : "#fff",
+                    padding: "4px 12px", borderRadius: 999,
+                    fontSize: 11, fontWeight: 700, border: `2px solid ${C.ink}`,
+                  }}>{badge}</div>
+
                   <div>
-                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>₹4,000</span>
-                    <span style={{ fontSize: 12, color: C.ink3, marginLeft: 6 }}>~$49 · one-time</span>
+                    <div style={{ fontFamily: "'Fraunces',serif", fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.02em" }}>{date}</div>
+                    <div style={{ fontSize: 13, color: C.ink3, marginTop: 4 }}>{day} · 2026</div>
                   </div>
-                  <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ full refund guarantee</span>
-                </div>
 
-                <button onClick={openWA} style={{
-                  marginTop: "auto", width: "100%", padding: "14px 18px",
-                  background: C.wa, color: "#fff", border: `2px solid ${C.ink}`,
-                  borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: "pointer",
-                  boxShadow: `0 4px 0 ${C.waD}`,
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                }}>
-                  💬 Reserve a spot for {date}
-                </button>
-              </div>
-            ))}
+                  {/* Seats counter */}
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    background: seatsBg, borderRadius: 8, padding: "8px 12px",
+                    border: `1.5px solid ${seatsColor}30`,
+                  }}>
+                    <span style={{ fontSize: 18 }}>{isCritical ? "🔴" : isLow ? "🟡" : "🟢"}</span>
+                    <div>
+                      <span style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900, color: seatsColor }}>{seats} seats</span>
+                      <span style={{ fontSize: 12, color: seatsColor, fontWeight: 700 }}> remaining</span>
+                    </div>
+                  </div>
+
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2 }}>
+                    {["15 self-paced lessons", "2× live sessions / week", "WhatsApp support", "5 real projects to keep"].map(f => (
+                      <li key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <Check/>{f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Price line inside card */}
+                  <div style={{
+                    padding: "10px 14px", borderRadius: 10,
+                    background: C.bg2, border: `1.5px dashed ${C.ink}`,
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                  }}>
+                    <div>
+                      <span style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>$49</span>
+                      <span style={{ fontSize: 11, color: C.ink3, marginLeft: 6 }}>₹4,000</span>
+                    </div>
+                    <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ full refund</span>
+                  </div>
+
+                  <button onClick={openWA} style={{
+                    marginTop: "auto", width: "100%", padding: "14px 18px",
+                    background: isCritical ? "#E05C00" : C.wa,
+                    color: "#fff", border: `2px solid ${C.ink}`,
+                    borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: "pointer",
+                    boxShadow: `0 4px 0 ${isCritical ? "#a03d00" : C.waD}`,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  }}>
+                    {isCritical ? "⚡" : "💬"} Reserve {isCritical ? "before it's gone" : `a spot for ${date}`}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1104,6 +1131,96 @@ export default function SummerCamp() {
         </div>
       </section>
 
+      {/* ── Why not YouTube / Udemy ─────────────────────────────────── */}
+      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg2 }}>
+        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              Fair question
+            </span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(30px,4vw,48px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+              "Why not just use YouTube or Udemy?"
+            </h2>
+            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12 }}>
+              Great question. Here's the honest answer.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1fr", gap: 16 }}>
+            {[
+              {
+                icon: "👩‍🏫",
+                title: "No live teacher who knows your kid",
+                them: "YouTube & Udemy give you a recorded instructor who has never seen your child's face.",
+                us: "Manisha knows every student by name. She watches quiz scores, reviews projects, and sends WhatsApp notes after every live class. That's 8+ years of teaching kids 8–15 — not a generic video.",
+                color: C.blue,
+              },
+              {
+                icon: "💻",
+                title: "No place to actually practise",
+                them: "You watch a video, then open a separate editor, then try to remember what you just saw. Kids lose interest in that gap.",
+                us: "Watch → Read → Code → Quiz — all on one page, no tab-switching. The coding challenges run right in the browser. Zero setup, zero friction.",
+                color: C.green,
+              },
+              {
+                icon: "💬",
+                title: "Stuck at 9pm? You're on your own",
+                them: "Got a bug you can't crack at night? Post in a forum and hope someone replies in 3 days.",
+                us: "Snap a photo of the screen and message Manisha on WhatsApp. She replies within the hour — evenings included. That's the difference between a kid who gives up and one who ships.",
+                color: C.wa,
+              },
+              {
+                icon: "⭐",
+                title: "Generic content, not built for kids",
+                them: "Most online courses are built for adults who can sit and focus for 2-hour lectures. Kids aged 8–15 learn completely differently.",
+                us: "Every lesson is designed for short attention spans: 15-minute chunks, visuals, interactive coding, quizzes, and a project at the end. Manisha has a 5.0★ rating from 1,000+ students for a reason.",
+                color: "#5B2BC7",
+              },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: C.paper, borderRadius: 20,
+                border: `2px solid ${C.ink}`,
+                overflow: "hidden",
+                boxShadow: `6px 6px 0 ${C.ink}`,
+              }}>
+                <div style={{
+                  padding: "16px 20px", background: item.color,
+                  display: "flex", alignItems: "center", gap: 12,
+                }}>
+                  <span style={{ fontSize: 28 }}>{item.icon}</span>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: "#fff", lineHeight: 1.3 }}>{item.title}</h3>
+                </div>
+                <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{
+                    padding: "12px 14px", borderRadius: 10,
+                    background: "#FFF5F5", border: "1.5px solid #FFD0D0",
+                  }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#CC0000", letterSpacing: "0.08em", marginBottom: 5 }}>YOUTUBE / UDEMY</div>
+                    <p style={{ fontSize: 13, color: "#5A3030", lineHeight: 1.5, margin: 0 }}>{item.them}</p>
+                  </div>
+                  <div style={{
+                    padding: "12px 14px", borderRadius: 10,
+                    background: "#F0FFF4", border: "1.5px solid #B2EFD0",
+                  }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: C.green, letterSpacing: "0.08em", marginBottom: 5 }}>CODERSBEE CAMP</div>
+                    <p style={{ fontSize: 13, color: "#1A3A26", lineHeight: 1.5, margin: 0 }}>{item.us}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 36 }}>
+            <p style={{ fontSize: 15, color: C.ink2, marginBottom: 16 }}>
+              Don't take our word for it — try Day 1 completely free and feel the difference.
+            </p>
+            <CTA kind="yellow" size="lg" icon="▶" sub="No signup · no card" onClick={openFree}>
+              Start free lesson →
+            </CTA>
+          </div>
+        </div>
+      </section>
+
       {/* ── FAQ ─────────────────────────────────────────────────────── */}
       <section id="faq" style={{ padding: mob ? "48px 20px" : "88px 32px" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
@@ -1164,8 +1281,8 @@ export default function SummerCamp() {
             padding: "14px 22px", flexWrap: "wrap",
           }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <span style={{ fontFamily: "'Fraunces',serif", fontSize: 32, fontWeight: 900 }}>₹4,000</span>
-              <span style={{ fontSize: 14, fontWeight: 600, opacity: 0.7 }}>full camp · ~$49</span>
+              <span style={{ fontFamily: "'Fraunces',serif", fontSize: 32, fontWeight: 900 }}>$49</span>
+              <span style={{ fontSize: 14, fontWeight: 600, opacity: 0.7 }}>full camp · ₹4,000</span>
             </div>
             <span style={{ width: 1, height: 32, background: "rgba(14,17,22,.2)" }}/>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
