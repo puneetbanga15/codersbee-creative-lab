@@ -15,6 +15,22 @@ Rules:
 
 Only respond with the raw output text.`;
 
+const PYTHON_INTERACTIVE_PROMPT = `You are a Python 3.11 interpreter for a kids' coding platform.
+
+You will be given Python code and a list of user input values (one per input() call, in order).
+
+Simulate the COMPLETE terminal session including:
+1. Each input() prompt text, followed immediately by the user's typed value on the same line — e.g. "What is your name? kaashvi"
+2. The output of all print() statements in order
+3. If there is a runtime error, show the exact Python error message
+
+Rules:
+- Return ONLY the raw terminal text — no markdown, no backticks, no explanations
+- Show input prompt + user value on the same line (no newline between them)
+- Preserve all newlines exactly as Python would produce them
+
+Only respond with the raw terminal output.`;
+
 const CHALLENGE_VALIDATOR_PROMPT = (challengeDescription: string) =>
   `You are a friendly coding coach for kids aged 10-14.
 
@@ -33,6 +49,45 @@ export interface RunResult {
 export interface ValidationResult {
   passed: boolean;
   message: string;
+}
+
+export async function runPythonCodeWithInputs(
+  code: string,
+  inputs: string[],
+  apiKey: string
+): Promise<RunResult> {
+  const inputList = inputs.map((v, i) => `Input ${i + 1}: "${v}"`).join("\n");
+  const userMessage = `Run this Python code:\n\n${code}\n\nUser inputs in order:\n${inputList}`;
+
+  const response = await fetch(PERPLEXITY_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        { role: "system", content: PYTHON_INTERACTIVE_PROMPT },
+        { role: "user", content: userMessage },
+      ],
+      temperature: 0,
+      max_tokens: 512,
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`API error ${response.status}: ${err}`);
+  }
+
+  const data = await response.json();
+  const output: string = data.choices?.[0]?.message?.content ?? "";
+
+  const errorKeywords = ["Error", "Traceback", "SyntaxError", "NameError", "TypeError", "ValueError", "IndentationError"];
+  const hasError = errorKeywords.some((kw) => output.includes(kw));
+
+  return { output: output.trim(), hasError, hasInputCall: false };
 }
 
 export async function runPythonCode(

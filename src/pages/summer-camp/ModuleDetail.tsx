@@ -660,7 +660,7 @@ function SectionCard({ section, idx, total, onPrev, onNext, atStart, atEnd }: {
 /* ─── ChallengeWrapper ─────────────────────────────────────────────── */
 function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWhatsApp, hints, solutionVideoUrl }: {
   n: number; icon: string; title: string; stamp: string; mission: string;
-  tone: "green" | "red" | "blue"; children: React.ReactNode;
+  tone: "green" | "red" | "blue" | "purple"; children: React.ReactNode;
   onWhatsApp: () => void; hints?: string[]; solutionVideoUrl?: string;
 }) {
   const [hintsShown, setHintsShown] = useState(0);
@@ -668,15 +668,17 @@ function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWh
   const allHintsShown = hints ? hintsShown >= hints.length : false;
 
   const colors = {
-    green: { bg: C.greenSoft, border: C.green, deep: C.greenDeep },
-    red:   { bg: C.redSoft,   border: C.red,   deep: "#a00735" },
-    blue:  { bg: C.blueSoft,  border: C.blue,  deep: C.blue },
+    green:  { bg: C.greenSoft,  border: C.green,  deep: C.greenDeep },
+    red:    { bg: C.redSoft,    border: C.red,    deep: "#a00735" },
+    blue:   { bg: C.blueSoft,   border: C.blue,   deep: C.blue },
+    purple: { bg: C.purpleSoft, border: C.purple, deep: C.purple },
   }[tone];
 
   const howToSteps = {
-    green: ["Read the mission above", "Replace every ___ with your own info", "Press ▶ Run to see your output", "Fix anything the output flags and run again"],
-    red:   ["Read the buggy code carefully", "Spot each mistake (there are 4)", "Fix them one by one in the editor", "Press ▶ Test Fix to check your work"],
-    blue:  ["Read the mission above", "Click inside the editor to start typing", "Write at least 3 print() statements", "Press ▶ Run to see your program run"],
+    green:  ["Read the mission above", "Replace every ___ with your own info", "Press ▶ Run to see your output", "Fix anything the output flags and run again"],
+    red:    ["Read the buggy code carefully", "Spot each mistake (there are 4)", "Fix them one by one in the editor", "Press ▶ Test Fix to check your work"],
+    blue:   ["Read the mission above", "Click inside the editor to start typing", "Write at least 3 print() statements", "Press ▶ Run to see your program run"],
+    purple: ["Press ▶ Run to start the program", "A terminal box appears — type your name there", "Press Enter or the Submit button", "Watch Python say hello to you!"],
   }[tone];
 
   return (
@@ -703,7 +705,7 @@ function ChallengeWrapper({ n, icon, title, stamp, mission, tone, children, onWh
             fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 800,
             color: C.ink, margin: "0 0 3px",
           }}>{title}</h3>
-          <div style={{ fontSize: 12, color: C.ink2, fontWeight: 600 }}>Challenge {n} of 3</div>
+          <div style={{ fontSize: 12, color: C.ink2, fontWeight: 600 }}>{n === 0 ? "Warm-up challenge" : `Challenge ${n} of 3`}</div>
         </div>
         <span style={{
           background: C.yellow, color: C.ink, borderRadius: 20,
@@ -1079,6 +1081,10 @@ export default function ModuleDetail() {
 
   /* ── Challenge hints ── */
   const hints = {
+    input: [
+      "Press Run, then look for the terminal box that appears below the editor. Type your name there!",
+      "Python's input() pauses and waits for you to type. Press Enter (or the Submit button) when done.",
+    ],
     guided: [
       "Look for the ___ blanks — replace each with your real info.",
       'Keep the quotes! e.g. print("Name: Priya")',
@@ -1238,6 +1244,28 @@ export default function ModuleDetail() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              {/* Challenge 0 — Warm-up with input() */}
+              {mod.inputChallenge && (
+                <ChallengeWrapper
+                  n={0} icon="🗣️"
+                  title="Challenge 0 — Warm-up"
+                  stamp="Talk to Python!"
+                  mission={mod.inputChallenge.description}
+                  tone="purple"
+                  onWhatsApp={() => setWaOpen(true)}
+                  hints={hints.input}
+                >
+                  <PythonPlayground
+                    starterCode={mod.inputChallenge.code ?? ""}
+                    challengeDescription={mod.inputChallenge.description}
+                    moduleColor="text-purple-600"
+                    moduleBgColor="bg-purple-50"
+                    moduleBorderColor="border-purple-200"
+                    variant="challenge"
+                  />
+                </ChallengeWrapper>
+              )}
+
               {/* Challenge 1 */}
               <ChallengeWrapper
                 n={1} icon="🏆"
@@ -1281,6 +1309,7 @@ export default function ModuleDetail() {
                     moduleBorderColor="border-red-200"
                     variant="debug"
                     hint={mod.debugChallenge.hint}
+                    debugBugs={mod.debugChallenge.bugs}
                   />
                 </ChallengeWrapper>
               )}

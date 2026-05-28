@@ -6,6 +6,13 @@ export interface ModuleChallenge {
   solutionVideoUrl?: string;
 }
 
+export interface DebugBug {
+  /** Substring that must be present in the code once this bug is fixed */
+  must: string;
+  /** Plain-English description of what was wrong (shown as per-bug feedback) */
+  hint: string;
+}
+
 export interface DebugChallenge {
   title: string;
   description: string;
@@ -17,6 +24,11 @@ export interface DebugChallenge {
   hint: string;
   /** Optional YouTube URL for a Manisha solution walkthrough (shown after all hints exhausted) */
   solutionVideoUrl?: string;
+  /**
+   * Deterministic bug checks — if provided, PythonPlayground uses string matching
+   * instead of LLM validation (more reliable for fixed-answer debug challenges).
+   */
+  bugs?: DebugBug[];
 }
 
 export interface BlankChallenge {
@@ -59,6 +71,7 @@ export interface SummerCampModule {
   intro: string;
   sections: ModuleSection[];
   videoUrl?: string;
+  inputChallenge?: ModuleChallenge;
   challenge: ModuleChallenge;
   debugChallenge?: DebugChallenge;
   blankChallenge?: BlankChallenge;
@@ -113,6 +126,14 @@ print("I love coding because it's AWESOME! 🚀")
 print("Python is my new best friend! 🐍")`,
       },
     ],
+    inputChallenge: {
+      title: "Talk to Python! 🗣️",
+      description: "Run the code — Python will ask for your name. Type it and press Enter to see what happens!",
+      code: `name = input("What is your name? ")
+print("Hello, " + name + "! 👋")
+print("Welcome to Python, " + name + "!")
+print("Today you're going to build something awesome! 🚀")`,
+    },
     challenge: {
       title: "Your Mission: Introduction Bot",
       description: "Create a program that prints 5 things about yourself — your name, age, favourite food, favourite game, and one superpower you wish you had!",
@@ -216,6 +237,24 @@ print("This summer I will build awesome things! 🚀"
         "Four lines printed cleanly with no errors: a greeting with a name, a learning statement, a favourite number statement, and an excited closing line.",
       hint: "Look carefully at: quotes around text, capital vs lowercase letters, and whether all brackets are closed properly.",
       solutionVideoUrl: "https://youtube.com/shorts/pIwdWWPUsQA",
+      bugs: [
+        {
+          must: 'print("Hello, my name is Priya!")',
+          hint: 'Bug 1: The text needs quotes around it — print("Hello, my name is Priya!")',
+        },
+        {
+          must: 'print("I am learning Python today!")',
+          hint: 'Bug 2: Python is case-sensitive — use print (lowercase p), not Print',
+        },
+        {
+          must: '"My favourite number is 7")',
+          hint: 'Bug 3: The closing quote is missing — "My favourite number is 7")',
+        },
+        {
+          must: 'print("This summer I will build awesome things! 🚀")',
+          hint: 'Bug 4: The closing bracket ) is missing at the end of the last print',
+        },
+      ],
     },
 
     blankChallenge: {
