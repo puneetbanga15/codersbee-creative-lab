@@ -284,125 +284,307 @@ Your program must have at least 4 print() statements and must run without any er
     id: 2,
     title: "Numbers & Strings",
     emoji: "🔢",
-    tagline: "The building blocks of everything",
+    tagline: "The two data types that power everything",
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
     duration: "Day 2",
-    topics: ["What are numbers?", "What are strings?", "Math with Python", "String tricks"],
-    intro: "Everything in the world is either a number or a description. Your age is a number. Your name is a description. In Python, we have NUMBERS (like 10, 3.14, 100) and STRINGS (like 'hello', 'pizza', 'awesome'). Today we learn the difference and why it matters SO much!",
+    topics: ["Integers & floats", "Python as a calculator", "What are strings?", "f-strings", "The BIG difference", "String superpowers"],
+    intro: "Everything a computer works with is either a NUMBER or TEXT. Your age? Number. Your name? Text. Your score in a game? Number. Your favourite song title? Text. Today you'll learn how Python thinks about both — and why they are completely different animals. By the end, you'll be making Python calculate things AND build beautiful sentences for you.",
     sections: [
       {
-        title: "Numbers — When We Count & Measure 🔢",
-        content: "Numbers in Python are for anything you want to do math with. Your age, your score in a game, the price of something, the temperature outside — these are all numbers!",
-        code: `# These are all NUMBERS in Python
+        title: "Numbers — Integers and Floats 🔢",
+        content: "Python has two kinds of numbers. **Integers** (int) are whole numbers — no decimal point. **Floats** are numbers with a decimal point. Python treats them slightly differently, and knowing which is which will save you a lot of confusion later!",
+        code: `# INTEGERS — whole numbers (no decimal)
 age = 12
+lives = 3
 score = 9500
-temperature = 37.5
-pocket_money = 100
+temperature_whole = 37   # 37 degrees, rounded
 
-# You can do MATH with numbers!
-print(age + 5)        # Adds 5 to age = 17
-print(score * 2)      # Multiplies score = 19000
-print(pocket_money - 30)  # Subtracts = 70
-print(10 / 3)         # Divides = 3.333...`,
-        analogy: "Think of numbers like Lego bricks you can count. 5 bricks + 3 bricks = 8 bricks. Python can do this math for you instantly! 🧱",
+# FLOATS — numbers with a decimal point
+price = 99.99
+pi = 3.14159
+temperature_exact = 37.5  # 37.5 degrees, precise
+average_score = 8.75
+
+# Python tells you which type it is
+print(type(age))          # <class 'int'>
+print(type(price))        # <class 'float'>
+
+# Integers divided always give floats!
+print(10 / 3)             # 3.3333333333333335
+print(10 // 3)            # 3  ← floor division, drops decimal`,
+        analogy: "Think of integers as full pizza slices 🍕 — 1, 2, 3. Floats are when someone cuts a slice in half and gives you 2.5 slices. Both are pizza, but they look different!",
       },
       {
-        title: "Strings — When We Describe 💬",
-        content: "Strings are any TEXT — names, messages, words, sentences. You wrap them in quotes (single ' or double \") to tell Python 'this is text, not a math problem!'",
-        code: `# These are all STRINGS in Python
-name = "Priya"
-favourite_color = "purple"
-school = "Sunshine Academy"
-greeting = "Hello there!"
+        title: "Python as Your Calculator 🧮",
+        content: "Python is an incredibly powerful calculator — way more powerful than the one on your phone. It knows all the maths operations and even some you might not have seen in school yet!",
+        code: `# The 6 main operators
+print(10 + 3)    # 13   → addition
+print(10 - 3)    # 7    → subtraction
+print(10 * 3)    # 30   → multiplication
+print(10 / 3)    # 3.333 → division (always float)
+print(10 // 3)   # 3    → floor division (drops decimal)
+print(10 % 3)    # 1    → modulo (remainder only!)
+print(10 ** 3)   # 1000 → power (10 to the power of 3)
 
-# You can JOIN strings together (called concatenation)
-print("My name is " + name)
-print("I love the color " + favourite_color)
-print(name + " goes to " + school)`,
-        tip: "ALWAYS put strings in quotes. If you forget the quotes, Python gets confused and thinks it's looking for a variable!",
+# Real-world uses
+pocket_money = 500
+spent = 175
+remaining = pocket_money - spent
+print("Money left: " + str(remaining))   # Money left: 325
+
+# Order of operations works like maths class (BODMAS)
+print(2 + 3 * 4)    # 14, not 20 — * happens before +
+print((2 + 3) * 4)  # 20 — brackets go first!`,
+        tip: "The % operator (modulo) gives you the REMAINDER. So 10 % 3 = 1 because 10 ÷ 3 is 3 with 1 left over. It's super useful for checking if a number is even or odd: if age % 2 == 0 means even!",
+      },
+      {
+        title: "Strings — Text in Python 💬",
+        content: "A string is any text wrapped in quotes. The quotes are the signal to Python: 'treat everything inside as text, not as code'. You can use single quotes or double quotes — Python accepts both, just be consistent!",
+        code: `# Single quotes work
+name = 'Priya'
+
+# Double quotes work too
+city = "Mumbai"
+
+# Triple quotes for multi-line text
+poem = """Roses are red,
+Violets are blue,
+Python is awesome,
+And so are you!"""
+
+print(name)
+print(city)
+print(poem)
+
+# Strings can hold ANYTHING — letters, numbers, spaces, emojis!
+mixed = "I am 12 years old 🎂 and I love coding! 💻"
+print(mixed)
+
+# But "12" is TEXT, not a number you can do maths with
+print("12" + "5")   # "125" — not 17!`,
+        analogy: "Quotes are like a picture frame 🖼️ — everything inside the frame is just a picture (text). Python looks at it but doesn't try to calculate it. Without the frame (quotes), Python thinks it's a command or a variable name.",
+      },
+      {
+        title: "Combining Strings — Two Ways ✨",
+        content: "Joining strings together is called **concatenation**. The old way uses + signs. The new, much better way uses **f-strings** — and professional Python developers use f-strings almost exclusively today. You should too!",
+        code: `name = "Arjun"
+age = 13
+city = "Delhi"
+
+# OLD way — concatenation with +
+# (notice you have to convert age with str())
+print("My name is " + name + " and I am " + str(age) + " years old.")
+
+# NEW way — f-strings (put f before the quote, use {} for variables)
+print(f"My name is {name} and I am {age} years old.")
+print(f"I live in {city}. That's a great city!")
+
+# f-strings can even do maths inside {}!
+price = 250
+quantity = 3
+print(f"Total cost: {price * quantity} rupees")
+print(f"Next year I'll be {age + 1} years old!")
+
+# f-strings are cleaner, shorter, and harder to get wrong
+# Always prefer f-strings when mixing text and variables`,
+        tip: "f-strings are your new best friend! Any time you want to put a variable inside a sentence, use f\"...{variable}...\". The f stands for 'formatted' — Python formats the string by replacing {} with the actual value.",
       },
       {
         title: "The BIG Difference 🤔",
-        content: "Here's where it gets interesting! 5 + 3 = 8 with numbers. But '5' + '3' = '53' with strings! Python just sticks text together instead of adding. This is called the difference between integers (whole numbers) and strings.",
-        code: `# See the difference!
-print(5 + 3)       # = 8  (math addition!)
-print("5" + "3")   # = 53 (text glued together!)
+        content: "Here's the most important thing to understand today: numbers and strings look similar but behave completely differently. The + operator does TOTALLY different things depending on which type you use it with. This trips up even experienced programmers sometimes!",
+        code: `# With NUMBERS: + means ADDITION (maths)
+print(5 + 3)       # 8   ← maths!
 
-# This would cause an ERROR - you can't mix them!
-# print(5 + "3")   ← DON'T do this!
+# With STRINGS: + means JOINING (concatenation)
+print("5" + "3")   # "53" ← text glued together!
 
-# But you can CONVERT between them
+# Mixing them → CRASH (TypeError)
+# print(5 + "3")   ← Python says: NOPE! Can't add int and str
+
+# The fix: convert one to match the other
+# Number → String: use str()
 age = 12
-print("I am " + str(age) + " years old!")  # str() converts number to text
-print(int("25") + 5)  # int() converts text to number = 30`,
-        analogy: "It's like this: if you have 5 apples 🍎 and 3 more apples, you get 8 apples. But if you have the WORD 'five' and the WORD 'three', you get the sentence 'fivethree' — which doesn't mean anything! 😄",
+print("I am " + str(age) + " years old")   # Works!
+print(f"I am {age} years old")              # Even better!
+
+# String → Number: use int() or float()
+text_number = "25"
+print(int(text_number) + 5)   # 30 ← now it's actual maths!
+print(float("3.14") + 1)      # 4.140000000000001
+
+# How to check what type something is
+print(type(42))      # <class 'int'>
+print(type("42"))    # <class 'str'>
+print(type(3.14))    # <class 'float'>`,
+        analogy: "Imagine you have 5 apples 🍎 and 3 apples — you get 8 apples. But if you have the STICKER that says '5' and the STICKER that says '3' and stick them together, you get the sticker '53'. Both use a plus sign, but one is real apples and one is just labels!",
       },
       {
-        title: "Cool String Tricks ✨",
-        content: "Strings have magical powers in Python! You can find out how long they are, make them UPPERCASE or lowercase, and much more.",
-        code: `name = "python rocks"
+        title: "String Superpowers 🦸",
+        content: "Strings come with built-in tools called **methods** — special actions that strings can perform on themselves. You call them using a dot (.) after the string. These are incredibly useful for working with text!",
+        code: `message = "  hello, python world!  "
 
-print(len(name))          # Length = 12 characters
-print(name.upper())       # PYTHON ROCKS
-print(name.lower())       # python rocks
-print(name.capitalize())  # Python rocks
-print(name.replace("rocks", "is awesome"))  # python is awesome
+# Length — how many characters?
+print(len("coding"))         # 6
 
-# Count how many times a letter appears
-print(name.count("o"))    # = 2`,
+# Case changers
+print(message.upper())       # "  HELLO, PYTHON WORLD!  "
+print(message.lower())       # "  hello, python world!  "
+print(message.capitalize())  # "  hello, python world!  " (first char only)
+print("python".title())      # "Python" (first letter of each word)
+
+# Whitespace removal
+print(message.strip())       # "hello, python world!" (removes spaces)
+
+# Finding and replacing
+sentence = "I love cats and cats love me"
+print(sentence.count("cats"))         # 2
+print(sentence.replace("cats", "dogs")) # "I love dogs and dogs love me"
+print(sentence.find("cats"))          # 7 (position of first 'cats')
+
+# Checking what's inside
+print("hello123".isalpha())   # False (has numbers)
+print("hello".isalpha())      # True (only letters)
+print("123".isdigit())        # True (only digits)
+
+# Splitting a string into a list
+words = "apple,banana,mango".split(",")
+print(words)   # ['apple', 'banana', 'mango']`,
+        tip: "You can chain methods! Try: '  HELLO WORLD  '.strip().lower().replace('world', 'python') — Python runs them one after another from left to right.",
       },
     ],
     challenge: {
       title: "Your Mission: The Info Card Maker",
-      description: "Create a program that stores information about yourself and prints a nice info card! Use numbers for age and score, and strings for names.",
-      code: `# INFO CARD MAKER
-# Store your info
-my_name = "___"          # Your name (string)
-my_age = ___             # Your age (number)
-my_hobby = "___"         # Your hobby (string)
-my_score = ___           # Made-up game score (number)
+      description: "Create a program that stores information about yourself using the right data types, then prints a nicely formatted info card using f-strings. Your card must use at least 3 variables and show a calculation!",
+      solutionVideoUrl: "https://youtube.com/shorts/om5wTk_t1ls",
+      code: `# INFO CARD MAKER — use f-strings!
+# Store your info (use the right types!)
+my_name = "___"          # string — your name
+my_age = ___             # int — your age
+my_hobby = "___"         # string — your hobby
+my_score = ___           # int — made-up game score
 
-# Print the card
-print("╔══════════════════╗")
-print("     MY INFO CARD     ")
-print("Name: " + my_name)
-print("Age: " + str(my_age) + " years old")
-print("Hobby: " + my_hobby)
-print("Top Score: " + str(my_score) + " points!")
-print("╚══════════════════╝")`,
+# Calculate something
+next_year_age = my_age + 1
+double_score = my_score * 2
+
+# Print the card using f-strings
+print("╔══════════════════════╗")
+print("      MY INFO CARD      ")
+print(f"  Name  : {my_name}")
+print(f"  Age   : {my_age} (turning {next_year_age} next year!)")
+print(f"  Hobby : {my_hobby}")
+print(f"  Score : {my_score} pts (double = {double_score}!)")
+print("╚══════════════════════╝")`,
     },
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Broken Code",
+      description: "This code is trying to print a player profile, but it has 4 bugs! Some are type errors, some are string mistakes. Find and fix all of them, then run it to see a clean profile.",
+      brokenCode: `# Player Profile Printer — fix the 4 bugs!
+
+player_name = "Rohan"
+player_age = "14"
+player_score = 8750
+bonus_points = 500
+
+# Bug hunt begins here...
+total = player_score + bonus_points
+print("Player: " + player_name)
+print("Age: " + player_age + " years old")
+print("Total score: " + total)
+print(f"Next year Rohan will be {player_age + 1} years old")`,
+      expectedOutputDescription:
+        "A clean player profile showing name, age, total score (9250), and next year's age (15) — all printed without any TypeError.",
+      hint: "Look carefully at which variables are numbers and which are strings. Can you add a number to a string with +? What about in an f-string?",
+      bugs: [
+        {
+          must: 'player_age = 14',
+          hint: 'Bug 1: player_age is "14" (a string) but we need to do maths with it — remove the quotes to make it an integer',
+        },
+        {
+          must: 'print("Total score: " + str(total))',
+          hint: 'Bug 2: total is a number (int) but you\'re trying to join it to a string with + — use str(total) or switch to an f-string',
+        },
+        {
+          must: 'player_age + 1',
+          hint: 'Bug 3: Once player_age is fixed to an int, the f-string calculation {player_age + 1} will work correctly',
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build a Receipt Generator",
+      task: `Write a Python program from scratch that acts like a shop receipt. It must:
+1. Store at least 3 items with their prices (as floats or ints)
+2. Calculate the total price
+3. Apply a 10% discount to the total
+4. Print a formatted receipt using f-strings showing each item, the total, and the discounted price
+Run it and make sure all numbers look correct!`,
+      validationGoal:
+        "The output should show at least 3 items with prices, a calculated total, and a discounted final price. The receipt should use f-strings or formatted output and display correct arithmetic. All values should be numbers (not strings that look like numbers).",
+      starterComment: `# RECEIPT GENERATOR — write it from scratch!
+# Hint: store items as variables, calculate total, apply 10% discount
+# Use f-strings to make it look neat
+
+`,
+    },
+
     quiz: [
       {
-        question: "What will print(\"3\" + \"4\") show on screen?",
-        options: ["7", "34", "3+4", "Error"],
+        question: "What will print(\"3\" + \"4\") display?",
+        options: ["7", "34", "3 + 4", "Error"],
         correct: 1,
-        explanation: "When you use + with strings, Python sticks them together (concatenation)! \"3\" + \"4\" = \"34\", not 7. To get 7, you'd need the numbers 3 + 4 without quotes.",
+        explanation: "When + is used with strings, Python concatenates (joins) them — it doesn't add! \"3\" + \"4\" gives \"34\". To get 7, you need real numbers: print(3 + 4).",
       },
       {
-        question: "Which of these is a STRING?",
-        options: ["42", "3.14", "\"hello\"", "100"],
+        question: "Which of these is a FLOAT?",
+        options: ["42", "\"3.14\"", "3.14", "True"],
         correct: 2,
-        explanation: "\"hello\" is a string because it's wrapped in quotes! Numbers like 42, 3.14, and 100 don't need quotes.",
+        explanation: "3.14 (no quotes) is a float — a number with a decimal point. \"3.14\" in quotes is a string. 42 is an integer. True is a boolean (we'll meet that soon!).",
       },
       {
-        question: "What does len(\"coding\") return?",
-        options: ["5", "6", "7", "coding"],
+        question: "What does the % operator do in Python?",
+        options: ["Calculates percentage", "Gives the remainder after division", "Converts to percent string", "Divides and rounds"],
         correct: 1,
-        explanation: "len() counts the number of characters in a string. \"coding\" has 6 letters: c-o-d-i-n-g = 6!",
+        explanation: "% is the modulo operator — it gives the REMAINDER. So 10 % 3 = 1 because 10 ÷ 3 is 3 with 1 left over. It's often used to check if a number is even (number % 2 == 0).",
+      },
+      {
+        question: "What is the correct f-string to print \"I am 12 years old\" if age = 12?",
+        options: ['print("I am age years old")', 'print(f"I am {age} years old")', 'print("I am " + age + " years old")', 'print(f"I am age years old")'],
+        correct: 1,
+        explanation: 'f-strings use curly braces {} to insert variable values. print(f"I am {age} years old") is correct — the f before the quote activates f-string mode, and {age} gets replaced by the actual value 12.',
+      },
+      {
+        question: "What does len(\"CodersBee\") return?",
+        options: ["8", "9", "10", "CodersBee"],
+        correct: 1,
+        explanation: "len() counts characters including uppercase and lowercase. C-o-d-e-r-s-B-e-e = 9 characters. It counts every single character including spaces and punctuation in other strings.",
+      },
+      {
+        question: "Why does print(\"Hello \" + 5) cause an error?",
+        options: ["5 is too small a number", "You can't use + inside print()", "Python can't join a string and an integer directly", "\"Hello\" needs to be lowercase"],
+        correct: 2,
+        explanation: "Python's + operator can join two strings OR add two numbers — but it can't mix types. \"Hello \" is a str and 5 is an int. Fix: use str(5) to convert, or use an f-string: f\"Hello {5}\".",
+      },
+      {
+        question: "What does \"python\".upper() return?",
+        options: ["Python", "PYTHON", "python", "Error — upper() doesn't exist"],
+        correct: 1,
+        explanation: ".upper() is a string method that converts every character to uppercase. \"python\".upper() returns \"PYTHON\". Similarly, .lower() makes everything lowercase and .title() capitalises each word.",
       },
     ],
     keyLearnings: [
-      "Numbers do maths — strings hold text wrapped in quotes",
-      "print(5 + 3) gives 8, but print(\"5\" + \"3\") gives \"53\" — totally different!",
-      "Use str() to turn a number into text, and int() to turn text into a number",
-      "len() counts characters, .upper() shouts, .lower() whispers",
-      "Never mix numbers and strings in maths — Python will throw a TypeError",
-      "Strings are like beads on a necklace — characters strung together",
+      "Integers are whole numbers (12, 100); floats have decimals (3.14, 9.99) — both are numbers",
+      "Python operators: + - * / // % ** — // gives whole number result, % gives remainder",
+      "Strings are text wrapped in quotes — single, double, or triple for multi-line",
+      "f-strings (f\"Hello {name}\") are the modern way to mix variables into text — use them always",
+      "print(5 + 3) = 8, but print(\"5\" + \"3\") = \"53\" — + means totally different things!",
+      "Never mix str + int directly — use str() to convert, or use an f-string",
+      "String methods: len(), .upper(), .lower(), .strip(), .replace(), .count(), .split()",
     ],
-    funFact: "The word 'string' in programming comes from the idea of characters strung together like beads on a necklace! 📿",
-    nextPreview: "Next up: Variables — the magical boxes that store ALL your data!",
+    funFact: "The word 'string' in programming comes from the idea of characters strung together like beads on a necklace — one after another in a line! 📿 The longest string ever stored in Python had over 1 billion characters.",
+    nextPreview: "Next up: Variables — the magical named boxes that let your program remember things!",
   },
 
   {
