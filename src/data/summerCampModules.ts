@@ -909,136 +909,354 @@ Bonus: Add a check — if remaining money is negative, print a warning!`,
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
     duration: "Day 4",
-    topics: ["If statements", "Else branches", "elif for more choices", "Comparison operators"],
-    intro: "Every day you make hundreds of decisions. If it's raining, grab an umbrella. If you're hungry, eat something. If your homework is done, go play! Python can make decisions too, using something called if/else statements. Today you'll teach your code to be smart!",
+    topics: ["If statements", "If-else branches", "elif for many choices", "Comparison operators", "and / or / not", "Nested if statements"],
+    intro: "Every single day you make hundreds of decisions without even thinking about it. If it's raining, you grab an umbrella. If your homework is done AND it's not too late, you play games. If you're hungry OR it's lunchtime, you eat. Python makes decisions EXACTLY the same way — using if, elif, and else. Today you'll teach your code to think, choose, and react!",
     sections: [
       {
         title: "The If Statement — Making One Decision 🚦",
-        content: "An if statement says: 'IF this condition is true, THEN do this thing.' Like a traffic light — IF the light is red, STOP!",
-        code: `# Basic if statement
+        content: "An if statement says: **IF this condition is True, run this code.** The colon (:) at the end and the **indentation** (4 spaces) are not optional — they're how Python knows which lines belong inside the if block. Get either wrong and Python crashes!",
+        code: `# Basic if — only runs when condition is True
 temperature = 38
 
 if temperature > 37:
-    print("You have a fever! 🤒")
-    print("Rest and drink water!")
+    print("🤒 You have a fever!")
+    print("Rest and drink lots of water.")
+    print("No school today!")
 
-# Notice the indent (4 spaces) — it tells Python
-# which lines are INSIDE the if statement`,
-        analogy: "Think of if as a guard at a door 🚪. The guard checks: 'Do you have a ticket?' IF yes → you get in. The indented code is what happens if you get in!",
+print("This always prints — it's outside the if")
+
+# if with a boolean variable
+is_raining = True
+
+if is_raining:               # same as: if is_raining == True
+    print("☔ Grab an umbrella!")
+
+# if with a string check
+mood = "happy"
+if mood == "happy":
+    print("😊 Great day to code!")`,
+        analogy: "Think of if as a bouncer at a club 🚪. The bouncer has ONE rule to check. If you pass → you get in. If not → you walk straight past. The bouncer doesn't call after you — the rest of the code just continues!",
       },
       {
         title: "If-Else — Two Choices 🔀",
-        content: "What if you want to do something ELSE when the condition is false? Use else! It's the backup plan.",
+        content: "What if you want to do something different when the condition is False? Add an **else** block — it's the backup plan that ALWAYS runs when if is False. Together they cover ALL cases: either the condition is True, or it's not.",
         code: `score = 75
 
 if score >= 60:
-    print("PASS! Great job! 🎉")
-    print("You can move to the next level!")
+    print("✅ PASS! Great job!")
+    print("You move to the next level!")
 else:
-    print("Not quite... Try again! 💪")
-    print("You'll get it next time!")
+    print("❌ Not quite — try again!")
+    print("You'll get it next time! 💪")
 
-# Another example
-is_weekend = True
+# Another example — even vs odd
+number = 17
 
-if is_weekend:
-    print("No school today! 🎮")
+if number % 2 == 0:
+    print(f"{number} is EVEN 🟢")
 else:
-    print("Time for school! 📚")`,
+    print(f"{number} is ODD 🔴")
+
+# One more — time-based greeting
+hour = 14    # 2pm
+
+if hour < 12:
+    print("Good morning! ☀️")
+else:
+    print("Good afternoon! 🌤️")`,
+        tip: "else never has a condition — it's always just `else:`. It catches EVERYTHING that didn't match the if (or any elif). Think of it as the default drawer where miscellaneous things go! 🗂️",
       },
       {
-        title: "Elif — Multiple Choices 📋",
-        content: "Sometimes there are more than two options! Like a menu at a restaurant. That's what elif (else-if) is for!",
-        code: `# Grading system
+        title: "Elif — Many Choices 📋",
+        content: "What if you have more than two options? **elif** (short for 'else if') lets you chain as many conditions as you need. Python checks them **in order from top to bottom** and runs the FIRST one that's True — then skips the rest entirely.",
+        code: `# Grade calculator with 5 levels
 score = 85
 
 if score >= 90:
-    print("A+ - Outstanding! 🌟")
+    grade = "A+"
+    msg = "Outstanding! 🌟"
 elif score >= 80:
-    print("A - Excellent! ⭐")
+    grade = "A"
+    msg = "Excellent! ⭐"
 elif score >= 70:
-    print("B - Good work! 👍")
+    grade = "B"
+    msg = "Good work! 👍"
 elif score >= 60:
-    print("C - Keep trying! 📚")
+    grade = "C"
+    msg = "Keep trying! 📚"
 else:
-    print("Need more practice! 💪")
+    grade = "F"
+    msg = "Let's practise more! 💪"
 
-# Python checks from top to bottom
-# and stops at the FIRST true condition`,
-        tip: "elif is short for 'else if'. Python checks each condition in order and runs the FIRST one that is true, then skips the rest!",
+print(f"Score: {score}  →  Grade: {grade}  →  {msg}")
+
+# Weather advisor
+temp = 28
+
+if temp >= 38:
+    advice = "🥵 Stay indoors — dangerous heat!"
+elif temp >= 30:
+    advice = "☀️ Hot! Wear light clothes and sunscreen."
+elif temp >= 20:
+    advice = "🌤️ Pleasant — perfect for a t-shirt!"
+elif temp >= 10:
+    advice = "🧥 Cool — grab a jacket."
+else:
+    advice = "🥶 Cold! Bundle up!"
+
+print(f"{temp}°C → {advice}")`,
+        analogy: "elif is like a multiple-choice exam 📝. Python reads question 1 (if). Wrong? Try question 2 (elif). Still wrong? Question 3 (elif)... and so on. The moment it finds the right answer, it stops reading.",
       },
       {
         title: "Comparison Operators — The Decision Tools 🔍",
-        content: "To make decisions, you need to compare things. Python gives you special comparison symbols:",
-        code: `age = 12
+        content: "Every if condition uses comparison operators — the symbols that compare two values and return True or False. These six operators are the backbone of every decision in every program ever written.",
+        code: `age = 15
+height = 162
 
-print(age == 12)    # Equal to?        True
-print(age != 10)    # Not equal to?    True
-print(age > 10)     # Greater than?    True
-print(age < 15)     # Less than?       True
-print(age >= 12)    # Greater or equal? True
-print(age <= 12)    # Less or equal?   True
+# The 6 comparison operators
+print(age == 15)     # True  — equal to
+print(age != 10)     # True  — NOT equal to
+print(age > 13)      # True  — greater than
+print(age < 18)      # True  — less than
+print(age >= 15)     # True  — greater than OR equal
+print(age <= 20)     # True  — less than OR equal
 
-# Combine conditions with 'and' / 'or'
-if age >= 10 and age <= 13:
-    print("You're a tween! 😎")
+# Real-world: roller coaster height check
+MIN_HEIGHT = 140
 
-if age == 12 or age == 13:
-    print("You're either 12 or 13!")`,
+if height >= MIN_HEIGHT:
+    print(f"✅ {height}cm — you can ride! 🎢")
+else:
+    print(f"❌ {height}cm — need {MIN_HEIGHT - height}cm more to ride.")
+
+# WARNING: = vs ==
+x = 5          # = ASSIGNS (puts 5 into x)
+if x == 5:     # == COMPARES (asks: is x equal to 5?)
+    print("x is five!")
+# NEVER write: if x = 5:  ← SyntaxError!`,
+        tip: "The most common beginner mistake: writing `if score = 90:` instead of `if score == 90:`. One = puts a value in a box. Two == asks a question. When in doubt — **if you're comparing, use two!**",
+      },
+      {
+        title: "Logical Operators — and, or, not 🧠",
+        content: "Real decisions often involve multiple conditions at once. **and** requires ALL conditions to be True. **or** needs just ONE. **not** flips True to False and vice versa. Combining these lets you write powerful, expressive conditions.",
+        code: `age = 15
+has_ticket = True
+is_member = False
+height = 155
+
+# AND — every condition must be True
+if age >= 13 and has_ticket:
+    print("✅ Welcome to the concert! 🎵")
+
+# OR — at least one condition must be True
+if age < 5 or is_member:
+    print("🎟️ You get in for free!")
+else:
+    print("💳 That's ₹200 please.")
+
+# NOT — flips True ↔ False
+if not is_member:
+    print("💡 Tip: join our membership for discounts!")
+
+# Combining AND + OR (use brackets to be clear!)
+if height >= 140 and (age >= 10 or has_ticket):
+    print("🎢 You can ride the roller coaster!")
+
+# Truth table — quickly test logic
+print(True and False)   # False — one is False
+print(True or False)    # True  — one is True
+print(not True)         # False — flipped!`,
+        analogy: "**and** is like needing BOTH a key AND a code to open a safe 🔐. **or** is like any door in a building — open ONE and you're in. **not** is the light switch — it just flips whatever state you had! 💡",
+      },
+      {
+        title: "Nested If — Decisions Inside Decisions 🪆",
+        content: "Sometimes a decision leads to another decision. You can put an if statement **inside** another if statement — this is called **nesting**. Each level needs its own indentation (4 more spaces). It's powerful but keep it to 2–3 levels max or it gets hard to read!",
+        code: `# Theme park entry system
+age = 14
+height = 158
+has_parent = False
+
+if age >= 10:
+    print("✅ Old enough to enter the park")
+    if height >= 150:
+        print("✅ Tall enough for all rides")
+        if age >= 18 or has_parent:
+            print("✅ Can enter the extreme zone 🎢")
+        else:
+            print("⚠️ Extreme zone needs a parent (under 18)")
+    else:
+        still_need = 150 - height
+        print(f"⚠️ Need {still_need}cm more for big rides")
+        print("✅ Junior rides are available!")
+else:
+    print("❌ Must be 10+ to enter")
+
+# Cleaner version using 'and' (same logic, fewer levels)
+if age >= 10 and height >= 150 and (age >= 18 or has_parent):
+    print("Full access — extreme zone unlocked! 🌟")`,
+        tip: "Before adding a nested if, ask: can I combine the conditions with `and` / `or` instead? Often you can flatten nested ifs into a single condition — cleaner code is always better! 🏆",
       },
     ],
     challenge: {
-      title: "Your Mission: The Weather Advisor",
-      description: "Build a program that tells you what to wear based on the temperature!",
-      code: `# WEATHER ADVISOR
-temperature = 25   # Change this number to test!
+      title: "Your Mission: The Smart Ticket Machine 🎟️",
+      description: "Build a cinema ticket price calculator! Prices vary by age AND day of week. Use if/elif/else and logical operators. Your program must handle at least 4 different ticket categories.",
+      code: `# 🎬 SMART CINEMA TICKET MACHINE
+age = 14           # Change to test different ages!
+day = "Saturday"   # Change to: Monday, Saturday, Sunday
 
-print("Today's temperature: " + str(temperature) + "°C")
-print("")
+BASE_PRICE = 250   # rupees
 
-if temperature >= 35:
-    print("🥵 Very hot! Wear shorts and sunscreen!")
-elif temperature >= 25:
-    print("☀️ Warm! Perfect for a t-shirt!")
-elif temperature >= 15:
-    print("🌤️ Cool! Grab a light jacket!")
-elif temperature >= 5:
-    print("🧥 Cold! Wear a warm coat!")
+print(f"Customer age: {age} | Day: {day}")
+print("-" * 35)
+
+# Determine ticket type by age
+if age < 5:
+    ticket_type = "Infant"
+    price = 0
+elif age < 12:
+    ticket_type = "Child"
+    price = BASE_PRICE * 0.5
+elif age >= 60:
+    ticket_type = "Senior"
+    price = BASE_PRICE * 0.6
 else:
-    print("🥶 Freezing! Dress up super warm!")
+    ticket_type = "Adult"
+    price = BASE_PRICE
 
-# BONUS: Add what activity to do in each weather!`,
+# Weekend surcharge
+if day == "Saturday" or day == "Sunday":
+    price = price * 1.2
+    print("📅 Weekend surcharge applied (+20%)")
+
+# Final output
+print(f"Ticket type : {ticket_type}")
+print(f"Final price : ₹{price:.0f}")
+
+if price == 0:
+    print("🎉 FREE entry for infants!")
+elif price < 150:
+    print("👍 Great value!")
+else:
+    print("🍿 Enjoy the film!")`,
     },
+
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Grade Calculator",
+      description: "This grade calculator has 3 bugs — one classic assignment-vs-comparison mistake, one type error, and one logical error. Fix them all to get a clean grade report!",
+      brokenCode: `# Grade Report Generator — fix 3 bugs!
+score = 85
+bonus = 10
+final_score = score + bonus   # 95
+
+if final_score = 90:          # Bug 1
+    grade = "A+"
+elif final_score >= 80:
+    grade = "A"
+elif final_score >= 70:
+    grade = "B"
+else:
+    grade = "C"
+
+print("Final score: " + final_score)   # Bug 2
+print("Grade: " + grade)
+
+if final_score >= 90 and grade = "A+":  # Bug 3
+    print("🌟 Outstanding performance!")`,
+      expectedOutputDescription:
+        "A clean grade report printing 'Final score: 95', 'Grade: A+', and '🌟 Outstanding performance!' — with no SyntaxError or TypeError.",
+      hint: "Look for: (1) a place where = should be == inside an if condition, (2) a type mismatch when joining a number to a string, and (3) another = vs == confusion.",
+      bugs: [
+        {
+          must: "if final_score == 90:",
+          hint: "Bug 1: Inside an if condition, you must use == to compare — not =. Writing `if final_score = 90:` is a SyntaxError because = is for assignment, not comparison!",
+        },
+        {
+          must: "str(final_score)",
+          hint: "Bug 2: final_score is an integer. You can't join it to a string with +. Wrap it: str(final_score), or switch to an f-string: f\"Final score: {final_score}\"",
+        },
+        {
+          must: 'grade == "A+"',
+          hint: 'Bug 3: Same mistake again — inside the if condition, `grade = "A+"` is assignment (SyntaxError). Change it to `grade == "A+"` to compare.',
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build an RPG Character Class Selector",
+      task: `Write a Python program that recommends an RPG character class based on stats. It must:
+1. Store three stat values: strength (1–10), agility (1–10), and magic (1–10)
+2. Use if/elif/else to recommend a class:
+   - strength is highest → "⚔️ Warrior"
+   - agility is highest → "🏹 Ranger"
+   - magic is highest → "🪄 Mage"
+   - all equal → "🌟 Paladin (master of all!)"
+3. Print the character summary using f-strings
+4. BONUS: Add a "rare class" message if any stat is 10 (legendary status!)`,
+      validationGoal:
+        "The output should show the three stat values, a recommended character class based on which stat is highest, and a formatted character summary. The logic must correctly identify the highest stat and map it to the right class.",
+      starterComment: `# ⚔️ RPG CHARACTER CLASS SELECTOR
+# Hint: compare strength, agility, and magic to each other
+# Use >= to handle ties (e.g. strength >= agility and strength >= magic)
+
+`,
+    },
+
     quiz: [
       {
         question: "What does == mean in Python?",
         options: ["Assigns a value to a variable", "Checks if two values are equal", "Makes something greater than", "Multiplies two numbers"],
         correct: 1,
-        explanation: "== checks if two things are equal and returns True or False. Remember: = assigns (puts value in a box), while == compares (asks 'are these the same?')!",
+        explanation: "== is the comparison operator — it checks if two things are equal and returns True or False. Remember: = assigns (puts value in a box), while == compares (asks 'are these the same?'). This is one of the most common beginner mistakes!",
       },
       {
         question: "In an if/elif/else chain, how many blocks run if the first condition is True?",
-        options: ["All of them", "None of them", "Only the first one", "Only the last one"],
+        options: ["All of them", "None of them", "Only the first matching one", "Only the last one"],
         correct: 2,
-        explanation: "Python stops at the FIRST condition that is True! Once it finds a match, it runs that block and skips everything else. That's what makes elif so useful!",
+        explanation: "Python stops at the FIRST condition that is True! Once it finds a match, it runs that block and completely skips everything else in the chain. That's what makes elif chains so efficient.",
       },
       {
         question: "What does 'and' do in a condition?",
         options: ["Both conditions must be True", "Either condition must be True", "Reverses the condition", "Adds two numbers"],
         correct: 0,
-        explanation: "With 'and', BOTH conditions must be True for the whole thing to be True. Like needing BOTH a ticket AND an ID to enter a concert!",
+        explanation: "With 'and', BOTH conditions must be True for the whole expression to be True. Like needing BOTH a key AND a code to open a safe — one alone is not enough!",
+      },
+      {
+        question: "What does `not True` evaluate to?",
+        options: ["True", "False", "None", "Error"],
+        correct: 1,
+        explanation: "not flips the boolean value — `not True` becomes False, and `not False` becomes True. It's like a light switch: not flips whatever state you had. Useful for writing `if not is_logged_in:` instead of `if is_logged_in == False:`.",
+      },
+      {
+        question: "Which condition correctly checks if age is between 13 and 17 (inclusive)?",
+        options: ["if age > 13 and age < 17:", "if 13 <= age <= 17:", "if age >= 13 or age <= 17:", "if age = 13 to 17:"],
+        correct: 1,
+        explanation: "Python allows chained comparisons like `13 <= age <= 17` — elegant and readable! Option A would exclude 13 and 17. Option C (using or) would be True for almost any number. Option D is not valid Python syntax.",
+      },
+      {
+        question: "What prints when score = 75?\n\nif score >= 90:\n    print('A')\nelif score >= 75:\n    print('B')\nelif score >= 60:\n    print('C')\nelse:\n    print('F')",
+        options: ["A", "B", "C", "B and C"],
+        correct: 1,
+        explanation: "Python checks from top to bottom and stops at the FIRST True condition. score >= 90 is False. score >= 75 is True (75 >= 75) — so it prints 'B' and stops. It never even checks the C or F conditions!",
+      },
+      {
+        question: "What is the purpose of indentation in an if statement?",
+        options: ["It makes the code look nice", "It tells Python which lines belong inside the if block", "It speeds up the program", "It is optional in Python"],
+        correct: 1,
+        explanation: "Indentation in Python is NOT decorative — it's mandatory syntax! It tells Python exactly which lines of code belong inside the if block. Unlike other languages that use {} braces, Python uses whitespace. Get it wrong and you get an IndentationError!",
       },
     ],
     keyLearnings: [
-      "if checks a condition — if it's True, the indented block runs",
-      "else is the backup plan — it runs when the if condition is False",
-      "elif lets you check more conditions in between if and else",
-      "== checks equality (is it the same?), = assigns (put this value in the box)",
-      "'and' needs both conditions True; 'or' needs just one to be True",
-      "Python checks elif conditions in order and stops at the first True one",
+      "if checks a condition — if True, the indented block runs; otherwise it's skipped",
+      "else is the backup that runs when the if condition is False — covers all remaining cases",
+      "elif chains let you check many conditions; Python runs the FIRST True one and skips the rest",
+      "== compares (is this equal?); = assigns (put this value here) — never mix them up in conditions!",
+      "Comparison operators: == != > < >= <= — they always return True or False",
+      "'and' needs ALL conditions True; 'or' needs just ONE; 'not' flips True↔False",
+      "Nested if = an if inside another if — each level needs 4 more spaces of indentation",
+      "Chained comparisons: 13 <= age <= 17 is valid Python — clean and readable!",
     ],
-    funFact: "Every video game uses thousands of if/else statements! When your character jumps in Mario, the game checks: if button pressed AND player is on ground → jump! 🎮",
-    nextPreview: "Day 5 is LOOPS — making Python do the same thing over and over so you don't have to!",
+    funFact: "Every video game uses thousands of if/else statements! When Mario jumps, the game checks: if jump_button pressed AND mario.is_on_ground → apply_jump_force(). A single second of gameplay can trigger millions of if checks! 🎮",
+    nextPreview: "Day 5 is LOOPS — making Python repeat things thousands of times so you never have to copy-paste code again!",
   },
 
   {
@@ -1050,143 +1268,336 @@ else:
     bgColor: "bg-red-50",
     borderColor: "border-red-200",
     duration: "Day 5",
-    topics: ["For loops", "While loops", "range() function", "Loop tricks"],
-    intro: "Imagine writing 'I will not talk in class' 100 times on a chalkboard. BORING! 😫 Now imagine telling Python: 'Print that sentence 100 times!' and it does it in a blink. ⚡ That's the magic of loops! Loops let you repeat things without writing the same code over and over.",
+    topics: ["For loops", "range() function", "While loops", "Nested loops", "break and continue", "enumerate()"],
+    intro: "Imagine writing 'I will not talk in class' 100 times on a chalkboard. BORING! 😫 Now imagine telling Python: 'Print that 100 times' — and it finishes in a blink. ⚡ That's the magic of loops! Loops are how computers do boring repetitive work so humans don't have to. They're also how every animation, every game level, and every search engine works behind the scenes.",
     sections: [
       {
         title: "The For Loop — Count and Repeat 🔢",
-        content: "A for loop repeats code a specific number of times, or once for each item in a collection. It's perfect when you KNOW how many times you want to repeat!",
-        code: `# Print 1 to 5
-for number in range(1, 6):
-    print(number)
-# Output: 1, 2, 3, 4, 5
+        content: "A **for loop** repeats code a specific number of times, or once for each item in a sequence. Use `range()` to generate numbers. It takes 1, 2, or 3 arguments: `range(stop)`, `range(start, stop)`, or `range(start, stop, step)`. The stop value is always **excluded**.",
+        code: `# range(stop) — counts from 0 up to (not including) stop
+for i in range(5):
+    print(i)           # 0 1 2 3 4
 
-# range(1, 6) means: start at 1, stop BEFORE 6
-# So it goes: 1, 2, 3, 4, 5
+# range(start, stop) — most common form
+for num in range(1, 6):
+    print(num)         # 1 2 3 4 5
 
-# Print a fun message 3 times
-for i in range(3):
-    print("Python is AWESOME! 🚀")
+# range(start, stop, step) — step controls jump size
+for n in range(0, 11, 2):
+    print(n)           # 0 2 4 6 8 10   (even numbers)
 
-# Count down from 5
-for countdown in range(5, 0, -1):   # third number = step
-    print(countdown)
-print("BLAST OFF! 🚀")`,
-        analogy: "A for loop is like a conveyor belt at a sushi restaurant 🍣. For each piece of sushi that comes past, you grab one. The belt keeps moving until all the food is gone!",
+# Count DOWN (negative step)
+for countdown in range(5, 0, -1):
+    print(f"T-minus {countdown}...")
+print("🚀 BLAST OFF!")
+
+# Print the 7 times table
+print("\\n7 Times Table:")
+for i in range(1, 13):
+    print(f"7 × {i:2} = {7 * i}")`,
+        analogy: "range() is like a staircase escalator 🏃 — you set where it starts, where it stops, and how big each step is. The for loop rides up one step at a time until it reaches the top!",
       },
       {
-        title: "Looping Through Lists 📋",
-        content: "One of the coolest uses of for loops is going through every item in a list!",
-        code: `# Loop through a list of friends
+        title: "Looping Through Lists & Strings 📋",
+        content: "The real power of for loops is iterating over **collections** — lists, strings, anything Python can step through. You don't need range() at all — just write `for item in collection`.",
+        code: `# Loop through a list — no index needed!
 friends = ["Aarav", "Priya", "Rohan", "Meera"]
 
 for friend in friends:
-    print("Hello, " + friend + "! 👋")
+    print(f"👋 Hello, {friend}!")
 
-# Loop through planets
-planets = ["Mercury", "Venus", "Earth", "Mars"]
+# Loop through a string — character by character
+for letter in "Python":
+    print(letter, end=" ")   # P y t h o n
+print()
 
-for planet in planets:
-    print("🪐 " + planet + " is a planet!")
-
-# You can even calculate inside a loop!
-prices = [10, 25, 5, 30, 15]
+# Add up a list of prices
+prices = [120, 45, 230, 89, 15]
 total = 0
 for price in prices:
-    total = total + price
-print("Total cost: $" + str(total))`,
+    total += price
+print(f"\\n🧾 Cart total: ₹{total}")
+print(f"Average item: ₹{total / len(prices):.2f}")
+
+# Loop + if together — filter a list
+scores = [72, 95, 61, 88, 55, 91, 78]
+print("\\n🏆 Students who passed (≥ 60):")
+for score in scores:
+    if score >= 60:
+        print(f"  ✅ {score}")`,
+        tip: "When you need both the **index** AND the **value** while looping, use `enumerate()` — you'll learn it in the last section today!",
       },
       {
         title: "The While Loop — Keep Going Until... ⏳",
-        content: "A while loop keeps repeating AS LONG AS a condition is true. Perfect when you don't know exactly how many times to repeat!",
-        code: `# Keep asking until the right answer
-password = "python123"
+        content: "A **while loop** repeats as long as a condition stays True. Use it when you don't know in advance how many times to loop — like waiting for the right user input, or running a game until someone wins.",
+        code: `# Simple countdown
+count = 5
+while count > 0:
+    print(f"⏱️ {count}...")
+    count -= 1          # MUST update count or loop is infinite!
+print("🏁 Go!")
+
+# Accumulate until a target
+savings = 0
+weekly = 150
+target = 1000
+weeks = 0
+
+while savings < target:
+    savings += weekly
+    weeks += 1
+
+print(f"💰 Reached ₹{target} in {weeks} weeks!")
+
+# Keep asking until valid input
+secret = "mango"
 guess = ""
+attempts = 0
 
-while guess != password:
-    guess = input("Enter password: ")
-    if guess == password:
-        print("✅ ACCESS GRANTED! Welcome!")
-    else:
-        print("❌ Wrong! Try again!")
+while guess != secret:
+    guess = input("Guess the fruit: ")
+    attempts += 1
+    if guess != secret:
+        print("❌ Try again!")
 
-# Countdown using while
-lives = 3
-while lives > 0:
-    print("Lives remaining: " + str(lives) + " ❤️")
-    lives = lives - 1
-print("GAME OVER! 💀")`,
-        tip: "Be careful with while loops! If the condition NEVER becomes false, the loop runs forever. This is called an 'infinite loop' — like a glitch in a video game! 😅",
+print(f"✅ Correct in {attempts} attempt(s)!")`,
+        tip: "**Always** make sure the while condition will eventually become False — otherwise you create an **infinite loop** (your program freezes forever). Every while loop needs a line that changes the variable being checked! 🔄",
       },
       {
-        title: "Loop Tricks — Break and Continue 🛑",
-        content: "Sometimes you want to exit a loop early or skip one step. Use break and continue!",
-        code: `# break — exit the loop immediately
-for number in range(1, 100):
-    if number == 5:
-        print("Found 5! Stopping now!")
-        break       # Jump out of the loop
-    print(number)
-# Only prints: 1, 2, 3, 4, Found 5!
+        title: "Nested Loops — Loops Inside Loops 🔄🔄",
+        content: "You can put a loop **inside** another loop. The inner loop runs **completely** for every single step of the outer loop. This is how you print grids, tables, patterns — and it's how many games render their playing field!",
+        code: `# Multiplication table grid
+print("   ", end="")
+for i in range(1, 6):
+    print(f"{i:4}", end="")   # column headers
+print()
+print("   " + "────" * 5)
 
-# continue — skip this step, go to next
-for number in range(1, 11):
-    if number % 2 == 0:   # if even number
-        continue           # skip it
-    print(number)          # only prints odd numbers
-# Prints: 1, 3, 5, 7, 9`,
+for row in range(1, 6):
+    print(f"{row:2} │", end="")
+    for col in range(1, 6):
+        print(f"{row * col:4}", end="")
+    print()    # newline after each row
+
+# Star triangle pattern
+print("\\nStar Triangle:")
+for row in range(1, 6):
+    for star in range(row):
+        print("★", end=" ")
+    print()
+# Output:
+# ★
+# ★ ★
+# ★ ★ ★
+# ★ ★ ★ ★
+# ★ ★ ★ ★ ★`,
+        analogy: "Nested loops are like a clock ⏰. The outer loop is the hour hand (moves slowly). For every hour, the inner loop is the minute hand — it goes all the way from 0 to 59 before the hour hand moves once!",
+      },
+      {
+        title: "Break and Continue — Loop Controls 🛑",
+        content: "**break** exits the loop immediately — no more iterations, even if there are numbers left. **continue** skips the rest of the current iteration and jumps to the next one. Both work in for and while loops.",
+        code: `# break — stop the moment we find what we want
+numbers = [3, 7, 2, 9, 4, 6, 1, 8]
+target = 9
+
+for i, num in enumerate(numbers):
+    if num == target:
+        print(f"🎯 Found {target} at position {i}!")
+        break           # stop searching — no need to continue
+    print(f"  Checking {num}...")
+
+# continue — skip certain items
+print("\\nEven numbers only:")
+for n in range(1, 11):
+    if n % 2 != 0:
+        continue        # skip odd numbers
+    print(n, end=" ")   # 2 4 6 8 10
+print()
+
+# while + break — menu system
+while True:             # loop forever...
+    choice = input("\\nEnter 'q' to quit or any key to continue: ")
+    if choice == "q":
+        print("👋 Goodbye!")
+        break           # ...until user quits`,
+        tip: "A `while True:` loop with `break` inside is a common pattern for menus and games — it keeps running until a specific exit condition is met. Much cleaner than trying to set up a complex while condition!",
+      },
+      {
+        title: "enumerate() — Index and Value Together 🔢✨",
+        content: "When you loop through a list, Python normally gives you only the **value**. If you also need the **index (position number)**, use `enumerate()`. It pairs each item with its position, saving you from awkward `range(len(list))` code.",
+        code: `fruits = ["apple", "banana", "mango", "kiwi", "grape"]
+
+# The OLD way (clunky)
+for i in range(len(fruits)):
+    print(f"{i}: {fruits[i]}")
+
+# THE PYTHON WAY — enumerate()
+print("\\n🏆 Leaderboard:")
+for position, fruit in enumerate(fruits):
+    print(f"  {position + 1}. {fruit}")   # start counting at 1
+
+# enumerate with a start number
+print("\\n📋 Menu (starting at 1):")
+menu = ["Pizza 🍕", "Burger 🍔", "Pasta 🍝", "Salad 🥗"]
+for num, item in enumerate(menu, start=1):
+    print(f"  [{num}] {item}")
+
+# Real use case — find all positions of an item
+scores = [85, 92, 78, 92, 65, 92]
+print("\\n92 appears at positions:", end=" ")
+for idx, score in enumerate(scores):
+    if score == 92:
+        print(idx, end=" ")   # 1 3 5`,
+        tip: "`enumerate(my_list, start=1)` lets you start counting from 1 instead of 0 — perfect for numbered lists, menus, and leaderboards where you don't want to show 0-indexed positions to users!",
       },
     ],
     challenge: {
-      title: "Your Mission: Times Table Generator",
-      description: "Create a program that prints any multiplication table that the user chooses!",
-      code: `# TIMES TABLE GENERATOR
-number = 7   # Change this to any number!
+      title: "Your Mission: Pattern Printer + FizzBuzz 🎯",
+      description: "Two challenges in one! Part 1: Print a diamond star pattern using nested loops. Part 2: Write FizzBuzz — the most famous coding interview question ever. Both must use loops correctly!",
+      code: `# PART 1: STAR STAIRCASE using nested loops
+print("=== STAR STAIRCASE ===")
+rows = 5
+for row in range(1, rows + 1):
+    for star in range(row):
+        print("★", end=" ")
+    print()    # newline
 
-print("=== " + str(number) + " Times Table ===")
-
-for i in range(1, 13):
-    result = number * i
-    print(str(number) + " x " + str(i) + " = " + str(result))
-
-# BONUS: Make it print tables from 1 to 10!
-print("")
-print("=== ALL TABLES 1-5 ===")
-for table in range(1, 6):
-    for i in range(1, 6):
-        print(str(table) + " x " + str(i) + " = " + str(table * i))
-    print("---")`,
+# PART 2: FIZZBUZZ — the classic challenge!
+# Rules: 1 to 30
+# → Divisible by 3: print "Fizz"
+# → Divisible by 5: print "Buzz"
+# → Divisible by BOTH 3 and 5: print "FizzBuzz"
+# → Otherwise: print the number
+print("\\n=== FIZZBUZZ (1 to 30) ===")
+for n in range(1, 31):
+    if n % 3 == 0 and n % 5 == 0:
+        print("FizzBuzz")
+    elif n % 3 == 0:
+        print("Fizz")
+    elif n % 5 == 0:
+        print("Buzz")
+    else:
+        print(n)`,
     },
+
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Loop Bugs",
+      description: "Three loops, three bugs. A multiplication table uses the wrong operator, a star pattern is missing a colon, and a countdown is counting UP instead of down. Fix all three!",
+      brokenCode: `# === BUG 1: Multiplication table ===
+print("8 Times Table:")
+for i in range(1, 11):
+    result = 8 + i          # Bug 1
+    print(f"8 x {i} = {result}")
+
+# === BUG 2: Star staircase ===
+print("\\nStar Staircase:")
+for row in range(1, 6):
+    for star in range(row)  # Bug 2
+        print("★", end=" ")
+    print()
+
+# === BUG 3: Countdown ===
+print("\\nCountdown:")
+count = 5
+while count > 0:
+    print(f"T-minus {count}...")
+    count += 1              # Bug 3
+print("🚀 Liftoff!")`,
+      expectedOutputDescription:
+        "The 8 times table (8×1=8 through 8×10=80), a star staircase triangle, and a countdown from 5 to 1 followed by 🚀 Liftoff!",
+      hint: "Check: (1) which operator gives multiplication, (2) what punctuation ends every for/while line, (3) should the countdown go up or down?",
+      bugs: [
+        {
+          must: "result = 8 * i",
+          hint: "Bug 1: `8 + i` adds instead of multiplying! For a times table you need the * operator: `result = 8 * i`",
+        },
+        {
+          must: "for star in range(row):",
+          hint: "Bug 2: Every for/while statement MUST end with a colon (:). Missing it gives a SyntaxError. Add the colon: `for star in range(row):`",
+        },
+        {
+          must: "count -= 1",
+          hint: "Bug 3: `count += 1` makes count go UP forever — an infinite loop! For a countdown you need to subtract: `count -= 1`",
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build a Number Analyser",
+      task: `Write a Python program from scratch that analyses a list of numbers. It must:
+1. Create a list of at least 8 numbers (mix of different values)
+2. Use a loop to find: total sum, count of even numbers, count of odd numbers, largest value, smallest value
+3. Print a formatted analysis report using f-strings
+4. BONUS: Use another loop to print a "histogram" — for each number, print that many ★ symbols in a row
+Example: 5 → ★ ★ ★ ★ ★`,
+      validationGoal:
+        "The output should show a list of numbers, then a report with sum, even count, odd count, max, and min — all calculated with loops (not built-in functions like sum() or max()). The maths must be correct and the output formatted neatly.",
+      starterComment: `# 📊 NUMBER ANALYSER — write from scratch!
+# Hints:
+# - Start with: numbers = [23, 7, 45, 12, 67, 4, 89, 31]
+# - total = 0, then total += num inside the loop
+# - Use num % 2 == 0 to check if even
+# - Track largest/smallest by comparing with a running max/min variable
+
+`,
+    },
+
     quiz: [
       {
         question: "What does range(1, 5) produce?",
         options: ["1, 2, 3, 4, 5", "1, 2, 3, 4", "0, 1, 2, 3, 4", "2, 3, 4, 5"],
         correct: 1,
-        explanation: "range(1, 5) starts at 1 and stops BEFORE 5, so it produces 1, 2, 3, 4. The last number is always excluded!",
+        explanation: "range(1, 5) starts at 1 and stops BEFORE 5, producing 1, 2, 3, 4. The stop value is always excluded. This trips up beginners constantly — if you want to include 5, write range(1, 6)!",
       },
       {
         question: "Which loop is best when you don't know how many times to repeat?",
-        options: ["for loop", "while loop", "if loop", "repeat loop"],
+        options: ["for loop", "while loop", "nested loop", "enumerate loop"],
         correct: 1,
-        explanation: "While loops keep running as long as a condition is true, so they're perfect when you don't know in advance how many repeats you need — like guessing a password!",
+        explanation: "while loops keep running as long as a condition is True, so they're perfect when you don't know in advance how many repeats you need — like waiting for correct user input, or running a game until someone wins.",
       },
       {
         question: "What does 'break' do inside a loop?",
-        options: ["Pauses the loop for 1 second", "Skips to the next iteration", "Exits the loop immediately", "Starts the loop over"],
+        options: ["Pauses the loop for 1 second", "Skips the current iteration and continues", "Exits the loop immediately", "Restarts the loop from the beginning"],
         correct: 2,
-        explanation: "break immediately exits the loop, no matter what. The code after the loop continues running. It's like an emergency exit button! 🚪",
+        explanation: "break immediately exits the entire loop — no more iterations, even if there are numbers left in range(). The code after the loop continues running normally. It's like an emergency exit button!",
+      },
+      {
+        question: "What does range(0, 10, 2) produce?",
+        options: ["0, 2, 4, 6, 8, 10", "0, 2, 4, 6, 8", "2, 4, 6, 8, 10", "1, 3, 5, 7, 9"],
+        correct: 1,
+        explanation: "range(0, 10, 2) starts at 0, goes up by steps of 2, and stops before 10. Result: 0, 2, 4, 6, 8. The step=2 makes it skip every other number — perfect for generating even numbers!",
+      },
+      {
+        question: "In a nested loop like:\nfor i in range(3):\n    for j in range(4):\n        print('x')\nHow many times does 'x' print?",
+        options: ["3", "4", "7", "12"],
+        correct: 3,
+        explanation: "The inner loop runs 4 times for EACH iteration of the outer loop. Outer runs 3 times × inner runs 4 times = 12 total. This is why nested loops can get expensive quickly — multiply the iteration counts!",
+      },
+      {
+        question: "What does 'continue' do inside a loop?",
+        options: ["Exits the loop completely", "Skips the rest of the current iteration and goes to the next", "Starts the loop over from the beginning", "Pauses execution"],
+        correct: 1,
+        explanation: "continue skips the remaining code in the CURRENT iteration and jumps straight to the next one. Unlike break which exits the whole loop, continue just skips one step. Great for filtering — skip items you don't want to process!",
+      },
+      {
+        question: "What does enumerate(['a', 'b', 'c']) give you?",
+        options: ["Just the values: a, b, c", "Just the indices: 0, 1, 2", "Pairs of (index, value): (0,'a'), (1,'b'), (2,'c')", "The length of the list: 3"],
+        correct: 2,
+        explanation: "enumerate() pairs each item with its position number, giving you (0,'a'), (1,'b'), (2,'c'). Use it like: `for i, val in enumerate(my_list):` — now you have both the index and value without needing range(len(list))!",
       },
     ],
     keyLearnings: [
-      "for loops repeat code a set number of times — perfect when you know how many",
-      "range(1, 6) produces 1, 2, 3, 4, 5 — the last number is always excluded",
-      "while loops keep going as long as a condition stays True",
-      "break exits a loop immediately; continue skips to the next iteration",
-      "You can loop through any list: for item in my_list does it automatically",
-      "Loops save you from copy-pasting the same code over and over",
+      "for loops repeat a fixed number of times — use range(start, stop, step) to control them",
+      "range(1, 6) produces 1,2,3,4,5 — stop is always EXCLUDED; range(5, 0, -1) counts down",
+      "for item in my_list: loops through every item without needing an index",
+      "while loops run as long as a condition stays True — always update the condition variable!",
+      "Nested loops multiply: outer × inner = total iterations (3 × 4 = 12 prints)",
+      "break exits the loop immediately; continue skips the current step and goes to the next",
+      "enumerate(list) gives you (index, value) pairs — cleaner than range(len(list))",
+      "while True: + break inside is the standard pattern for menus and game loops",
     ],
-    funFact: "The fastest loop in history was a program that counted to 1 billion in under 1 second! Your computer can do millions of loops per second — imagine writing that by hand! 🤯",
-    nextPreview: "Day 6: Lists — the ultimate collection tool in Python!",
+    funFact: "FizzBuzz is the #1 coding interview warm-up question used by companies worldwide — including Google and Microsoft. Studies show 40% of people who apply for programming jobs can't solve it! Now you can. 🏆",
+    nextPreview: "Day 6: Lists — the ultimate data container that holds entire collections of things in one variable!",
   },
 
   {
@@ -1198,146 +1609,602 @@ for table in range(1, 6):
     bgColor: "bg-indigo-50",
     borderColor: "border-indigo-200",
     duration: "Day 6",
-    topics: ["Creating lists", "Accessing items", "Adding and removing", "Sorting lists"],
-    intro: "Imagine if you needed a separate variable for every item in your shopping list: item1, item2, item3... That would be chaos! 😱 Python lists let you store MANY items in ONE variable. A list is like a train — each carriage holds one item, and the carriages are numbered starting from 0!",
+    topics: ["Creating lists", "Indexing and slicing", "Adding and removing", "Loops with lists", "Sorting and methods", "List comprehensions"],
+    intro: "Imagine needing a separate variable for every item in your shopping list: item1, item2, item3... by item50. That would be chaos! 😱 Python **lists** let you store MANY items in ONE variable, access any of them instantly by position, loop through all of them, sort them, filter them, and transform them. Lists are the backbone of Python — nearly every real program uses them. Today you'll master them completely.",
     sections: [
       {
-        title: "Creating a List 🚂",
-        content: "Lists use square brackets [] and commas to separate items. They can hold numbers, strings, or even a mix of both!",
+        title: "Creating and Reading Lists 🚂",
+        content: "Lists use square brackets `[]` with commas between items. They can hold **any data type** — strings, numbers, booleans, or even other lists. `len()` tells you how many items there are.",
         code: `# Creating lists
 fruits = ["apple", "banana", "mango", "kiwi"]
 scores = [95, 87, 78, 92, 88]
-mixed = ["Priya", 12, "cricket", True]
+mixed  = ["Priya", 12, True, 3.14]
+empty  = []                         # empty list — add items later
 
 # Print the whole list
-print(fruits)    # ['apple', 'banana', 'mango', 'kiwi']
-print(scores)    # [95, 87, 78, 92, 88]
+print(fruits)           # ['apple', 'banana', 'mango', 'kiwi']
+print(f"Length: {len(fruits)}")     # Length: 4
 
-# Find out how many items
-print(len(fruits))   # 4`,
-        analogy: "A list is like a numbered locker row at a swimming pool 🏊. Locker 0, Locker 1, Locker 2... Each locker has one item. Remember: counting STARTS at 0, not 1!",
+# Lists can be nested (a list of lists!)
+grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+print(grid[1])          # [4, 5, 6] — second row
+print(grid[1][2])       # 6 — row 1, column 2
+
+# Useful: quickly create a list of numbers
+tens = list(range(0, 101, 10))
+print(tens)             # [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]`,
+        analogy: "A list is like a numbered train 🚂. Carriage 0 is the first one, carriage 1 is second... You can look in any carriage instantly, add a new carriage at the back, or remove one. The train gets longer as you add more!",
       },
       {
-        title: "Accessing Items — Indexing 🔍",
-        content: "To get a specific item, use its index (position number) in square brackets. IMPORTANT: Python starts counting from 0, not 1!",
-        code: `fruits = ["apple", "banana", "mango", "kiwi"]
-#           Index:    0         1         2       3
+        title: "Indexing and Slicing 🔍",
+        content: "Access any item with its **index** in square brackets. Python starts at **0**, not 1. Use **negative indices** to count from the end. Use **slicing** `[start:stop]` to grab a chunk of the list.",
+        code: `planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter"]
+#  index:      0          1        2        3        4
+# neg index:  -5         -4       -3       -2       -1
 
-print(fruits[0])    # apple  (first item)
-print(fruits[1])    # banana (second item)
-print(fruits[3])    # kiwi   (fourth item)
+# Positive indexing (from start)
+print(planets[0])     # Mercury — first
+print(planets[2])     # Earth   — third
+print(planets[4])     # Jupiter — fifth
 
-# Negative indexing — count from the END!
-print(fruits[-1])   # kiwi   (last item)
-print(fruits[-2])   # mango  (second from last)
+# Negative indexing (from end — very handy!)
+print(planets[-1])    # Jupiter — last
+print(planets[-2])    # Mars    — second to last
 
-# Slicing — get a portion of the list
-print(fruits[1:3])  # ['banana', 'mango']`,
-        tip: "The index 0 thing confuses EVERYONE at first! Just remember: the first item is at position 0, like a building where the ground floor is called 'Floor 0'. 🏢",
+# Slicing [start:stop] — stop is excluded
+print(planets[1:4])   # ['Venus', 'Earth', 'Mars']
+print(planets[:3])    # ['Mercury', 'Venus', 'Earth'] — from beginning
+print(planets[2:])    # ['Earth', 'Mars', 'Jupiter']  — to the end
+print(planets[::2])   # ['Mercury', 'Earth', 'Jupiter'] — every 2nd item`,
+        tip: "**my_list[-1]** is the Pythonic way to get the last item — it always works regardless of how long the list is. Much better than `my_list[len(my_list)-1]`!",
       },
       {
         title: "Changing Lists — Add, Remove, Update 🔧",
-        content: "Lists are mutable — you can change them after creating them! This makes them super flexible.",
+        content: "Lists are **mutable** — you can change them after creating them. This is what separates them from strings (which are immutable). Use these methods to keep your lists up to date.",
         code: `shopping = ["milk", "bread", "eggs"]
 
-# Add to the end
-shopping.append("butter")
-print(shopping)  # ['milk', 'bread', 'eggs', 'butter']
-
-# Insert at a specific position
-shopping.insert(1, "juice")  # Insert at index 1
+# ADD items
+shopping.append("butter")       # add to END
+shopping.insert(1, "juice")     # insert at index 1
 print(shopping)  # ['milk', 'juice', 'bread', 'eggs', 'butter']
 
-# Remove an item
-shopping.remove("bread")
-print(shopping)  # ['milk', 'juice', 'eggs', 'butter']
+# REMOVE items
+shopping.remove("bread")        # remove by VALUE (first match)
+popped = shopping.pop()         # remove and return LAST item
+popped_idx = shopping.pop(0)    # remove and return item at index 0
+print(shopping)  # ['juice', 'eggs']
 
-# Change an item
+# UPDATE an item
 shopping[0] = "oat milk"
-print(shopping)  # ['oat milk', 'juice', 'eggs', 'butter']
+print(shopping)  # ['oat milk', 'eggs']
 
-# Check if something is in the list
-print("eggs" in shopping)   # True
-print("bread" in shopping)  # False`,
+# CHECK membership
+print("eggs" in shopping)       # True
+print("bread" in shopping)      # False
+print(shopping.count("eggs"))   # 1 — how many times?
+
+# COMBINE two lists
+extras = ["chocolate", "chips"]
+full_list = shopping + extras   # creates a new combined list
+shopping.extend(extras)         # adds extras directly into shopping
+print(shopping)`,
       },
       {
-        title: "Sorting and Useful List Methods 📊",
-        content: "Python has built-in tools to sort, count, and work with lists easily!",
-        code: `scores = [78, 95, 62, 88, 71, 99, 55]
+        title: "Loops + Lists — The Power Combo ⚡",
+        content: "Lists and loops were made for each other. Loop through a list to process every item, build new lists from old ones, filter items, and calculate summaries. This pattern appears in virtually every Python program.",
+        code: `# Build a leaderboard from scores
+names  = ["Arjun", "Priya", "Rohan", "Meera", "Dev"]
+scores = [85, 92, 78, 95, 88]
 
-# Sort from smallest to largest
-scores.sort()
-print(scores)  # [55, 62, 71, 78, 88, 95, 99]
+# Print formatted leaderboard
+print("🏆 LEADERBOARD")
+print("-" * 25)
+for i, name in enumerate(names):
+    bar = "█" * (scores[i] // 10)   # visual bar
+    print(f"  {i+1}. {name:<8} {scores[i]:3}  {bar}")
 
-# Sort from largest to smallest
-scores.sort(reverse=True)
-print(scores)  # [99, 95, 88, 78, 71, 62, 55]
+# Filter — collect only passing scores
+passing = []
+for score in scores:
+    if score >= 80:
+        passing.append(score)
+print(f"\\nPassing scores: {passing}")
 
-# Find highest and lowest
-print("Best score:", max(scores))   # 99
-print("Worst score:", min(scores))  # 55
-print("Average:", sum(scores) / len(scores))  # 78.28...
+# Calculate average manually
+total = 0
+for score in scores:
+    total += score
+average = total / len(scores)
+print(f"Class average: {average:.1f}")
 
-# Count how many times something appears
-fruits = ["apple", "banana", "apple", "mango", "apple"]
-print(fruits.count("apple"))  # 3`,
+# Find the top scorer
+top_score = scores[0]
+top_name  = names[0]
+for i in range(len(scores)):
+    if scores[i] > top_score:
+        top_score = scores[i]
+        top_name  = names[i]
+print(f"Top scorer: {top_name} with {top_score}")`,
+        analogy: "Loops + lists are like a factory conveyor belt 🏭. Each item on the belt (list) goes through the machine (loop). Some items get modified, some get sorted into boxes, some get discarded — but every item gets checked!",
+      },
+      {
+        title: "Sorting and Powerful List Methods 📊",
+        content: "Python's built-in list tools let you sort, search, count, sum and reverse lists in one line. Know these methods and you'll solve most list problems instantly.",
+        code: `scores = [78, 95, 62, 88, 71, 99, 55, 84]
+
+# Sorting
+scores.sort()                    # sort IN PLACE (modifies original)
+print("Ascending:", scores)      # [55, 62, 71, 78, 84, 88, 95, 99]
+
+scores.sort(reverse=True)        # descending
+print("Descending:", scores)     # [99, 95, 88, 84, 78, 71, 62, 55]
+
+sorted_copy = sorted(scores)     # returns NEW sorted list (original unchanged)
+
+# Stats — one-liners!
+print(f"Highest: {max(scores)}")
+print(f"Lowest:  {min(scores)}")
+print(f"Total:   {sum(scores)}")
+print(f"Average: {sum(scores)/len(scores):.1f}")
+
+# Other useful methods
+fruits = ["mango", "apple", "banana", "apple", "kiwi"]
+print(fruits.count("apple"))     # 2 — how many times?
+print(fruits.index("banana"))    # 2 — position of first match
+
+fruits.reverse()                 # reverse in place
+print(fruits)
+
+fruits2 = fruits.copy()          # make an independent copy
+fruits2.clear()                  # empty the copy (original unchanged)
+print(fruits)                    # still has items!`,
+        tip: "`.sort()` changes the list itself (in-place). `sorted()` returns a brand-new sorted list and leaves the original alone. Use `sorted()` when you want to keep the original order!",
+      },
+      {
+        title: "List Comprehensions — Python's Magic Shortcut ✨",
+        content: "List comprehensions are a beautiful Python feature that creates a new list from an existing one **in a single line**. They replace the common 'create empty list, loop, append' pattern with something much more elegant. Professional Python developers use them constantly!",
+        code: `numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# OLD way: loop + append
+squares_old = []
+for n in numbers:
+    squares_old.append(n ** 2)
+
+# NEW way: list comprehension (same result, one line!)
+squares = [n ** 2 for n in numbers]
+print(squares)   # [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+# With a condition — filter AND transform!
+even_squares = [n ** 2 for n in numbers if n % 2 == 0]
+print(even_squares)  # [4, 16, 36, 64, 100]
+
+# Practical examples
+names = ["  alice  ", "BOB", "  Charlie"]
+clean = [name.strip().title() for name in names]
+print(clean)     # ['Alice', 'Bob', 'Charlie']
+
+prices = [100, 250, 80, 320, 150]
+discounted = [p * 0.9 for p in prices if p > 100]
+print(discounted)  # [225.0, 288.0, 135.0]
+
+# Syntax: [expression  for  item  in  collection  if  condition]
+#               ↑                                       ↑
+#           what to do                           optional filter`,
+        tip: "List comprehensions read like English: `[n**2 for n in numbers if n > 5]` = 'give me n-squared for each n in numbers, but only if n is greater than 5'. Once you get used to them, you'll use them everywhere! 🚀",
       },
     ],
     challenge: {
-      title: "Your Mission: The Top 5 List",
-      description: "Create a Top 5 list of your favourite movies/games and do some fun operations on it!",
-      code: `# MY TOP 5 FAVOURITES
-top5 = ["___", "___", "___", "___", "___"]
+      title: "Your Mission: The Class Report Generator 📊",
+      description: "Build a complete class grade report! Use a list of students and scores, then generate statistics, a sorted leaderboard, pass/fail analysis, and a visual bar chart — all using loops, list methods, and f-strings.",
+      code: `# 📊 CLASS REPORT GENERATOR
+students = ["Arjun", "Priya", "Rohan", "Meera", "Dev", "Anaya", "Kabir"]
+scores   = [85,      92,      67,      95,       78,    88,      72]
 
-print("=== MY TOP 5 LIST ===")
+PASS_MARK = 75
 
-# Print with numbers using a loop
-for i in range(len(top5)):
-    print(str(i + 1) + ". " + top5[i])
+print("=" * 40)
+print("       CLASS PERFORMANCE REPORT")
+print("=" * 40)
 
-# Add a new favourite!
-top5.append("___")
-print("")
-print("Wait, I forgot one:", top5[-1])
-print("Now I have", len(top5), "favourites!")
+# 1. Print all students with pass/fail
+print("\\n📋 Student Results:")
+for i, name in enumerate(students):
+    status = "✅ Pass" if scores[i] >= PASS_MARK else "❌ Fail"
+    bar = "█" * (scores[i] // 10)
+    print(f"  {name:<8} {scores[i]:3}/100  {bar} {status}")
 
-# Print them in reverse order!
-print("")
-print("=== IN REVERSE ===")
-top5.reverse()
-for item in top5:
-    print("👉 " + item)`,
+# 2. Statistics
+total = sum(scores)
+average = total / len(scores)
+print(f"\\n📈 Statistics:")
+print(f"  Class average : {average:.1f}")
+print(f"  Highest score : {max(scores)} ({students[scores.index(max(scores))]})")
+print(f"  Lowest score  : {min(scores)} ({students[scores.index(min(scores))]})")
+
+# 3. Sorted leaderboard
+paired = list(zip(students, scores))
+paired.sort(key=lambda x: x[1], reverse=True)
+print("\\n🏆 Leaderboard:")
+for rank, (name, score) in enumerate(paired, 1):
+    print(f"  #{rank}  {name:<8} — {score}")`,
     },
+
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Shopping Cart",
+      description: "A shopping cart calculator has 3 bugs: items are numbered from 0 instead of 1, the total isn't accumulating correctly, and an elif is missing its condition. Fix them all!",
+      brokenCode: `# Shopping Cart Calculator — fix 3 bugs!
+items  = ["Notebook", "Pen", "Ruler", "Eraser"]
+prices = [45, 10, 25, 5]
+
+print("🛒 YOUR CART:")
+for i in range(len(items)):
+    print(f"  {i}. {items[i]:<12} ₹{prices[i]}")  # Bug 1
+
+total = 0
+for price in prices:
+    total = price                   # Bug 2
+
+print(f"\\nSubtotal: ₹{total}")
+
+discount = total * 0.10
+if total >= 60:
+    print(f"🎉 10% discount applied! You save ₹{discount:.0f}")
+    print(f"Final total: ₹{total - discount:.0f}")
+elif:                               # Bug 3
+    print("Add more items to qualify for a discount!")`,
+      expectedOutputDescription:
+        "A numbered cart starting at 1, a correct subtotal of 85, a 10% discount message showing ₹8 saved and final total ₹77.",
+      hint: "Look for: (1) the item numbering should start at 1 not 0, (2) += vs = for accumulating a total, (3) elif needs a condition after it — or should it be else?",
+      bugs: [
+        {
+          must: "{i+1}.",
+          hint: "Bug 1: `{i}.` prints 0, 1, 2, 3 — customers expect 1, 2, 3, 4! Change it to `{i+1}.` so the numbering starts at 1.",
+        },
+        {
+          must: "total += price",
+          hint: "Bug 2: `total = price` replaces total with just the latest price each time — so you end up with only the last item's price! Use `total += price` to ADD each price to the running total.",
+        },
+        {
+          must: "else:",
+          hint: "Bug 3: `elif:` without a condition is a SyntaxError. Since there's no other condition to check (it's either above ₹60 or not), use `else:` as the catch-all.",
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build a Playlist Manager",
+      task: `Write a Python playlist manager from scratch. It must:
+1. Create a list of at least 6 song titles
+2. Print the full playlist with numbering (starting at 1)
+3. Add a new song at the end and another at position 2
+4. Remove one song by name
+5. Sort the playlist alphabetically and print the sorted version
+6. Use a list comprehension to create a new list of only songs whose title is longer than 5 characters
+7. Print a summary: total songs, longest title, shortest title`,
+      validationGoal:
+        "The output should show the original playlist numbered from 1, then demonstrate adding/removing songs, then a sorted playlist, then a filtered list from comprehension, and finally a summary with count and title lengths. All list operations must work correctly.",
+      starterComment: `# 🎵 PLAYLIST MANAGER — write from scratch!
+# Hints:
+# - Start: songs = ["Shape of You", "Blinding Lights", ...]
+# - Use append(), insert(), remove(), sort()
+# - List comprehension: [s for s in songs if len(s) > 5]
+# - max(songs, key=len) finds the longest string in the list
+
+`,
+    },
+
     quiz: [
       {
         question: "What is the index of the FIRST item in a Python list?",
-        options: ["1", "0", "-1", "first"],
+        options: ["1", "0", "-1", "It depends on the list"],
         correct: 1,
-        explanation: "Python lists start at index 0! So the first item is at [0], the second at [1], and so on. This trips up every beginner — now you know the secret! 😄",
+        explanation: "Python lists ALWAYS start at index 0! So the first item is at [0], the second at [1], and so on. This is called 'zero-based indexing' and is standard in most programming languages. The last item is always at [len(list)-1] or simply [-1].",
       },
       {
         question: "What does list.append(\"mango\") do?",
-        options: ["Removes mango from the list", "Adds mango to the beginning", "Adds mango to the end", "Finds mango in the list"],
+        options: ["Removes mango from the list", "Adds mango to the BEGINNING of the list", "Adds mango to the END of the list", "Finds mango in the list"],
         correct: 2,
-        explanation: "append() always adds to the END of the list, like joining the back of a queue. To add to a specific position, use insert()!",
+        explanation: "append() ALWAYS adds to the END of the list — like joining the back of a queue. If you want to add at a specific position, use insert(index, value). For example, list.insert(0, 'mango') adds to the very beginning!",
       },
       {
         question: "What does len([\"a\", \"b\", \"c\"]) return?",
         options: ["2", "3", "4", "abc"],
         correct: 1,
-        explanation: "len() counts how many items are in the list. [\"a\", \"b\", \"c\"] has 3 items, so len() returns 3.",
+        explanation: "len() counts the number of items in the list. [\"a\", \"b\", \"c\"] has 3 items, so len() returns 3. len() works on strings too — len(\"hello\") returns 5.",
+      },
+      {
+        question: "Given fruits = [\"apple\", \"banana\", \"mango\", \"kiwi\"], what does fruits[-1] return?",
+        options: ["apple", "banana", "mango", "kiwi"],
+        correct: 3,
+        explanation: "Negative indexing counts from the END of the list. -1 is always the last item. fruits[-1] = 'kiwi'. fruits[-2] = 'mango'. This is much cleaner than writing fruits[len(fruits)-1] every time!",
+      },
+      {
+        question: "What is the difference between .sort() and sorted()?",
+        options: [".sort() returns a new list; sorted() modifies the original", "They are identical", ".sort() modifies the list in place; sorted() returns a new sorted list", "sorted() only works with numbers"],
+        correct: 2,
+        explanation: ".sort() modifies the original list IN PLACE and returns None. sorted() leaves the original unchanged and RETURNS a new sorted list. Use sorted() when you need to keep the original order, .sort() when you're done with the original.",
+      },
+      {
+        question: "What does this list comprehension produce?\n[x * 2 for x in range(1, 5)]",
+        options: ["[1, 2, 3, 4]", "[2, 4, 6, 8]", "[2, 4, 6, 8, 10]", "[1, 4, 9, 16]"],
+        correct: 1,
+        explanation: "range(1, 5) gives 1, 2, 3, 4. The comprehension doubles each: 1×2=2, 2×2=4, 3×2=6, 4×2=8. Result: [2, 4, 6, 8]. List comprehensions follow the pattern: [expression for item in iterable].",
+      },
+      {
+        question: "What does 'eggs' in ['milk', 'eggs', 'bread'] return?",
+        options: ["1 (the index)", "True", "False", "'eggs'"],
+        correct: 1,
+        explanation: "The 'in' operator checks if an item EXISTS in a list and returns True or False — not the index! It's perfect for membership tests in if statements: `if 'eggs' in shopping:`. To get the index, use list.index('eggs').",
       },
     ],
     keyLearnings: [
-      "A list stores many items in one variable using square brackets: [item1, item2]",
-      "Lists start at index 0 — the first item is list[0], not list[1]",
-      "Use -1 to get the last item: my_list[-1] always works regardless of length",
-      "append() adds to the end; insert(i, x) adds at a specific position",
-      "len() counts items; sort() orders them; max() and min() find extremes",
-      "Loop through a list with: for item in my_list — no index needed!",
+      "A list stores many items in one variable: fruits = ['apple', 'banana', 'mango']",
+      "Lists start at index 0 — first item is list[0], last is list[-1]",
+      "Slicing grabs a chunk: list[1:4] gives items at index 1, 2, 3 (4 is excluded)",
+      "append() adds to the end; insert(i, x) adds at position i; remove(x) deletes by value",
+      "sort() changes the list in place; sorted() returns a new sorted copy",
+      "len(), sum(), max(), min() — one-liners for common calculations",
+      "Loop pattern: for item in my_list; for i, item in enumerate(my_list)",
+      "List comprehension: [expr for item in list if condition] — elegant one-line filtering",
     ],
-    funFact: "Python lists can hold over 500 million items on a modern computer! Spotify's playlist feature is essentially a giant list of songs. 🎵",
-    nextPreview: "Tomorrow: Functions — create your own Python commands!",
+    funFact: "Python lists are technically dynamic arrays — they automatically grow as you add items. Spotify's 'Liked Songs' playlist, YouTube's recommended videos, and Instagram's feed are all built on list-like data structures. Your morning algorithm is basically a Python list! 🎵",
+    nextPreview: "Up next: Bonus Setup Module — get Google Colab and Replit running so you can write real Python beyond the browser!",
+  },
+
+  {
+    id: 6.5,
+    title: "Your Real Python Toolkit",
+    emoji: "🛠️",
+    tagline: "Set up Google Colab & Replit — code like a pro!",
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+    duration: "Bonus",
+    topics: ["Why you need real tools", "Google Colab walkthrough", "Notebook cells & markdown", "Replit for interactive programs", "Moving your camp code"],
+    intro: "You've built real Python programs inside this platform — variables, loops, lists, decisions. Amazing work! 🎉 But our in-browser playground has limits. It can't install libraries, can't make charts, can't save your work, and struggles with longer programs. Time to upgrade to the tools that real Python developers use every day. The great news: both tools are completely FREE and run in your browser — no installation needed!",
+    sections: [
+      {
+        title: "Why You Need Real Tools Now 🚀",
+        content: "Our built-in playground is perfect for learning — it runs Python instantly without any setup. But from Module 7 onwards you'll write longer programs, use libraries like `random`, `turtle`, and `matplotlib`, and build actual projects. Here's what real tools unlock:",
+        code: `# Things you CAN'T do in our browser playground:
+
+# 1. Install libraries
+import matplotlib.pyplot as plt   # make charts!
+import random                      # real randomness
+import turtle                      # draw graphics
+
+# 2. Save your work permanently
+# (browser playground resets every session)
+
+# 3. Run programs that take user input reliably
+name = input("What's your name? ")   # works better in Replit
+
+# 4. Write programs longer than ~50 lines comfortably
+
+# 5. Share your work with your teacher
+# (Colab notebooks have shareable links!)
+
+print("Time to level up! 🚀")`,
+        analogy: "Our browser playground is like training wheels on a bike 🚲 — brilliant for learning, but once you can balance, you switch to a real bike. Google Colab and Replit are your real bikes. Same Python, way more power!",
+      },
+      {
+        title: "Google Colab — Your Cloud Python Lab ☁️",
+        content: "**Google Colab** (Colaboratory) is a free tool from Google that lets you write and run Python in your browser, saves everything to your Google Drive, and comes with hundreds of libraries pre-installed. Data scientists at NASA, Google, and hospitals use it every day.",
+        code: `# What makes Colab special:
+
+# ✅ Completely FREE
+# ✅ Nothing to install — works in Chrome/Firefox/Safari
+# ✅ Saves automatically to Google Drive
+# ✅ 500+ libraries pre-installed (numpy, pandas, matplotlib...)
+# ✅ You can share your notebook link — like a Google Doc for code
+# ✅ Runs on Google's computers — not yours
+# ✅ Supports rich text, images, and headings alongside code
+
+# How to open Colab:
+# 1. Go to: colab.research.google.com
+# 2. Sign in with your Google account
+# 3. Click "New Notebook"
+# 4. You're ready to code!
+
+# The URL of every Colab notebook looks like:
+# colab.research.google.com/drive/1ABC...XYZ
+# Share this link with Manisha so she can see your work! 📤`,
+        tip: "Bookmark **colab.research.google.com** right now! Every notebook auto-saves to Google Drive in a folder called 'Colab Notebooks'. You can also open it from Google Drive → New → More → Google Colaboratory.",
+      },
+      {
+        title: "Inside a Colab Notebook — Cells 📓",
+        content: "A Colab notebook is made of **cells** — individual blocks you can run one at a time. There are two types: **Code cells** (Python code) and **Text cells** (formatted notes using Markdown). This is the key difference from our playground — you can build up a program step by step, running each piece and seeing output immediately.",
+        code: `# ── HOW TO USE COLAB CELLS ──────────────────────────
+
+# RUNNING a cell:
+#   Click the ▶ play button on the left of the cell
+#   OR press Shift + Enter (runs cell and moves to next)
+#   OR press Ctrl + Enter (runs cell and stays)
+
+# ADDING a new cell:
+#   Click "+ Code" or "+ Text" in the toolbar
+#   OR hover between cells — buttons appear
+
+# KEYBOARD SHORTCUTS (learn these — they save time!):
+#   Shift + Enter  → Run cell, go to next
+#   Ctrl + Enter   → Run cell, stay here
+#   Ctrl + M + B   → Insert code cell below
+#   Ctrl + M + A   → Insert code cell above
+#   Ctrl + M + D   → Delete current cell
+
+# TEXT CELL MARKDOWN (makes your notebook readable):
+# # Big heading
+# ## Smaller heading
+# **bold text**
+# *italic text*
+# - bullet point
+# You write this in a Text cell and it renders beautifully!
+
+print("Each cell runs independently — try it!")
+print("Variables from earlier cells are remembered 🧠")`,
+        analogy: "A Colab notebook is like a science lab report 🔬 — you write your hypothesis (text cell), run the experiment (code cell), see the results below, then write your conclusion (text cell). Each experiment is separate but they share the same lab bench (memory)!",
+      },
+      {
+        title: "Replit — For Interactive Programs 💻",
+        content: "**Replit** is your go-to for programs that need `input()` — asking the user to type things. It's also great for multi-file projects, building games, and programs that run continuously. Think of it as a mini online IDE (code editor) that runs your code in a real terminal.",
+        code: `# When to use REPLIT vs COLAB:
+
+# Use REPLIT when your program:
+# ✅ Has lots of input() calls (text adventures, quizzes)
+# ✅ Is a game or runs in a loop waiting for user
+# ✅ Needs a real terminal feel
+# ✅ Has multiple Python files
+# ✅ You want to share a running program (not just a notebook)
+
+# Use COLAB when your program:
+# ✅ Works with lists, data, calculations
+# ✅ Makes charts or graphs (matplotlib)
+# ✅ Is a step-by-step analysis or project
+# ✅ You want to show work + explanation together
+# ✅ You're sharing code for teacher to review
+
+# HOW TO SET UP REPLIT:
+# 1. Go to: replit.com
+# 2. Click "Sign Up" (use Google account — easiest)
+# 3. Click "+ Create Repl"
+# 4. Choose "Python" as language
+# 5. Give it a name (e.g. "CodersBee-Day5")
+# 6. Click "Create Repl"
+# 7. Type your code in the left panel, click Run ▶
+
+print("Replit gives you a real terminal on the right →")
+name = input("What's your name? ")   # This works perfectly in Replit!
+print(f"Hello, {name}! 🎉")`,
+        tip: "Replit saves your code automatically and gives every project a unique URL like `replit.com/@YourName/ProjectName`. You can share this link and anyone can see (and even fork) your project. It's like GitHub for beginners! 🌐",
+      },
+      {
+        title: "Moving Your Camp Code to Real Tools ↗️",
+        content: "The Python you've learned here works **identically** in Colab and Replit — no changes needed! Just copy and paste. There are a few small differences to know about, but nothing that will break your code.",
+        code: `# ── THINGS THAT WORK IDENTICALLY ──────────────────
+# ✅ All variables, strings, numbers, booleans
+# ✅ All operators (+ - * / // % **)
+# ✅ All if/elif/else logic
+# ✅ All for and while loops
+# ✅ All list operations
+# ✅ print() and f-strings
+# ✅ All string methods (.upper(), .split(), etc.)
+
+# ── SMALL DIFFERENCES TO KNOW ──────────────────────
+
+# 1. input() — works perfectly in Replit and Colab
+#    (In our browser playground it needed the special handler)
+name = input("Enter your name: ")    # Just works! ✅
+
+# 2. In Colab — run cells in ORDER (top to bottom)
+#    Variables from a cell only exist after you run that cell
+
+# 3. In Colab — if you restart the runtime (Runtime menu),
+#    ALL variables reset. You need to re-run cells from the top.
+
+# 4. You can install new libraries in Colab with:
+!pip install library_name           # run this in a code cell
+
+# 5. Import libraries at the TOP of your first code cell
+import random
+import math
+
+# ── COPY THIS TEST TO COLAB RIGHT NOW ──────────────
+import random
+number = random.randint(1, 100)
+print(f"🎲 Random number: {number}")
+print("If you see this — Colab is working! 🎉")`,
+        tip: "Start every Colab session by running ALL cells from the top using **Runtime → Run all** (Ctrl+F9). This ensures all your variables are set up correctly before you work on specific cells.",
+      },
+    ],
+    challenge: {
+      title: "Setup Challenge 🏆 — Get Both Tools Running",
+      description: "This challenge is different — no coding puzzles, just real setup! Complete all 5 steps to earn your 'Real Python Developer' badge. Screenshot each step and share with Manisha on WhatsApp.",
+      code: `# ════════════════════════════════════════════
+#   SETUP CHALLENGE — Your checklist:
+# ════════════════════════════════════════════
+
+# STEP 1: Open Google Colab
+# → Go to: colab.research.google.com
+# → Sign in with Google
+# → Click "New Notebook"
+
+# STEP 2: Run your first Colab cell
+# → Copy the code below into a Colab code cell
+# → Press Shift+Enter to run it
+
+my_name = "___"          # put your name here!
+my_age = ___             # put your age here!
+my_favourite_language = "Python 🐍"
+
+print("=" * 40)
+print(f"  👋 Hello from Google Colab!")
+print(f"  Name    : {my_name}")
+print(f"  Age     : {my_age}")
+print(f"  Language: {my_favourite_language}")
+print("=" * 40)
+print("✅ Colab is working! I'm a real Python dev now!")
+
+# STEP 3: Add a Text cell above your code
+# → Click the "+ Text" button
+# → Write: "# My First Colab Notebook"
+# → Write: "This is my Python camp notebook by [Your Name]"
+
+# STEP 4: Share your notebook
+# → Click Share (top right)
+# → Change to "Anyone with the link can view"
+# → Copy the link and send to Manisha on WhatsApp! 📤
+
+# STEP 5: Set up Replit
+# → Go to: replit.com
+# → Sign up with Google
+# → Create a Python repl called "CodersBee-Camp"
+# → Paste the code above and press Run ▶`,
+    },
+
+    quiz: [
+      {
+        question: "What is a 'cell' in Google Colab?",
+        options: ["A spreadsheet cell like in Excel", "An individual block of code or text that you can run independently", "A type of variable", "A folder in Google Drive"],
+        correct: 1,
+        explanation: "A cell is the building block of a Colab notebook. Code cells contain Python code you can run with Shift+Enter. Text cells contain formatted notes using Markdown. Each cell can be run independently, but they all share the same memory (variables from one cell are available in others).",
+      },
+      {
+        question: "What is the keyboard shortcut to run a Colab cell and move to the next one?",
+        options: ["Ctrl + Enter", "Shift + Enter", "Alt + Enter", "Tab + Enter"],
+        correct: 1,
+        explanation: "Shift + Enter runs the current cell AND moves focus to the next cell — the fastest way to work through a notebook. Ctrl + Enter runs the cell but stays on it. Learn Shift + Enter and you'll fly through Colab! ⚡",
+      },
+      {
+        question: "When is Replit a better choice than Google Colab?",
+        options: ["When making charts and graphs", "When writing programs that need lots of input() from the user", "When sharing a step-by-step analysis", "When working with large datasets"],
+        correct: 1,
+        explanation: "Replit shines for interactive programs — anything with lots of input() calls, text adventure games, quiz programs. It gives you a real terminal where the user can type naturally. Colab is better for analysis, charts, and notebook-style learning.",
+      },
+      {
+        question: "What happens to variables in Colab if you restart the runtime?",
+        options: ["They are saved automatically", "They are deleted — you must re-run all cells", "They move to Google Drive", "Nothing changes"],
+        correct: 1,
+        explanation: "When you restart the runtime (Runtime → Restart runtime), ALL variables in memory are wiped clean. It's like turning your computer off. To get back to where you were, run all cells from the top again using Runtime → Run all (Ctrl+F9).",
+      },
+      {
+        question: "How do you install a new library in Google Colab?",
+        options: ["Download it from the internet manually", "Run !pip install library_name in a code cell", "Go to Settings → Libraries", "You can't — only pre-installed libraries work"],
+        correct: 1,
+        explanation: "In Colab, run `!pip install library_name` in a code cell (the ! means 'run this as a terminal command'). For example: `!pip install emoji` installs the emoji library. Hundreds of popular libraries like matplotlib, numpy, and pandas are already pre-installed — no pip needed!",
+      },
+    ],
+    keyLearnings: [
+      "Google Colab is a free, cloud-based Python notebook — no installation, saves to Google Drive",
+      "Colab notebooks are made of cells: Code cells run Python, Text cells show formatted notes",
+      "Shift+Enter runs a cell and moves to the next one — learn this shortcut!",
+      "Replit is better for interactive programs with lots of input() — it has a real terminal",
+      "All the Python you learned in this camp works identically in Colab and Replit",
+      "Share your Colab notebook link so Manisha can review your code — like a Google Doc",
+      "Restart runtime = all variables reset; use Runtime → Run all to rebuild your session",
+      "!pip install library_name in a Colab cell installs any Python library instantly",
+    ],
+    funFact: "Google Colab was built for machine learning researchers and is used to train AI models — including some of the AI systems that power Google Search and Google Translate. When you open a Colab notebook, you're using the same tool that world-class AI researchers use every day! 🤖",
+    nextPreview: "Day 7: Functions — write your own reusable Python commands and stop copy-pasting code forever!",
   },
 
   {
