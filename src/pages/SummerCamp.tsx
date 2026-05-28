@@ -252,8 +252,8 @@ export default function SummerCamp() {
      "Any laptop with Chrome. We provide the coding environment in-browser — no installs, no setup. Python runs right inside the lesson page."],
     ["How does the teacher track progress?",
      "Manisha has a live dashboard showing each student's quiz scores and completed modules. She also sends WhatsApp updates after live sessions."],
-    ["Can I pay in INR?",
-     "Yes — UPI, cards, or a WhatsApp invoice. Message Manisha and she'll send the right link in 2 minutes."],
+    ["How much does the full camp cost?",
+     "₹4,000 (about $49) for all 15 lessons, 6 live sessions with Manisha, WhatsApp support, and 5 real projects. That works out to ₹267 per lesson — less than a single private tuition class. UPI, cards, or WhatsApp invoice — whatever is easiest."],
     ["What if my kid doesn't enjoy it after the first week?",
      "Full refund, no questions, no forms. Just message Manisha. We can say that because almost nobody asks."],
   ];
@@ -274,7 +274,9 @@ export default function SummerCamp() {
         }}>
           <span>🎁 First lesson <strong style={{ color: "#fff" }}>FREE</strong> — no signup, no card. Just click &amp; start.</span>
           <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ color: "#fff" }}>Summer 2026 · Batches: June 1, 8 &amp; 15</span>
+          <span style={{ color: "#fff" }}>Full camp <strong style={{ color: C.yellow }}>₹4,000</strong> · ~$49 · money-back guarantee</span>
+          <span style={{ opacity: 0.4 }}>·</span>
+          <span>Summer 2026 · June 1, 8 &amp; 15</span>
         </div>
       )}
 
@@ -699,6 +701,36 @@ export default function SummerCamp() {
             </p>
           </div>
 
+          {/* Price anchor — shown once above the cards */}
+          <div style={{
+            textAlign: "center", marginBottom: 28,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap",
+          }}>
+            <div style={{
+              display: "inline-flex", alignItems: "baseline", gap: 8,
+              background: C.paper, border: `2.5px solid ${C.ink}`,
+              borderRadius: 18, padding: "14px 28px",
+              boxShadow: `5px 5px 0 ${C.ink}`,
+            }}>
+              <span style={{ fontFamily: "'Fraunces',serif", fontSize: 48, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em" }}>₹4,000</span>
+              <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: C.ink2 }}>full camp</span>
+                <span style={{ fontSize: 12, color: C.ink3 }}>~$49 · one-time</span>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.ink2, fontWeight: 600 }}>
+                <Check/> ₹267/lesson · 15 lessons included
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.ink2, fontWeight: 600 }}>
+                <Check/> 6 live sessions with Manisha included
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: C.green, fontWeight: 700 }}>
+                <Check/> Full refund if your kid doesn't love it
+              </div>
+            </div>
+          </div>
+
           <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
             {[
               { date: "June 1",  day: "Sunday",   urgency: "⚡ Filling fast", urgencyColor: "#E05C00", badge: "Earliest batch", badgeBg: C.yellow },
@@ -729,12 +761,25 @@ export default function SummerCamp() {
                 </div>
 
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, color: C.ink2 }}>
-                  {["15 self-paced lessons", "2× live sessions / week", "WhatsApp support"].map(f => (
+                  {["15 self-paced lessons", "2× live sessions / week", "WhatsApp support", "5 real projects to keep"].map(f => (
                     <li key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <Check/>{f}
                     </li>
                   ))}
                 </ul>
+
+                {/* Price line inside card */}
+                <div style={{
+                  padding: "10px 14px", borderRadius: 10,
+                  background: C.bg2, border: `1.5px dashed ${C.ink}`,
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                }}>
+                  <div>
+                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 26, fontWeight: 900 }}>₹4,000</span>
+                    <span style={{ fontSize: 12, color: C.ink3, marginLeft: 6 }}>~$49</span>
+                  </div>
+                  <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ refund guarantee</span>
+                </div>
 
                 <button onClick={openWA} style={{
                   marginTop: "auto", width: "100%", padding: "14px 18px",
@@ -973,6 +1018,23 @@ export default function SummerCamp() {
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <CTA kind="primary" size="xl" icon="▶" sub="No signup needed" onClick={openFree}>Start free lesson now</CTA>
             <CTA kind="whatsapp" size="xl" icon="💬" sub="Talk to a human first" onClick={openWA}>WhatsApp Manisha</CTA>
+          </div>
+
+          {/* Pricing reassurance line */}
+          <div style={{
+            marginTop: 32, display: "inline-flex", alignItems: "center", gap: 14,
+            background: "rgba(14,17,22,.08)", borderRadius: 14,
+            padding: "14px 22px", flexWrap: "wrap",
+          }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+              <span style={{ fontFamily: "'Fraunces',serif", fontSize: 32, fontWeight: 900 }}>₹4,000</span>
+              <span style={{ fontSize: 14, fontWeight: 600, opacity: 0.7 }}>full camp · ~$49</span>
+            </div>
+            <span style={{ width: 1, height: 32, background: "rgba(14,17,22,.2)" }}/>
+            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <span style={{ fontSize: 12, fontWeight: 700 }}>₹267/lesson · 15 lessons + 6 live sessions</span>
+              <span style={{ fontSize: 12, opacity: 0.7 }}>Full refund if your kid doesn't love it. No questions.</span>
+            </div>
           </div>
           <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>🗓 Pick your start date:</span>
