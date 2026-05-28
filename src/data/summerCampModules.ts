@@ -284,125 +284,308 @@ Your program must have at least 4 print() statements and must run without any er
     id: 2,
     title: "Numbers & Strings",
     emoji: "🔢",
-    tagline: "The building blocks of everything",
+    tagline: "The two data types that power everything",
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
     duration: "Day 2",
-    topics: ["What are numbers?", "What are strings?", "Math with Python", "String tricks"],
-    intro: "Everything in the world is either a number or a description. Your age is a number. Your name is a description. In Python, we have NUMBERS (like 10, 3.14, 100) and STRINGS (like 'hello', 'pizza', 'awesome'). Today we learn the difference and why it matters SO much!",
+    videoUrl: "https://www.youtube.com/embed/5OBVBvS24Ns?rel=0",
+    topics: ["Integers & floats", "Python as a calculator", "What are strings?", "f-strings", "The BIG difference", "String superpowers"],
+    intro: "Everything a computer works with is either a NUMBER or TEXT. Your age? Number. Your name? Text. Your score in a game? Number. Your favourite song title? Text. Today you'll learn how Python thinks about both — and why they are completely different animals. By the end, you'll be making Python calculate things AND build beautiful sentences for you.",
     sections: [
       {
-        title: "Numbers — When We Count & Measure 🔢",
-        content: "Numbers in Python are for anything you want to do math with. Your age, your score in a game, the price of something, the temperature outside — these are all numbers!",
-        code: `# These are all NUMBERS in Python
+        title: "Numbers — Integers and Floats 🔢",
+        content: "Python has two kinds of numbers. **Integers** (int) are whole numbers — no decimal point. **Floats** are numbers with a decimal point. Python treats them slightly differently, and knowing which is which will save you a lot of confusion later!",
+        code: `# INTEGERS — whole numbers (no decimal)
 age = 12
+lives = 3
 score = 9500
-temperature = 37.5
-pocket_money = 100
+temperature_whole = 37   # 37 degrees, rounded
 
-# You can do MATH with numbers!
-print(age + 5)        # Adds 5 to age = 17
-print(score * 2)      # Multiplies score = 19000
-print(pocket_money - 30)  # Subtracts = 70
-print(10 / 3)         # Divides = 3.333...`,
-        analogy: "Think of numbers like Lego bricks you can count. 5 bricks + 3 bricks = 8 bricks. Python can do this math for you instantly! 🧱",
+# FLOATS — numbers with a decimal point
+price = 99.99
+pi = 3.14159
+temperature_exact = 37.5  # 37.5 degrees, precise
+average_score = 8.75
+
+# Python tells you which type it is
+print(type(age))          # <class 'int'>
+print(type(price))        # <class 'float'>
+
+# Integers divided always give floats!
+print(10 / 3)             # 3.3333333333333335
+print(10 // 3)            # 3  ← floor division, drops decimal`,
+        analogy: "Think of integers as full pizza slices 🍕 — 1, 2, 3. Floats are when someone cuts a slice in half and gives you 2.5 slices. Both are pizza, but they look different!",
       },
       {
-        title: "Strings — When We Describe 💬",
-        content: "Strings are any TEXT — names, messages, words, sentences. You wrap them in quotes (single ' or double \") to tell Python 'this is text, not a math problem!'",
-        code: `# These are all STRINGS in Python
-name = "Priya"
-favourite_color = "purple"
-school = "Sunshine Academy"
-greeting = "Hello there!"
+        title: "Python as Your Calculator 🧮",
+        content: "Python is an incredibly powerful calculator — way more powerful than the one on your phone. It knows all the maths operations and even some you might not have seen in school yet!",
+        code: `# The 6 main operators
+print(10 + 3)    # 13   → addition
+print(10 - 3)    # 7    → subtraction
+print(10 * 3)    # 30   → multiplication
+print(10 / 3)    # 3.333 → division (always float)
+print(10 // 3)   # 3    → floor division (drops decimal)
+print(10 % 3)    # 1    → modulo (remainder only!)
+print(10 ** 3)   # 1000 → power (10 to the power of 3)
 
-# You can JOIN strings together (called concatenation)
-print("My name is " + name)
-print("I love the color " + favourite_color)
-print(name + " goes to " + school)`,
-        tip: "ALWAYS put strings in quotes. If you forget the quotes, Python gets confused and thinks it's looking for a variable!",
+# Real-world uses
+pocket_money = 500
+spent = 175
+remaining = pocket_money - spent
+print("Money left: " + str(remaining))   # Money left: 325
+
+# Order of operations works like maths class (BODMAS)
+print(2 + 3 * 4)    # 14, not 20 — * happens before +
+print((2 + 3) * 4)  # 20 — brackets go first!`,
+        tip: "The % operator (modulo) gives you the REMAINDER. So 10 % 3 = 1 because 10 ÷ 3 is 3 with 1 left over. It's super useful for checking if a number is even or odd: if age % 2 == 0 means even!",
+      },
+      {
+        title: "Strings — Text in Python 💬",
+        content: "A string is any text wrapped in quotes. The quotes are the signal to Python: 'treat everything inside as text, not as code'. You can use single quotes or double quotes — Python accepts both, just be consistent!",
+        code: `# Single quotes work
+name = 'Priya'
+
+# Double quotes work too
+city = "Mumbai"
+
+# Triple quotes for multi-line text
+poem = """Roses are red,
+Violets are blue,
+Python is awesome,
+And so are you!"""
+
+print(name)
+print(city)
+print(poem)
+
+# Strings can hold ANYTHING — letters, numbers, spaces, emojis!
+mixed = "I am 12 years old 🎂 and I love coding! 💻"
+print(mixed)
+
+# But "12" is TEXT, not a number you can do maths with
+print("12" + "5")   # "125" — not 17!`,
+        analogy: "Quotes are like a picture frame 🖼️ — everything inside the frame is just a picture (text). Python looks at it but doesn't try to calculate it. Without the frame (quotes), Python thinks it's a command or a variable name.",
+      },
+      {
+        title: "Combining Strings — Two Ways ✨",
+        content: "Joining strings together is called **concatenation**. The old way uses + signs. The new, much better way uses **f-strings** — and professional Python developers use f-strings almost exclusively today. You should too!",
+        code: `name = "Arjun"
+age = 13
+city = "Delhi"
+
+# OLD way — concatenation with +
+# (notice you have to convert age with str())
+print("My name is " + name + " and I am " + str(age) + " years old.")
+
+# NEW way — f-strings (put f before the quote, use {} for variables)
+print(f"My name is {name} and I am {age} years old.")
+print(f"I live in {city}. That's a great city!")
+
+# f-strings can even do maths inside {}!
+price = 250
+quantity = 3
+print(f"Total cost: {price * quantity} rupees")
+print(f"Next year I'll be {age + 1} years old!")
+
+# f-strings are cleaner, shorter, and harder to get wrong
+# Always prefer f-strings when mixing text and variables`,
+        tip: "f-strings are your new best friend! Any time you want to put a variable inside a sentence, use f\"...{variable}...\". The f stands for 'formatted' — Python formats the string by replacing {} with the actual value.",
       },
       {
         title: "The BIG Difference 🤔",
-        content: "Here's where it gets interesting! 5 + 3 = 8 with numbers. But '5' + '3' = '53' with strings! Python just sticks text together instead of adding. This is called the difference between integers (whole numbers) and strings.",
-        code: `# See the difference!
-print(5 + 3)       # = 8  (math addition!)
-print("5" + "3")   # = 53 (text glued together!)
+        content: "Here's the most important thing to understand today: numbers and strings look similar but behave completely differently. The + operator does TOTALLY different things depending on which type you use it with. This trips up even experienced programmers sometimes!",
+        code: `# With NUMBERS: + means ADDITION (maths)
+print(5 + 3)       # 8   ← maths!
 
-# This would cause an ERROR - you can't mix them!
-# print(5 + "3")   ← DON'T do this!
+# With STRINGS: + means JOINING (concatenation)
+print("5" + "3")   # "53" ← text glued together!
 
-# But you can CONVERT between them
+# Mixing them → CRASH (TypeError)
+# print(5 + "3")   ← Python says: NOPE! Can't add int and str
+
+# The fix: convert one to match the other
+# Number → String: use str()
 age = 12
-print("I am " + str(age) + " years old!")  # str() converts number to text
-print(int("25") + 5)  # int() converts text to number = 30`,
-        analogy: "It's like this: if you have 5 apples 🍎 and 3 more apples, you get 8 apples. But if you have the WORD 'five' and the WORD 'three', you get the sentence 'fivethree' — which doesn't mean anything! 😄",
+print("I am " + str(age) + " years old")   # Works!
+print(f"I am {age} years old")              # Even better!
+
+# String → Number: use int() or float()
+text_number = "25"
+print(int(text_number) + 5)   # 30 ← now it's actual maths!
+print(float("3.14") + 1)      # 4.140000000000001
+
+# How to check what type something is
+print(type(42))      # <class 'int'>
+print(type("42"))    # <class 'str'>
+print(type(3.14))    # <class 'float'>`,
+        analogy: "Imagine you have 5 apples 🍎 and 3 apples — you get 8 apples. But if you have the STICKER that says '5' and the STICKER that says '3' and stick them together, you get the sticker '53'. Both use a plus sign, but one is real apples and one is just labels!",
       },
       {
-        title: "Cool String Tricks ✨",
-        content: "Strings have magical powers in Python! You can find out how long they are, make them UPPERCASE or lowercase, and much more.",
-        code: `name = "python rocks"
+        title: "String Superpowers 🦸",
+        content: "Strings come with built-in tools called **methods** — special actions that strings can perform on themselves. You call them using a dot (.) after the string. These are incredibly useful for working with text!",
+        code: `message = "  hello, python world!  "
 
-print(len(name))          # Length = 12 characters
-print(name.upper())       # PYTHON ROCKS
-print(name.lower())       # python rocks
-print(name.capitalize())  # Python rocks
-print(name.replace("rocks", "is awesome"))  # python is awesome
+# Length — how many characters?
+print(len("coding"))         # 6
 
-# Count how many times a letter appears
-print(name.count("o"))    # = 2`,
+# Case changers
+print(message.upper())       # "  HELLO, PYTHON WORLD!  "
+print(message.lower())       # "  hello, python world!  "
+print(message.capitalize())  # "  hello, python world!  " (first char only)
+print("python".title())      # "Python" (first letter of each word)
+
+# Whitespace removal
+print(message.strip())       # "hello, python world!" (removes spaces)
+
+# Finding and replacing
+sentence = "I love cats and cats love me"
+print(sentence.count("cats"))         # 2
+print(sentence.replace("cats", "dogs")) # "I love dogs and dogs love me"
+print(sentence.find("cats"))          # 7 (position of first 'cats')
+
+# Checking what's inside
+print("hello123".isalpha())   # False (has numbers)
+print("hello".isalpha())      # True (only letters)
+print("123".isdigit())        # True (only digits)
+
+# Splitting a string into a list
+words = "apple,banana,mango".split(",")
+print(words)   # ['apple', 'banana', 'mango']`,
+        tip: "You can chain methods! Try: '  HELLO WORLD  '.strip().lower().replace('world', 'python') — Python runs them one after another from left to right.",
       },
     ],
     challenge: {
       title: "Your Mission: The Info Card Maker",
-      description: "Create a program that stores information about yourself and prints a nice info card! Use numbers for age and score, and strings for names.",
-      code: `# INFO CARD MAKER
-# Store your info
-my_name = "___"          # Your name (string)
-my_age = ___             # Your age (number)
-my_hobby = "___"         # Your hobby (string)
-my_score = ___           # Made-up game score (number)
+      description: "Create a program that stores information about yourself using the right data types, then prints a nicely formatted info card using f-strings. Your card must use at least 3 variables and show a calculation!",
+      solutionVideoUrl: "https://youtube.com/shorts/om5wTk_t1ls",
+      code: `# INFO CARD MAKER — use f-strings!
+# Store your info (use the right types!)
+my_name = "___"          # string — your name
+my_age = ___             # int — your age
+my_hobby = "___"         # string — your hobby
+my_score = ___           # int — made-up game score
 
-# Print the card
-print("╔══════════════════╗")
-print("     MY INFO CARD     ")
-print("Name: " + my_name)
-print("Age: " + str(my_age) + " years old")
-print("Hobby: " + my_hobby)
-print("Top Score: " + str(my_score) + " points!")
-print("╚══════════════════╝")`,
+# Calculate something
+next_year_age = my_age + 1
+double_score = my_score * 2
+
+# Print the card using f-strings
+print("╔══════════════════════╗")
+print("      MY INFO CARD      ")
+print(f"  Name  : {my_name}")
+print(f"  Age   : {my_age} (turning {next_year_age} next year!)")
+print(f"  Hobby : {my_hobby}")
+print(f"  Score : {my_score} pts (double = {double_score}!)")
+print("╚══════════════════════╝")`,
     },
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Broken Code",
+      description: "This code is trying to print a player profile, but it has 4 bugs! Some are type errors, some are string mistakes. Find and fix all of them, then run it to see a clean profile.",
+      brokenCode: `# Player Profile Printer — fix the 4 bugs!
+
+player_name = "Rohan"
+player_age = "14"
+player_score = 8750
+bonus_points = 500
+
+# Bug hunt begins here...
+total = player_score + bonus_points
+print("Player: " + player_name)
+print("Age: " + player_age + " years old")
+print("Total score: " + total)
+print(f"Next year Rohan will be {player_age + 1} years old")`,
+      expectedOutputDescription:
+        "A clean player profile showing name, age, total score (9250), and next year's age (15) — all printed without any TypeError.",
+      hint: "Look carefully at which variables are numbers and which are strings. Can you add a number to a string with +? What about in an f-string?",
+      bugs: [
+        {
+          must: 'player_age = 14',
+          hint: 'Bug 1: player_age is "14" (a string) but we need to do maths with it — remove the quotes to make it an integer',
+        },
+        {
+          must: 'print("Total score: " + str(total))',
+          hint: 'Bug 2: total is a number (int) but you\'re trying to join it to a string with + — use str(total) or switch to an f-string',
+        },
+        {
+          must: 'player_age + 1',
+          hint: 'Bug 3: Once player_age is fixed to an int, the f-string calculation {player_age + 1} will work correctly',
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build a Receipt Generator",
+      task: `Write a Python program from scratch that acts like a shop receipt. It must:
+1. Store at least 3 items with their prices (as floats or ints)
+2. Calculate the total price
+3. Apply a 10% discount to the total
+4. Print a formatted receipt using f-strings showing each item, the total, and the discounted price
+Run it and make sure all numbers look correct!`,
+      validationGoal:
+        "The output should show at least 3 items with prices, a calculated total, and a discounted final price. The receipt should use f-strings or formatted output and display correct arithmetic. All values should be numbers (not strings that look like numbers).",
+      starterComment: `# RECEIPT GENERATOR — write it from scratch!
+# Hint: store items as variables, calculate total, apply 10% discount
+# Use f-strings to make it look neat
+
+`,
+    },
+
     quiz: [
       {
-        question: "What will print(\"3\" + \"4\") show on screen?",
-        options: ["7", "34", "3+4", "Error"],
+        question: "What will print(\"3\" + \"4\") display?",
+        options: ["7", "34", "3 + 4", "Error"],
         correct: 1,
-        explanation: "When you use + with strings, Python sticks them together (concatenation)! \"3\" + \"4\" = \"34\", not 7. To get 7, you'd need the numbers 3 + 4 without quotes.",
+        explanation: "When + is used with strings, Python concatenates (joins) them — it doesn't add! \"3\" + \"4\" gives \"34\". To get 7, you need real numbers: print(3 + 4).",
       },
       {
-        question: "Which of these is a STRING?",
-        options: ["42", "3.14", "\"hello\"", "100"],
+        question: "Which of these is a FLOAT?",
+        options: ["42", "\"3.14\"", "3.14", "True"],
         correct: 2,
-        explanation: "\"hello\" is a string because it's wrapped in quotes! Numbers like 42, 3.14, and 100 don't need quotes.",
+        explanation: "3.14 (no quotes) is a float — a number with a decimal point. \"3.14\" in quotes is a string. 42 is an integer. True is a boolean (we'll meet that soon!).",
       },
       {
-        question: "What does len(\"coding\") return?",
-        options: ["5", "6", "7", "coding"],
+        question: "What does the % operator do in Python?",
+        options: ["Calculates percentage", "Gives the remainder after division", "Converts to percent string", "Divides and rounds"],
         correct: 1,
-        explanation: "len() counts the number of characters in a string. \"coding\" has 6 letters: c-o-d-i-n-g = 6!",
+        explanation: "% is the modulo operator — it gives the REMAINDER. So 10 % 3 = 1 because 10 ÷ 3 is 3 with 1 left over. It's often used to check if a number is even (number % 2 == 0).",
+      },
+      {
+        question: "What is the correct f-string to print \"I am 12 years old\" if age = 12?",
+        options: ['print("I am age years old")', 'print(f"I am {age} years old")', 'print("I am " + age + " years old")', 'print(f"I am age years old")'],
+        correct: 1,
+        explanation: 'f-strings use curly braces {} to insert variable values. print(f"I am {age} years old") is correct — the f before the quote activates f-string mode, and {age} gets replaced by the actual value 12.',
+      },
+      {
+        question: "What does len(\"CodersBee\") return?",
+        options: ["8", "9", "10", "CodersBee"],
+        correct: 1,
+        explanation: "len() counts characters including uppercase and lowercase. C-o-d-e-r-s-B-e-e = 9 characters. It counts every single character including spaces and punctuation in other strings.",
+      },
+      {
+        question: "Why does print(\"Hello \" + 5) cause an error?",
+        options: ["5 is too small a number", "You can't use + inside print()", "Python can't join a string and an integer directly", "\"Hello\" needs to be lowercase"],
+        correct: 2,
+        explanation: "Python's + operator can join two strings OR add two numbers — but it can't mix types. \"Hello \" is a str and 5 is an int. Fix: use str(5) to convert, or use an f-string: f\"Hello {5}\".",
+      },
+      {
+        question: "What does \"python\".upper() return?",
+        options: ["Python", "PYTHON", "python", "Error — upper() doesn't exist"],
+        correct: 1,
+        explanation: ".upper() is a string method that converts every character to uppercase. \"python\".upper() returns \"PYTHON\". Similarly, .lower() makes everything lowercase and .title() capitalises each word.",
       },
     ],
     keyLearnings: [
-      "Numbers do maths — strings hold text wrapped in quotes",
-      "print(5 + 3) gives 8, but print(\"5\" + \"3\") gives \"53\" — totally different!",
-      "Use str() to turn a number into text, and int() to turn text into a number",
-      "len() counts characters, .upper() shouts, .lower() whispers",
-      "Never mix numbers and strings in maths — Python will throw a TypeError",
-      "Strings are like beads on a necklace — characters strung together",
+      "Integers are whole numbers (12, 100); floats have decimals (3.14, 9.99) — both are numbers",
+      "Python operators: + - * / // % ** — // gives whole number result, % gives remainder",
+      "Strings are text wrapped in quotes — single, double, or triple for multi-line",
+      "f-strings (f\"Hello {name}\") are the modern way to mix variables into text — use them always",
+      "print(5 + 3) = 8, but print(\"5\" + \"3\") = \"53\" — + means totally different things!",
+      "Never mix str + int directly — use str() to convert, or use an f-string",
+      "String methods: len(), .upper(), .lower(), .strip(), .replace(), .count(), .split()",
     ],
-    funFact: "The word 'string' in programming comes from the idea of characters strung together like beads on a necklace! 📿",
-    nextPreview: "Next up: Variables — the magical boxes that store ALL your data!",
+    funFact: "The word 'string' in programming comes from the idea of characters strung together like beads on a necklace — one after another in a line! 📿 The longest string ever stored in Python had over 1 billion characters.",
+    nextPreview: "Next up: Variables — the magical named boxes that let your program remember things!",
   },
 
   {
@@ -414,129 +597,307 @@ print("╚══════════════════╝")`,
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200",
     duration: "Day 3",
-    topics: ["What are variables?", "Naming rules", "Changing values", "Multiple variables"],
-    intro: "Imagine your brain has little boxes where you store information. Your name is in one box, your age in another, your best friend's name in another. Variables in Python are exactly like those memory boxes! You give each box a name, put something inside, and you can always look inside later.",
+    topics: ["What are variables?", "Naming rules", "Changing values", "Multiple variables", "Constants", "Swapping values"],
+    intro: "Imagine your brain has little boxes where you store information. Your name is in one box, your age in another, your best friend's name in another. Variables in Python are exactly like those memory boxes! You give each box a name, put something inside, and you can look inside any time. The amazing part? You can change what's in the box, use multiple boxes together, and even swap what's in two boxes in a single line. Today you'll master all of it!",
     sections: [
       {
         title: "What is a Variable? 📦",
-        content: "A variable is a named container that stores a value. When you write name = 'Arjun', you're creating a box called 'name' and putting 'Arjun' inside. Later, whenever you write 'name', Python opens that box and uses what's inside!",
-        code: `# Creating variables (putting things in boxes)
-player_name = "SuperCoder"
-player_lives = 3
-player_score = 0
-is_game_over = False
+        content: "A variable is a named container that stores a value. When you write `name = 'Arjun'`, you're creating a box called **name** and putting 'Arjun' inside it. Whenever you write `name` later, Python opens that box and uses whatever is inside. The = sign is called the **assignment operator** — it puts the value on the right into the box on the left.",
+        code: `# Creating variables — the = sign puts values INTO boxes
+player_name = "SuperCoder"    # a string variable
+player_lives = 3              # an integer variable
+player_score = 0              # starts at zero
+is_game_over = False          # a boolean (True/False)
 
-# Using variables (opening the boxes)
+# Using variables — Python opens the box and uses what's inside
 print(player_name)     # SuperCoder
 print(player_lives)    # 3
-print(player_score)    # 0`,
-        analogy: "It's like your school locker! 🏫 You put your lunch box in locker #5. Later, when you want lunch, you open locker #5. The locker number is your variable name, and your lunch is the value inside!",
+print(player_score)    # 0
+
+# f-strings are the BEST way to use variables in sentences
+print(f"{player_name} has {player_lives} lives and {player_score} points!")
+# SuperCoder has 3 lives and 0 points!`,
+        analogy: "Think of your school locker 🏫 — you put your lunch box in locker #5. Later, when you're hungry, you open locker #5 and take out your lunch. The locker NUMBER is the variable name, and your lunch is the value. You can swap the lunch for something else anytime!",
       },
       {
         title: "Naming Your Variables 🏷️",
-        content: "Variable names have rules — just like how your school has rules. Follow these and Python will be happy!",
-        code: `# GOOD variable names ✅
+        content: "Variable names have rules — and a style guide. Python will **crash** if you break the rules. It will still run if you break the style, but other programmers (and future-you!) will find your code harder to read.",
+        code: `# ✅ GOOD variable names — clear, readable, snake_case
 my_name = "Riya"
 player_score = 100
 favourite_color = "blue"
 age_in_years = 12
 is_raining = True
+total_items_in_cart = 5
 
-# BAD variable names ❌ (Python will complain!)
-# 1name = "bad"       # Can't START with a number
-# my-name = "bad"     # Can't use hyphens (-)
-# my name = "bad"     # Can't have spaces
-# for = "bad"         # Can't use Python's special words`,
-        tip: "Use underscores _ to separate words in variable names. Like 'my_best_friend' not 'mybestfriend'. This is called snake_case — just like Python's mascot! 🐍",
+# ❌ ILLEGAL names — Python will crash!
+# 1name = "bad"        # Can't START with a number
+# my-name = "bad"      # Hyphens (-) are not allowed
+# my name = "bad"      # Spaces are not allowed
+# for = "bad"          # 'for' is a Python keyword — reserved!
+# print = "bad"        # Don't overwrite built-in names!
+
+# ⚠️ LEGAL but BAD style — Python won't crash, but ugly!
+x = "Riya"            # Too short — what does x mean?
+MyName = "Riya"       # CamelCase is for class names, not variables
+MYSCORE = 100         # ALL_CAPS means constant (we'll see this next!)`,
+        tip: "Use **snake_case** — all lowercase with underscores between words. Like `my_best_friend`, not `myBestFriend` or `MyBestFriend`. Python developers worldwide follow this rule (it's in the official Python style guide, PEP 8!).",
       },
       {
         title: "Variables Can Change! 🔄",
-        content: "The 'variable' in variable means it can VARY — it can change! You can update what's inside a box whenever you want. This is how games track your score as it goes up!",
-        code: `# Variables changing over time
+        content: "The word 'variable' literally means **something that varies**. You can change what's inside a box whenever you want — and Python is brilliant at this. This is how games track your score as it goes up, or how apps update your profile. Each time you reassign, the old value is simply replaced.",
+        code: `# A variable updating over time — like a live score
 score = 0
-print("Start:", score)      # Start: 0
+print(f"🎮 Game starts! Score: {score}")
 
-score = score + 10          # You scored 10 points!
-print("After level 1:", score)  # After level 1: 10
+score = score + 10          # Found a coin
+print(f"🪙 Coin collected! Score: {score}")    # 10
 
-score = score + 25          # Boss defeated! +25 points
-print("After boss:", score)     # After boss: 35
+score = score + 25          # Defeated an enemy
+print(f"👾 Enemy defeated! Score: {score}")    # 35
 
-score = score * 2           # Double points bonus!
-print("With bonus:", score)     # With bonus: 70
+score = score * 2           # Double-points zone!
+print(f"✨ DOUBLE ZONE! Score: {score}")       # 70
 
-# There's a shortcut way to do this!
-score += 10    # Same as score = score + 10
-score -= 5     # Same as score = score - 5
-print("Final score:", score)    # Final score: 75`,
+# Shortcut operators (save you typing)
+score += 15    # same as: score = score + 15   → 85
+score -= 5     # same as: score = score - 5    → 80
+score *= 2     # same as: score = score * 2    → 160
+score //= 3    # same as: score = score // 3   → 53
+print(f"🏁 Final score: {score}")`,
+        analogy: "Imagine a whiteboard with your score written on it. You erase the old number and write the new one. The whiteboard is the variable, the number is the value. You can erase and rewrite as many times as you like! 🎯",
       },
       {
         title: "Using Multiple Variables Together 🤝",
-        content: "Variables get really powerful when you use them together to solve problems!",
-        code: `# Let's calculate how many days until your birthday!
-days_in_year = 365
-today_day_number = 130     # Day number 130 of the year
-birthday_day_number = 250  # Your birthday is day 250
+        content: "Variables become truly powerful when you combine them. You can build a whole mini-calculator using just variables — no magic numbers scattered through your code. This makes your program easy to update: change one variable and everything adjusts automatically!",
+        code: `# Trip cost calculator — all values in variables
+distance_km = 250
+fuel_cost_per_km = 8       # rupees per km
+hotel_cost_per_night = 1500
+nights = 3
+food_budget_per_day = 500
 
-days_until_birthday = birthday_day_number - today_day_number
-print("Days until my birthday: " + str(days_until_birthday))
+# Now calculate everything using variables
+fuel_total = distance_km * fuel_cost_per_km
+hotel_total = hotel_cost_per_night * nights
+food_total = food_budget_per_day * nights
+grand_total = fuel_total + hotel_total + food_total
 
-# Or calculate your age in dog years!
-my_age = 12
-dog_years = my_age * 7
-print("In dog years, I am: " + str(dog_years) + " years old! 🐕")`,
+print("🚗 TRIP BUDGET CALCULATOR")
+print(f"  Fuel ({distance_km} km):  ₹{fuel_total}")
+print(f"  Hotel ({nights} nights): ₹{hotel_total}")
+print(f"  Food ({nights} days):   ₹{food_total}")
+print(f"  ─────────────────────")
+print(f"  GRAND TOTAL:         ₹{grand_total}")
+
+# To update the whole calculation, just change ONE number above!
+# Change distance_km = 400 and everything recalculates automatically`,
+        tip: "Never 'hard-code' numbers directly inside a calculation like `250 * 8`. Store them in variables first! Future-you will be VERY grateful when you need to change the fuel price.",
+      },
+      {
+        title: "Constants — Values That Never Change 🔒",
+        content: "Some values should never change during your program — like Pi (3.14159), the speed of light, or the number of seconds in a day. By convention, Python programmers write these in **ALL_CAPS** to signal: 'don't touch this!' Python won't actually stop you from changing it, but the ALL_CAPS shouts a warning to everyone reading the code.",
+        code: `# Constants — write in ALL_CAPS as a signal to everyone
+PI = 3.14159
+SECONDS_IN_A_DAY = 86400
+MAX_LIVES = 3
+SCHOOL_NAME = "Greenview High"
+GST_RATE = 0.18           # 18% GST
+
+# Multiple assignment — set several variables in one line!
+a, b, c = 10, 20, 30
+print(a, b, c)            # 10 20 30
+
+x = y = z = 0             # set them ALL to the same value
+print(x, y, z)            # 0 0 0
+
+# Using constants in calculations
+radius = 7
+area = PI * radius ** 2
+print(f"Circle area: {area:.2f}")    # :.2f means 2 decimal places
+
+price = 500
+gst_amount = price * GST_RATE
+print(f"Price + GST: ₹{price + gst_amount}")  # ₹590.0`,
+        analogy: "ALL_CAPS is like writing something in red permanent marker instead of pencil 🖊️. Python CAN erase it if forced, but the red marker tells everyone: 'This is important — don't change it without a really good reason!'",
+      },
+      {
+        title: "The Variable Swap Trick 🔄✨",
+        content: "Here's one of Python's most delightful tricks: swapping two variables in ONE line. In other programming languages you need a temporary 'helper' variable — three lines of code. Python makes it beautiful. This is a classic interview question for programmers!",
+        code: `# The classic way (other languages) — needs a temp variable
+a = "🍕 Pizza"
+b = "🍔 Burger"
+
+# Swap using temp
+temp = a       # save a's value
+a = b          # overwrite a with b
+b = temp       # put the saved value into b
+print(a, b)    # 🍔 Burger 🍕 Pizza
+
+# THE PYTHON WAY — one line! ✨
+x = "First"
+y = "Second"
+x, y = y, x   # Python swaps them simultaneously!
+print(x, y)    # Second First
+
+# Real use case: sorting two numbers
+low = 100
+high = 5
+if low > high:         # if they're in the wrong order...
+    low, high = high, low    # ...swap them!
+print(f"Low: {low}, High: {high}")  # Low: 5, High: 100`,
+        tip: "The one-line swap `a, b = b, a` works because Python evaluates the ENTIRE right side first, then assigns. So it reads both b and a before changing either one. It's like two people handing each other things simultaneously! 🤝",
       },
     ],
     challenge: {
-      title: "Your Mission: The Score Tracker",
-      description: "Build a score tracker for an imaginary game! Start with 0 points, then add points for different achievements.",
-      code: `# EPIC GAME SCORE TRACKER
-player_name = "___"   # Your game name
-score = 0
+      title: "Your Mission: The Game Character Creator 🎮",
+      description: "Create a game character using variables of different types, build their stats, and level them up! Use f-strings throughout. Your character must have at least 5 attributes, a calculated total power score, and show what happens after levelling up.",
+      code: `# ⚔️ GAME CHARACTER CREATOR
+# Step 1: Define your character's base stats
+hero_name = "___"        # string — your hero's name
+hero_class = "___"       # string — Wizard, Warrior, Archer, etc.
+hero_level = 1           # int
+hero_health = 100        # int
+hero_attack = ___        # int — pick a number 1–50
+hero_defense = ___       # int — pick a number 1–30
 
-# Add points for each achievement!
-score = score + 50   # Found hidden treasure
-print(player_name + " found treasure! Score: " + str(score))
+# Step 2: Calculate total power score
+total_power = hero_health + (hero_attack * 3) + (hero_defense * 2)
 
-score = score + 100  # Defeated the dragon
-print("Dragon defeated! Score: " + str(score))
+# Step 3: Print the character card using f-strings
+print("=" * 30)
+print(f"⚔️  {hero_name} the {hero_class}")
+print("=" * 30)
+print(f"  Level   : {hero_level}")
+print(f"  Health  : {hero_health} HP")
+print(f"  Attack  : {hero_attack}")
+print(f"  Defense : {hero_defense}")
+print(f"  POWER   : {total_power} ⚡")
+print("=" * 30)
 
-score = score + 200  # Completed the secret level
-print("Secret level done! Score: " + str(score))
+# Step 4: Level up! Update the stats
+hero_level += 1
+hero_health += 20
+hero_attack += 5
+hero_defense += 3
+new_power = hero_health + (hero_attack * 3) + (hero_defense * 2)
 
-score = score * 2    # DOUBLE POINTS BONUS!
-print("DOUBLE POINTS! Final score: " + str(score))`,
+print(f"\\n🎉 {hero_name} levelled up to Level {hero_level}!")
+print(f"   Power: {total_power} → {new_power} (+{new_power - total_power})")`,
     },
+
+    debugChallenge: {
+      title: "Debug Zone 🐛 — Fix the Broken Variables",
+      description: "This code tracks a student's quiz scores, but it has 3 bugs involving variable naming, type errors, and a sneaky undefined variable. Find and fix all 3, then run it to see a clean score report!",
+      brokenCode: `# Student Score Tracker — find the 3 bugs!
+
+student name = "Priya"      # Bug 1
+quiz1 = 85
+quiz2 = 92
+quiz3 = 78
+
+total = quiz1 + quiz2 + quiz3
+average = total / 3
+
+print("Student: " + student_name)
+print("Total marks: " + total)       # Bug 2
+print(f"Average: {average:.1f}/100")
+print(f"Percentage: {averege:.1f}%") # Bug 3`,
+      expectedOutputDescription:
+        "A clean score report showing Priya's name, total marks (255), average (85.0/100) and percentage (85.0%) — all printed without any error.",
+      hint: "Look carefully at how variables are named and how they're used in print statements. Can you spot the space, the type mismatch, and the typo?",
+      bugs: [
+        {
+          must: "student_name = ",
+          hint: 'Bug 1: Variable names cannot have spaces! "student name" must be written as "student_name" (with an underscore)',
+        },
+        {
+          must: 'print("Total marks: " + str(total))',
+          hint: "Bug 2: total is an integer (int) — you can't join it to a string with +. Use str(total) to convert it first, or switch to an f-string: f\"Total marks: {total}\"",
+        },
+        {
+          must: "average:.1f}%",
+          hint: 'Bug 3: "averege" is a typo — the variable is called "average". Python is case-sensitive and spelling-sensitive — every character must match exactly!',
+        },
+      ],
+    },
+
+    blankChallenge: {
+      title: "Your Turn! ✍️ — Build a Pocket Money Tracker",
+      task: `Write a Python program from scratch that tracks your weekly pocket money. It must:
+1. Store your weekly allowance, this week's spending (at least 3 items), and a savings goal
+2. Calculate total spent, money remaining, and how many more weeks to reach the savings goal
+3. Print a neat weekly report using f-strings
+4. Use ALL_CAPS for any constant values (like the savings goal)
+Bonus: Add a check — if remaining money is negative, print a warning!`,
+      validationGoal:
+        "The output should show a weekly allowance, at least 3 spending items with amounts, total spent, money remaining, and a weeks-to-goal calculation. All values should be variables and the output should be formatted with f-strings. The maths must be correct.",
+      starterComment: `# 💰 POCKET MONEY TRACKER — write from scratch!
+# Hints:
+# - Store allowance, spending items, savings goal as variables
+# - Calculate total_spent, remaining = allowance - total_spent
+# - weeks_to_goal = savings_goal / remaining  (if remaining > 0)
+# - Use f-strings for all output
+
+`,
+    },
+
     quiz: [
       {
         question: "What happens when you write: score = score + 10?",
-        options: ["Creates a new variable called 'score + 10'", "Adds 10 to the current value of score", "Causes an error", "Sets score to exactly 10"],
+        options: ["Creates a new variable called 'score + 10'", "Adds 10 to the current value of score", "Causes an error because you can't use a variable in its own assignment", "Sets score to exactly 10"],
         correct: 1,
-        explanation: "Python first looks at the right side (score + 10), adds 10 to the current value of score, then stores the result back into score. It's like taking money out of your piggy bank, adding more, and putting it back!",
+        explanation: "Python evaluates the right side FIRST (current score + 10), then stores the result back into score. It's like taking money out of your piggy bank, adding more coins, and putting it all back in!",
       },
       {
-        question: "Which variable name follows the rules?",
+        question: "Which variable name follows Python's rules?",
         options: ["2fast", "my-speed", "my_speed", "my speed"],
         correct: 2,
-        explanation: "my_speed is correct! It uses letters and underscore. 2fast starts with a number, my-speed uses a hyphen (not allowed), and my speed has a space (not allowed).",
+        explanation: "my_speed is correct! It uses only letters and underscores. 2fast starts with a number (not allowed), my-speed uses a hyphen (not allowed — Python reads - as subtraction!), and my speed has a space (not allowed).",
       },
       {
         question: "What does score += 5 mean?",
         options: ["score = 5", "score = score + 5", "score = score - 5", "score = score * 5"],
         correct: 1,
-        explanation: "+= is a shortcut! score += 5 is exactly the same as writing score = score + 5. It adds 5 to whatever is already in score.",
+        explanation: "+= is a shortcut operator! score += 5 is exactly the same as writing score = score + 5. It takes what's already in score, adds 5, and saves the result back. Python also has -=, *=, //= and more.",
+      },
+      {
+        question: "What will Python print for the last line?\n\nx = 10\nx = x * 2\nx += 5\nprint(x)",
+        options: ["10", "15", "20", "25"],
+        correct: 3,
+        explanation: "Step by step: x starts at 10. x = x * 2 makes it 20. x += 5 adds 5 to make 25. print(x) prints 25. Variables update one step at a time — trace through them like following a recipe!",
+      },
+      {
+        question: "What's wrong with this variable name: 1st_place = 'Arjun'",
+        options: ["'Arjun' should be a number", "Variable names can't start with a digit", "The underscore is not allowed", "Nothing — this is perfectly valid"],
+        correct: 1,
+        explanation: "Python variable names must start with a LETTER or underscore, never a digit. 1st_place is illegal because it starts with 1. Fix: first_place = 'Arjun' works perfectly!",
+      },
+      {
+        question: "What does this one line do?\n\na, b = b, a",
+        options: ["Creates two new variables a and b", "Swaps the values of a and b", "Causes an error — you can't assign two variables at once", "Sets both a and b to the same value"],
+        correct: 1,
+        explanation: "This is Python's beautiful swap trick! Python evaluates the entire right side (b, a) first, then assigns. So a gets the old b, and b gets the old a — all at once. In other languages, you'd need a temporary variable and 3 lines of code!",
+      },
+      {
+        question: "Why do Python programmers write some variables in ALL_CAPS like MAX_LIVES = 3?",
+        options: ["Python requires it for numbers", "It makes the program run faster", "It's a signal that this value should not change during the program", "ALL_CAPS variables are automatically saved to a file"],
+        correct: 2,
+        explanation: "ALL_CAPS is a convention (a shared agreement) that says 'this is a constant — don't change it!' Python won't stop you from changing it, but any programmer who sees ALL_CAPS knows to leave it alone. It's like writing in permanent red marker instead of pencil!",
       },
     ],
     keyLearnings: [
-      "A variable is a named box that stores a value — like a labelled locker",
-      "Create a variable with = : age = 12 puts 12 into a box called 'age'",
-      "Variable names use letters and underscores — no spaces, no starting with numbers",
-      "Variables can change: score = score + 10 updates the value inside the box",
-      "+= is a shortcut: score += 10 means the same as score = score + 10",
-      "Variables make code flexible — change the value once, it updates everywhere",
+      "A variable is a named box that stores a value — create it with = : age = 12",
+      "Variable names must start with a letter/underscore, use only letters/digits/underscores, no spaces",
+      "Use snake_case (my_variable) for regular variables — Python's official style guide says so",
+      "Variables can change: score = score + 10 replaces the old value with a new one",
+      "Shortcut operators: += -= *= //= all update a variable in one step",
+      "ALL_CAPS signals a constant — a value that should never change (PI, MAX_LIVES, GST_RATE)",
+      "Multiple assignment: a, b = 10, 20 sets two variables in one line",
+      "Swap trick: a, b = b, a swaps two variables in one elegant line — no temp variable needed!",
     ],
-    funFact: "A computer's RAM (Random Access Memory) is basically a HUGE collection of variables! When you close a program, all those variables are erased — like emptying your school locker at the end of term. 🎒",
-    nextPreview: "Get ready for Day 4: Making Decisions with If/Else — teaching Python to think!",
+    funFact: "A computer's RAM (Random Access Memory) is basically a HUGE collection of variables! Modern laptops have billions of variable 'slots'. When you close a program, all its variables are erased instantly — like clearing a whiteboard. That's why unsaved work disappears when an app crashes! 🎒",
+    nextPreview: "Day 4: Making Decisions with If/Else — teaching Python to think and choose for itself!",
   },
 
   {
