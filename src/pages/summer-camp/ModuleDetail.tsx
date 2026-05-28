@@ -977,7 +977,7 @@ export default function ModuleDetail() {
   const vw = useWindowWidth();
   const mob = vw < 920;
 
-  const id  = parseInt(moduleId || "1", 10);
+  const id  = parseFloat(moduleId || "1");
   const mod = summerCampModules.find(m => m.id === id);
 
   /* ── State ── */
@@ -1043,7 +1043,9 @@ export default function ModuleDetail() {
   }
 
   /* ── Derived values ── */
-  const nextMod  = summerCampModules.find(m => m.id === id + 1);
+  const sortedMods = [...summerCampModules].sort((a, b) => a.id - b.id);
+  const currentIdx = sortedMods.findIndex(m => m.id === id);
+  const nextMod    = currentIdx >= 0 ? sortedMods[currentIdx + 1] : undefined;
   const savedPct = Math.round(
     ((sectionsDone.filter(Boolean).length + (quizSubmitted ? 1 : 0)) /
      (mod.sections.length + 1)) * 100
