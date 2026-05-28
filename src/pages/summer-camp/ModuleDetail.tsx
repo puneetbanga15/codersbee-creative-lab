@@ -31,23 +31,24 @@ function useWindowWidth() {
 }
 
 /* ─── 15-day sidebar data ──────────────────────────────────────────── */
-interface DayInfo { n: number; title: string; track: "P" | "A"; project?: boolean; }
+interface DayInfo { n: number; title: string; track: "P" | "A"; project?: boolean; bonus?: boolean; }
 const ALL_DAYS: DayInfo[] = [
-  { n: 1,  title: "Meet Python",                  track: "P" },
-  { n: 2,  title: "Variables — Python remembers", track: "P" },
-  { n: 3,  title: "Strings, numbers & maths",     track: "P" },
-  { n: 4,  title: "Asking the user (input)",       track: "P" },
-  { n: 5,  title: "If / else — decisions",         track: "P" },
-  { n: 6,  title: "Loops — repeat yourself",       track: "P" },
-  { n: 7,  title: "Mini-project: Quiz game",       track: "P", project: true },
-  { n: 8,  title: "Lists & data",                  track: "P" },
-  { n: 9,  title: "Functions — make your own",     track: "P" },
-  { n: 10, title: "Hello, AI 🤖",                  track: "A" },
-  { n: 11, title: "Prompting like a pro",           track: "A" },
-  { n: 12, title: "Build a chatbot",               track: "A", project: true },
-  { n: 13, title: "Image AI",                      track: "A" },
-  { n: 14, title: "Capstone build",                track: "A" },
-  { n: 15, title: "Demo Day 🎉",                   track: "A", project: true },
+  { n: 1,   title: "Meet Python",                  track: "P" },
+  { n: 2,   title: "Variables — Python remembers", track: "P" },
+  { n: 3,   title: "Strings, numbers & maths",     track: "P" },
+  { n: 4,   title: "Asking the user (input)",       track: "P" },
+  { n: 5,   title: "If / else — decisions",         track: "P" },
+  { n: 6,   title: "Loops — repeat yourself",       track: "P" },
+  { n: 6.5, title: "Colab & Replit Setup",          track: "P", bonus: true },
+  { n: 7,   title: "Mini-project: Quiz game",       track: "P", project: true },
+  { n: 8,   title: "Lists & data",                  track: "P" },
+  { n: 9,   title: "Functions — make your own",     track: "P" },
+  { n: 10,  title: "Hello, AI 🤖",                  track: "A" },
+  { n: 11,  title: "Prompting like a pro",           track: "A" },
+  { n: 12,  title: "Build a chatbot",               track: "A", project: true },
+  { n: 13,  title: "Image AI",                      track: "A" },
+  { n: 14,  title: "Capstone build",                track: "A" },
+  { n: 15,  title: "Demo Day 🎉",                   track: "A", project: true },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -165,21 +166,22 @@ function DayRow({ day, currentDay }: { day: DayInfo; currentDay: number }) {
     <div style={{
       display: "flex", alignItems: "center", gap: 10,
       padding: "9px 16px",
-      background: isCurrent ? C.yellowSoft : "transparent",
-      borderLeft: `3px solid ${isCurrent ? C.yellow : "transparent"}`,
+      background: isCurrent ? C.yellowSoft : day.bonus ? "rgba(251,191,36,0.08)" : "transparent",
+      borderLeft: `3px solid ${isCurrent ? C.yellow : day.bonus ? C.yellow : "transparent"}`,
       opacity: isLocked ? 0.45 : 1,
       cursor: isLocked ? "default" : "pointer",
       transition: "background 0.15s",
     }}>
       <div style={{
         width: 28, height: 28, borderRadius: 8, flexShrink: 0,
-        background: isCurrent ? C.yellow : isDone ? C.green : C.bg2,
-        border: `1.5px solid ${isCurrent ? C.yellowD : isDone ? C.greenDeep : C.line}`,
+        background: isCurrent ? C.yellow : day.bonus ? "#FFF8E1" : isDone ? C.green : C.bg2,
+        border: `1.5px solid ${isCurrent ? C.yellowD : day.bonus ? C.yellow : isDone ? C.greenDeep : C.line}`,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 10, fontWeight: 800, color: isCurrent ? C.ink : isDone ? "#fff" : C.ink3,
+        fontSize: day.bonus ? 13 : 10, fontWeight: 800,
+        color: isCurrent ? C.ink : isDone ? "#fff" : C.ink3,
         fontFamily: "'JetBrains Mono', monospace",
       }}>
-        {isDone ? "✓" : String(day.n).padStart(2, "0")}
+        {day.bonus ? "⭐" : isDone ? "✓" : String(day.n).padStart(2, "0")}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
@@ -189,6 +191,9 @@ function DayRow({ day, currentDay }: { day: DayInfo; currentDay: number }) {
         }}>{day.title}</div>
         {day.project && (
           <div style={{ fontSize: 10, color: C.purple, fontWeight: 700, marginTop: 1 }}>🎯 Project</div>
+        )}
+        {day.bonus && (
+          <div style={{ fontSize: 10, color: "#92620A", fontWeight: 700, marginTop: 1 }}>🛠️ Bonus</div>
         )}
       </div>
       {isLocked && <span style={{ fontSize: 11, flexShrink: 0 }}>🔒</span>}
