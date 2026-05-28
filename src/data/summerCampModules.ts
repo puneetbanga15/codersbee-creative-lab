@@ -289,6 +289,7 @@ Your program must have at least 4 print() statements and must run without any er
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
     duration: "Day 2",
+    videoUrl: "https://www.youtube.com/embed/5OBVBvS24Ns?rel=0",
     topics: ["Integers & floats", "Python as a calculator", "What are strings?", "f-strings", "The BIG difference", "String superpowers"],
     intro: "Everything a computer works with is either a NUMBER or TEXT. Your age? Number. Your name? Text. Your score in a game? Number. Your favourite song title? Text. Today you'll learn how Python thinks about both — and why they are completely different animals. By the end, you'll be making Python calculate things AND build beautiful sentences for you.",
     sections: [
