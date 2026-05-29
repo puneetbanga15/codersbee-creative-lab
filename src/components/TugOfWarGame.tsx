@@ -89,11 +89,21 @@ function Rope({ pos, shake }: { pos: number; shake: boolean }) {
           alignItems: "center",
         }}
       >
-        <img
-          src="/tug/flag.png"
-          alt="Flag"
-          style={{ width: 36, height: 36, objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,.4))" }}
-        />
+        {/* Pure-CSS flag — never breaks if /tug/flag.png is missing */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+          <div style={{
+            width: 20, height: 14,
+            background: "#E0124F",
+            clipPath: "polygon(0 0, 100% 30%, 0 100%)",
+            marginLeft: 3,
+          }} />
+          <div style={{
+            width: 3, height: 20,
+            background: "#fff",
+            borderRadius: 2,
+            boxShadow: "0 1px 3px rgba(0,0,0,.5)",
+          }} />
+        </div>
       </div>
     </div>
   );
@@ -137,26 +147,53 @@ function StatusBar({ pos, round, total }: { pos: number; round: number; total: n
   );
 }
 
+/* ─── Emoji fallbacks when PNG sprites aren't in /tug/ yet ─────────── */
+const SPRITE_EMOJI: Record<string, string> = {
+  "kids-pull":      "🧒💪",
+  "kids-win":       "🎉🧒",
+  "kids-lose":      "😱🧒",
+  "computer-strain":"💻😤",
+  "computer-win":   "💻😈",
+  "computer-lose":  "💻😵",
+};
+
 /* ─── Sprite display ───────────────────────────────────────────────── */
 function Sprite({
   src, alt, flip, shake, bounce,
 }: {
   src: string; alt: string; flip?: boolean; shake?: boolean; bounce?: boolean;
 }) {
+  const [broken, setBroken] = useState(false);
+
+  // Extract sprite key from path e.g. "/tug/kids-pull.png" → "kids-pull"
+  const key = src.replace(/^.*\//, "").replace(/\.png$/, "");
+  const emoji = SPRITE_EMOJI[key] ?? "🎮";
+
+  const wrapStyle: React.CSSProperties = {
+    width: 120, height: 120, flexShrink: 0,
+    animation: shake ? "tug-shake .35s ease" : bounce ? "tug-bounce 1.2s ease infinite" : undefined,
+    display: "flex", alignItems: "flex-end", justifyContent: "center",
+  };
+
+  if (broken) {
+    return (
+      <div style={{ ...wrapStyle, fontSize: 56, paddingBottom: 6, userSelect: "none" }}>
+        {emoji}
+      </div>
+    );
+  }
+
   return (
-    <div style={{
-      width: 120, height: 120, flexShrink: 0,
-      animation: shake ? "tug-shake .35s ease" : bounce ? "tug-bounce 1.2s ease infinite" : undefined,
-      transform: flip ? "scaleX(-1)" : undefined,
-      display: "flex", alignItems: "flex-end", justifyContent: "center",
-    }}>
+    <div style={wrapStyle}>
       <img
         src={src}
         alt={alt}
+        onError={() => setBroken(true)}
         style={{
           maxWidth: "100%", maxHeight: "100%",
           objectFit: "contain",
           filter: "drop-shadow(0 4px 8px rgba(0,0,0,.2))",
+          transform: flip ? "scaleX(-1)" : undefined,
         }}
       />
     </div>
@@ -603,19 +640,11 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
           }}>
             {/* Sprites + rope */}
             <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 10 }}>
-              <div style={{ flexShrink: 0, animation: isShaking ? "tug-shake .35s ease" : "none" }}>
-                <Sprite src={kidsImg} alt="Kids team" />
-              </div>
+              <Sprite src={kidsImg} alt="Kids team" shake={isShaking} />
               <div style={{ flex: 1, paddingBottom: 28 }}>
                 <Rope pos={ropePos} shake={isShaking} />
               </div>
-              <div style={{
-                flexShrink: 0,
-                transform: "scaleX(-1)",
-                animation: isShaking ? "tug-shake .35s ease" : "none",
-              }}>
-                <Sprite src={compImg} alt="Computer team" />
-              </div>
+              <Sprite src={compImg} alt="Computer team" flip shake={isShaking} />
             </div>
 
             {/* Labels */}
