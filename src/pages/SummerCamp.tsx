@@ -490,12 +490,12 @@ export default function SummerCamp() {
               background: C.yellow, color: C.ink, border: "none",
               padding: "7px 16px", borderRadius: 8, fontWeight: 800,
               fontSize: 12, cursor: "pointer",
-            }}>Try Day 1 free →</button>
+            }}>▶ Try free →</button>
             <button onClick={() => openEnroll()} style={{
               background: C.wa, color: "#fff", border: "none",
               padding: "7px 16px", borderRadius: 8, fontWeight: 800,
               fontSize: 12, cursor: "pointer",
-            }}>🎉 Enroll Now</button>
+            }}>🎉 Enroll — $49</button>
           </div>
         </div>
       )}
@@ -536,27 +536,21 @@ export default function SummerCamp() {
               <CTA kind="yellow" size="xl" icon="▶" sub="No signup · no card" onClick={openFree}>
                 Start free lesson
               </CTA>
-              <CTA kind="whatsapp" size="xl" icon="💬" sub="Reply in &lt; 1 hour" onClick={openWA}>
-                WhatsApp Manisha
+              <CTA kind="whatsapp" size="xl" icon="🎉" sub="June 7 · June 15 · 5 seats left" onClick={() => openEnroll()}>
+                Enroll Now — $49
               </CTA>
             </div>
 
-            {/* Enroll CTA row */}
-            <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-              <button onClick={() => openEnroll()} style={{
-                display: "inline-flex", alignItems: "center", gap: 10,
-                padding: "14px 26px", borderRadius: 14,
-                background: C.blue, color: "#fff",
-                border: `2px solid ${C.ink}`,
-                boxShadow: `0 5px 0 ${C.blueD}`,
-                fontWeight: 800, fontSize: 16, cursor: "pointer",
-                fontFamily: "inherit", letterSpacing: "-0.01em",
+            {/* Subtle WA text link */}
+            <div style={{ marginTop: 12 }}>
+              <button onClick={openWA} style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: 13, color: C.ink3, fontWeight: 600,
+                fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: 6,
+                padding: 0, textDecoration: "underline", textUnderlineOffset: 3,
               }}>
-                🎉 Enroll Now — $49
+                💬 Have questions? Chat with Manisha →
               </button>
-              <span style={{ fontSize: 13, color: C.ink3, fontWeight: 600 }}>
-                June 7 · June 15 · limited seats
-              </span>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 20, fontSize: 13, color: C.ink2, flexWrap: "wrap" }}>
