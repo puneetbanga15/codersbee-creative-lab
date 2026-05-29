@@ -58,6 +58,16 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export interface ColabChallenge {
+  title: string;
+  emoji: string;
+  description: string;
+  steps: string[];
+  starterCode: string;
+  expectedOutput: string;
+  whatsappText: string;
+}
+
 export interface SummerCampModule {
   id: number;
   title: string;
@@ -75,6 +85,7 @@ export interface SummerCampModule {
   challenge: ModuleChallenge;
   debugChallenge?: DebugChallenge;
   blankChallenge?: BlankChallenge;
+  colabChallenge?: ColabChallenge;
   quiz: QuizQuestion[];
   keyLearnings: string[];
   funFact: string;
@@ -2217,8 +2228,8 @@ print("✅ Colab is working! I'm a real Python dev now!")
     bgColor: "bg-teal-50",
     borderColor: "border-teal-200",
     duration: "Day 7",
-    topics: ["Defining functions", "Parameters & arguments", "Return values", "Why functions matter"],
-    intro: "You've been using Python's built-in commands like print() and len(). But what if you want to create your OWN commands? Functions let you package up code and give it a name. Then you can use it over and over — like saving a LEGO creation and being able to copy it whenever you want! 🏗️",
+    topics: ["Defining functions", "Parameters & arguments", "Return values", "Default parameters", "Functions calling functions", "Real-world patterns"],
+    intro: "You've been using Python's built-in commands like print() and len(). But what if you want to create your OWN commands? Functions let you package up code and give it a name. Then you can use it over and over — like saving a LEGO creation and being able to copy it whenever you want! Today you'll build functions that are so useful, you'll never want to code without them. 🏗️",
     sections: [
       {
         title: "Creating a Function — def 🏗️",
@@ -2323,10 +2334,117 @@ def student_report(name, score):
 student_report("Aisha", 92)
 student_report("Kabir", 75)`,
       },
+      {
+        title: "Default Parameters — Optional Extras 🎛️",
+        content: "You can give parameters a default value. If the caller doesn't provide that argument, Python uses the default. This makes functions flexible!",
+        code: `# Default parameters — used when no argument is given
+def greet(name, time_of_day="morning", emoji="☀️"):
+    print(f"Good {time_of_day}, {name}! {emoji}")
+
+greet("Arjun")                    # Good morning, Arjun! ☀️
+greet("Priya", "evening")         # Good evening, Priya! ☀️
+greet("Rohan", "night", "🌙")    # Good night, Rohan! 🌙
+
+# Another example — discount calculator with defaults
+def calculate_price(price, discount=0, tax=18):
+    discounted = price - (price * discount / 100)
+    final = discounted + (discounted * tax / 100)
+    return round(final, 2)
+
+print(calculate_price(1000))           # No discount, 18% GST
+print(calculate_price(1000, 10))       # 10% discount, 18% GST
+print(calculate_price(1000, 20, 5))    # 20% off, 5% tax`,
+        tip: "Default parameters must come AFTER non-default ones. def greet(name='Anon', age) would be an error! Always put defaults last.",
+      },
+      {
+        title: "Default Parameters — Optional Extras 🎛️",
+        content: "You can give parameters a default value. If the caller doesn't provide that argument, Python uses the default. This makes functions flexible!",
+        code: `# Default parameters — used when no argument is given
+def greet(name, time_of_day="morning", emoji="☀️"):
+    print(f"Good {time_of_day}, {name}! {emoji}")
+
+greet("Arjun")                    # Good morning, Arjun! ☀️
+greet("Priya", "evening")         # Good evening, Priya! ☀️
+greet("Rohan", "night", "🌙")    # Good night, Rohan! 🌙
+
+# Another example — discount calculator with defaults
+def calculate_price(price, discount=0, tax=18):
+    discounted = price - (price * discount / 100)
+    final = discounted + (discounted * tax / 100)
+    return round(final, 2)
+
+print(calculate_price(1000))           # No discount, 18% GST
+print(calculate_price(1000, 10))       # 10% discount, 18% GST
+print(calculate_price(1000, 20, 5))    # 20% off, 5% tax`,
+        tip: "Default parameters must come AFTER non-default ones. def greet(name='Anon', age) would be an error! Always put defaults last.",
+      },
+      {
+        title: "Functions Calling Functions 🔗",
+        content: "The real power comes when functions work together — each doing one job, combining to do big things. This is how professional programs are built!",
+        code: `# Calculate grade from marks
+def get_grade(marks):
+    if marks >= 90: return "A+"
+    elif marks >= 75: return "A"
+    elif marks >= 60: return "B"
+    elif marks >= 50: return "C"
+    else: return "F"
+
+def get_remark(grade):
+    remarks = {
+        "A+": "Outstanding! 🌟",
+        "A":  "Excellent! 🎉",
+        "B":  "Good work! 👍",
+        "C":  "Keep going! 💪",
+        "F":  "Don't give up! ❤️"
+    }
+    return remarks[grade]
+
+# This function uses BOTH functions above
+def full_report(name, marks):
+    grade  = get_grade(marks)      # Calls get_grade
+    remark = get_remark(grade)     # Calls get_remark
+    print(f"Student: {name}")
+    print(f"Marks:   {marks}/100")
+    print(f"Grade:   {grade}")
+    print(f"Remark:  {remark}")
+    print("―" * 30)
+
+full_report("Priya", 92)
+full_report("Arjun", 74)
+full_report("Meera", 55)`,
+      },
+      {
+        title: "Real-World Function Patterns 🏗️",
+        content: "Professional Python code follows patterns that make it clean, readable, and easy to change. Here are the three patterns you'll see everywhere!",
+        code: `# PATTERN 1: Validation — check before you act
+def is_valid_age(age):
+    return 8 <= age <= 15
+
+# PATTERN 2: Formatting — display data nicely
+def format_rupees(amount):
+    return f"₹{amount:,}"
+
+# PATTERN 3: Pure function — same input = same output, no side effects
+def celsius_to_fahrenheit(celsius):
+    return (celsius * 9/5) + 32
+
+# Using all three together
+def enroll_student(name, age, fee):
+    if not is_valid_age(age):
+        print(f"Sorry, {name} — camp is for ages 8–15!")
+        return
+    print(f"✅ Enrolled: {name}, Age {age}")
+    print(f"   Fee: {format_rupees(fee)}")
+    print(f"   Welcome to CodersBee! 🐝")
+
+enroll_student("Kabir", 11, 4000)
+enroll_student("Grandpa", 65, 4000)  # Will be rejected!`,
+        tip: "Each function should do ONE thing and do it well. If you're struggling to name a function, it probably does too many things — split it!",
+      },
     ],
     challenge: {
-      title: "Your Mission: The Pizza Calculator",
-      description: "Build functions for a pizza ordering system!",
+      title: "Your Mission: Pizza Calculator 🍕",
+      description: "Build a pizza ordering system using multiple functions — one to calculate price, one to print the order summary!",
       code: `# PIZZA CALCULATOR 🍕
 
 def pizza_price(size, toppings):
@@ -2337,8 +2455,7 @@ def pizza_price(size, toppings):
         base_price = 250
     elif size == "large":
         base_price = 350
-
-    topping_cost = toppings * 30   # 30 rupees per topping
+    topping_cost = toppings * 30
     total = base_price + topping_cost
     return total
 
@@ -2350,9 +2467,89 @@ def order_summary(name, size, toppings):
     print("Toppings: " + str(toppings))
     print("Total: ₹" + str(price))
 
-# Test your pizza calculator!
 order_summary("Riya", "large", 3)
 order_summary("Arjun", "small", 1)`,
+    },
+    colabChallenge: {
+      title: "Report Card Generator",
+      emoji: "📋",
+      description: "Build a full student report card generator in Google Colab or Replit. Use multiple functions — one to calculate average, one to get grade, one to print the full formatted report.",
+      steps: [
+        "Open Google Colab (colab.research.google.com) or Replit (replit.com) and create a new Python file",
+        "Copy the starter code below into your notebook/editor",
+        "Complete all the TODO sections — write the missing functions",
+        "Test it with at least 2 different students",
+        "Take a clear screenshot showing your code AND the output",
+        "Send the screenshot to Manisha Mam on WhatsApp with the message below!",
+      ],
+      starterCode: `# 📋 REPORT CARD GENERATOR — Module 7 Project
+# Complete all the TODO sections!
+
+def calculate_average(marks_list):
+    # TODO: Add up all marks and divide by number of subjects
+    total = sum(marks_list)
+    average = total / len(marks_list)
+    return round(average, 1)
+
+def get_grade(average):
+    # TODO: Return grade based on average
+    if average >= 90:
+        return "A+ 🌟"
+    elif average >= 75:
+        return "A 🎉"
+    elif average >= 60:
+        return "B 👍"
+    elif average >= 50:
+        return "C 💪"
+    else:
+        return "F ❤️"
+
+def print_report(name, class_name, subjects_dict):
+    # TODO: Print a formatted report card
+    print("=" * 35)
+    print(f"   REPORT CARD — {name}")
+    print(f"   Class: {class_name}")
+    print("=" * 35)
+    marks_list = []
+    for subject, marks in subjects_dict.items():
+        print(f"  {subject:<20} {marks}/100")
+        marks_list.append(marks)
+    print("-" * 35)
+    avg = calculate_average(marks_list)
+    grade = get_grade(avg)
+    print(f"  Average: {avg}%")
+    print(f"  Grade:   {grade}")
+    print("=" * 35)
+
+# Test with your own name and marks!
+my_subjects = {
+    "Maths":         85,
+    "Science":       92,
+    "English":       78,
+    "Hindi":         88,
+    "Social Studies": 74,
+}
+
+print_report("Your Name Here", "7-A", my_subjects)
+print()
+print_report("Priya Sharma", "8-B", {
+    "Maths": 95, "Science": 90,
+    "English": 88, "Hindi": 92, "Social Studies": 85
+})`,
+      expectedOutput: `===================================
+   REPORT CARD — Your Name Here
+   Class: 7-A
+===================================
+  Maths                85/100
+  Science              92/100
+  English              78/100
+  Hindi                88/100
+  Social Studies       74/100
+-----------------------------------
+  Average: 83.4%
+  Grade:   A 🎉
+===================================`,
+      whatsappText: "Hi Manisha Mam! 📋 I completed Module 7 - Functions! I built a Report Card Generator using multiple functions. Here's my screenshot! 🐝",
     },
     quiz: [
       {
@@ -2368,10 +2565,34 @@ order_summary("Arjun", "small", 1)`,
         explanation: "return sends a value BACK to wherever the function was called from. The caller can then store it in a variable or use it directly!",
       },
       {
-        question: "Why are functions useful?",
-        options: ["They make code run faster", "You can reuse code without copy-pasting", "They use less RAM", "All of the above"],
+        question: "Which of these correctly defines a function with a default parameter?",
+        options: ["def greet(='hello', name):", "def greet(name, msg='hello'):", "def greet[name, msg='hello']:", "function greet(name, msg='hello'):"],
         correct: 1,
-        explanation: "The biggest benefit of functions is reusability! Write once, use many times. This also makes code easier to fix — change the function, and ALL places that use it get updated!",
+        explanation: "Default parameters go AFTER regular parameters. def greet(name, msg='hello') is correct — name is required, msg is optional with default 'hello'.",
+      },
+      {
+        question: "How many times can you call the same function?",
+        options: ["Once only", "Twice maximum", "As many times as you want", "Only 10 times"],
+        correct: 2,
+        explanation: "That's the whole point of functions! Write the code once, call it as many times as you need. This is called reusability!",
+      },
+      {
+        question: "What happens when Python reaches a return statement?",
+        options: ["It prints the value and continues", "It stops the function and sends the value back", "It repeats the function", "It creates a new variable"],
+        correct: 1,
+        explanation: "return immediately exits the function and sends the value back to whoever called it. Code after return in the same function never runs!",
+      },
+      {
+        question: "Which of these is a valid function call for def add(a, b)?",
+        options: ["add(5)", "add(5, 3)", "add(a=5, b=3, c=1)", "def add(5, 3)"],
+        correct: 1,
+        explanation: "add(5, 3) correctly passes two arguments matching the two parameters a and b. You can also use keyword arguments: add(a=5, b=3).",
+      },
+      {
+        question: "What is the output of: def double(n): return n * 2 — then print(double(4) + 1)?",
+        options: ["9", "8", "41", "Error"],
+        correct: 0,
+        explanation: "double(4) returns 8. Then 8 + 1 = 9. The return value is used directly in the expression — you don't need a variable to store it first!",
       },
     ],
     keyLearnings: [
@@ -2379,11 +2600,11 @@ order_summary("Arjun", "small", 1)`,
       "Parameters are the variable names inside the brackets when defining a function",
       "Arguments are the actual values you send when calling a function",
       "return sends a value back from the function to wherever it was called",
-      "Functions make code reusable — no more copy-pasting the same logic",
-      "You can call one function from inside another to build powerful combinations",
+      "Default parameters make arguments optional — specify a fallback value with =",
+      "Functions can call other functions — this is how big programs are built from small pieces",
     ],
-    funFact: "A professional Python program can have hundreds or even thousands of functions! Python itself has over 60 built-in functions ready for you to use — you've already been using print() and len()! 🔧",
-    nextPreview: "Day 8: Dictionaries — the smartest way to organise data!",
+    funFact: "A professional Python program can have hundreds or even thousands of functions! Python itself has over 60 built-in functions ready for you to use — you've already been using print(), len(), and range()! 🔧",
+    nextPreview: "Day 8: Dictionaries — the smartest way to organise data with labels instead of numbers!",
   },
 
   {
@@ -2395,8 +2616,8 @@ order_summary("Arjun", "small", 1)`,
     bgColor: "bg-orange-50",
     borderColor: "border-orange-200",
     duration: "Day 8",
-    topics: ["Key-value pairs", "Creating dictionaries", "Accessing and updating", "Real-world uses"],
-    intro: "A list stores items by position (0, 1, 2...). But what if you want to look things up by NAME instead? Like a real dictionary — you look up 'python' and it tells you the definition! Python dictionaries store information as key-value pairs, making data super organised and fast to find.",
+    topics: ["Key-value pairs", "Creating & accessing", "Updating dictionaries", "Looping through dicts", "Nested dictionaries", "Dict methods & when to use"],
+    intro: "A list stores items by position (0, 1, 2...). But what if you want to look things up by NAME instead? Like a real dictionary — you look up 'python' and it tells you the definition! Python dictionaries store information as key-value pairs, making data super organised and fast to find. Every app you use — contacts, games, school records — uses dictionaries under the hood!",
     sections: [
       {
         title: "Key-Value Pairs — The Dictionary Idea 🗝️",
@@ -2491,6 +2712,69 @@ for subject, marks in report_card["subjects"].items():
 average = total / len(report_card["subjects"])
 print("-------------------------------")
 print("Average: " + str(round(average, 1)) + "%")`,
+        analogy: "A nested dictionary is like a filing cabinet 🗄️. The cabinet is the outer dict, the drawers are the inner dicts, and the folders inside are the values. Very organised!",
+      },
+      {
+        title: "Dictionary Methods — Your Toolkit 🛠️",
+        content: "Python gives you powerful built-in methods to work with dictionaries without writing lots of code yourself!",
+        code: `inventory = {
+    "apples": 50,
+    "bananas": 30,
+    "mangoes": 0,
+    "oranges": 15
+}
+
+# .get() — safe access (no error if key missing!)
+stock = inventory.get("grapes", 0)   # Returns 0 if not found
+print(f"Grapes in stock: {stock}")   # Grapes in stock: 0
+
+# .keys(), .values(), .items()
+print(list(inventory.keys()))        # All item names
+print(list(inventory.values()))      # All quantities
+for item, qty in inventory.items():
+    status = "✅ In stock" if qty > 0 else "❌ Out of stock"
+    print(f"{item:<10} — {status}")
+
+# .update() — merge another dict in
+new_stock = {"grapes": 25, "apples": 60}
+inventory.update(new_stock)          # Adds grapes, updates apples
+print(f"Apples now: {inventory['apples']}")  # 60
+
+# .pop() — remove and return a value
+removed = inventory.pop("bananas")
+print(f"Removed bananas (had {removed})")`,
+        tip: "Always use .get() when you're not 100% sure a key exists. inventory['grapes'] crashes if 'grapes' isn't there. inventory.get('grapes', 0) safely returns 0 instead!",
+      },
+      {
+        title: "List vs Dictionary — When to Use Which? 🤔",
+        content: "Lists and dictionaries are both essential. Knowing which to reach for is a key programmer skill!",
+        code: `# USE A LIST when order matters or items are the same type:
+shopping = ["milk", "eggs", "bread", "butter"]
+scores   = [95, 87, 72, 91, 88]
+
+# USE A DICTIONARY when you need labels for your data:
+student = {
+    "name": "Priya",
+    "age": 12,
+    "score": 95
+}
+
+# REAL EXAMPLE: storing multiple students
+# Bad way — parallel lists (confusing, error-prone):
+names  = ["Priya", "Arjun", "Meera"]
+ages   = [12, 11, 13]
+scores = [95, 87, 91]
+
+# Good way — list of dictionaries:
+students = [
+    {"name": "Priya",  "age": 12, "score": 95},
+    {"name": "Arjun",  "age": 11, "score": 87},
+    {"name": "Meera",  "age": 13, "score": 91},
+]
+
+# Access is crystal clear:
+for s in students:
+    print(f"{s['name']} (age {s['age']}) — Score: {s['score']}")`,
       },
     ],
     challenge: {
@@ -2519,6 +2803,89 @@ if search in contacts:
     print("Found " + search + "!")
     print("Phone: " + contacts[search]["phone"])`,
     },
+    colabChallenge: {
+      title: "Digital Class Register",
+      emoji: "📒",
+      description: "Build a class register that stores student info in a dictionary of dictionaries. Add students, display the register, and find the class topper — all in Google Colab or Replit!",
+      steps: [
+        "Open Google Colab (colab.research.google.com) or Replit (replit.com) and create a new Python file",
+        "Copy the starter code below and complete all TODO sections",
+        "Add at least 4 students with their details and marks",
+        "Make sure the 'find topper' section works correctly",
+        "Take a clear screenshot showing your code AND the full output",
+        "Send the screenshot to Manisha Mam on WhatsApp — it counts for your certificate! 🐝",
+      ],
+      starterCode: `# 📒 DIGITAL CLASS REGISTER — Module 8 Project
+
+# The class register — dictionary of dictionaries
+class_register = {
+    "Priya Sharma": {
+        "roll_no": 1,
+        "age": 12,
+        "marks": {"Maths": 92, "Science": 88, "English": 85},
+        "hobby": "painting"
+    },
+    "Arjun Verma": {
+        "roll_no": 2,
+        "age": 11,
+        "marks": {"Maths": 78, "Science": 94, "English": 70},
+        "hobby": "cricket"
+    },
+    # TODO: Add 2 more students with your own names and marks!
+}
+
+def get_average(marks_dict):
+    # TODO: Calculate and return the average of all marks
+    return round(sum(marks_dict.values()) / len(marks_dict), 1)
+
+def display_register(register):
+    print("=" * 45)
+    print("         CLASS REGISTER 📒")
+    print("=" * 45)
+    for name, info in register.items():
+        avg = get_average(info["marks"])
+        print(f"\\nRoll #{info['roll_no']:02d} — {name}")
+        print(f"  Age: {info['age']}  |  Hobby: {info['hobby']}")
+        print(f"  Marks: ", end="")
+        for sub, marks in info["marks"].items():
+            print(f"{sub}: {marks}", end="  ")
+        print(f"\\n  Average: {avg}%")
+    print("=" * 45)
+
+def find_topper(register):
+    # TODO: Find and return the student with highest average
+    best_name = ""
+    best_avg  = 0
+    for name, info in register.items():
+        avg = get_average(info["marks"])
+        if avg > best_avg:
+            best_avg  = avg
+            best_name = name
+    return best_name, best_avg
+
+# Run it!
+display_register(class_register)
+topper, avg = find_topper(class_register)
+print(f"\\n🏆 Class Topper: {topper} with {avg}% average!")`,
+      expectedOutput: `=============================================
+         CLASS REGISTER 📒
+=============================================
+
+Roll #01 — Priya Sharma
+  Age: 12  |  Hobby: painting
+  Marks: Maths: 92  Science: 88  English: 85
+  Average: 88.3%
+
+Roll #02 — Arjun Verma
+  Age: 11  |  Hobby: cricket
+  Marks: Maths: 78  Science: 94  English: 70
+  Average: 80.7%
+...
+=============================================
+
+🏆 Class Topper: Priya Sharma with 88.3% average!`,
+      whatsappText: "Hi Manisha Mam! 📒 I completed Module 8 - Dictionaries! I built a Digital Class Register with nested dictionaries and found the class topper. Here's my screenshot! 🐝",
+    },
     quiz: [
       {
         question: "How do you access a value in a dictionary?",
@@ -2528,7 +2895,7 @@ if search in contacts:
       },
       {
         question: "What symbol separates keys from values in a dictionary?",
-        options: ["=", "->", ":", "->"],
+        options: ["=", "->", ":", ","],
         correct: 2,
         explanation: "Colon : separates keys from values! Like {\"name\": \"Priya\"}. The key is on the left of the colon, the value is on the right.",
       },
@@ -2538,14 +2905,38 @@ if search in contacts:
         correct: 2,
         explanation: "keys() returns all the key names in the dictionary. Similarly, values() gives all the values, and items() gives both keys AND values as pairs!",
       },
+      {
+        question: "What is a nested dictionary?",
+        options: ["A dictionary inside a list", "A dictionary where values are also dictionaries", "A dictionary with only numbers", "Two dictionaries merged together"],
+        correct: 1,
+        explanation: "A nested dictionary has dictionaries as its values! Like student = {\"Priya\": {\"age\": 12, \"score\": 95}}. You access nested values with two keys: student[\"Priya\"][\"age\"].",
+      },
+      {
+        question: "What does my_dict.get('key', 'default') do if 'key' doesn't exist?",
+        options: ["Raises a KeyError", "Returns None", "Returns 'default'", "Creates the key with 'default' value"],
+        correct: 2,
+        explanation: ".get() is the safe way to access a dictionary! If the key doesn't exist, it returns the default value you specify instead of crashing with a KeyError.",
+      },
+      {
+        question: "What's the best data structure to store a student's name, age, and score together?",
+        options: ["A list [name, age, score]", "Three separate variables", "A dictionary {name: ..., age: ..., score: ...}", "A string"],
+        correct: 2,
+        explanation: "A dictionary is perfect here! Each piece of data gets a meaningful label (key). student['name'] is clearer than student[0], and you can add new fields any time.",
+      },
+      {
+        question: "How do you loop through both keys AND values in a dictionary at once?",
+        options: ["for key in my_dict:", "for key, value in my_dict.items():", "for key, value in my_dict:", "for item in my_dict.values():"],
+        correct: 1,
+        explanation: ".items() returns each key-value pair as a tuple. Use 'for key, value in my_dict.items()' to unpack both at once — this is the most common dictionary loop pattern!",
+      },
     ],
     keyLearnings: [
       "Dictionaries store key-value pairs inside curly braces: {\"name\": \"Priya\"}",
       "Access a value using its key: my_dict[\"name\"] — not an index number",
       "Add or update: my_dict[\"new_key\"] = value — it's that simple",
-      "del my_dict[\"key\"] removes a key-value pair from the dictionary",
+      "Use .get(\"key\", default) for safe access — no crash if key is missing",
       "Loop through pairs with: for key, value in my_dict.items()",
-      "Dictionaries are like a phone book — look things up by name, not position",
+      "Nested dicts (dict inside dict) are how real apps store structured data",
     ],
     funFact: "Python dictionaries are incredibly fast! Even if you have a million items, Python can find what you're looking for almost instantly. They use a technique called 'hashing' — like a superpower address book! 🔍",
     nextPreview: "Day 9: We put it all together with a real Python project — a Number Guessing Game!",
@@ -2560,8 +2951,8 @@ if search in contacts:
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-200",
     duration: "Day 9",
-    topics: ["User input", "Building a full game", "Combining all concepts", "Debugging tips"],
-    intro: "Today is PROJECT DAY! We're going to use EVERYTHING we've learned — variables, if/else, loops, functions — and build a real, playable game. You'll be surprised how much you can create! Today's project: a Number Guessing Game where the computer picks a number and you have to guess it! 🎮",
+    topics: ["User input & random", "Building a full game", "Adding a score system", "Debugging like a pro", "Polishing your code", "Extending your project"],
+    intro: "Today is PROJECT DAY — the first big milestone! We're going to use EVERYTHING we've learned — variables, if/else, loops, functions, and even dictionaries — and build a real, complete, playable game. By the end of today, you'll have something you can show your family and friends with pride. Today's project: a Number Guessing Game with hints, a score system, and a high-score board! 🎮",
     sections: [
       {
         title: "Getting Input from the User — input() 🎤",
@@ -2666,6 +3057,84 @@ if again == "yes":
 # 3. Comment out code to find the broken part
 # 4. Take a break and come back with fresh eyes 👀`,
       },
+      {
+        title: "Adding a Score System 🏆",
+        content: "Turn a one-off game into a proper scored experience! Track scores, rate performance, and challenge players to beat their best.",
+        code: `import random
+
+def rate_performance(guesses_used, max_guesses):
+    ratio = guesses_used / max_guesses
+    if ratio <= 0.3:   return "🌟 PSYCHIC! Incredible!"
+    elif ratio <= 0.5: return "🔥 Sharp shooter!"
+    elif ratio <= 0.7: return "👍 Good job!"
+    else:              return "💪 Keep practising!"
+
+def calculate_score(guesses_used, max_guesses):
+    # Fewer guesses = higher score
+    return max(0, (max_guesses - guesses_used + 1) * 100)
+
+# Score tracker using a DICTIONARY (we just learned those!)
+scoreboard = {}
+
+def add_to_scoreboard(player, score):
+    if player not in scoreboard:
+        scoreboard[player] = score
+    else:
+        # Only update if it's a new best
+        if score > scoreboard[player]:
+            scoreboard[player] = score
+            print(f"🎉 New personal best for {player}!")
+
+def show_scoreboard():
+    if not scoreboard:
+        print("No scores yet!")
+        return
+    print("\\n=== 🏆 SCOREBOARD ===")
+    # Sort by score, highest first
+    sorted_scores = sorted(scoreboard.items(), key=lambda x: x[1], reverse=True)
+    for i, (name, score) in enumerate(sorted_scores, 1):
+        medal = ["🥇", "🥈", "🥉"][i-1] if i <= 3 else f"#{i}"
+        print(f"{medal} {name:<15} {score} pts")`,
+        tip: "lambda x: x[1] is a mini one-line function! sorted() uses it to know which part of each (name, score) pair to sort by — we want x[1], which is the score.",
+      },
+      {
+        title: "Polishing Your Code ✨",
+        content: "Good code works. Great code is also readable, friendly, and handles mistakes gracefully. Let's make your game production-quality!",
+        code: `# POLISH 1: Handle bad input gracefully
+def safe_int_input(prompt, min_val=None, max_val=None):
+    while True:
+        try:
+            value = int(input(prompt))
+            if min_val is not None and value < min_val:
+                print(f"Please enter {min_val} or higher!")
+                continue
+            if max_val is not None and value > max_val:
+                print(f"Please enter {max_val} or lower!")
+                continue
+            return value
+        except ValueError:
+            print("That's not a number! Try again.")
+
+# POLISH 2: Clear welcome screen
+def show_welcome():
+    print("╔══════════════════════════════╗")
+    print("║   🎮 NUMBER GUESSING GAME    ║")
+    print("║   Powered by Python 🐍       ║")
+    print("╚══════════════════════════════╝")
+    print()
+
+# POLISH 3: Play-again loop
+def main():
+    show_welcome()
+    player = input("Enter your name: ")
+    while True:
+        # ... game code ...
+        again = input("\\nPlay again? (yes/no): ").lower()
+        if again != "yes":
+            show_scoreboard()
+            print(f"\\nThanks for playing, {player}! 👋")
+            break`,
+      },
     ],
     challenge: {
       title: "Your Mission: Upgrade the Game!",
@@ -2696,6 +3165,119 @@ all_guesses = []
 
 # Try to add all 3 features to the game!`,
     },
+    colabChallenge: {
+      title: "Full Number Guessing Game with Scoreboard",
+      emoji: "🎮",
+      description: "Build the complete, polished Number Guessing Game with temperature hints, a scoring system, and a multi-player scoreboard stored in a dictionary. This is your first real, complete Python project!",
+      steps: [
+        "Open Google Colab (colab.research.google.com) or Replit (replit.com) and start a new Python file",
+        "Copy the starter code and complete all the TODO sections",
+        "Run the game and play at least 2 full rounds with different player names",
+        "Make sure the scoreboard shows after playing (with rankings!)",
+        "Take a screenshot showing the scoreboard with at least 2 players' scores",
+        "Send it to Manisha Mam on WhatsApp — this unlocks your Module 9 certificate badge! 🏆",
+      ],
+      starterCode: `import random
+
+# 🏆 Scoreboard — stored in a dictionary!
+scoreboard = {}
+
+def get_grade(guesses_used, max_guesses):
+    ratio = guesses_used / max_guesses
+    if ratio <= 0.3:   return "🌟 PSYCHIC!"
+    elif ratio <= 0.5: return "🔥 Sharp!"
+    elif ratio <= 0.7: return "👍 Good!"
+    else:              return "💪 Keep going!"
+
+def calculate_score(guesses_used, max_guesses):
+    return max(0, (max_guesses - guesses_used + 1) * 100)
+
+def temperature_hint(guess, secret):
+    diff = abs(guess - secret)
+    if diff == 0:       return "🎯 BULLSEYE!"
+    elif diff <= 5:     return "🔥 RED HOT! Very close!"
+    elif diff <= 15:    return "☀️ Warm! Getting closer."
+    elif diff <= 30:    return "❄️ Cold..."
+    else:               return "🧊 FREEZING! Way off!"
+
+def play_round(player_name):
+    secret = random.randint(1, 100)
+    max_guesses = 7
+    guesses_used = 0
+
+    print(f"\\n🎮 {player_name}'s turn! Guess my number (1-100)")
+    print(f"You have {max_guesses} guesses. Go!\\n")
+
+    while guesses_used < max_guesses:
+        try:
+            guess = int(input(f"Guess #{guesses_used + 1}: "))
+        except ValueError:
+            print("Numbers only please!")
+            continue
+
+        guesses_used += 1
+        hint = temperature_hint(guess, secret)
+        print(f"  {hint}  ({max_guesses - guesses_used} guesses left)")
+
+        if guess == secret:
+            score = calculate_score(guesses_used, max_guesses)
+            grade = get_grade(guesses_used, max_guesses)
+            print(f"\\n✅ CORRECT in {guesses_used} guess(es)! {grade}")
+            print(f"   Score: {score} points")
+            # TODO: Update scoreboard — only keep best score per player
+            if player_name not in scoreboard or score > scoreboard[player_name]:
+                scoreboard[player_name] = score
+                print("   📈 Personal best!")
+            return
+
+    print(f"\\n😢 Out of guesses! The number was {secret}.")
+
+def show_scoreboard():
+    print("\\n╔════════════════════════════╗")
+    print("║     🏆 SCOREBOARD          ║")
+    print("╠════════════════════════════╣")
+    if not scoreboard:
+        print("║  No scores yet!            ║")
+    else:
+        sorted_scores = sorted(scoreboard.items(), key=lambda x: x[1], reverse=True)
+        for i, (name, score) in enumerate(sorted_scores, 1):
+            medal = ["🥇","🥈","🥉"][i-1] if i <= 3 else f"#{i} "
+            print(f"║  {medal} {name:<12} {score:>5} pts  ║")
+    print("╚════════════════════════════╝")
+
+# MAIN GAME LOOP
+print("╔══════════════════════════════╗")
+print("║  🎮 NUMBER GUESSING GAME 🎮  ║")
+print("╚══════════════════════════════╝")
+
+while True:
+    player = input("\\nEnter your name (or 'quit'): ")
+    if player.lower() == "quit":
+        break
+    play_round(player)
+    show_scoreboard()
+    again = input("\\nAnother round? (yes/no): ").lower()
+    if again != "yes":
+        break
+
+print("\\nThanks for playing! 👋🐝")`,
+      expectedOutput: `╔══════════════════════════════╗
+║  🎮 NUMBER GUESSING GAME 🎮  ║
+╚══════════════════════════════╝
+
+Enter your name: Priya
+🎮 Priya's turn! Guess my number (1-100)
+...
+✅ CORRECT in 4 guess(es)! 👍 Good!
+   Score: 400 points
+
+╔════════════════════════════╗
+║     🏆 SCOREBOARD          ║
+╠════════════════════════════╣
+║  🥇 Priya        400 pts  ║
+╚════════════════════════════╝`,
+      whatsappText: "Hi Manisha Mam! 🎮 I completed Module 9 - Project Day! I built a full Number Guessing Game with temperature hints and a scoreboard. Here's my screenshot! 🏆🐝",
+    },
     quiz: [
       {
         question: "What does input() always return?",
@@ -2715,13 +3297,37 @@ all_guesses = []
         correct: 2,
         explanation: "Error messages are your FRIENDS! They tell you exactly which line has the problem and what went wrong. Read them carefully — they usually give you a big clue!",
       },
+      {
+        question: "Why do we write int(input(...)) instead of just input(...)?",
+        options: ["To make it faster", "Because input() returns a string and we need a number for math", "To avoid bugs in the terminal", "int() is required before all inputs"],
+        correct: 1,
+        explanation: "input() always gives a string. '5' + 1 would crash! int() converts '5' to the number 5 so you can do arithmetic. Always convert when expecting a number!",
+      },
+      {
+        question: "What does random.randint(1, 10) return?",
+        options: ["Always 5 (the middle)", "A random decimal between 1 and 10", "A random whole number from 1 to 10 inclusive", "A random number from 0 to 9"],
+        correct: 2,
+        explanation: "randint(1, 10) returns a random integer between 1 and 10, including both 1 and 10 themselves. This is different from range(1, 10) which excludes 10!",
+      },
+      {
+        question: "Which concept from the game uses a dictionary?",
+        options: ["Picking the secret number", "Getting user input", "Storing the scoreboard", "Checking if a guess is correct"],
+        correct: 2,
+        explanation: "The scoreboard is a perfect dictionary use case! Keys are player names, values are their best scores. scoreboard['Priya'] = 400 — meaningful labels, not index numbers.",
+      },
+      {
+        question: "What does abs(guess - secret) calculate?",
+        options: ["The sum of guess and secret", "How many guesses are left", "The absolute (positive) distance between the guess and the secret", "Whether the guess is correct"],
+        correct: 2,
+        explanation: "abs() gives the absolute value — always positive. abs(30 - 80) = 50, abs(80 - 30) = 50. We use it for the temperature hint so it doesn't matter if the guess is too high or too low!",
+      },
     ],
     keyLearnings: [
       "input() lets users type something — it always returns a string",
       "Wrap input with int() to get a number: int(input(\"Enter age: \"))",
       "import random then random.randint(1, 100) gives a random whole number",
       "Read error messages carefully — they name the line and the type of problem",
-      "Print variables at key points to check their values while debugging",
+      "Use a dictionary to store a scoreboard: {player_name: best_score}",
       "A working simple program beats a broken complex one every time",
     ],
     funFact: "The first computer bug was an actual BUG! In 1947, Grace Hopper found a real moth stuck in a computer relay causing errors. She taped it into her log book and wrote 'First actual case of bug being found'. That's where 'debugging' comes from! 🦗",

@@ -1343,6 +1343,113 @@ export default function ModuleDetail() {
                   />
                 </ChallengeWrapper>
               )}
+
+              {/* Colab / Replit Project Challenge */}
+              {mod.colabChallenge && (() => {
+                const cc = mod.colabChallenge!;
+                const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(cc.whatsappText)}`;
+                return (
+                  <div style={{
+                    background: "linear-gradient(135deg, #0E1116 0%, #1a2235 100%)",
+                    borderRadius: 20, padding: mob ? "24px 20px" : "32px 36px",
+                    border: "2.5px solid #FFC72C",
+                    boxShadow: "0 8px 0 #FFC72C",
+                    marginTop: 24,
+                  }}>
+                    {/* Header */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+                      <div style={{
+                        width: 52, height: 52, borderRadius: 14,
+                        background: "#FFC72C", display: "flex",
+                        alignItems: "center", justifyContent: "center",
+                        fontSize: 26, flexShrink: 0,
+                        border: "2px solid rgba(255,255,255,0.2)",
+                      }}>{cc.emoji}</div>
+                      <div>
+                        <div style={{ fontSize: 10, fontWeight: 800, color: "#FFC72C", letterSpacing: "0.1em", marginBottom: 4 }}>
+                          🚀 COLAB / REPLIT PROJECT — SUBMIT FOR CERTIFICATE
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>{cc.title}</div>
+                      </div>
+                    </div>
+
+                    <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.7, marginBottom: 20 }}>
+                      {cc.description}
+                    </p>
+
+                    {/* Steps */}
+                    <div style={{
+                      background: "rgba(255,255,255,0.05)", borderRadius: 14,
+                      padding: "16px 20px", marginBottom: 20,
+                      border: "1px solid rgba(255,255,255,0.1)",
+                    }}>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#FFC72C", letterSpacing: "0.08em", marginBottom: 12 }}>
+                        📋 HOW TO COMPLETE
+                      </div>
+                      {cc.steps.map((step, i) => (
+                        <div key={i} style={{ display: "flex", gap: 12, marginBottom: 10, alignItems: "flex-start" }}>
+                          <div style={{
+                            width: 24, height: 24, borderRadius: 999, flexShrink: 0,
+                            background: i === cc.steps.length - 1 ? "#25D366" : "#FFC72C",
+                            color: "#0E1116", display: "flex", alignItems: "center",
+                            justifyContent: "center", fontSize: 11, fontWeight: 900,
+                          }}>{i + 1}</div>
+                          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.5, paddingTop: 3 }}>{step}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Starter code */}
+                    <div style={{ marginBottom: 20 }}>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#FFC72C", letterSpacing: "0.08em", marginBottom: 10 }}>
+                        💻 STARTER CODE — COPY INTO COLAB / REPLIT
+                      </div>
+                      <div style={{
+                        background: "#0d1117", borderRadius: 12,
+                        padding: "16px 18px", overflowX: "auto",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        maxHeight: 320, overflowY: "auto",
+                      }}>
+                        <pre style={{ margin: 0, fontSize: 12, color: "#e2e8f0", fontFamily: "monospace", lineHeight: 1.6, whiteSpace: "pre" }}>
+                          {cc.starterCode}
+                        </pre>
+                      </div>
+                    </div>
+
+                    {/* Expected output */}
+                    <div style={{ marginBottom: 24 }}>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#25D366", letterSpacing: "0.08em", marginBottom: 10 }}>
+                        ✅ YOUR OUTPUT SHOULD LOOK LIKE THIS
+                      </div>
+                      <div style={{
+                        background: "#0d1117", borderRadius: 12,
+                        padding: "14px 18px", border: "1px solid #25D36630",
+                      }}>
+                        <pre style={{ margin: 0, fontSize: 12, color: "#86efac", fontFamily: "monospace", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                          {cc.expectedOutput}
+                        </pre>
+                      </div>
+                    </div>
+
+                    {/* Submit button */}
+                    <a href={waUrl} target="_blank" rel="noreferrer" style={{
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+                      width: "100%", padding: "18px 24px",
+                      background: "#25D366", color: "#fff",
+                      borderRadius: 14, fontWeight: 900, fontSize: 17,
+                      textDecoration: "none", boxSizing: "border-box",
+                      border: "2px solid rgba(255,255,255,0.3)",
+                      boxShadow: "0 4px 0 #128C7E",
+                      transition: "transform .12s",
+                    }}>
+                      📸 Screenshot done? Send to Manisha Mam →
+                    </a>
+                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textAlign: "center", marginTop: 10 }}>
+                      Opens WhatsApp with your message pre-filled. Attach your screenshot and hit send. Manisha Mam will mark your module complete! 🏆
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
