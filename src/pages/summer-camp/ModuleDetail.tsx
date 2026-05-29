@@ -1243,15 +1243,23 @@ export default function ModuleDetail() {
               <span style={{
                 background: C.ink, color: C.yellow, borderRadius: 20,
                 padding: "4px 14px", fontSize: 12, fontWeight: 700,
-              }}>3 Challenges</span>
+              }}>{mod.tugOfWarChallenge ? "4 Challenges" : "3 Challenges"}</span>
               <h2 style={{
                 fontFamily: "'Fraunces', serif", fontSize: 30, fontWeight: 900,
                 color: C.ink, margin: 0,
               }}>Time to code.</h2>
-              <span style={{ fontSize: 13, color: C.ink3 }}>Easy → medium → blank page. Take your time.</span>
+              <span style={{ fontSize: 13, color: C.ink3 }}>
+                {mod.tugOfWarChallenge ? "Game → guided → debug → blank page." : "Easy → medium → blank page."} Take your time.
+              </span>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+
+              {/* 🎮 Tug of War Game — shown FIRST when present */}
+              {mod.tugOfWarChallenge && (
+                <TugOfWarGame data={mod.tugOfWarChallenge} />
+              )}
+
               {/* Challenge 0 — Warm-up with input() */}
               {mod.inputChallenge && (
                 <ChallengeWrapper
@@ -1452,11 +1460,6 @@ export default function ModuleDetail() {
                   </div>
                 );
               })()}
-
-              {/* Tug of War Game */}
-              {mod.tugOfWarChallenge && (
-                <TugOfWarGame data={mod.tugOfWarChallenge} />
-              )}
             </div>
           </div>
 
