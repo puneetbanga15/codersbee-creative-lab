@@ -110,6 +110,154 @@ function ModalShell({ children, onClose, width = 540 }: { children: React.ReactN
   );
 }
 
+/* ── Enroll modal ────────────────────────────────────────────────────── */
+function EnrollModal({ onClose, defaultBatch = "June 7" }: { onClose: () => void; defaultBatch?: string }) {
+  const [parentName, setParentName] = useState("");
+  const [email,      setEmail]      = useState("");
+  const [phone,      setPhone]      = useState("");
+  const [childName,  setChildName]  = useState("");
+  const [childAge,   setChildAge]   = useState("");
+  const [batch,      setBatch]      = useState(defaultBatch);
+
+  const isValid = parentName.trim() && email.trim() && phone.trim() && childName.trim() && childAge.trim();
+
+  const handleSubmit = () => {
+    const msg = [
+      `Hi Manisha! I'd like to enroll my child in the Python & AI Summer Camp 🎉`,
+      ``,
+      `👨‍👩‍👧 Parent : ${parentName}`,
+      `📧 Email  : ${email}`,
+      `📱 Phone  : ${phone}`,
+      ``,
+      `👦 Child  : ${childName}, Age ${childAge}`,
+      `📅 Batch  : ${batch} 2026`,
+      ``,
+      `Please share payment details and login credentials. Thank you!`,
+    ].join("\n");
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+    onClose();
+  };
+
+  const fieldStyle: React.CSSProperties = {
+    width: "100%", padding: "11px 14px", fontSize: 14, borderRadius: 10,
+    border: `2px solid ${C.line}`, fontFamily: "inherit", background: C.bg,
+    boxSizing: "border-box" as const, outline: "none",
+    transition: "border-color .15s",
+  };
+  const labelStyle: React.CSSProperties = {
+    fontSize: 12, fontWeight: 700, color: C.ink2, marginBottom: 5, display: "block",
+  };
+
+  return (
+    <ModalShell onClose={onClose} width={520}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: "50%", background: C.yellow,
+          border: `2px solid ${C.ink}`, overflow: "hidden", flexShrink: 0,
+        }}>
+          <img src="/manisha.png" alt="Manisha" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+        </div>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 17 }}>Enroll in Summer Camp 🎉</div>
+          <div style={{ fontSize: 12, color: C.ink3, marginTop: 2 }}>Manisha replies within a few hours with payment link + login</div>
+        </div>
+      </div>
+
+      {/* Parent section */}
+      <div style={{ background: C.bg2, borderRadius: 12, padding: "14px 16px", marginBottom: 12 }}>
+        <div style={{ fontSize: 11, fontWeight: 800, color: C.ink3, letterSpacing: "0.05em", marginBottom: 12 }}>PARENT DETAILS</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div>
+            <label style={labelStyle}>Full Name *</label>
+            <input value={parentName} onChange={e => setParentName(e.target.value)}
+              placeholder="e.g. Priya Sharma" style={fieldStyle}/>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div>
+              <label style={labelStyle}>Email *</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="you@email.com" style={fieldStyle}/>
+            </div>
+            <div>
+              <label style={labelStyle}>WhatsApp Number *</label>
+              <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                placeholder="+91 98765 43210" style={fieldStyle}/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Child section */}
+      <div style={{ background: C.bg2, borderRadius: 12, padding: "14px 16px", marginBottom: 12 }}>
+        <div style={{ fontSize: 11, fontWeight: 800, color: C.ink3, letterSpacing: "0.05em", marginBottom: 12 }}>CHILD DETAILS</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div>
+            <label style={labelStyle}>Child's Name *</label>
+            <input value={childName} onChange={e => setChildName(e.target.value)}
+              placeholder="e.g. Arjun" style={fieldStyle}/>
+          </div>
+          <div>
+            <label style={labelStyle}>Age *</label>
+            <input type="number" min="8" max="15" value={childAge} onChange={e => setChildAge(e.target.value)}
+              placeholder="8 – 15" style={fieldStyle}/>
+          </div>
+        </div>
+      </div>
+
+      {/* Batch selection */}
+      <div style={{ background: C.bg2, borderRadius: 12, padding: "14px 16px", marginBottom: 18 }}>
+        <div style={{ fontSize: 11, fontWeight: 800, color: C.ink3, letterSpacing: "0.05em", marginBottom: 12 }}>CHOOSE BATCH</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+          {/* June 1 — FULL */}
+          <div style={{
+            padding: "12px 10px", borderRadius: 10, textAlign: "center",
+            background: "#F5F5F5", border: `2px solid ${C.line}`,
+            opacity: 0.55, cursor: "not-allowed",
+          }}>
+            <div style={{ fontWeight: 800, fontSize: 14, color: C.ink3 }}>June 1</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#E05C00", marginTop: 4 }}>🔴 FULL</div>
+          </div>
+          {/* June 7 */}
+          {["June 7", "June 15"].map(b => (
+            <button key={b} onClick={() => setBatch(b)} style={{
+              padding: "12px 10px", borderRadius: 10, textAlign: "center",
+              background: batch === b ? C.yellow : C.paper,
+              border: `2px solid ${batch === b ? C.ink : C.line}`,
+              boxShadow: batch === b ? `3px 3px 0 ${C.ink}` : "none",
+              cursor: "pointer", fontFamily: "inherit",
+              transition: "all .15s",
+            }}>
+              <div style={{ fontWeight: 800, fontSize: 14, color: C.ink }}>{b}</div>
+              <div style={{ fontSize: 11, color: C.ink3, marginTop: 4 }}>
+                {b === "June 7" ? "5 seats left" : "8 seats left"}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Submit */}
+      <button onClick={handleSubmit} disabled={!isValid} style={{
+        width: "100%", padding: "16px 20px",
+        background: isValid ? C.wa : C.line,
+        color: isValid ? "#fff" : C.ink3,
+        border: `2px solid ${isValid ? C.ink : C.line}`,
+        borderRadius: 12, fontWeight: 800, fontSize: 16,
+        cursor: isValid ? "pointer" : "not-allowed",
+        boxShadow: isValid ? `0 4px 0 ${C.waD}` : "none",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+        transition: "all .15s",
+      }}>
+        💬 Send Enrollment to Manisha →
+      </button>
+      <p style={{ fontSize: 11, color: C.ink3, marginTop: 8, textAlign: "center" }}>
+        Opens WhatsApp with your details pre-filled. You hit send. Manisha replies with payment link + login.
+      </p>
+    </ModalShell>
+  );
+}
+
 /* ── WhatsApp modal ──────────────────────────────────────────────────── */
 function WhatsAppModal({ onClose }: { onClose: () => void }) {
   const [msg, setMsg] = useState("Hi Manisha! My kid tried Day 1 of the Summer Coding Camp and loved it. Can we get the 7-day free trial?");
@@ -212,7 +360,8 @@ function FreeLessonModal({ onClose, openWA }: { onClose: () => void; openWA: () 
    ──────────────────────────────────────────────────────────────────── */
 
 export default function SummerCamp() {
-  const [modal, setModal] = useState<null | "free" | "wa">(null);
+  const [modal, setModal] = useState<null | "free" | "wa" | "enroll">(null);
+  const [enrollBatch, setEnrollBatch] = useState("June 7");
   const [faqOpen, setFaqOpen] = useState<number>(-1);
   const [showAllLessons, setShowAllLessons] = useState(false);
   const [dayExpanded, setDayExpanded] = useState(false);
@@ -231,8 +380,9 @@ export default function SummerCamp() {
   }, []);
   const mob = vw < 768;
 
-  const openFree = () => setModal("free");
-  const openWA   = () => setModal("wa");
+  const openFree   = () => setModal("free");
+  const openWA     = () => setModal("wa");
+  const openEnroll = (batch = "June 7") => { setEnrollBatch(batch); setModal("enroll"); };
 
   const lessons = [
     { n: 1,   t: "Hello, Python!",                      track: "P", kind: "F" },
@@ -341,11 +491,11 @@ export default function SummerCamp() {
               padding: "7px 16px", borderRadius: 8, fontWeight: 800,
               fontSize: 12, cursor: "pointer",
             }}>Try Day 1 free →</button>
-            <button onClick={openWA} style={{
+            <button onClick={() => openEnroll()} style={{
               background: C.wa, color: "#fff", border: "none",
               padding: "7px 16px", borderRadius: 8, fontWeight: 800,
               fontSize: 12, cursor: "pointer",
-            }}>💬 Get trial</button>
+            }}>🎉 Enroll Now</button>
           </div>
         </div>
       )}
@@ -879,40 +1029,42 @@ export default function SummerCamp() {
                   <li style={{ display: "flex", gap: 8 }}><Check/>Completion certificate</li>
                   <li style={{ display: "flex", gap: 8 }}><Check/>Full refund if not happy</li>
                 </ul>
-                <button onClick={openWA} style={{
+                <button onClick={() => openEnroll()} style={{
                   marginTop: "auto", width: "100%", padding: "12px 16px",
                   background: C.yellow, color: C.ink, border: "none",
                   borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: "pointer",
                   boxShadow: `0 3px 0 ${C.yellowD}`,
-                }}>Reserve a spot →</button>
+                }}>🎉 Enroll Now →</button>
               </div>
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
             {[
-              { date: "June 1",  day: "Sunday",   seats: 2, badge: "Earliest batch", badgeBg: C.yellow },
-              { date: "June 8",  day: "Sunday",   seats: 5, badge: "Most popular",   badgeBg: C.green },
-              { date: "June 15", day: "Sunday",   seats: 8, badge: "Last batch",     badgeBg: C.ink },
-            ].map(({ date, day, seats, badge, badgeBg }) => {
-              const isCritical = seats <= 2;
-              const isLow      = seats <= 5;
-              const seatsColor  = isCritical ? "#E05C00" : isLow ? "#B36B00" : C.green;
-              const seatsBg     = isCritical ? "#FFF3E0" : isLow ? "#FFFBEA" : "#F0FFF4";
+              { date: "June 1",  day: "Sunday",   seats: 0,  badge: "Earliest batch", badgeBg: C.yellow, full: true  },
+              { date: "June 7",  day: "Saturday",  seats: 5,  badge: "Most popular",   badgeBg: C.green,  full: false },
+              { date: "June 15", day: "Sunday",   seats: 8,  badge: "Last batch",     badgeBg: C.ink,    full: false },
+            ].map(({ date, day, seats, badge, badgeBg, full }) => {
+              const isCritical = !full && seats <= 2;
+              const isLow      = !full && seats <= 5;
+              const seatsColor  = full ? C.ink3 : isCritical ? "#E05C00" : isLow ? "#B36B00" : C.green;
+              const seatsBg     = full ? C.bg2  : isCritical ? "#FFF3E0" : isLow ? "#FFFBEA" : "#F0FFF4";
               return (
                 <div key={date} style={{
-                  background: C.paper, border: `2.5px solid ${isCritical ? "#E05C00" : C.ink}`,
+                  background: full ? C.bg2 : C.paper,
+                  border: `2.5px solid ${full ? C.line : isCritical ? "#E05C00" : C.ink}`,
                   borderRadius: 22, padding: "32px 28px",
-                  boxShadow: isCritical ? `8px 8px 0 #E05C00` : `8px 8px 0 ${C.ink}`,
+                  boxShadow: full ? "none" : isCritical ? `8px 8px 0 #E05C00` : `8px 8px 0 ${C.ink}`,
                   display: "flex", flexDirection: "column", gap: 16,
-                  position: "relative",
+                  position: "relative", opacity: full ? 0.7 : 1,
                 }}>
                   <div style={{
                     position: "absolute", top: -14, left: 24,
-                    background: badgeBg, color: badgeBg === C.yellow ? C.ink : "#fff",
+                    background: full ? "#E05C00" : badgeBg,
+                    color: (full || badgeBg !== C.yellow) ? "#fff" : C.ink,
                     padding: "4px 12px", borderRadius: 999,
                     fontSize: 11, fontWeight: 700, border: `2px solid ${C.ink}`,
-                  }}>{badge}</div>
+                  }}>{full ? "🔴 FULL" : badge}</div>
 
                   <div>
                     <div style={{ fontFamily: "'Fraunces',serif", fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.02em" }}>{date}</div>
@@ -925,10 +1077,15 @@ export default function SummerCamp() {
                     background: seatsBg, borderRadius: 8, padding: "8px 12px",
                     border: `1.5px solid ${seatsColor}30`,
                   }}>
-                    <span style={{ fontSize: 18 }}>{isCritical ? "🔴" : isLow ? "🟡" : "🟢"}</span>
+                    <span style={{ fontSize: 18 }}>{full ? "⛔" : isCritical ? "🔴" : isLow ? "🟡" : "🟢"}</span>
                     <div>
-                      <span style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900, color: seatsColor }}>{seats} seats</span>
-                      <span style={{ fontSize: 12, color: seatsColor, fontWeight: 700 }}> remaining</span>
+                      {full
+                        ? <span style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900, color: C.ink3 }}>Batch Full</span>
+                        : <>
+                            <span style={{ fontFamily: "'Fraunces',serif", fontSize: 22, fontWeight: 900, color: seatsColor }}>{seats} seats</span>
+                            <span style={{ fontSize: 12, color: seatsColor, fontWeight: 700 }}> remaining</span>
+                          </>
+                      }
                     </div>
                   </div>
 
@@ -953,16 +1110,28 @@ export default function SummerCamp() {
                     <span style={{ fontSize: 11, color: C.green, fontWeight: 700 }}>↩ full refund</span>
                   </div>
 
-                  <button onClick={openWA} style={{
-                    marginTop: "auto", width: "100%", padding: "14px 18px",
-                    background: isCritical ? "#E05C00" : C.wa,
-                    color: "#fff", border: `2px solid ${C.ink}`,
-                    borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: "pointer",
-                    boxShadow: `0 4px 0 ${isCritical ? "#a03d00" : C.waD}`,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  }}>
-                    {isCritical ? "⚡" : "💬"} Reserve {isCritical ? "before it's gone" : `a spot for ${date}`}
-                  </button>
+                  {full ? (
+                    <div style={{
+                      marginTop: "auto", width: "100%", padding: "14px 18px",
+                      background: C.bg2, color: C.ink3,
+                      border: `2px solid ${C.line}`, borderRadius: 12,
+                      fontWeight: 800, fontSize: 15, textAlign: "center",
+                      boxSizing: "border-box",
+                    }}>
+                      ⛔ Batch Closed
+                    </div>
+                  ) : (
+                    <button onClick={() => openEnroll(date)} style={{
+                      marginTop: "auto", width: "100%", padding: "14px 18px",
+                      background: isCritical ? "#E05C00" : C.wa,
+                      color: "#fff", border: `2px solid ${C.ink}`,
+                      borderRadius: 12, fontWeight: 800, fontSize: 15, cursor: "pointer",
+                      boxShadow: `0 4px 0 ${isCritical ? "#a03d00" : C.waD}`,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    }}>
+                      🎉 Enroll for {date}
+                    </button>
+                  )}
                 </div>
               );
             })}
@@ -1458,10 +1627,16 @@ export default function SummerCamp() {
           </div>
           <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.7 }}>🗓 Pick your start date:</span>
-            {["June 1", "June 8", "June 15"].map((d, i) => (
-              <button key={d} onClick={openWA} style={{
-                background: i === 0 ? C.ink : "rgba(14,17,22,.12)",
-                color: i === 0 ? "#fff" : C.ink,
+            {/* June 1 — FULL */}
+            <button disabled style={{
+              background: "rgba(14,17,22,.08)", color: C.ink3,
+              border: `2px solid rgba(14,17,22,.2)`,
+              padding: "8px 16px", borderRadius: 999,
+              fontWeight: 700, fontSize: 13, cursor: "not-allowed", opacity: 0.55,
+            }}>June 1 🔴 FULL</button>
+            {["June 7", "June 15"].map((d) => (
+              <button key={d} onClick={() => openEnroll(d)} style={{
+                background: "rgba(14,17,22,.12)", color: C.ink,
                 border: `2px solid ${C.ink}`,
                 padding: "8px 16px", borderRadius: 999,
                 fontWeight: 700, fontSize: 13, cursor: "pointer",
@@ -1540,8 +1715,9 @@ export default function SummerCamp() {
       `}</style>
 
       {/* ── Modals ───────────────────────────────────────────────────── */}
-      {modal === "free" && <FreeLessonModal onClose={() => setModal(null)} openWA={openWA}/>}
-      {modal === "wa"   && <WhatsAppModal   onClose={() => setModal(null)}/>}
+      {modal === "free"   && <FreeLessonModal onClose={() => setModal(null)} openWA={openWA}/>}
+      {modal === "wa"     && <WhatsAppModal   onClose={() => setModal(null)}/>}
+      {modal === "enroll" && <EnrollModal     onClose={() => setModal(null)} defaultBatch={enrollBatch}/>}
     </div>
   );
 }
