@@ -541,7 +541,25 @@ export default function SummerCamp() {
               </CTA>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 24, fontSize: 13, color: C.ink2, flexWrap: "wrap" }}>
+            {/* Enroll CTA row */}
+            <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+              <button onClick={() => openEnroll()} style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                padding: "14px 26px", borderRadius: 14,
+                background: C.blue, color: "#fff",
+                border: `2px solid ${C.ink}`,
+                boxShadow: `0 5px 0 ${C.blueD}`,
+                fontWeight: 800, fontSize: 16, cursor: "pointer",
+                fontFamily: "inherit", letterSpacing: "-0.01em",
+              }}>
+                🎉 Enroll Now — $49
+              </button>
+              <span style={{ fontSize: 13, color: C.ink3, fontWeight: 600 }}>
+                June 7 · June 15 · limited seats
+              </span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 20, fontSize: 13, color: C.ink2, flexWrap: "wrap" }}>
               {["No signup required", "Live + self-paced", "Money-back guarantee"].map(t => (
                 <span key={t} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Check/>{t}</span>
               ))}
