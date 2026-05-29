@@ -597,6 +597,7 @@ Run it and make sure all numbers look correct!`,
     bgColor: "bg-purple-50",
     borderColor: "border-purple-200",
     duration: "Day 3",
+    videoUrl: "https://www.youtube.com/embed/hZ1OyqX5lfQ?rel=0",
     topics: ["What are variables?", "Naming rules", "Changing values", "Multiple variables", "Constants", "Swapping values"],
     intro: "Imagine your brain has little boxes where you store information. Your name is in one box, your age in another, your best friend's name in another. Variables in Python are exactly like those memory boxes! You give each box a name, put something inside, and you can look inside any time. The amazing part? You can change what's in the box, use multiple boxes together, and even swap what's in two boxes in a single line. Today you'll master all of it!",
     sections: [
