@@ -68,6 +68,29 @@ export interface ColabChallenge {
   whatsappText: string;
 }
 
+export interface TugRound {
+  /** Short description of what Python command to type */
+  challenge: string;
+  /** Detailed instruction shown inside the game */
+  instruction: string;
+  /** Input placeholder text */
+  placeholder: string;
+  /** Client-side validator — fast, no API call needed */
+  validate: (s: string) => { ok: boolean; hint?: string };
+  /** How far the rope moves on a correct answer (0-100 scale) */
+  strength: number;
+  /** Short win message shown on correct answer */
+  winMsg: string;
+  /** Canonical correct answer (shown in won/lost screens) */
+  exampleAnswer: string;
+}
+
+export interface TugOfWarChallengeData {
+  title: string;
+  subtitle: string;
+  rounds: TugRound[];
+}
+
 export interface SummerCampModule {
   id: number;
   title: string;
@@ -86,6 +109,7 @@ export interface SummerCampModule {
   debugChallenge?: DebugChallenge;
   blankChallenge?: BlankChallenge;
   colabChallenge?: ColabChallenge;
+  tugOfWarChallenge?: TugOfWarChallengeData;
   quiz: QuizQuestion[];
   keyLearnings: string[];
   funFact: string;
@@ -285,6 +309,85 @@ Your program must have at least 4 print() statements and must run without any er
 
 `,
       solutionVideoUrl: "https://youtube.com/shorts/gECNhePNt3M",
+    },
+
+    tugOfWarChallenge: {
+      title: "Coder vs Computer — Tug of War! 🎮",
+      subtitle: "The computer thinks you can't write Python. Prove it wrong. Type the right command each round and yank that rope to victory. Get it wrong and the computer pulls back. Three rounds. One winner.",
+      rounds: [
+        {
+          challenge: "Tell Python to print your name",
+          instruction: `Type a print() command that shows your name on screen. Use this exact pattern:\n  print("Your Name Here")\nReplace "Your Name Here" with your actual name — but keep the quotes!`,
+          placeholder: 'print("Your Name Here")',
+          exampleAnswer: 'print("Alex")',
+          strength: 22,
+          winMsg: "💥 PULL! print() works — the computer slipped back!",
+          validate: (s: string) => {
+            // Must be: print("something") or print('something')
+            if (/^print\s*\(\s*['"][^'"]+['"]\s*\)\s*$/.test(s)) {
+              return { ok: true };
+            }
+            if (!s.startsWith("print")) {
+              return { ok: false, hint: "Start with print( — lowercase p, then round brackets" };
+            }
+            if (!s.includes("(") || !s.includes(")")) {
+              return { ok: false, hint: "You need brackets: print(\"your text\")" };
+            }
+            if (!s.includes('"') && !s.includes("'")) {
+              return { ok: false, hint: "Put quotes around your text: print(\"Alex\")" };
+            }
+            return { ok: false, hint: 'Close both the quote and the bracket: print("Alex")' };
+          },
+        },
+        {
+          challenge: "Store your name in a variable called name",
+          instruction: `Variables are like labelled boxes — Python stores information inside them. Type:\n  name = "YourName"\nUse the = sign to store your name (in quotes) into a variable called name.`,
+          placeholder: 'name = "YourName"',
+          exampleAnswer: 'name = "Alex"',
+          strength: 24,
+          winMsg: "🎯 YES! Python stored your name — the computer is struggling!",
+          validate: (s: string) => {
+            // Must be: name = "something" or name = 'something'
+            if (/^name\s*=\s*['"][^'"]+['"]\s*$/.test(s)) {
+              return { ok: true };
+            }
+            if (!s.includes("name")) {
+              return { ok: false, hint: 'The variable must be called name — type: name = "YourName"' };
+            }
+            if (!s.includes("=")) {
+              return { ok: false, hint: 'Use = to assign: name = "YourName"' };
+            }
+            if (!s.includes('"') && !s.includes("'")) {
+              return { ok: false, hint: 'Put your name in quotes: name = "Alex"' };
+            }
+            return { ok: false, hint: 'Almost! Try: name = "Alex" — variable name, equals sign, quoted text' };
+          },
+        },
+        {
+          challenge: "Print the variable name (without quotes!)",
+          instruction: `Now tell Python to show what's inside the name variable. Type:\n  print(name)\nThis time — NO quotes around name. Quotes mean text; no quotes means "look up what's stored in this variable!"`,
+          placeholder: "print(name)",
+          exampleAnswer: "print(name)",
+          strength: 26,
+          winMsg: "🏆 BOOM! You used a variable — the computer is DONE! 💥",
+          validate: (s: string) => {
+            // Must be: print(name) — no quotes around name
+            if (/^print\s*\(\s*name\s*\)\s*$/.test(s)) {
+              return { ok: true };
+            }
+            if (/^print\s*\(\s*['"]name['"]\s*\)\s*$/.test(s)) {
+              return { ok: false, hint: 'Remove the quotes! print(name) prints the variable. print("name") prints the word name.' };
+            }
+            if (!s.startsWith("print")) {
+              return { ok: false, hint: "Use print() to display the variable" };
+            }
+            if (!s.includes("name")) {
+              return { ok: false, hint: "Put the variable name inside the brackets: print(name)" };
+            }
+            return { ok: false, hint: "Almost! Try exactly: print(name) — no quotes, no spaces inside" };
+          },
+        },
+      ],
     },
 
     funFact: "Python was created in 1991 by a Dutch programmer named Guido van Rossum. He wrote the first version during his Christmas holiday! 🎄",

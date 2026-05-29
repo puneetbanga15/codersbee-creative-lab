@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { summerCampModules } from "@/data/summerCampModules";
 import { PythonPlayground } from "@/components/PythonPlayground";
+import { TugOfWarGame } from "@/components/TugOfWarGame";
 import { useCampAuth } from "@/context/CampAuthContext";
 import { Loader2 } from "lucide-react";
 
@@ -1447,9 +1448,15 @@ export default function ModuleDetail() {
                     <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textAlign: "center", marginTop: 10 }}>
                       Opens WhatsApp with your message pre-filled. Attach your screenshot and hit send. Manisha Mam will mark your module complete! 🏆
                     </p>
+
                   </div>
                 );
               })()}
+
+              {/* Tug of War Game */}
+              {mod.tugOfWarChallenge && (
+                <TugOfWarGame data={mod.tugOfWarChallenge} />
+              )}
             </div>
           </div>
 
