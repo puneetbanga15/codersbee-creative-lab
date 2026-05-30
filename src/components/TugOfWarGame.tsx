@@ -201,19 +201,38 @@ function Sprite({
 }
 
 /* ─── Feedback bubble ──────────────────────────────────────────────── */
-function Feedback({ ok, msg }: { ok: boolean; msg: string }) {
+function Feedback({ ok, msg, example }: { ok: boolean; msg: string; example?: string }) {
   return (
     <div style={{
-      padding: "10px 16px", borderRadius: 12,
+      padding: "12px 16px", borderRadius: 12,
       background: ok ? "#E8F8EE" : "#FEE2EC",
       border: `2px solid ${ok ? C.green : C.red}`,
       color: ok ? "#15803D" : "#9F1239",
-      fontWeight: 700, fontSize: 14,
-      display: "flex", alignItems: "center", gap: 10,
       animation: "tug-pop .25s ease",
     }}>
-      <span style={{ fontSize: 20 }}>{ok ? "✅" : "❌"}</span>
-      {msg}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+        <span style={{ fontSize: 20, lineHeight: 1.2 }}>{ok ? "✅" : "💡"}</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 800, fontSize: 14, marginBottom: ok ? 0 : 3 }}>
+            {ok ? msg : "Not quite — let's fix it together!"}
+          </div>
+          {!ok && (
+            <div style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.5 }}>
+              {msg}
+            </div>
+          )}
+          {!ok && example && (
+            <div style={{
+              marginTop: 8, padding: "6px 10px", borderRadius: 8,
+              background: "rgba(159,18,57,.08)",
+              fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+              fontSize: 13, fontWeight: 700, color: "#9F1239",
+            }}>
+              Type it like this →&nbsp; {example}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -249,7 +268,8 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
   }
 
   function handleSubmit() {
-    if (!inputVal.trim() || feedback || phase !== "playing") return;
+    // Block only while a SUCCESS animation is playing; errors stay editable.
+    if (!inputVal.trim() || (feedback && feedback.ok) || phase !== "playing") return;
 
     const result = currentRound.validate(inputVal.trim());
 
@@ -277,7 +297,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
       }, 1400);
 
     } else {
-      // Wrong!
+      // Wrong! Keep the error + hint on screen until the kid edits their code.
       doShake();
       const penalty = Math.min(10 + wrongStreak * 2, 18);
       const newPos  = clamp(ropePos - penalty, 0, 100);
@@ -285,18 +305,16 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
       setWrongStreak(s => s + 1);
       setFeedback({
         ok: false,
-        msg: result.hint ?? "Not quite — check your syntax and try again!",
+        msg: result.hint ?? "Not quite — check your spelling, quotes and brackets, then try again!",
       });
-      const newResults = [...roundResults, false];
 
       if (newPos <= LOSE_POS) {
-        setRoundResults(newResults);
-        setTimeout(() => setPhase("lost"), 1400);
+        // Computer wins — lock and show the lose screen after a beat.
+        setRoundResults([...roundResults, false]);
+        setTimeout(() => setPhase("lost"), 1600);
       } else {
-        setTimeout(() => {
-          setFeedback(null);
-          // After wrong, they get another try on same round (don't advance)
-        }, 2000);
+        // Stay on this round. Error message persists; refocus so they can fix it.
+        setTimeout(() => inputRef.current?.focus(), 50);
       }
     }
   }
@@ -691,11 +709,17 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
                 ref={inputRef}
                 value={inputVal}
                 onChange={e => {
-                  if (!feedback) setInputVal(e.target.value);
+                  // Lock only while a SUCCESS animation plays. During an error,
+                  // let the kid keep typing — and clear the red error as soon
+                  // as they start fixing it, so the hint stays until they act.
+                  if (!(feedback && feedback.ok)) {
+                    setInputVal(e.target.value);
+                    if (feedback && !feedback.ok) setFeedback(null);
+                  }
                 }}
                 onKeyDown={handleKey}
                 placeholder={currentRound.placeholder}
-                disabled={!!feedback}
+                disabled={!!feedback && feedback.ok}
                 spellCheck={false}
                 autoComplete="off"
                 autoCorrect="off"
@@ -710,19 +734,20 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
             </div>
             <button
               onClick={handleSubmit}
-              disabled={!!feedback || !inputVal.trim()}
+              disabled={(!!feedback && feedback.ok) || !inputVal.trim()}
               style={{
                 padding: "0 22px",
-                background: feedback ? "#333" : C.yellow,
+                background: (!!feedback && feedback.ok) ? "#333" : C.yellow,
                 color: C.ink, border: "none", borderRadius: 10,
-                fontWeight: 900, fontSize: 14, cursor: feedback ? "default" : "pointer",
+                fontWeight: 900, fontSize: 14,
+                cursor: (!!feedback && feedback.ok) ? "default" : "pointer",
                 fontFamily: "'Fraunces', serif",
                 transition: "background .2s",
                 flexShrink: 0,
-                opacity: (!inputVal.trim() && !feedback) ? 0.5 : 1,
+                opacity: (!inputVal.trim() && !(feedback && feedback.ok)) ? 0.5 : 1,
               }}
             >
-              Pull! 💪
+              {feedback && !feedback.ok ? "Try again 💪" : "Pull! 💪"}
             </button>
           </div>
 
@@ -734,7 +759,13 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
           )}
 
           {/* Feedback */}
-          {feedback && <Feedback ok={feedback.ok} msg={feedback.msg} />}
+          {feedback && (
+            <Feedback
+              ok={feedback.ok}
+              msg={feedback.msg}
+              example={!feedback.ok ? currentRound.exampleAnswer : undefined}
+            />
+          )}
 
           {/* Progress dots */}
           <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "center" }}>
