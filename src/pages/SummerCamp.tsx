@@ -566,6 +566,52 @@ export default function SummerCamp() {
               15 lessons · self-paced + 2× live with Manisha · WhatsApp support · ages 8–15
             </p>
 
+            {/* Mobile: intro video up top — first thing people see */}
+            {mob && (
+              <div style={{ position: "relative", marginBottom: 28 }}>
+                <div style={{
+                  position: "absolute", top: -12, left: 4, zIndex: 4,
+                  background: C.yellow, color: C.ink, padding: "6px 12px",
+                  borderRadius: 999, border: `2px solid ${C.ink}`,
+                  fontSize: 11, fontWeight: 800, transform: "rotate(-3deg)",
+                  boxShadow: "0 6px 14px -4px rgba(0,0,0,.2)",
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                }}>
+                  <span style={{ width: 7, height: 7, borderRadius: 999, background: C.red, display: "inline-block" }}/>
+                  Watch · 42 sec
+                </div>
+                <div style={{
+                  padding: 7, borderRadius: 18,
+                  background: `linear-gradient(135deg, ${C.yellow} 0%, ${C.blue} 100%)`,
+                  boxShadow: `8px 8px 0 ${C.ink}`,
+                  border: `2.5px solid ${C.ink}`,
+                }}>
+                  <div style={{
+                    position: "relative", width: "100%", paddingTop: "56.25%",
+                    borderRadius: 12, overflow: "hidden",
+                    border: `2.5px solid ${C.ink}`, background: "#000",
+                  }}>
+                    <iframe
+                      src="https://www.youtube-nocookie.com/embed/GiHXXEx0sJs?rel=0"
+                      title="CodersBee Summer Camp — introduction"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      loading="lazy"
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                    />
+                  </div>
+                </div>
+                <a
+                  href="https://youtu.be/GiHXXEx0sJs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: "inline-block", marginTop: 12, fontSize: 12, color: C.ink3, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}
+                >
+                  Video not loading? Watch on YouTube ↗
+                </a>
+              </div>
+            )}
+
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
               <CTA kind="yellow" size="xl" icon="▶" sub="No signup · no card · starts in 30 sec" onClick={openFree}>
                 Start free lesson
@@ -591,53 +637,48 @@ export default function SummerCamp() {
             </div>
           </div>
 
-          {/* Right — code window (hidden on mobile) */}
-          {!mob && <div style={{ position: "relative", height: 560 }}>
+          {/* Right — intro video (hidden on mobile; mobile gets the standalone section below) */}
+          {!mob && <div style={{ position: "relative" }}>
+            {/* Watch sticker */}
             <div style={{
-              position: "absolute", top: 30, right: 0, left: 10,
-              background: "#fff", borderRadius: 18,
-              border: `2.5px solid ${C.ink}`,
-              boxShadow: `10px 10px 0 ${C.ink}`,
-              overflow: "hidden",
-            }}>
-              <div style={{ background: C.ink, padding: "12px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-                {["#FF5F57", C.yellow, C.green].map(c => (
-                  <span key={c} style={{ width: 11, height: 11, borderRadius: 999, background: c }}/>
-                ))}
-                <span style={{ marginLeft: 10, fontSize: 12, color: "#FFEFC2", fontFamily: "'JetBrains Mono',monospace" }}>
-                  lesson-13 — homework-helper.py · Aanya, 11
-                </span>
-              </div>
-              <div style={{ padding: "20px 22px", fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.7 }}>
-                <div style={{ color: C.ink3 }}># my AI homework helper</div>
-                <div><span style={{ color: C.blue }}>from</span> codersbee <span style={{ color: C.blue }}>import</span> ai</div>
-                <div style={{ marginTop: 6 }}>tutor = ai.chat(role=<span style={{ color: C.green }}>"kind maths teacher"</span>)</div>
-                <div>tutor.ask(<span style={{ color: C.green }}>"What is 7 × 8?"</span>)</div>
-                <div style={{ marginTop: 10, padding: "8px 10px", background: C.bg2, borderRadius: 8, borderLeft: `3px solid ${C.green}` }}>
-                  <div style={{ color: C.green, fontWeight: 600 }}>&gt; 56!</div>
-                  <div style={{ color: C.ink2 }}>&gt; Think of it as 7 + 7 eight times. Want me to show you?</div>
-                </div>
-                <div style={{ marginTop: 12, color: C.ink3 }}># shipped on Day 13 🎉</div>
-              </div>
-            </div>
-
-            {/* floating sticker */}
-            <div style={{
-              position: "absolute", top: 0, left: 0, zIndex: 2,
-              background: C.yellow, color: C.ink, padding: "7px 13px",
+              position: "absolute", top: -14, left: -6, zIndex: 4,
+              background: C.yellow, color: C.ink, padding: "7px 14px",
               borderRadius: 999, border: `2px solid ${C.ink}`,
               fontSize: 12, fontWeight: 800, transform: "rotate(-3deg)",
               boxShadow: "0 6px 14px -4px rgba(0,0,0,.2)",
               display: "inline-flex", alignItems: "center", gap: 6,
             }}>
-              <span style={{ width: 8, height: 8, borderRadius: 999, background: C.green, display: "inline-block" }}/>
-              Real student · lesson 13
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: C.red, display: "inline-block" }}/>
+              Watch · 42 sec
             </div>
 
-            {/* floating chips — sit below the code window in a tidy row */}
+            {/* Bordered video frame */}
             <div style={{
-              position: "absolute", bottom: 16, left: 0, right: 0,
-              display: "flex", gap: 10, justifyContent: "flex-start", flexWrap: "wrap",
+              padding: 10, borderRadius: 22,
+              background: `linear-gradient(135deg, ${C.yellow} 0%, ${C.blue} 100%)`,
+              boxShadow: `12px 12px 0 ${C.ink}`,
+              border: `2.5px solid ${C.ink}`,
+            }}>
+              <div style={{
+                position: "relative", width: "100%", paddingTop: "56.25%",
+                borderRadius: 14, overflow: "hidden",
+                border: `2.5px solid ${C.ink}`, background: "#000",
+              }}>
+                <iframe
+                  src="https://www.youtube-nocookie.com/embed/GiHXXEx0sJs?rel=0"
+                  title="CodersBee Summer Camp — introduction"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  loading="lazy"
+                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                />
+              </div>
+            </div>
+
+            {/* floating chips — sit below the video in a tidy row */}
+            <div style={{
+              marginTop: 20,
+              display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap",
               padding: "0 10px",
             }}>
               <div style={{
@@ -695,67 +736,6 @@ export default function SummerCamp() {
         <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: -1, overflow: "hidden", pointerEvents: "none" }}>
           <div style={{ position: "absolute", top: -80, right: -80, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle,#FFC72C55,transparent 70%)" }}/>
           <div style={{ position: "absolute", bottom: 80, left: -100, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle,#1E5BB722,transparent 70%)" }}/>
-        </div>
-      </section>
-
-      {/* ── Intro video ─────────────────────────────────────────────── */}
-      <section style={{ padding: mob ? "44px 20px 8px" : "72px 32px 16px" }}>
-        <div style={{ maxWidth: 880, margin: "0 auto", textAlign: "center" }}>
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: 7,
-            background: C.ink, color: "#fff", padding: "6px 14px",
-            borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 16,
-          }}>
-            <span style={{ width: 8, height: 8, borderRadius: 999, background: C.red, display: "inline-block" }}/>
-            WATCH FIRST · 90 SECONDS
-          </span>
-          <h2 style={{
-            fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,44px)",
-            fontWeight: 900, margin: "0 0 8px", letterSpacing: "-0.02em",
-          }}>
-            New here? Let Manisha show you around.
-          </h2>
-          <p style={{ fontSize: 15, color: C.ink2, margin: "0 0 28px", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
-            What your kid builds, how the camp works, and why it's not just another video course — in under two minutes.
-          </p>
-
-          {/* Bordered video frame */}
-          <div style={{
-            padding: mob ? 8 : 12, borderRadius: 22,
-            background: `linear-gradient(135deg, ${C.yellow} 0%, ${C.blue} 100%)`,
-            boxShadow: `${mob ? "8px 8px" : "12px 12px"} 0 ${C.ink}`,
-            border: `2.5px solid ${C.ink}`,
-          }}>
-            <div style={{
-              position: "relative", width: "100%", paddingTop: "56.25%",
-              borderRadius: 14, overflow: "hidden",
-              border: `2.5px solid ${C.ink}`, background: "#000",
-            }}>
-              <iframe
-                src="https://www.youtube-nocookie.com/embed/GiHXXEx0sJs?rel=0"
-                title="CodersBee Summer Camp — introduction"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                loading="lazy"
-                style={{
-                  position: "absolute", top: 0, left: 0,
-                  width: "100%", height: "100%", border: "none",
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginTop: 16, display: "flex", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-            <CTA kind="yellow" size="lg" icon="▶" onClick={openFree}>Start the free lesson →</CTA>
-            <a
-              href="https://youtu.be/GiHXXEx0sJs"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ fontSize: 13, color: C.ink3, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}
-            >
-              Video not loading? Watch on YouTube ↗
-            </a>
-          </div>
         </div>
       </section>
 
