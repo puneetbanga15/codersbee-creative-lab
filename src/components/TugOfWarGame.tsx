@@ -384,21 +384,21 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
               padding: "20px 24px", marginBottom: 24,
             }}>
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16 }}>
-                <Sprite src="/tug/kids-pull.png" alt="Kids team" bounce />
+                <Sprite src="/tug/computer-strain.png" alt="Computer team" bounce />
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ textAlign: "center", color: "rgba(255,255,255,.6)", fontSize: 11, fontWeight: 700 }}>
                     VS
                   </div>
                   <div style={{
                     height: 10, borderRadius: 5,
-                    background: "linear-gradient(90deg, #22A55C 38%, #E0124F 38%)",
+                    background: "linear-gradient(90deg, #E0124F 50%, #22A55C 50%)",
                     border: "1.5px solid rgba(255,255,255,.15)",
                   }} />
                   <div style={{ textAlign: "center", color: "rgba(255,255,255,.5)", fontSize: 11 }}>
                     Type Python → Pull the rope!
                   </div>
                 </div>
-                <Sprite src="/tug/computer-strain.png" alt="Computer team" flip bounce />
+                <Sprite src="/tug/kids-pull.png" alt="Kids team" bounce />
               </div>
             </div>
 
@@ -475,8 +475,8 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
           ))}
 
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 24, justifyContent: "center" }}>
+            <Sprite src="/tug/computer-lose.png" alt="Computer loses" />
             <Sprite src="/tug/kids-win.png" alt="Kids win!" bounce />
-            <Sprite src="/tug/computer-lose.png" alt="Computer loses" flip />
           </div>
 
           <h2 style={{
@@ -556,8 +556,8 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
           padding: "32px 28px",
         }}>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 24, justifyContent: "center" }}>
+            <Sprite src="/tug/computer-win.png" alt="Computer wins" />
             <Sprite src="/tug/kids-lose.png" alt="Kids lose" />
-            <Sprite src="/tug/computer-win.png" alt="Computer wins" flip />
           </div>
 
           <h2 style={{
@@ -658,17 +658,17 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
           }}>
             {/* Sprites + rope */}
             <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 10 }}>
-              <Sprite src={kidsImg} alt="Kids team" shake={isShaking} />
+              <Sprite src={compImg} alt="Computer team" shake={isShaking} />
               <div style={{ flex: 1, paddingBottom: 28 }}>
                 <Rope pos={ropePos} shake={isShaking} />
               </div>
-              <Sprite src={compImg} alt="Computer team" flip shake={isShaking} />
+              <Sprite src={kidsImg} alt="Kids team" shake={isShaking} />
             </div>
 
             {/* Labels */}
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: -4 }}>
-              <span style={{ fontSize: 11, fontWeight: 800, color: C.green }}>👩‍💻 You</span>
               <span style={{ fontSize: 11, fontWeight: 800, color: C.red }}>💻 Computer</span>
+              <span style={{ fontSize: 11, fontWeight: 800, color: C.green }}>👩‍💻 You</span>
             </div>
           </div>
 
