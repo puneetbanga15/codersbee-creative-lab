@@ -46,6 +46,24 @@ export interface RunResult {
   hasInputCall: boolean;
 }
 
+/**
+ * Detect a REAL Python error in simulated stdout.
+ *
+ * Python prints exceptions in a recognisable shape — a traceback header, or a
+ * line like "NameError: ...", "SyntaxError: ...", "ValueError: ...". We match
+ * that shape instead of the bare word "Error", so a kid printing something like
+ * "I make no Errors!" or "Error-free zone" is NOT falsely flagged as failing.
+ */
+export function detectPythonError(output: string): boolean {
+  if (!output) return false;
+  // 1. A traceback is unambiguous.
+  if (/Traceback \(most recent call last\)/.test(output)) return true;
+  // 2. An exception line: optional leading whitespace, an Exception/Error class
+  //    name (e.g. NameError, SyntaxError, ValueError, Exception), then a colon.
+  //    Anchored to line-start so prose containing the word "error" won't match.
+  return /(^|\n)[ \t]*[A-Za-z_]*(Error|Exception)\s*:/.test(output);
+}
+
 export interface ValidationResult {
   passed: boolean;
   message: string;
@@ -84,8 +102,7 @@ export async function runPythonCodeWithInputs(
   const data = await response.json();
   const output: string = data.choices?.[0]?.message?.content ?? "";
 
-  const errorKeywords = ["Error", "Traceback", "SyntaxError", "NameError", "TypeError", "ValueError", "IndentationError"];
-  const hasError = errorKeywords.some((kw) => output.includes(kw));
+  const hasError = detectPythonError(output);
 
   return { output: output.trim(), hasError, hasInputCall: false };
 }
@@ -129,8 +146,7 @@ export async function runPythonCode(
   const data = await response.json();
   const output: string = data.choices?.[0]?.message?.content ?? "";
 
-  const errorKeywords = ["Error", "Traceback", "SyntaxError", "NameError", "TypeError", "ValueError", "IndentationError"];
-  const hasError = errorKeywords.some((kw) => output.includes(kw));
+  const hasError = detectPythonError(output);
 
   return { output: output.trim(), hasError, hasInputCall: false };
 }
