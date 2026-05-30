@@ -176,6 +176,14 @@ const SPRITE_EMOJI: Record<string, string> = {
   "computer-strain":"💻😤",
   "computer-win":   "💻😈",
   "computer-lose":  "💻😵",
+  "boy-idle":       "🙋‍♂️",
+  "boy-pull":       "🧒💪",
+  "boy-win":        "🙌",
+  "boy-lose":       "😞",
+  "girl-idle":      "🙋‍♀️",
+  "girl-pull":      "👧💪",
+  "girl-win":       "🙌",
+  "girl-lose":      "😞",
 };
 
 /* ─── Sprite display ───────────────────────────────────────────────── */
@@ -265,10 +273,10 @@ function Feedback({ ok, msg, example }: { ok: boolean; msg: string; example?: st
 type SfxName = "pull" | "win" | "lose" | "wrong";
 
 const SOUND_FILES: Partial<Record<SfxName, string>> = {
-  // pull:  "/tug/sfx/pull.mp3",   // ← uncomment + drop the file in to use a real clip
-  // win:   "/tug/sfx/win.mp3",
-  // lose:  "/tug/sfx/lose.mp3",
-  // wrong: "/tug/sfx/wrong.mp3",
+  pull:  "/tug/sfx/pull.mp3",
+  win:   "/tug/sfx/win.mp3",
+  lose:  "/tug/sfx/lose.mp3",
+  wrong: "/tug/sfx/wrong.mp3",
 };
 
 const Sfx = (() => {
@@ -378,7 +386,16 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
     if (typeof window === "undefined") return false;
     return window.localStorage.getItem("tug-muted") === "1";
   });
+  const [avatar, setAvatar] = useState<"boy" | "girl">(() => {
+    if (typeof window === "undefined") return "boy";
+    return window.localStorage.getItem("tug-avatar") === "girl" ? "girl" : "boy";
+  });
   const inputRef = useRef<HTMLInputElement>(null);
+
+  function pickAvatar(a: "boy" | "girl") {
+    setAvatar(a);
+    try { window.localStorage.setItem("tug-avatar", a); } catch { /* ignore */ }
+  }
 
   const currentRound = data.rounds[round];
 
@@ -467,12 +484,9 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
     if (e.key === "Enter") handleSubmit();
   }
 
-  // Sprite selection
-  const kidsImg = ropePos >= WIN_POS
-    ? "/tug/kids-win.png"
-    : ropePos <= LOSE_POS
-    ? "/tug/kids-lose.png"
-    : "/tug/kids-pull.png";
+  // Sprite selection — the player side uses the kid's chosen avatar.
+  const playerState = ropePos >= WIN_POS ? "win" : ropePos <= LOSE_POS ? "lose" : "pull";
+  const kidsImg = `/tug/${avatar}-${playerState}.png`;
 
   const compImg = ropePos >= WIN_POS
     ? "/tug/computer-lose.png"
@@ -543,8 +557,45 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
                     Type Python → Pull the rope!
                   </div>
                 </div>
-                <Sprite src="/tug/kids-pull.png" alt="Kids team" bounce />
+                <Sprite src={`/tug/${avatar}-idle.png`} alt="Your player" bounce />
               </div>
+            </div>
+
+            {/* Avatar picker */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+              marginBottom: 24,
+            }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: C.yellow, letterSpacing: "0.04em" }}>
+                Pick your player:
+              </span>
+              {(["boy", "girl"] as const).map(a => {
+                const selected = avatar === a;
+                return (
+                  <button
+                    key={a}
+                    onClick={() => pickAvatar(a)}
+                    aria-pressed={selected}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      padding: "6px 14px 6px 8px", borderRadius: 999, cursor: "pointer",
+                      background: selected ? C.yellow : "rgba(255,255,255,.06)",
+                      border: `2px solid ${selected ? C.yellow : "rgba(255,255,255,.18)"}`,
+                      color: selected ? C.ink : "rgba(255,255,255,.8)",
+                      fontWeight: 800, fontSize: 14,
+                      transition: "all .15s",
+                    }}
+                  >
+                    <img
+                      src={`/tug/${a}-idle.png`}
+                      alt=""
+                      style={{ width: 34, height: 34, objectFit: "contain" }}
+                    />
+                    {a === "boy" ? "Boy" : "Girl"}
+                    {selected && <span style={{ fontSize: 13 }}>✓</span>}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Round previews */}
@@ -624,7 +675,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
 
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 24, justifyContent: "center" }}>
             <Sprite src="/tug/computer-lose.png" alt="Computer loses" />
-            <Sprite src="/tug/kids-win.png" alt="Kids win!" bounce />
+            <Sprite src={`/tug/${avatar}-win.png`} alt="You win!" bounce />
           </div>
 
           <h2 style={{
@@ -727,7 +778,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
         }}>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 24, justifyContent: "center" }}>
             <Sprite src="/tug/computer-win.png" alt="Computer wins" />
-            <Sprite src="/tug/kids-lose.png" alt="Kids lose" />
+            <Sprite src={`/tug/${avatar}-lose.png`} alt="You lose" />
           </div>
 
           <h2 style={{
