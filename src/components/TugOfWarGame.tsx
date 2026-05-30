@@ -13,6 +13,27 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
 
+/**
+ * Tiny Python simulator for the win screen — runs the kid's own lines so we can
+ * show the real output Python would print. Handles just the three command shapes
+ * this game teaches: print("literal"), name = "literal", and print(variable).
+ */
+function simulatePython(lines: string[]): string {
+  const vars: Record<string, string> = {};
+  const out: string[] = [];
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+    let m = line.match(/^([A-Za-z_]\w*)\s*=\s*(['"])([\s\S]*)\2\s*$/);   // name = "value"
+    if (m) { vars[m[1]] = m[3]; continue; }
+    m = line.match(/^print\s*\(\s*(['"])([\s\S]*)\1\s*\)\s*$/);          // print("literal")
+    if (m) { out.push(m[2]); continue; }
+    m = line.match(/^print\s*\(\s*([A-Za-z_]\w*)\s*\)\s*$/);             // print(variable)
+    if (m) { out.push(vars[m[1]] ?? ""); continue; }
+  }
+  return out.join("\n");
+}
+
 /* ─── Rope ─────────────────────────────────────────────────────────── */
 function Rope({ pos, shake }: { pos: number; shake: boolean }) {
   // pos: 0=far left (computer wins) … 100=far right (kids win)
@@ -251,6 +272,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
   const [shake,    setShake]    = useState(false);
   const [wrongStreak, setWrongStreak] = useState(0);
   const [roundResults, setRoundResults] = useState<boolean[]>([]);
+  const [submissions, setSubmissions] = useState<string[]>([]);  // the kid's actual typed code, per round
   const inputRef = useRef<HTMLInputElement>(null);
 
   const currentRound = data.rounds[round];
@@ -281,6 +303,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
       setWrongStreak(0);
       const newResults = [...roundResults, true];
       setRoundResults(newResults);
+      setSubmissions(prev => [...prev, inputVal.trim()]);  // remember exactly what the kid typed
 
       setTimeout(() => {
         setFeedback(null);
@@ -444,7 +467,10 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
   }
 
   if (phase === "won") {
-    const code = data.rounds.map(r => r.exampleAnswer).join("\n");
+    // Use exactly what the kid typed; fall back to the model answer if missing.
+    const lines = data.rounds.map((r, i) => submissions[i] ?? r.exampleAnswer);
+    const code = lines.join("\n");
+    const programOutput = simulatePython(lines);
     return (
       <div style={{ fontFamily: "'Manrope', sans-serif" }}>
         <style>{`
@@ -506,6 +532,27 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
             }}>
               {code}
             </pre>
+
+            {/* What the computer printed when it ran your code */}
+            <div style={{
+              marginTop: 16, paddingTop: 14,
+              borderTop: "1px dashed rgba(255,255,255,.15)",
+            }}>
+              <div style={{
+                fontSize: 11, fontWeight: 800, color: "#7dd3fc",
+                letterSpacing: "0.1em", marginBottom: 10,
+                display: "flex", alignItems: "center", gap: 6,
+              }}>▶ OUTPUT — WHAT PYTHON PRINTED</div>
+              <pre style={{
+                margin: 0, fontSize: 15, color: "#86efac",
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                lineHeight: 1.8, whiteSpace: "pre-wrap",
+                background: "#06090d", borderRadius: 8,
+                border: "1px solid rgba(125,211,252,.18)",
+                padding: "12px 14px",
+              }}>{programOutput || " "}</pre>
+            </div>
+
             <div style={{
               marginTop: 14, padding: "10px 14px",
               background: "rgba(34,165,92,.12)", borderRadius: 8,
@@ -521,6 +568,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
               setRopePos(START_POS);
               setRound(0);
               setRoundResults([]);
+              setSubmissions([]);
               setInputVal("");
               setFeedback(null);
               setWrongStreak(0);
@@ -592,6 +640,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
               setRopePos(START_POS);
               setRound(0);
               setRoundResults([]);
+              setSubmissions([]);
               setInputVal("");
               setFeedback(null);
               setWrongStreak(0);
