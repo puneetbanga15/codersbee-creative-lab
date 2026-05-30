@@ -698,6 +698,67 @@ export default function SummerCamp() {
         </div>
       </section>
 
+      {/* ── Intro video ─────────────────────────────────────────────── */}
+      <section style={{ padding: mob ? "44px 20px 8px" : "72px 32px 16px" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto", textAlign: "center" }}>
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 7,
+            background: C.ink, color: "#fff", padding: "6px 14px",
+            borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 16,
+          }}>
+            <span style={{ width: 8, height: 8, borderRadius: 999, background: C.red, display: "inline-block" }}/>
+            WATCH FIRST · 90 SECONDS
+          </span>
+          <h2 style={{
+            fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,4vw,44px)",
+            fontWeight: 900, margin: "0 0 8px", letterSpacing: "-0.02em",
+          }}>
+            New here? Let Manisha show you around.
+          </h2>
+          <p style={{ fontSize: 15, color: C.ink2, margin: "0 0 28px", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+            What your kid builds, how the camp works, and why it's not just another video course — in under two minutes.
+          </p>
+
+          {/* Bordered video frame */}
+          <div style={{
+            padding: mob ? 8 : 12, borderRadius: 22,
+            background: `linear-gradient(135deg, ${C.yellow} 0%, ${C.blue} 100%)`,
+            boxShadow: `${mob ? "8px 8px" : "12px 12px"} 0 ${C.ink}`,
+            border: `2.5px solid ${C.ink}`,
+          }}>
+            <div style={{
+              position: "relative", width: "100%", paddingTop: "56.25%",
+              borderRadius: 14, overflow: "hidden",
+              border: `2.5px solid ${C.ink}`, background: "#000",
+            }}>
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/GiHXXEx0sJs?rel=0"
+                title="CodersBee Summer Camp — introduction"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                style={{
+                  position: "absolute", top: 0, left: 0,
+                  width: "100%", height: "100%", border: "none",
+                }}
+              />
+            </div>
+          </div>
+
+          <div style={{ marginTop: 16, display: "flex", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+            <CTA kind="yellow" size="lg" icon="▶" onClick={openFree}>Start the free lesson →</CTA>
+            <a
+              href="https://youtu.be/GiHXXEx0sJs"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 13, color: C.ink3, fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}
+            >
+              Video not loading? Watch on YouTube ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ── Why not YouTube / Udemy ─────────────────────────────────── */}
       <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg2 }}>
         <div style={{ maxWidth: 1060, margin: "0 auto" }}>
