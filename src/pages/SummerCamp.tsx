@@ -364,7 +364,7 @@ export default function SummerCamp() {
   const [enrollBatch, setEnrollBatch] = useState("June 7");
   const [faqOpen, setFaqOpen] = useState<number>(-1);
   const [showAllLessons, setShowAllLessons] = useState(false);
-  const [dayExpanded, setDayExpanded] = useState(false);
+  const [dayExpanded, setDayExpanded] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
 
@@ -383,6 +383,12 @@ export default function SummerCamp() {
   const openFree   = () => setModal("free");
   const openWA     = () => setModal("wa");
   const openEnroll = (batch = "June 7") => { setEnrollBatch(batch); setModal("enroll"); };
+  // Direct, one-tap trial: opens WhatsApp pre-filled with the trial request —
+  // no manual "ask for the trial" step for the parent.
+  const openTrial  = () => {
+    const msg = "Hi Manisha! My kid finished Day 1 of the Summer Coding Camp 🎉 We'd like to start the 7-day FREE trial — full access to all 15 lessons + challenges. Please send our login credentials. Thank you!";
+    window.open(`${WA_URL}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
 
   const lessons = [
     { n: 1,   t: "Hello, Python!",                      track: "P", kind: "F" },
@@ -413,7 +419,7 @@ export default function SummerCamp() {
     ["How does the teacher track progress?",
      "Manisha has a live dashboard showing each student's quiz scores and completed modules. She also sends WhatsApp updates after live sessions."],
     ["What is the 7-day free trial — and how do I get it?",
-     "After your kid finishes Day 1, just message Manisha on WhatsApp and say 'we'd like the trial'. She'll send login credentials within minutes. The trial gives full access to all 15 lessons and coding challenges for 7 days — completely free. What's not included: live sessions with Manisha, WhatsApp teacher support, and the completion certificate. Those come with the full camp."],
+     "After your kid finishes Day 1, tap 'Start my 7-day free trial' in the pricing section — it opens WhatsApp with your request ready, so you just hit send. Manisha replies with login credentials within minutes. The trial gives full access to all 15 lessons and coding challenges for 7 days — completely free. What's not included: live sessions with Manisha, WhatsApp teacher support, and the completion certificate. Those come with the full camp."],
     ["How much does the full camp cost?",
      "$49 (₹4,000) for all 15 lessons, 6 live sessions with Manisha, personal WhatsApp support, project reviews, and a completion certificate. UPI, cards, or WhatsApp invoice — whatever is easiest. And if your kid doesn't love it, full refund, no questions."],
     ["What if my kid doesn't enjoy it after the first week?",
@@ -436,7 +442,7 @@ export default function SummerCamp() {
         }}>
           <span>🎁 Day 1 <strong style={{ color: "#fff" }}>FREE</strong> · 7-day trial after · full camp <strong style={{ color: C.yellow }}>$49</strong> <span style={{ opacity: 0.6 }}>(₹4,000)</span></span>
           <span style={{ opacity: 0.4 }}>·</span>
-          <span>Money-back guarantee · Summer 2026 · June 1, 8 &amp; 15</span>
+          <span>Money-back guarantee · Summer 2026 · June 1, 7 &amp; 15</span>
         </div>
       )}
 
@@ -458,14 +464,20 @@ export default function SummerCamp() {
           </Link>
           {!mob && (
             <nav style={{ marginLeft: "auto", display: "flex", gap: 28, fontSize: 14, fontWeight: 600, color: C.ink2 }}>
-              {[["#what","What you'll build"],["#curriculum","15 lessons"],["#pricing","Pricing"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
+              {[["#what","What you'll build"],["#curriculum","15 lessons"],["#reviews","Reviews"],["#pricing","Pricing"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
                 <a key={h} href={h} style={{ color: C.ink2, textDecoration: "none" }}>{l}</a>
               ))}
             </nav>
           )}
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: mob ? "auto" : undefined }}>
-            <CTA kind="whatsapp" size="sm" icon="💬" onClick={openWA}>{mob ? "" : "WhatsApp"}</CTA>
-            <CTA kind="primary" size="sm" onClick={openFree}>{mob ? "Free lesson →" : "Try free lesson →"}</CTA>
+          <div style={{ display: "flex", gap: mob ? 8 : 14, alignItems: "center", marginLeft: mob ? "auto" : undefined }}>
+            {!mob && (
+              <button onClick={openWA} style={{
+                background: "none", border: "none", cursor: "pointer", padding: 0,
+                fontSize: 14, fontWeight: 600, color: C.ink2, whiteSpace: "nowrap",
+                display: "flex", alignItems: "center", gap: 5,
+              }}>💬 Questions? Ask Manisha</button>
+            )}
+            <CTA kind="yellow" size="sm" icon="▶" onClick={openFree}>{mob ? "Free lesson →" : "Try free lesson →"}</CTA>
           </div>
         </div>
       </header>
@@ -510,7 +522,7 @@ export default function SummerCamp() {
                 SUMMER 2026 · 15 DAYS · AGES 8–15
               </span>
               <span style={{ background: C.yellow, color: C.ink, padding: "6px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 5 }}>
-                🗓 Pick your start: June 1, 8 or 15
+                🗓 Pick your start: June 1, 7 or 15
               </span>
             </div>
 
@@ -533,23 +545,20 @@ export default function SummerCamp() {
             </p>
 
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
-              <CTA kind="yellow" size="xl" icon="▶" sub="No signup · no card" onClick={openFree}>
+              <CTA kind="yellow" size="xl" icon="▶" sub="No signup · no card · starts in 30 sec" onClick={openFree}>
                 Start free lesson
-              </CTA>
-              <CTA kind="whatsapp" size="xl" icon="🎉" sub="June 7 · June 15 · 5 seats left" onClick={() => openEnroll()}>
-                Enroll Now — $49
               </CTA>
             </div>
 
-            {/* Subtle WA text link */}
-            <div style={{ marginTop: 12 }}>
+            {/* WhatsApp #1 — questions (distinct label) */}
+            <div style={{ marginTop: 14 }}>
               <button onClick={openWA} style={{
                 background: "none", border: "none", cursor: "pointer",
                 fontSize: 13, color: C.ink3, fontWeight: 600,
                 fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: 6,
                 padding: 0, textDecoration: "underline", textUnderlineOffset: 3,
               }}>
-                💬 Have questions? Chat with Manisha →
+                💬 Questions first? Chat with Manisha on WhatsApp →
               </button>
             </div>
 
@@ -664,6 +673,96 @@ export default function SummerCamp() {
         <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: -1, overflow: "hidden", pointerEvents: "none" }}>
           <div style={{ position: "absolute", top: -80, right: -80, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle,#FFC72C55,transparent 70%)" }}/>
           <div style={{ position: "absolute", bottom: 80, left: -100, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle,#1E5BB722,transparent 70%)" }}/>
+        </div>
+      </section>
+
+      {/* ── Why not YouTube / Udemy ─────────────────────────────────── */}
+      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg2 }}>
+        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+              Fair question
+            </span>
+            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(30px,4vw,48px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
+              "Why not just use YouTube or Udemy?"
+            </h2>
+            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12 }}>
+              Great question. Here's the honest answer.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1fr", gap: 16 }}>
+            {[
+              {
+                icon: "👩‍🏫",
+                title: "No live teacher who knows your kid",
+                them: "YouTube & Udemy give you a recorded instructor who has never seen your child's face.",
+                us: "Manisha knows every student by name. She watches quiz scores, reviews projects, and sends WhatsApp notes after every live class. That's 8+ years of teaching kids 8–15 — not a generic video.",
+                color: C.blue,
+              },
+              {
+                icon: "💻",
+                title: "No place to actually practise",
+                them: "You watch a video, then open a separate editor, then try to remember what you just saw. Kids lose interest in that gap.",
+                us: "Watch → Read → Code → Quiz — all on one page, no tab-switching. The coding challenges run right in the browser. Zero setup, zero friction.",
+                color: C.green,
+              },
+              {
+                icon: "💬",
+                title: "Stuck at 9pm? You're on your own",
+                them: "Got a bug you can't crack at night? Post in a forum and hope someone replies in 3 days.",
+                us: "Snap a photo of the screen and message Manisha on WhatsApp. She replies within the hour — evenings included. That's the difference between a kid who gives up and one who ships.",
+                color: C.wa,
+              },
+              {
+                icon: "⭐",
+                title: "Generic content, not built for kids",
+                them: "Most online courses are built for adults who can sit and focus for 2-hour lectures. Kids aged 8–15 learn completely differently.",
+                us: "Every lesson is designed for short attention spans: 15-minute chunks, visuals, interactive coding, quizzes, and a project at the end. Manisha has a 5.0★ rating from 1,000+ students for a reason.",
+                color: "#5B2BC7",
+              },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: C.paper, borderRadius: 20,
+                border: `2px solid ${C.ink}`,
+                overflow: "hidden",
+                boxShadow: `6px 6px 0 ${C.ink}`,
+              }}>
+                <div style={{
+                  padding: "16px 20px", background: item.color,
+                  display: "flex", alignItems: "center", gap: 12,
+                }}>
+                  <span style={{ fontSize: 28 }}>{item.icon}</span>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: "#fff", lineHeight: 1.3 }}>{item.title}</h3>
+                </div>
+                <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{
+                    padding: "12px 14px", borderRadius: 10,
+                    background: "#FFF5F5", border: "1.5px solid #FFD0D0",
+                  }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#CC0000", letterSpacing: "0.08em", marginBottom: 5 }}>YOUTUBE / UDEMY</div>
+                    <p style={{ fontSize: 13, color: "#5A3030", lineHeight: 1.5, margin: 0 }}>{item.them}</p>
+                  </div>
+                  <div style={{
+                    padding: "12px 14px", borderRadius: 10,
+                    background: "#F0FFF4", border: "1.5px solid #B2EFD0",
+                  }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: C.green, letterSpacing: "0.08em", marginBottom: 5 }}>CODERSBEE CAMP</div>
+                    <p style={{ fontSize: 13, color: "#1A3A26", lineHeight: 1.5, margin: 0 }}>{item.us}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 36 }}>
+            <p style={{ fontSize: 15, color: C.ink2, marginBottom: 16 }}>
+              Don't take our word for it — try Day 1 completely free and feel the difference.
+            </p>
+            <CTA kind="yellow" size="lg" icon="▶" sub="No signup · no card" onClick={openFree}>
+              Start free lesson →
+            </CTA>
+          </div>
         </div>
       </section>
 
@@ -1000,14 +1099,14 @@ export default function SummerCamp() {
                   <li style={{ display: "flex", gap: 8, color: C.ink3 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>–</span>No teacher WhatsApp support</li>
                   <li style={{ display: "flex", gap: 8, color: C.ink3 }}><span style={{ width: 20, height: 20, borderRadius: 999, background: C.bg2, border: `1.5px solid ${C.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>–</span>No completion certificate</li>
                 </ul>
-                <button onClick={openWA} style={{
+                <button onClick={openTrial} style={{
                   marginTop: "auto", width: "100%", padding: "12px 16px",
                   background: C.wa, color: "#fff", border: `2px solid ${C.ink}`,
                   borderRadius: 10, fontWeight: 800, fontSize: 14, cursor: "pointer",
                   boxShadow: `0 3px 0 ${C.waD}`,
-                }}>💬 WhatsApp to request</button>
+                }}>🚀 Start my 7-day free trial →</button>
                 <p style={{ fontSize: 11, color: C.ink3, textAlign: "center", margin: 0 }}>
-                  Message Manisha after Day 1 — she'll send credentials in minutes.
+                  One tap — opens WhatsApp with your request ready. Manisha sends your login in minutes.
                 </p>
               </div>
 
@@ -1207,8 +1306,7 @@ export default function SummerCamp() {
               <footer style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: C.ink2 }}>— Manisha Mam</footer>
             </blockquote>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <CTA kind="whatsapp" size="lg" icon="💬" onClick={openWA}>Say hi on WhatsApp</CTA>
-              <CTA kind="outline" size="lg" onClick={openFree}>Try the free lesson →</CTA>
+              <CTA kind="yellow" size="lg" icon="▶" onClick={openFree}>Try the free lesson →</CTA>
             </div>
           </div>
         </div>
@@ -1282,7 +1380,7 @@ export default function SummerCamp() {
       </section>
 
       {/* ── Testimonials ────────────────────────────────────────────── */}
-      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
+      <section id="reviews" style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
@@ -1478,96 +1576,6 @@ export default function SummerCamp() {
         </div>
       </section>
 
-      {/* ── Why not YouTube / Udemy ─────────────────────────────────── */}
-      <section style={{ padding: mob ? "48px 20px" : "88px 32px", background: C.bg2 }}>
-        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 44 }}>
-            <span style={{ display: "inline-block", background: C.ink, color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
-              Fair question
-            </span>
-            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(30px,4vw,48px)", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>
-              "Why not just use YouTube or Udemy?"
-            </h2>
-            <p style={{ fontSize: 16, color: C.ink2, marginTop: 12 }}>
-              Great question. Here's the honest answer.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1fr", gap: 16 }}>
-            {[
-              {
-                icon: "👩‍🏫",
-                title: "No live teacher who knows your kid",
-                them: "YouTube & Udemy give you a recorded instructor who has never seen your child's face.",
-                us: "Manisha knows every student by name. She watches quiz scores, reviews projects, and sends WhatsApp notes after every live class. That's 8+ years of teaching kids 8–15 — not a generic video.",
-                color: C.blue,
-              },
-              {
-                icon: "💻",
-                title: "No place to actually practise",
-                them: "You watch a video, then open a separate editor, then try to remember what you just saw. Kids lose interest in that gap.",
-                us: "Watch → Read → Code → Quiz — all on one page, no tab-switching. The coding challenges run right in the browser. Zero setup, zero friction.",
-                color: C.green,
-              },
-              {
-                icon: "💬",
-                title: "Stuck at 9pm? You're on your own",
-                them: "Got a bug you can't crack at night? Post in a forum and hope someone replies in 3 days.",
-                us: "Snap a photo of the screen and message Manisha on WhatsApp. She replies within the hour — evenings included. That's the difference between a kid who gives up and one who ships.",
-                color: C.wa,
-              },
-              {
-                icon: "⭐",
-                title: "Generic content, not built for kids",
-                them: "Most online courses are built for adults who can sit and focus for 2-hour lectures. Kids aged 8–15 learn completely differently.",
-                us: "Every lesson is designed for short attention spans: 15-minute chunks, visuals, interactive coding, quizzes, and a project at the end. Manisha has a 5.0★ rating from 1,000+ students for a reason.",
-                color: "#5B2BC7",
-              },
-            ].map((item, i) => (
-              <div key={i} style={{
-                background: C.paper, borderRadius: 20,
-                border: `2px solid ${C.ink}`,
-                overflow: "hidden",
-                boxShadow: `6px 6px 0 ${C.ink}`,
-              }}>
-                <div style={{
-                  padding: "16px 20px", background: item.color,
-                  display: "flex", alignItems: "center", gap: 12,
-                }}>
-                  <span style={{ fontSize: 28 }}>{item.icon}</span>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: "#fff", lineHeight: 1.3 }}>{item.title}</h3>
-                </div>
-                <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
-                  <div style={{
-                    padding: "12px 14px", borderRadius: 10,
-                    background: "#FFF5F5", border: "1.5px solid #FFD0D0",
-                  }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: "#CC0000", letterSpacing: "0.08em", marginBottom: 5 }}>YOUTUBE / UDEMY</div>
-                    <p style={{ fontSize: 13, color: "#5A3030", lineHeight: 1.5, margin: 0 }}>{item.them}</p>
-                  </div>
-                  <div style={{
-                    padding: "12px 14px", borderRadius: 10,
-                    background: "#F0FFF4", border: "1.5px solid #B2EFD0",
-                  }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: C.green, letterSpacing: "0.08em", marginBottom: 5 }}>CODERSBEE CAMP</div>
-                    <p style={{ fontSize: 13, color: "#1A3A26", lineHeight: 1.5, margin: 0 }}>{item.us}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: 36 }}>
-            <p style={{ fontSize: 15, color: C.ink2, marginBottom: 16 }}>
-              Don't take our word for it — try Day 1 completely free and feel the difference.
-            </p>
-            <CTA kind="yellow" size="lg" icon="▶" sub="No signup · no card" onClick={openFree}>
-              Start free lesson →
-            </CTA>
-          </div>
-        </div>
-      </section>
-
       {/* ── FAQ ─────────────────────────────────────────────────────── */}
       <section id="faq" style={{ padding: mob ? "48px 20px" : "88px 32px" }}>
         <div style={{ maxWidth: 820, margin: "0 auto" }}>
@@ -1618,7 +1626,7 @@ export default function SummerCamp() {
           </p>
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <CTA kind="primary" size="xl" icon="▶" sub="No signup needed" onClick={openFree}>Start free lesson now</CTA>
-            <CTA kind="whatsapp" size="xl" icon="💬" sub="Talk to a human first" onClick={openWA}>WhatsApp Manisha</CTA>
+            <CTA kind="whatsapp" size="xl" icon="🎉" sub="June 7 · 5 seats left" onClick={() => openEnroll()}>Enroll Now — $49</CTA>
           </div>
 
           {/* Pricing reassurance line */}
@@ -1681,7 +1689,27 @@ export default function SummerCamp() {
             <div key={h as string}>
               <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 14 }}>{h}</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 13 }}>
-                {(items as string[]).map(it => <li key={it} style={{ opacity: 0.65 }}>{it}</li>)}
+                {(items as string[]).map(it => {
+                  // WhatsApp #3 — the footer link (distinct label)
+                  if (it === "WhatsApp Manisha") return (
+                    <li key={it}>
+                      <button onClick={openWA} style={{
+                        background: "none", border: "none", padding: 0, cursor: "pointer",
+                        font: "inherit", color: C.wa, fontWeight: 700, opacity: 1,
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                      }}>💬 WhatsApp Manisha</button>
+                    </li>
+                  );
+                  if (it === "Day 1 — free lesson") return (
+                    <li key={it}>
+                      <button onClick={openFree} style={{
+                        background: "none", border: "none", padding: 0, cursor: "pointer",
+                        font: "inherit", color: "inherit", opacity: 0.65,
+                      }}>{it}</button>
+                    </li>
+                  );
+                  return <li key={it} style={{ opacity: 0.65 }}>{it}</li>;
+                })}
               </ul>
             </div>
           ))}
