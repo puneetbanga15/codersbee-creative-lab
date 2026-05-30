@@ -258,6 +258,107 @@ function Feedback({ ok, msg, example }: { ok: boolean; msg: string; example?: st
   );
 }
 
+/* ─── Sound engine ─────────────────────────────────────────────────── */
+// Sounds are SYNTHESIZED in-browser via the Web Audio API, so the game needs
+// zero audio asset files today. To swap in real recordings later, add a URL to
+// SOUND_FILES below — any name with a file plays that instead of the synth.
+type SfxName = "pull" | "win" | "lose" | "wrong";
+
+const SOUND_FILES: Partial<Record<SfxName, string>> = {
+  // pull:  "/tug/sfx/pull.mp3",   // ← uncomment + drop the file in to use a real clip
+  // win:   "/tug/sfx/win.mp3",
+  // lose:  "/tug/sfx/lose.mp3",
+  // wrong: "/tug/sfx/wrong.mp3",
+};
+
+const Sfx = (() => {
+  let ctx: AudioContext | null = null;
+  let muted = false;
+  const elements: Partial<Record<SfxName, HTMLAudioElement>> = {};
+
+  function ensureCtx(): AudioContext | null {
+    if (typeof window === "undefined") return null;
+    if (!ctx) {
+      const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (AC) ctx = new AC();
+    }
+    if (ctx && ctx.state === "suspended") void ctx.resume();
+    return ctx;
+  }
+
+  // One synthesized note with a quick attack and exponential decay.
+  function note(c: AudioContext, freq: number, start: number, dur: number, type: OscillatorType, peak: number) {
+    const t0 = c.currentTime + start;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.linearRampToValueAtTime(peak, t0 + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain).connect(c.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.02);
+  }
+
+  function synth(name: SfxName, c: AudioContext) {
+    switch (name) {
+      case "pull":  // quick rising pluck — satisfying tug
+        note(c, 440, 0, 0.12, "triangle", 0.20);
+        note(c, 660, 0.06, 0.14, "triangle", 0.20);
+        break;
+      case "win":   // happy ascending arpeggio C-E-G-C
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => note(c, f, i * 0.12, 0.22, "triangle", 0.20));
+        break;
+      case "lose":  // gentle descending "aww"
+        [392, 329.63, 261.63].forEach((f, i) => note(c, f, i * 0.16, 0.30, "sine", 0.18));
+        break;
+      case "wrong": // soft low nudge — not harsh
+        note(c, 196, 0, 0.16, "square", 0.10);
+        break;
+    }
+  }
+
+  return {
+    setMuted(m: boolean) { muted = m; },
+    // Call from a user gesture (e.g. a button click) to unlock audio on iOS/Safari.
+    unlock() { ensureCtx(); },
+    play(name: SfxName) {
+      if (muted || typeof window === "undefined") return;
+      const url = SOUND_FILES[name];
+      if (url) {
+        let el = elements[name];
+        if (!el) { el = new Audio(url); elements[name] = el; }
+        el.currentTime = 0;
+        void el.play().catch(() => {});
+        return;
+      }
+      const c = ensureCtx();
+      if (c) synth(name, c);
+    },
+  };
+})();
+
+/* ─── Sound on/off toggle ──────────────────────────────────────────── */
+function SoundToggle({ muted, onToggle }: { muted: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      title={muted ? "Sound off — click to turn on" : "Sound on — click to mute"}
+      aria-label={muted ? "Turn sound on" : "Turn sound off"}
+      style={{
+        flexShrink: 0, width: 34, height: 34, borderRadius: 9,
+        border: `1.5px solid ${C.ink}`,
+        background: "rgba(14,17,22,.06)", color: C.ink,
+        cursor: "pointer", fontSize: 16, lineHeight: 1,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}
+    >
+      {muted ? "🔇" : "🔊"}
+    </button>
+  );
+}
+
 /* ─── Main component ───────────────────────────────────────────────── */
 export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
   const WIN_POS  = 82;
@@ -273,9 +374,25 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
   const [wrongStreak, setWrongStreak] = useState(0);
   const [roundResults, setRoundResults] = useState<boolean[]>([]);
   const [submissions, setSubmissions] = useState<string[]>([]);  // the kid's actual typed code, per round
+  const [muted, setMuted] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("tug-muted") === "1";
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
   const currentRound = data.rounds[round];
+
+  // Keep the sound engine in sync with the kid's mute choice.
+  useEffect(() => { Sfx.setMuted(muted); }, [muted]);
+
+  function toggleMute() {
+    setMuted(m => {
+      const next = !m;
+      try { window.localStorage.setItem("tug-muted", next ? "1" : "0"); } catch { /* ignore */ }
+      if (!next) Sfx.unlock();  // we're inside a click — a good moment to unlock audio
+      return next;
+    });
+  }
 
   // Auto-focus input when playing
   useEffect(() => {
@@ -304,6 +421,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
       const newResults = [...roundResults, true];
       setRoundResults(newResults);
       setSubmissions(prev => [...prev, inputVal.trim()]);  // remember exactly what the kid typed
+      Sfx.play("pull");
 
       setTimeout(() => {
         setFeedback(null);
@@ -311,8 +429,10 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
         if (newPos >= WIN_POS || round === data.rounds.length - 1) {
           // Check final result
           const correctCount = newResults.filter(Boolean).length;
+          const didWin = correctCount >= Math.ceil(data.rounds.length / 2);
           setTimeout(() => {
-            setPhase(correctCount >= Math.ceil(data.rounds.length / 2) ? "won" : "lost");
+            Sfx.play(didWin ? "win" : "lose");
+            setPhase(didWin ? "won" : "lost");
           }, 300);
         } else {
           setRound(r => r + 1);
@@ -322,6 +442,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
     } else {
       // Wrong! Keep the error + hint on screen until the kid edits their code.
       doShake();
+      Sfx.play("wrong");
       const penalty = Math.min(10 + wrongStreak * 2, 18);
       const newPos  = clamp(ropePos - penalty, 0, 100);
       setRopePos(newPos);
@@ -334,7 +455,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
       if (newPos <= LOSE_POS) {
         // Computer wins — lock and show the lose screen after a beat.
         setRoundResults([...roundResults, false]);
-        setTimeout(() => setPhase("lost"), 1600);
+        setTimeout(() => { Sfx.play("lose"); setPhase("lost"); }, 1600);
       } else {
         // Stay on this round. Error message persists; refocus so they can fix it.
         setTimeout(() => inputRef.current?.focus(), 50);
@@ -387,11 +508,12 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
               background: C.ink, color: C.yellow, borderRadius: 12,
               padding: "6px 14px", fontSize: 11, fontWeight: 800, letterSpacing: "0.08em",
               flexShrink: 0,
-            }}>🎮 CHALLENGE 4 — GAME</div>
+            }}>🎮 GAME</div>
             <h3 style={{
               fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 900,
               color: C.ink, margin: 0, flex: 1,
             }}>{data.title}</h3>
+            <SoundToggle muted={muted} onToggle={toggleMute} />
           </div>
 
           {/* Body */}
@@ -447,7 +569,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
             </div>
 
             <button
-              onClick={() => setPhase("playing")}
+              onClick={() => { Sfx.unlock(); setPhase("playing"); }}
               style={{
                 width: "100%", padding: "18px 24px",
                 background: C.yellow, color: C.ink,
@@ -692,6 +814,7 @@ export function TugOfWarGame({ data }: { data: TugOfWarChallengeData }) {
             borderRadius: 20, padding: "3px 12px",
             fontSize: 11, fontWeight: 800,
           }}>Round {round + 1} / {data.rounds.length}</span>
+          <SoundToggle muted={muted} onToggle={toggleMute} />
         </div>
 
         <div style={{ padding: "20px 24px" }}>

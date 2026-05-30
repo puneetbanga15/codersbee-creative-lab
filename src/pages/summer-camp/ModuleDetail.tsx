@@ -1243,7 +1243,7 @@ export default function ModuleDetail() {
               <span style={{
                 background: C.ink, color: C.yellow, borderRadius: 20,
                 padding: "4px 14px", fontSize: 12, fontWeight: 700,
-              }}>{mod.tugOfWarChallenge ? "4 Challenges" : "3 Challenges"}</span>
+              }}>{mod.tugOfWarChallenge ? "1 Game + 3 Challenges" : "3 Challenges"}</span>
               <h2 style={{
                 fontFamily: "'Fraunces', serif", fontSize: 30, fontWeight: 900,
                 color: C.ink, margin: 0,
