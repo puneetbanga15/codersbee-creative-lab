@@ -366,6 +366,7 @@ export default function SummerCamp() {
   const [showAllLessons, setShowAllLessons] = useState(false);
   const [dayExpanded, setDayExpanded] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
 
   useEffect(() => {
@@ -478,8 +479,29 @@ export default function SummerCamp() {
               }}>💬 Questions? Ask Manisha</button>
             )}
             <CTA kind="yellow" size="sm" icon="▶" onClick={openFree}>{mob ? "Free lesson →" : "Try free lesson →"}</CTA>
+            {mob && (
+              <button onClick={() => setMenuOpen(o => !o)} aria-label="Menu" aria-expanded={menuOpen} style={{
+                background: "none", border: `1px solid ${C.line}`, borderRadius: 8,
+                width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer", fontSize: 18, color: C.ink, flexShrink: 0,
+              }}>{menuOpen ? "✕" : "☰"}</button>
+            )}
           </div>
         </div>
+        {mob && menuOpen && (
+          <nav style={{ borderTop: `1px solid ${C.line}`, background: "rgba(251,250,245,.98)", padding: "8px 16px 14px" }}>
+            {[["#what","What you'll build"],["#curriculum","15 lessons"],["#reviews","⭐ Reviews"],["#pricing","Pricing"],["#teacher","Meet Manisha"],["#faq","FAQ"]].map(([h,l]) => (
+              <a key={h} href={h} onClick={() => setMenuOpen(false)} style={{
+                display: "block", padding: "12px 4px", fontSize: 16, fontWeight: 600,
+                color: C.ink, textDecoration: "none", borderBottom: `1px solid ${C.line}`,
+              }}>{l}</a>
+            ))}
+            <button onClick={() => { setMenuOpen(false); openWA(); }} style={{
+              width: "100%", marginTop: 12, padding: "12px", borderRadius: 10, border: "none",
+              background: "#25D366", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer",
+            }}>💬 Questions? Ask Manisha</button>
+          </nav>
+        )}
       </header>
 
       {/* ── Sticky enroll bar (appears after hero scrolls away) ─────── */}
